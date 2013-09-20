@@ -1,0 +1,15 @@
+<map edf:definitions="editor_main">
+    <object id="object (impexp_door) (1)" doublesided="false" model="3075" interior="0" dimension="0" posX="2039.5" posY="-1396.2399902344" posZ="50.959999084473" rotX="0" rotY="0" rotZ="45" />
+    <object id="object (impexp_door) (2)" doublesided="false" model="3075" interior="0" dimension="0" posX="2047.8000488281" posY="-1396.2530517578" posZ="51.009998321533" rotX="0" rotY="0" rotZ="225" />
+    <object id="object (Gen_doorEXT08) (1)" doublesided="false" model="1506" interior="0" dimension="0" posX="2043.6600341797" posY="-1396.6180419922" posZ="47.336708068848" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (Gen_doorEXT08) (2)" doublesided="false" model="1506" interior="0" dimension="0" posX="2042.1779785156" posY="-1396.6240234375" posZ="47.338600158691" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (arptpillar01_lvs) (1)" doublesided="false" model="3440" interior="0" dimension="0" posX="2043.65625" posY="-1388.7275390625" posZ="49.712432861328" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (fenceshit3) (1)" doublesided="false" model="983" interior="0" dimension="0" posX="2048.2514648438" posY="-1368.5206298828" posZ="48.019493103027" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (fenceshit) (1)" doublesided="false" model="982" interior="0" dimension="0" posX="2048.2653808594" posY="-1384.6217041016" posZ="48.019493103027" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (fenceshit) (2)" doublesided="false" model="982" interior="0" dimension="0" posX="2035.4107666016" posY="-1365.3299560547" posZ="48.010845184326" rotX="0" rotY="0" rotZ="90" />
+    <object id="object (fenceshit) (5)" doublesided="false" model="982" interior="0" dimension="0" posX="2021.7550048828" posY="-1365.3287353516" posZ="48.019493103027" rotX="0" rotY="0" rotZ="90" />
+    <object id="object (fenceshit) (3)" doublesided="false" model="982" interior="0" dimension="0" posX="2008.9541015625" posY="-1378.1217041016" posZ="48.019493103027" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (fenceshit3) (3)" doublesided="false" model="983" interior="0" dimension="0" posX="2009.0688476563" posY="-1393.1964111328" posZ="48.019493103027" rotX="0" rotY="0" rotZ="0" />
+    <object id="object (fenceshit) (4)" doublesided="false" model="982" interior="0" dimension="0" posX="2021.8922119141" posY="-1396.4580078125" posZ="48.019493103027" rotX="0" rotY="0" rotZ="90" />
+    <object id="object (fenceshit3) (4)" doublesided="false" model="983" interior="0" dimension="0" posX="2037.9765625" posY="-1396.4975585938" posZ="48.019493103027" rotX="0" rotY="0" rotZ="90" />
+</map>

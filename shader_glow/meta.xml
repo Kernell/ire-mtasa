@@ -1,0 +1,9 @@
+<meta>
+	<info description="Shader - Glow" version="0.0.1" type="script" author="Kernell" />
+  
+	<script src="shader.lua"        type="client" />
+  
+	<file src="mta-helper.fx" />
+  
+	<file src="Glow.fx" />
+</meta>

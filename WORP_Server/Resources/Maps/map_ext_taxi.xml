@@ -1,0 +1,37 @@
+<map edf:definitions="editor_main">
+    <object id="object (fenceshit) (1)" doublesided="false" model="982" interior="0" dimension="0" posX="1566.1999511719" posY="-2309.1999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit) (2)" doublesided="false" model="982" interior="0" dimension="0" posX="1566.1999511719" posY="-2334.8000488281" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit) (3)" doublesided="false" model="982" interior="0" dimension="0" posX="1553.4000244141" posY="-2368.3000488281" posZ="13.199999809265" rotX="0" rotY="2" rotZ="270"></object>
+    <object id="object (fenceshit) (5)" doublesided="false" model="982" interior="0" dimension="0" posX="1530.9000244141" posY="-2368.1999511719" posZ="13.199999809265" rotX="0" rotY="1.99951171875" rotZ="270"></object>
+    <object id="object (fenceshit) (6)" doublesided="false" model="982" interior="0" dimension="0" posX="1505.3000488281" posY="-2368.1000976563" posZ="13.199999809265" rotX="0" rotY="359.99951171875" rotZ="270"></object>
+    <object id="object (fenceshit) (7)" doublesided="false" model="982" interior="0" dimension="0" posX="1484.3000488281" posY="-2355.3000488281" posZ="13.199999809265" rotX="0" rotY="1.99951171875" rotZ="0"></object>
+    <object id="object (fenceshit3) (1)" doublesided="false" model="983" interior="0" dimension="0" posX="1566.1999511719" posY="-2350.8000488281" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit3) (2)" doublesided="false" model="983" interior="0" dimension="0" posX="1566.1999511719" posY="-2357.3000488281" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit3) (3)" doublesided="false" model="983" interior="0" dimension="0" posX="1566.1999511719" posY="-2363.6000976563" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit3) (4)" doublesided="false" model="983" interior="0" dimension="0" posX="1566.1999511719" posY="-2365.1999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="0"></object>
+    <object id="object (fenceshit3) (5)" doublesided="false" model="983" interior="0" dimension="0" posX="1489.3000488281" posY="-2368.1000976563" posZ="13.199999809265" rotX="0" rotY="0" rotZ="270"></object>
+    <object id="object (fenceshit3) (6)" doublesided="false" model="983" interior="0" dimension="0" posX="1487.5999755859" posY="-2368.1999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="270"></object>
+    <object id="object (fenceshit3) (7)" doublesided="false" model="983" interior="0" dimension="0" posX="1487.4000244141" posY="-2341.8999023438" posZ="13.199999809265" rotX="0" rotY="0" rotZ="280"></object>
+    <object id="object (fenceshit3) (8)" doublesided="false" model="983" interior="0" dimension="0" posX="1493.5999755859" posY="-2340.8000488281" posZ="13.199999809265" rotX="0" rotY="0" rotZ="279.99755859375"></object>
+    <object id="object (fenceshit3) (9)" doublesided="false" model="983" interior="0" dimension="0" posX="1499.6999511719" posY="-2339.1999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="289.99755859375"></object>
+    <object id="object (fenceshit3) (10)" doublesided="false" model="983" interior="0" dimension="0" posX="1511" posY="-2333.6000976563" posZ="13.199999809265" rotX="0" rotY="0" rotZ="303.99609375"></object>
+    <object id="object (fenceshit3) (11)" doublesided="false" model="983" interior="0" dimension="0" posX="1505.5" posY="-2336.6999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="293.994140625"></object>
+    <object id="object (fenceshit3) (12)" doublesided="false" model="983" interior="0" dimension="0" posX="1529.2998046875" posY="-2304.8994140625" posZ="13.199999809265" rotX="0" rotY="0" rotZ="353.99047851563"></object>
+    <object id="object (fenceshit3) (13)" doublesided="false" model="983" interior="0" dimension="0" posX="1515.6999511719" posY="-2329.5" posZ="13.199999809265" rotX="0" rotY="0" rotZ="315.99072265625"></object>
+    <object id="object (fenceshit3) (14)" doublesided="false" model="983" interior="0" dimension="0" posX="1519.9000244141" posY="-2324.6999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="321.9892578125"></object>
+    <object id="object (fenceshit3) (15)" doublesided="false" model="983" interior="0" dimension="0" posX="1523.5" posY="-2319.5" posZ="13.199999809265" rotX="0" rotY="0" rotZ="329.9873046875"></object>
+    <object id="object (fenceshit3) (16)" doublesided="false" model="983" interior="0" dimension="0" posX="1526.3000488281" posY="-2313.8000488281" posZ="13.199999809265" rotX="0" rotY="358" rotZ="335.98388671875"></object>
+    <object id="object (fenceshit3) (17)" doublesided="false" model="983" interior="0" dimension="0" posX="1527.5999755859" posY="-2310.8999023438" posZ="13.199999809265" rotX="0" rotY="0" rotZ="335.98095703125"></object>
+    <object id="object (fenceshit3) (18)" doublesided="false" model="983" interior="0" dimension="0" posX="1529.9000244141" posY="-2299.6999511719" posZ="13.199999809265" rotX="0" rotY="0" rotZ="351.98095703125"></object>
+    <object id="object (fenceshit3) (19)" doublesided="false" model="983" interior="0" dimension="0" posX="1533.5" posY="-2296.6000976563" posZ="13.199999809265" rotX="0" rotY="0" rotZ="267.97998046875"></object>
+    <object id="object (fenceshit3) (20)" doublesided="false" model="983" interior="0" dimension="0" posX="1563" posY="-2296.3999023438" posZ="13.199999809265" rotX="0" rotY="0" rotZ="269.97705078125"></object>
+    <object id="object (fenceshit3) (21)" doublesided="false" model="983" interior="0" dimension="0" posX="1556.5999755859" posY="-2296.3999023438" posZ="13.199999809265" rotX="0" rotY="0" rotZ="269.97253417969"></object>
+    <object id="object (fenceshit3) (23)" doublesided="false" model="983" interior="0" dimension="0" posX="1540" posY="-2296.6000976563" posZ="13.199999809265" rotX="0" rotY="0" rotZ="271.97705078125"></object>
+    <object id="object (des_tepeoff01) (1)" doublesided="false" model="11431" interior="0" dimension="0" posX="1541.3000488281" posY="-2299.3000488281" posZ="13.89999961853" rotX="0" rotY="0" rotZ="272"></object>
+    <object id="object (arrows01_lvs) (1)" doublesided="false" model="8843" interior="0" dimension="0" posX="1502.8000488281" posY="-2352" posZ="12.60000038147" rotX="0" rotY="0" rotZ="272"></object>
+    <object id="object (arrows01_lvs) (2)" doublesided="false" model="8843" interior="0" dimension="0" posX="1528.1999511719" posY="-2351.1000976563" posZ="12.60000038147" rotX="0" rotY="0" rotZ="271.99951171875"></object>
+    <object id="object (parkbench1) (1)" doublesided="false" model="1280" interior="0" dimension="0" posX="1538.5999755859" posY="-2306.1000976563" posZ="12.89999961853" rotX="0" rotY="0" rotZ="180"></object>
+    <object id="object (DYN_ROADBARRIER_3) (1)" doublesided="false" model="1425" interior="0" dimension="0" posX="1541.3000488281" posY="-2295.5" posZ="13" rotX="0" rotY="0" rotZ="180"></object>
+    <object id="object (bar_gatebar01) (1)" doublesided="false" model="966" interior="0" dimension="0" posX="1545.0699462891" posY="-2296.3898925781" posZ="12.550000190735" rotX="0" rotY="0" rotZ="180"></object>
+    <object id="object (MED_OFFICE_CHAIR2) (1)" doublesided="false" model="6134" interior="0" dimension="0" posX="1530" posY="-2326.8000488281" posZ="16.700000762939" rotX="0" rotY="0" rotZ="269.99853515625"></object>
+</map>
