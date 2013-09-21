@@ -409,9 +409,9 @@ function CVehicle:UpdateComponent( sComponent )
 end
 
 function CVehicle:Update()
-	local fX, fY		= getElementVelocity( self );
+	local fX, fY, fZ		= getElementVelocity( self );
 	
-	self:SetGravity( 0.0, 0.0, -1.0 - ( ( fX * fX + fY * fY ) * self.m_fAerodynamics ) );
+	self:SetGravity( 0.0, 0.0, -1.0 - ( ( fX * fX + fY * fY + fZ * fZ ) * self.m_fAerodynamics ) );
 end
 
 function CVehicle:SetWiperState( iWiperState )
@@ -433,14 +433,18 @@ addEventHandler( "onClientPreRender", root,
 		
 		for i, pVehicle in pairs( getElementsByType( "vehicle", root, true ) ) do
 			if pVehicle:IsOnScreen() and pVehicle:GetHealth() > 100.0 then
-				pVehicle.m_fAerodynamics = pVehicle:GetData( "m_fAerodynamics" ) or 0.0;
+				pVehicle.m_fAerodynamics = 0.0;
 				
-				for sVehicleComponent, pVehicleComponent in pairs( gl_Components ) do
-					if pVehicleComponent.Update and pVehicle:IsComponentVisible( sVehicleComponent ) then
-						pVehicleComponent.Update( sVehicleComponent, pVehicle, iTick );
-						
-						if pVehicleComponent.m_fAerodynamics then
-							pVehicle.m_fAerodynamics = pVehicle.m_fAerodynamics + pVehicleComponent.m_fAerodynamics;
+				if pVehicle:GetModel() == 520 then
+					pVehicle.m_fAerodynamics = 10.0;
+				else		
+					for sVehicleComponent, pVehicleComponent in pairs( gl_Components ) do
+						if pVehicleComponent.Update and pVehicle:IsComponentVisible( sVehicleComponent ) then
+							pVehicleComponent.Update( sVehicleComponent, pVehicle, iTick );
+							
+							if pVehicleComponent.m_fAerodynamics then
+								pVehicle.m_fAerodynamics = pVehicle.m_fAerodynamics + pVehicleComponent.m_fAerodynamics;
+							end
 						end
 					end
 				end
