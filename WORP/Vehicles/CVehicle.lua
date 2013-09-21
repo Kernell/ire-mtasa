@@ -440,7 +440,7 @@ addEventHandler( "onClientPreRender", root,
 				pVehicle.m_fAerodynamics = 0.0;
 				
 				if pVehicle:GetModel() == 520 then
-					pVehicle.m_fAerodynamics = 2.0;
+					pVehicle.m_fAerodynamics = 1.0;
 				else		
 					for sVehicleComponent, pVehicleComponent in pairs( gl_Components ) do
 						if pVehicleComponent.Update and pVehicle:IsComponentVisible( sVehicleComponent ) then
