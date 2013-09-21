@@ -10,7 +10,7 @@
   <script src="Shared/CPed.lua"   type="client" />
   <script src="Shared/CPlayer.lua"   type="client" />
   
-  <script src="CClientVehicleEngine.lua" type="client" />
+  <!-- <script src="CClientVehicleEngine.lua" type="client" /> -->
   
   <file src="Sounds/350Z_onmid.wav" />
 </meta>
