@@ -3,7 +3,7 @@
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
 -- License		Proprietary Software
--- Version		1.0
+-- Version		1.0.12
 
 local gl_Components	= 
 {
