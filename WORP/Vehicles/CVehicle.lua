@@ -456,6 +456,7 @@ addEventHandler( "onClientPreRender", root,
 	end
 );
 
+
 addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot,
 	function()
 		if source:type() == "vehicle" then
