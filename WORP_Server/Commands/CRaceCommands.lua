@@ -162,6 +162,8 @@ end
 function CRaceCommands:Join( pPlayer, sCmd, sOption, sName )
 	if not pPlayer:IsInGame() then return true; end
 	
+	sName	= (string)(sName);
+	
 	if pPlayer.m_pRace == NULL then
 		local pRace = g_pGame:GetRaceManager():Get( sName );
 		
