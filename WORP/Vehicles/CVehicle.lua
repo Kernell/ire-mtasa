@@ -414,7 +414,7 @@ function CVehicle:Update()
 	
 	self:SetGravity( 0.0, 0.0, fGravity );
 	
-	dxDrawText( ( "pVehicle->m_fAerodynamics = %.3f" ):format( pVehicle.m_fAerodynamics ), 100, 500 );
+	dxDrawText( ( "pVehicle->m_fAerodynamics = %.3f" ):format( self.m_fAerodynamics ), 100, 500 );
 	dxDrawText( ( "pVehicle->SetGravity( 0.0f, 0.0f, %.3f )" ):format( fGravity ), 100, 510 );
 end
 
