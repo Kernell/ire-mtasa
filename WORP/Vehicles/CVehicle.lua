@@ -433,7 +433,7 @@ addEventHandler( "onClientPreRender", root,
 		
 		for i, pVehicle in pairs( getElementsByType( "vehicle", root, true ) ) do
 			if pVehicle:IsOnScreen() and pVehicle:GetHealth() > 100.0 then
-				pVehicle.m_fAerodynamics = 0.0 or pVehicle:GetData( "m_fAerodynamics" );
+				pVehicle.m_fAerodynamics = pVehicle:GetData( "m_fAerodynamics" ) or 0.0;
 				
 				for sVehicleComponent, pVehicleComponent in pairs( gl_Components ) do
 					if pVehicleComponent.Update and pVehicle:IsComponentVisible( sVehicleComponent ) then
