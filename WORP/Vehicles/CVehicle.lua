@@ -3,7 +3,7 @@
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
 -- License		Proprietary Software
--- Version		1.0.12
+-- Version		1.0
 
 local gl_Components	= 
 {
@@ -413,9 +413,6 @@ function CVehicle:Update()
 	local fGravity			= -1.0 - ( ( fX * fX + fY * fY + fZ * fZ ) * self.m_fAerodynamics );
 	
 	self:SetGravity( 0.0, 0.0, fGravity );
-	
-	dxDrawText( ( "pVehicle->m_fAerodynamics = %.3f" ):format( self.m_fAerodynamics ), 100, 500 );
-	dxDrawText( ( "pVehicle->SetGravity( 0.0f, 0.0f, %.3f )" ):format( fGravity ), 100, 510 );
 end
 
 function CVehicle:SetWiperState( iWiperState )
@@ -440,7 +437,7 @@ addEventHandler( "onClientPreRender", root,
 				pVehicle.m_fAerodynamics = 0.0;
 				
 				if pVehicle:GetModel() == 520 then
-					pVehicle.m_fAerodynamics = 1.0;
+					pVehicle.m_fAerodynamics = 0.5;
 				else		
 					for sVehicleComponent, pVehicleComponent in pairs( gl_Components ) do
 						if pVehicleComponent.Update and pVehicle:IsComponentVisible( sVehicleComponent ) then
