@@ -327,6 +327,7 @@ function CVehicleCommands:Get( pPlayer, sCmd, sOption, sID )
 		if pVehicle then	
 			local fRotation		= pPlayer:GetRotation();
 			
+			pVehicle:SetVelocity()
 			pVehicle:SetPosition( pPlayer:GetPosition():Offset( 2.5, fRotation ) );
 			pVehicle:SetRotation( Vector3( 0, 0, fRotation + 90 ) );
 			pVehicle:SetInterior( pPlayer:GetInterior() );

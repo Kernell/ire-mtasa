@@ -76,6 +76,8 @@ function CPlayer:CPlayer( pPlayerManager, pPlayerEntity )
 end
 
 function CPlayer:_CPlayer()
+	triggerEvent( "onColShapeLeave", resourceRoot, self, false );
+	
 	self:_CPlayerTutorial();
 	
 	if self:IsInGame() then

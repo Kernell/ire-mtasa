@@ -11,6 +11,7 @@ class: CVehicleHUDFuel ( C3DHUD )
 	
 	m_RemapOffsets	=
 	{
+		[ DODO ]		= { 0.5, -6.0, 0.95 };
 		[ HYDRA ]		= { 0.7, -7.0, 0.95 };
 		[ HUNTER ]		= { 0.6, -9.0, 1.55 };
 		[ MAVERICK ]	= { 0.5, -7.0, 1.35 };

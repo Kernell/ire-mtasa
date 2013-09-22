@@ -1,105 +1,122 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CGate"
-
-function CGate:CGate( pGateManager, iID, iModel, pFaction, pJob, iInterior, iDimension, vecPosition, vecRotation, vecTargetPosition, vecTargetRotation, iTime, fRadius, sEasing, fEasingPeriod, fEasingAmplitude, fEasingOvershoot )
-	self.m_pGateManager			= pGateManager;
+class: CGate
+{
+	m_iElementsCount	= 0;
+	m_iMovingStart		= 0;
+	m_Players			= NULL;
 	
-	self.m_iID					= iID;
-	self.m_bOpened				= false;
-	self.m_pFaction				= pFaction;
-	self.m_pJob					= pJob;
-	self.m_iInterior			= iInterior;
-	self.m_iDimension			= iDimension;
-	self.m_vecPosition			= vecPosition;
-	self.m_vecRotation			= vecRotation;
-	self.m_vecTargetPosition	= vecTargetPosition;
-	self.m_vecTargetRotation	= vecTargetRotation;
-	self.m_iTime				= iTime;
-	self.m_fRadius				= fRadius;
-	self.m_sEasing				= sEasing;
-	self.m_fEasingPeriod		= fEasingPeriod;
-	self.m_fEasingAmplitude		= fEasingAmplitude;
-	self.m_fEasingOvershoot		= fEasingOvershoot;
-	self.m_iMovingStart			= 0;
+	CGate	= function( this, iID, iModel, pFaction, iInterior, iDimension, vecPosition, vecRotation, vecTargetPosition, vecTargetRotation, iTime, fRadius, sEasing, fEasingPeriod, fEasingAmplitude, fEasingOvershoot )
+		this.m_Players				= {};
+		this.m_iID					= iID;
+		this.m_bOpened				= false;
+		this.m_pFaction				= pFaction;
+		this.m_iInterior			= iInterior;
+		this.m_iDimension			= iDimension;
+		this.m_vecPosition			= vecPosition;
+		this.m_vecRotation			= vecRotation;
+		this.m_vecTargetPosition	= vecTargetPosition;
+		this.m_vecTargetRotation	= vecTargetRotation;
+		this.m_iTime				= iTime;
+		this.m_fRadius				= fRadius;
+		this.m_sEasing				= sEasing;
+		this.m_fEasingPeriod		= fEasingPeriod;
+		this.m_fEasingAmplitude		= fEasingAmplitude;
+		this.m_fEasingOvershoot		= fEasingOvershoot;
+		
+		this.m_pColShape			= CColShape( "Sphere", this.m_vecPosition.X, this.m_vecPosition.Y, this.m_vecPosition.Z, this.m_fRadius );
+		
+		this.m_pColShape:SetInterior	( this.m_iInterior );
+		this.m_pColShape:SetDimension	( this.m_iDimension );
+		
+		this.m_pColShape.m_pGate	= this;
+		this.m_pColShape.OnHit		= this.OnHit;
+		this.m_pColShape.OnLeave	= this.OnLeave;
+		
+		this.m_pObject				= CObject.Create( iModel, this.m_vecPosition, this.m_vecRotation );
+		
+		this.m_pObject:SetInterior	( this.m_iInterior );
+		this.m_pObject:SetDimension	( this.m_iDimension );
+		
+		g_pGame:GetGateManager():AddToList( this );
+	end;
 	
-	self.m_pColShape			= CColShape( "Sphere", self.m_vecPosition.X, self.m_vecPosition.Y, self.m_vecPosition.Z, self.m_fRadius );
+	_CGate	= function( this )
+		g_pGame:GetGateManager():RemoveFromList( this );
+		
+		this.m_pColShape.OnHit		= NULL;
+		this.m_pColShape.OnLeave	= NULL;
+		
+		delete ( this.m_pColShape );
+		this.m_pColShape = NULL;
+		
+		delete ( this.m_pObject );
+		this.m_pObject	= NULL;
+		
+		this.m_Players				= NULL;
+		this.m_vecPosition			= NULL;
+		this.m_vecRotation			= NULL;
+		this.m_vecTargetPosition	= NULL;
+		this.m_vecTargetRotation	= NULL;
+	end;
 	
-	self.m_pColShape:SetInterior	( self.m_iInterior );
-	self.m_pColShape:SetDimension	( self.m_iDimension );
+	GetID	= function( this )
+		return this.m_iID;
+	end;
 	
-	self.m_pObject				= CObject.Create( iModel, self.m_vecPosition, self.m_vecRotation );
-	
-	self.m_pObject:SetInterior	( self.m_iInterior );
-	self.m_pObject:SetDimension	( self.m_iDimension );
-	
-	pGateManager:AddToList( self );
-end
-
-function CGate:_CGate()
-	self.m_pGateManager:RemoveFromList( self );
-	
-	delete ( self.m_pColShape );
-	self.m_pColShape = NULL;
-	
-	delete ( self.m_pObject );
-	self.m_pObject	= NULL;
-end
-
-function CGate:GetID()
-	return self.m_iID;
-end
-
-function CGate:IsOpen()
-	return self.m_bOpened;
-end
-
-function CGate:GetFaction()
-	return self.m_pFaction;
-end
-
-function CGate:GetJob()
-	return self.m_pJob;
-end
-
-function CGate:GetObject()
-	return self.m_pObject;
-end
-
-function CGate:DoPulse( tReal )
-	local bOpened = false;
-	
-	for i, pPlayer in ipairs( self.m_pColShape:GetWithinColShape( "player" ) ) do	
-		if pPlayer and pPlayer:GetInterior() == self.m_iInterior and pPlayer:GetDimension() == self.m_iDimension then
-			local pChar = pPlayer:GetChar();
+	OnHit	= function( pColShape, pElement, bDimension )
+		local this = bDimension and pColShape.m_pGate;
+		
+		if this and classof( pElement ) == CPlayer then
+			local pChar	= pElement:GetChar();
 			
-			if pChar and ( self.m_pFaction == NULL or self.m_pFaction == pChar:GetFaction() ) then
-				bOpened = true;
+			if pChar and ( this.m_pFaction == NULL or this.m_pFaction == pChar:GetFaction() ) then
+				this.m_Players[ pElement ]	= true;
+				this.m_iElementsCount 		= this.m_iElementsCount + 1;
 				
-				break;
+				if _DEBUG then
+					Debug( "< CGate* >( " + this:GetID() + " )::OnHit( " + pChar:GetName() + " ); // " + this.m_iElementsCount );
+				end
 			end
 		end
-	end
+	end;
 	
-	if self.m_iMovingStart ~= 0 and tReal.timestamp - self.m_iMovingStart >= self.m_iTime / 1000 then
-		self.m_pObject:SetRotation( self.m_bOpened and self.m_vecTargetRotation or self.m_vecRotation );
+	OnLeave	= function( pColShape, pElement, bDimension )
+		local this = pColShape.m_pGate;
 		
-		self.m_iMovingStart = 0;
-	end
+		if this and this.m_Players[ pElement ] and ( bDimension or pElement:GetDimension() == pColShape:GetDimension() ) then
+			this.m_Players[ pElement ]	= NULL;
+			this.m_iElementsCount 		= this.m_iElementsCount - 1;
+			
+			if _DEBUG then
+				Debug( "< CGate* >( " + this:GetID() + " )::OnLeave( " + pElement:GetName() + " ); // " + this.m_iElementsCount );
+			end
+		end
+	end;
 	
-	if self.m_bOpened ~= bOpened then
-		local vecRotation 		= self.m_pObject:GetRotation();
-		local vecNewPosition	= self.m_bOpened and self.m_vecPosition or self.m_vecTargetPosition;
-		local vecNewRotation	= self.m_bOpened and self.m_vecRotation - vecRotation or self.m_vecTargetRotation - vecRotation;
+	DoPulse	= function( this, tReal )
+		local bOpened = this.m_iElementsCount > 0;
 		
-		self.m_bOpened			= bOpened;
-		self.m_iMovingStart		= tReal.timestamp;
+		if this.m_iMovingStart ~= 0 and tReal.timestamp - this.m_iMovingStart >= this.m_iTime / 1000 then
+			this.m_pObject:SetRotation( this.m_bOpened and this.m_vecTargetRotation or this.m_vecRotation );
+			
+			this.m_iMovingStart = 0;
+		end
 		
-		self.m_pObject:Move( self.m_iTime, vecNewPosition, vecNewRotation, self.m_sEasing, self.m_fEasingPeriod, self.m_fEasingAmplitude, self.m_fEasingOvershoot );
-	end
-end
+		if this.m_bOpened ~= bOpened then
+			local vecRotation 		= this.m_pObject:GetRotation();
+			local vecNewPosition	= this.m_bOpened and this.m_vecPosition or this.m_vecTargetPosition;
+			local vecNewRotation	= this.m_bOpened and this.m_vecRotation - vecRotation or this.m_vecTargetRotation - vecRotation;
+			
+			this.m_bOpened			= bOpened;
+			this.m_iMovingStart		= tReal.timestamp;
+			
+			this.m_pObject:Move( this.m_iTime, vecNewPosition, vecNewRotation, this.m_sEasing, this.m_fEasingPeriod, this.m_fEasingAmplitude, this.m_fEasingOvershoot );
+		end
+	end;
+};

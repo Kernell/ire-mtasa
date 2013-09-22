@@ -7,6 +7,10 @@
 
 class: CConsole
 {
+	GetID		= function( this )
+		return 0;
+	end;
+	
 	IsLoggedIn	= function( this )
 		return true;
 	end;

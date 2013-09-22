@@ -6,8 +6,7 @@
 -- Version		1.0 
 
 local HOSPITAL_RESPAWN		= Vector3( 2035.4779052734, -1413.8355712891, 16.99 );
-local ARMY_RESPAWN			= Vector3( -1291.690, 490.630, 11.195 );
-local PRISON_RESPAWN		= Vector3( 2521.7, -6313.47, 17.44 );
+local PRISON_RESPAWN		= Vector3( 2262.488, -4783.914, 8.62 );
 
 function CClientRPC:Respawn()
 	if self:IsDead() then
@@ -24,7 +23,7 @@ function CPlayer:GetSpawnCoords()
 		local sJail = pChar:GetJailed();
 		
 		if sJail ~= "No" then
-			local vecPositon, iInterior, iDimension = self:GetNearbyJail( 'Inside', sJail );
+			local vecPositon, iInterior, iDimension = self:GetNearbyJail( "Inside", sJail );
 			
 			return vecPosition, 0, iInterior, iDimension;
 		end

@@ -22,13 +22,19 @@ class: CVehicleHUD
 			this:OnClientVehicleExit( source, pPlayer, iSeat );
 		end
 		
-		addEventHandler( "onClientVehicleEnter", root, this.__OnClientVehicleEnter );
-		addEventHandler( "onClientVehicleExit",  root, this.__OnClientVehicleExit );
+		function this.__OnClientElementDestroy()
+			this:OnClientVehicleDestroy( source );
+		end
+		
+		addEventHandler( "onClientVehicleEnter", 	root, this.__OnClientVehicleEnter );
+		addEventHandler( "onClientVehicleExit",  	root, this.__OnClientVehicleExit );
+		addEventHandler( "onClientElementDestroy",  root, this.__OnClientElementDestroy );
 	end;
 	
 	_CVehicleHUD	= function( this )
-		removeEventHandler( "onClientVehicleEnter", root, this.__OnClientVehicleEnter );
-		removeEventHandler( "onClientVehicleExit",  root, this.__OnClientVehicleExit );
+		removeEventHandler( "onClientVehicleEnter", 	root, this.__OnClientVehicleEnter );
+		removeEventHandler( "onClientVehicleExit",  	root, this.__OnClientVehicleExit );
+		removeEventHandler( "onClientElementDestroy",  	root, this.__OnClientElementDestroy );
 		
 		delete ( this.m_pSpeedo );
 		delete ( this.m_pFuel );
@@ -41,6 +47,10 @@ class: CVehicleHUD
 		this.m_pRaceLaps		= NULL;
 		this.m_pRaceTime		= NULL;
 		this.m_pRacePosition	= NULL;
+		
+		this.__OnClientVehicleEnter		= NULL;
+		this.__OnClientVehicleExit		= NULL;
+		this.__OnClientElementDestroy	= NULL;
 	end;
 	
 	SetVehicle		= function( this, pVehicle )
@@ -59,6 +69,12 @@ class: CVehicleHUD
 	
 	OnClientVehicleExit		= function( this, pVehicle, pPlayer, iSeat )
 		if pPlayer == CLIENT then
+			this:SetVehicle( NULL );
+		end
+	end;
+	
+	OnClientVehicleDestroy	= function( this, pVehicle )
+		if CLIENT:GetVehicle() == source then
 			this:SetVehicle( NULL );
 		end
 	end;

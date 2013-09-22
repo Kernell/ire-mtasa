@@ -29,32 +29,29 @@ function CGateManager:Init()
 		return false;
 	end
 	
-	for _, row in ipairs( pResult:GetArray() ) do
-		local iID				= row.id;
-		local iModel			= row.model;
-		local pFaction			= g_pGame:GetFactionManager():Get( row.faction_id );
-		local pJob				= CJob.GetByID( row.job_id );
-		local iInterior			= row.interior;
-		local iDimension		= row.dimension;
-		local vecPosition		= Vector3( row.x, row.y, row.z );
-		local vecRotation		= Vector3( row.rx, row.ry, row.rz );
-		local vecTargetPosition	= Vector3( row.target_x, row.target_y, row.target_z );
-		local vecTargetRotation	= Vector3( row.target_rx, row.target_ry, row.target_rz );
-		local iTime				= row.time;
-		local fRadius			= row.radius;
-		local sEasing			= row.easing;
-		local fEasingPeriod		= row.easing_period;
-		local fEasingAmplitude	= row.easing_amplitude;
-		local fEasingOvershoot	= row.easing_overshoot;
+	for _, pRow in ipairs( pResult:GetArray() ) do
+		local iID				= pRow.id;
+		local iModel			= pRow.model;
+		local pFaction			= g_pGame:GetFactionManager():Get( pRow.faction_id );
+		local iInterior			= pRow.interior;
+		local iDimension		= pRow.dimension;
+		local vecPosition		= Vector3( pRow.x, pRow.y, pRow.z );
+		local vecRotation		= Vector3( pRow.rx, pRow.ry, pRow.rz );
+		local vecTargetPosition	= Vector3( pRow.target_x, pRow.target_y, pRow.target_z );
+		local vecTargetRotation	= Vector3( pRow.target_rx, pRow.target_ry, pRow.target_rz );
+		local iTime				= pRow.time;
+		local fRadius			= pRow.radius;
+		local sEasing			= pRow.easing;
+		local fEasingPeriod		= pRow.easing_period;
+		local fEasingAmplitude	= pRow.easing_amplitude;
+		local fEasingOvershoot	= pRow.easing_overshoot;
 		
-		local pGate		= CGate( self, iID, iModel, pFaction, pJob, iInterior, iDimension, vecPosition, vecRotation, vecTargetPosition, vecTargetRotation, iTime, fRadius, sEasing, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
+		local pGate	= CGate( iID, iModel, pFaction, iInterior, iDimension, vecPosition, vecRotation, vecTargetPosition, vecTargetRotation, iTime, fRadius, sEasing, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
 		
 		iCount = iCount + 1;
 	end
 	
-	delete ( result );
-	
---	Debug( ( "Loaded %d gates (%d ms)" ):format( iCount, getTickCount() - iTick ) );
+	delete ( pResult );
 	
 	return true;
 end
