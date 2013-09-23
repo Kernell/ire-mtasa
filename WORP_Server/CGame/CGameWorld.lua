@@ -56,8 +56,8 @@ function CGameWorld:CGameWorld()
 	end
 	
 	setGarageOpen( 0, (bool)(_DEBUG) );
-	
 	setOcclusionsEnabled( false );
+	setAircraftMaxVelocity( 5 );
 end
 
 function CGameWorld:RemoveBuildings( iModel, fRadius, vecPosition )

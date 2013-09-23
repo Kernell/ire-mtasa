@@ -13,12 +13,13 @@ class: CVehicleHUDRaceLaps ( C3DHUD )
 	
 	m_RemapOffsets	=
 	{
-		[ DODO ]		= { -1.5, -6.0, 1.3 };
-		[ HYDRA ]		= { -1.7, -7.0, 1.3 };
-		[ HUNTER ]		= { -1.6, -9.0, 1.9 };
-		[ MAVERICK ]	= { -1.5, -7.0, 1.7 };
-		[ POLMAV ]		= { -1.5, -7.0, 1.7 };
-		[ VCNMAV ]		= { -1.5, -6.0, 1.7 };
+		[ RUSTLER ]		= { -1.6, -4.5, 1.35 };
+		[ DODO ]		= { -1.5, -6.0, 1.30 };
+		[ HYDRA ]		= { -1.7, -7.0, 1.30 };
+		[ HUNTER ]		= { -1.6, -9.0, 1.90 };
+		[ MAVERICK ]	= { -1.5, -7.0, 1.70 };
+		[ POLMAV ]		= { -1.5, -7.0, 1.70 };
+		[ VCNMAV ]		= { -1.5, -6.0, 1.70 };
 	};
 	
 	Update		= function( this )

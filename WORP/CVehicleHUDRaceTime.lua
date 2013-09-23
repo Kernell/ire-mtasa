@@ -13,6 +13,7 @@ class: CVehicleHUDRaceTime ( C3DHUD )
 	
 	m_RemapOffsets	=
 	{
+		[ RUSTLER ]		= { -1.6, -4.5, 0.7 };
 		[ DODO ]		= { -1.5, -6.0, 0.6 };
 		[ HYDRA ]		= { -1.7, -7.0, 0.6 };
 		[ HUNTER ]		= { -1.6, -9.0, 1.2 };
