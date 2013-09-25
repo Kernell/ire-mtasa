@@ -8,7 +8,7 @@
 function CVehicleCommands:LoopWhiperState( pClient )
 	local pVehicle = pClient:GetVehicle();
 	
-	if pVehicle and pClient:GetVehicleSeat() == 0 then
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() == 0 then
 		local iWiperState = ( (int)(pVehicle:GetData( "m_iWiperState" )) + 1 ) % 3;
 		
 		pVehicle:SetData( "m_iWiperState", iWiperState );
@@ -20,7 +20,7 @@ end
 function CVehicleCommands:LoopWhelenState( pClient )
 	local pVehicle = pClient:GetVehicle();
 		
-	if pVehicle and pClient:GetVehicleSeat() <= 1 then
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 		local iNextState	= ( pVehicle.m_pSiren.m_iWhelenState ~= 0 and pVehicle.m_pSiren.m_iWhelenState or pVehicle.m_pSiren.m_iWhelenStateLast ) + 1;
 		
 		local iState = math.max( 1, iNextState % ( pVehicle.m_pSiren.m_iMaxWhelenState + 1 ) );
@@ -36,7 +36,7 @@ end
 function CVehicleCommands:LoopSirenState( pClient )
 	local pVehicle = pClient:GetVehicle();
 		
-	if pVehicle and pClient:GetVehicleSeat() <= 1 then
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 		local iNextState	= ( pVehicle.m_pSiren.m_iSirenState ~= 0 and pVehicle.m_pSiren.m_iSirenState or pVehicle.m_pSiren.m_iSirenStateLast ) + 1;
 		
 		local iState = math.max( 1, iNextState % ( pVehicle.m_pSiren.m_iMaxSirenState + 1 ) );
@@ -59,7 +59,7 @@ function CVehicleCommands:SetWhelenState( pClient, sCmd, sOption, iState )
 		
 		local pVehicle = pClient:GetVehicle();
 		
-		if pVehicle and pClient:GetVehicleSeat() <= 1 then
+		if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 			pVehicle.m_pSiren.m_iWhelenStateLast	= pVehicle.m_pSiren.m_iWhelenState;
 			
 			pVehicle.m_pSiren:SetState( iState == 0 and 0 or pVehicle.m_pSiren.m_iSirenState, iState );
@@ -75,7 +75,7 @@ function CVehicleCommands:SetSirenState( pClient, sCmd, sOption, iState )
 	if iState then
 		local pVehicle = pClient:GetVehicle();
 		
-		if pVehicle and pClient:GetVehicleSeat() <= 1 then
+		if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 			if pVehicle.m_pSiren.m_iWhelenState == 0 then
 				pVehicle.m_pSiren.m_iWhelenState = math.max( 1, pVehicle.m_pSiren.m_iWhelenStateLast );
 			end
@@ -94,7 +94,7 @@ end
 function CVehicleCommands:ToggleWhelen( pClient, sCmd, sOption )
 	local pVehicle = pClient:GetVehicle();
 		
-	if pVehicle and pClient:GetVehicleSeat() <= 1 then
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 		local iState = pVehicle.m_pSiren.m_iWhelenState == 0 and math.max( 1, pVehicle.m_pSiren.m_iWhelenStateLast ) or 0;
 		
 		CVehicleCommands:SetWhelenState( pClient, sCmd, sOption, iState );
@@ -106,7 +106,7 @@ end
 function CVehicleCommands:ToggleSiren( pClient, sCmd, sOption )
 	local pVehicle = pClient:GetVehicle();
 		
-	if pVehicle and pClient:GetVehicleSeat() <= 1 then
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() <= 1 then
 		local iState = pVehicle.m_pSiren.m_iSirenState == 0 and math.max( 1, pVehicle.m_pSiren.m_iSirenStateLast ) or 0;
 		
 		CVehicleCommands:SetSirenState( pClient, sCmd, sOption, iState );
@@ -139,7 +139,7 @@ function CVehicleCommands:ToggleEngine( pPlayer, sCmd, sOption, ... )
 						function()
 							local bEngine = false;
 							
-							if not pVehicle:HaveFuel() or pVehicle:GetFuel() > 0 then
+							if not pVehicle:HaveFuel() or pVehicle:GetFuel() > 0.0 then
 								if pVehicle:GetHealth() > 250 then
 									bEngine = math.random() < pVehicle:GetHealth() * .001;
 								end
@@ -169,10 +169,10 @@ function CVehicleCommands:ToogleLocked( pPlayer, sCmd, sOption, ... )
 	local pVehicle;
 	
 	if ( pPlayer:GetVehicleSeat() or 2 ) <= 1 then
-		local veh = pPlayer:GetVehicle();
+		local pVeh = pPlayer:GetVehicle();
 		
-		if veh and veh == pPlayer.m_pVehicle and veh:IsLockable() and veh:GetHealth() > 10 then
-			pVehicle = veh;
+		if pVeh and pVeh == pPlayer.m_pVehicle and pVeh:IsLockable() and pVeh:GetHealth() > 10 then
+			pVehicle = pVeh;
 		end
 	elseif not pPlayer:IsInVehicle() then
 		local vecPosition	= pPlayer:GetPosition();
@@ -181,12 +181,12 @@ function CVehicleCommands:ToogleLocked( pPlayer, sCmd, sOption, ... )
 		
 		local fDistanceMin = 3;
 		
-		for id, veh in pairs( g_pGame:GetVehicleManager():GetAll() ) do
-			local fDistance = vecPosition:DistanceTo( veh:GetPosition() );
+		for id, pVeh in pairs( g_pGame:GetVehicleManager():GetAll() ) do
+			local fDistance = vecPosition:DistanceTo( pVeh:GetPosition() );
 			
-			if fDistance < fDistanceMin and iDimension == veh:GetDimension() and iInterior == veh:GetInterior() and veh:IsLockable() and veh:GetHealth() > 10 and pPlayer:HasKey( veh ) then
+			if fDistance < fDistanceMin and iDimension == pVeh:GetDimension() and iInterior == pVeh:GetInterior() and pVeh:IsLockable() and pVeh:GetHealth() > 10 and pPlayer:HasKey( pVeh ) then
 				fDistanceMin	= fDistance;
-				pVehicle		= veh;
+				pVehicle		= pVeh;
 			end
 		end
 	end
