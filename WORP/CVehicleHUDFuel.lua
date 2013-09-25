@@ -22,7 +22,7 @@ class: CVehicleHUDFuel ( C3DHUD )
 	
 	DrawText	= function( this, sText, fX, fY, fWidth, fHeight, iColor )
 		dxDrawText( sText, fX, 0, fWidth, 0, iColor, 1.0, this.m_pFont, "right" );
-        dxDrawText( "% fuel", fX + fWidth + 15, 0, fWidth + 10, 0, iColor, 1.0, this.m_pFont );
+        dxDrawText( "% fuel", fX + fWidth + 10, 0, fWidth + 15, 0, iColor, 1.0, this.m_pFont );
 	end;
 	
 	Update		= function( this )
