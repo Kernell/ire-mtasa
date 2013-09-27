@@ -42,9 +42,13 @@ class: CPlayerAnimation
 
 		iPriority			= (int)(iPriority);
 		
-		if this.m_pLastAnimation and this.m_pLastAnimation.m_iPriority >= iPriority then
-			if this.m_pLastAnimation.m_iTime == -1 or this.m_pLastAnimation.m_iStart + this.m_pLastAnimation.m_iTime > pRealTime.timestamp then
-				return false;
+		if this.m_pLastAnimation and iPriority <= this.m_pLastAnimation.m_iPriority then
+			if this.m_pLastAnimation.m_iTime == -1 and iPriority == this.m_pLastAnimation.m_iPriority then
+				-- TODO: nothing ..
+			else
+				if this.m_pLastAnimation.m_iStart + this.m_pLastAnimation.m_iTime > pRealTime.timestamp then
+					return false;
+				end
 			end
 		end
 		
