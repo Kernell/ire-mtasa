@@ -219,7 +219,7 @@ function CPlayer:DoPulse( tReal )
 						end
 					end
 				elseif self.m_bLowHPAnim then
-					self:SetAnimation( CPlayerAnimation.PRIORITY_LOWHP, "PED", "getup", -1, false, false, false, false );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_LOWHP, "PED", "getup", 1500, false, false, false, false );
 					
 					self.m_bLowHPAnim = false;
 				end

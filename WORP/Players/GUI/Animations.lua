@@ -39,7 +39,7 @@ local Animations	=
 	[ "Dance 10" ]			= { "DANCING", "dnce_M_d", 0, true, false };
 	[ "Dance 11" ]			= { "DANCING", "dnce_M_e", 0, true, false };
 	[ "Car Repair Loop" ]	= { "CAR", "Fixn_Car_Loop", 0, true, false };
-	[ "Car Repair Out" ]	= { "CAR", "Fixn_Car_Out", -1, false, false, false, false };
+	[ "Car Repair Out" ]	= { "CAR", "Fixn_Car_Out", 0, false, false, true, true };
 }
 
 function CGUIAnimations:CGUIAnimations( Anims )
