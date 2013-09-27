@@ -383,7 +383,7 @@ function CFactionCommands:Heal( pClient, sCmd, sPlayer )
 		return "Этому игроку не требуется лечение", 255, 0, 0;
 	end
 	
-	if not pClient:SetAnimationSafe( pPlayer.m_bLowHPAnim and "MEDIC" or "CRIB", pPlayer.m_bLowHPAnim and "CPR" or "CRIB_Use_Switch", -1, false, false, false, false ) then
+	if not pClient:SetAnimation( CPlayerAnimation.PRIORITY_JOB, pPlayer.m_bLowHPAnim and "MEDIC" or "CRIB", pPlayer.m_bLowHPAnim and "CPR" or "CRIB_Use_Switch", pPlayer.m_bLowHPAnim and 5000 or 500, false, false, false, false ) then
 		return "Команда не доступна в данный момент", 255, 0, 0;
 	end
 	

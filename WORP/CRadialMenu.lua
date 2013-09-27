@@ -188,11 +188,8 @@ class: CRadialMenu
 					local iFactionID	= CLIENT:GetData( "CFaction::ID" );
 					
 					if fHealth > 10.0 then
-						this:AddItem( "13-handshake", CRadialMenu.FunctionPlayerHello, pPlayer );
-						
-						if pPlayer:GetSkin().GetGender() ~= pSkin.GetGender() then
-							this:AddItem( "13-kiss", CRadialMenu.FunctionPlayerKiss, pPlayer );	
-						end
+						this:AddItem( "13-handshake", 	CRadialMenu.FunctionPlayerHello, 	pPlayer );
+						this:AddItem( "13-kiss", 		CRadialMenu.FunctionPlayerKiss, 	pPlayer );
 						
 						if false then
 							this:AddItem( "13-marry", CRadialMenu.FunctionPlayerPropose, pPlayer );

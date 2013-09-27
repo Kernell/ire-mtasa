@@ -38,7 +38,7 @@ function CDrink:Drink()
 			return;
 		end
 		
-		if self.m_pOwner.m_pClient:SetAnimationSafe( self.m_sAnimLib, self.m_sAnimName, self.m_iAnimTime, false, true, false, false ) then
+		if self.m_pOwner.m_pClient:SetAnimation( CPlayerAnimation.PRIORITY_FOOD, self.m_sAnimLib, self.m_sAnimName, self.m_iAnimTime, false, true, false, false ) then
 			self.m_fCondition	= Clamp( 0.0, self.m_fCondition - 10.0, 100.0 );
 			
 			self.m_pOwner:SetHealth		( self.m_pOwner:GetHealth() + self.m_fHealth );

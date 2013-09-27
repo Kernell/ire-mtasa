@@ -28,7 +28,7 @@ function CFood:Use()
 			return false;
 		end
 		
-		if self.m_pOwner.m_pClient:SetAnimationSafe( self.m_sAnimLib, self.m_sAnimName, 0, false, false, false, true ) then
+		if self.m_pOwner.m_pClient:SetAnimation( CPlayerAnimation.PRIORITY_FOOD, self.m_sAnimLib, self.m_sAnimName, 0, false, false, false, true ) then
 			self.m_pOwner:SetHealth		( self.m_pOwner:GetHealth() + self.m_fHealth );
 			self.m_pOwner:SetAlcohol	( self.m_pOwner:GetAlcohol() + self.m_fAlcohol );
 --			self.m_pOwner:SetSatiety	( self.m_pOwner:GetSatiety() + self.m_fSatiety );
@@ -43,7 +43,7 @@ function CFood:Use()
 			setTimer(
 				function()
 					if pPlayer:IsInGame() then
-						pPlayer:SetAnimationSafe( "PED", "facanger", 1, false, false, false, false );
+						pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_FOOD, "PED", "facanger", 0, false, false, false, false );
 					end
 					
 					if pBoneObject then

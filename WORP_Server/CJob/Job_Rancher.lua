@@ -201,7 +201,7 @@ function TJobRancher.OnMarkerHit( pMarker, pPlayer, bMatching )
 						if #aRicks < #aRickOffsets then
 							TJobRancher:UnbindFailKeys( pPlayer );
 							
-							pPlayer:SetAnimation( "CARRY", "putdwn105", -1, false, false, false, false );
+							pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_JOB, "CARRY", "putdwn105", 500, false, false, false, false );
 							pPlayer:DetachFromBone( pRick );
 							pPlayer:PlaySoundFrontEnd( 10 );
 							
@@ -341,7 +341,7 @@ function OnRickPickup( this, pPlayer, bMatching )
 				pPlayer.m_pJob 			= CElement.Create( 'TJobRancher', 'TJobRancher:' + pPlayer:GetID() );
 				pPlayer.m_pJob.m_pRick 	= this.m_pRick;
 				
-				pPlayer:SetAnimation( "CARRY", "liftup", -1, false );
+				pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_JOB, "CARRY", "liftup", 900, false );
 				
 				setTimer(
 					function()
@@ -373,13 +373,13 @@ function OnRickPickup( this, pPlayer, bMatching )
 								setTimer(
 									function()
 										if pPlayer:IsInGame() and pPlayer:GetChar():GetJob() == TJobRancher and not pPlayer:IsInVehicle() and not pPlayer.m_bLowHPAnim and not pPlayer:IsCuffed() then
-											pPlayer:SetAnimation( "CARRY", "crry_prtial", 0, false );
+											pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_JOB, "CARRY", "crry_prtial", 0, false );
 										end
 									end,
 									500, 1
 								);
 							else
-								pPlayer:SetAnimation( NULL );
+								pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_JOB, NULL );
 								pPlayer.m_pJob:Destroy();
 								pPlayer.m_pJob = nil;
 							end
@@ -397,12 +397,12 @@ function FailRick( this, key, state )
 	
 	if pRick then
 		if ( key == 'sprint' or key == 'jump' ) and not this.m_bLowHPAnim and not this:IsCuffed() then
-			this:SetAnimation( "PED", "KO_SKID_BACK", -1, false, true, false, true );
+			this:SetAnimation( CPlayerAnimation.PRIORITY_JOB, "PED", "KO_SKID_BACK", 2000, false, true, false, true );
 			
 			setTimer(
 				function()
 					if this:IsInGame() and this:GetChar():GetJob() == TJobRancher and not this:IsInVehicle() and not this.m_bLowHPAnim and not this:IsCuffed() then
-						this:SetAnimation( "PED", "getup_front", -1, false, true, false, false );
+						this:SetAnimation( CPlayerAnimation.PRIORITY_JOB, "PED", "getup_front", 1000, false, true, false, false );
 					end
 				end,
 				2000, 1
@@ -410,9 +410,9 @@ function FailRick( this, key, state )
 		end
 		
 		this:DetachFromBone( pRick );
-				
+		
 		this.m_pJob:Destroy();
-		this.m_pJob = nil;
+		this.m_pJob = NULL;
 		
 		local vecPosition = this:GetPosition();
 		vecPosition.Z = vecPosition.Z - .65

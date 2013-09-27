@@ -13,7 +13,8 @@ function CSystemCommands:Restart( pPlayer, sCmd, sOption, sSeconds )
 	if iSeconds then
 		iSeconds = Clamp( 0, iSeconds, 600 );
 		
-		g_pServer:SetRestartTimer( iSeconds );
+		g_pServer.m_iCountDown		= iSeconds;
+		g_pServer.m_iCountDownType	= iSeconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_RESTART;
 		
 		outputChatBox( "Внимание! Рестарт сервера " + ( iSeconds == 0 and "отменён" or "через " + iSeconds + " секунд" ), root, 255, 64, 0 );
 		
@@ -31,7 +32,8 @@ function CSystemCommands:Shutdown( pPlayer, sCmd, sOption, sSeconds )
 	if iSeconds then
 		iSeconds = Clamp( 0, iSeconds, 600 );
 		
-		g_pServer:SetShutDownTimer( iSeconds );
+		g_pServer.m_iCountDown		= iSeconds;
+		g_pServer.m_iCountDownType	= iSeconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_SHUTDOWN;
 		
 		outputChatBox( "Внимание! Выключение сервера " + ( iSeconds == 0 and "отменено" or "через " + iSeconds + " секунд" ), root, 255, 64, 0 );
 		

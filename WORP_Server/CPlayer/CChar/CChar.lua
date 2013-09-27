@@ -400,7 +400,7 @@ function CChar:DoPulse( tReal )
 		self.m_pClient:SetData( "alcohol", self.m_iAlcohol, true, true );
 		
 		if self.m_iAlcohol > 30 and getTickCount() - ( self.m_pDrinkAnimationTime or 0 ) > 0 then
-			self.m_pClient:SetAnimationSafe( "PED", "WALK_drunk", 900, true, true, true, true );
+			self.m_pClient:SetAnimation( CPlayerAnimation.PRIORITY_FOOD, "PED", "WALK_drunk", 900, true, true, true, true );
 		end
 	end
 end

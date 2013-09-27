@@ -195,53 +195,59 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 end
 
 function CCommands:Pay( pPlayer, sCmd, sTarget, sValue )
-	if pPlayer:IsInGame() then
-		if pPlayer.m_bLowHPAnim then
-			pPlayer:GetChat():Send( "Невозможно использовать эту команду", 255, 0, 0 );
-			
-			return;
-		end
-		
-		local iValue = tonumber( sValue );
-		
-		if sTarget and iValue then
-			if iValue > 0 and ( iValue <= 5000 or pPlayer:IsAdmin() ) then
-				if iValue <= pPlayer:GetChar():GetMoney() then
-					local pTarget = g_pGame:GetPlayerManager():Get( sTarget );
-					
-					if pTarget and pTarget:IsInGame() then
-						if pTarget ~= pPlayer then
-							if pPlayer:GetPosition():Distance( pTarget:GetPosition() ) < 3 and pTarget:GetInterior() == pPlayer:GetInterior() and pTarget:GetDimension() == pPlayer:GetDimension() and not pTarget:IsAdmin() then
-								pPlayer:Me( pPlayer:Gender( "передал", "передала" ) + " деньги " + pTarget:GetChar():GetName() );
-								
-								pPlayer:GetChar():TakeMoney( iValue );
-								pTarget:GetChar():GiveMoney( iValue );
-								
-								pPlayer:PlaySoundFrontEnd( 14 );
-								pTarget:PlaySoundFrontEnd( 6 );
-								
-								pPlayer:SetAnimation( "VENDING", "VEND_USE", 1000, false, true, true, false );
-								
-								g_pMoneyLog:Write( "[%d] %s (%s) transfered $%d to [%d] %s (%s)", pPlayer:GetID(), pPlayer:GetName(), pPlayer:GetUserName(), iValue, pTarget:GetID(), pTarget:GetName(), pTarget:GetUserName() );
-							else
-								pPlayer:GetChat():Send( TEXT_PLAYER_NOT_NEARBY, 255, 0, 0 );
-							end
-						else
-							pPlayer:GetChat():Send( "Команда не применима к самому себе", 255, 0, 0 );
-						end
-					else
-						pPlayer:GetChat():Send( PLAYER_NOT_FOUND, 255, 0, 0 );
-					end
-				else
-					pPlayer:GetChat():Send( "У Вас нет такой суммы", 255, 0, 0 );
-				end
-			else
-				pPlayer:GetChat():Send( "Сумма должна быть не более $5000 и не менее $1", 255, 0, 0 );
+	local pChar = pPlayer:GetChar();
+	
+	if not pChar then return true; end
+	
+	local iValue = tonumber( sValue );
+	
+	if sTarget and iValue then
+		if iValue > 0 and ( iValue <= 5000 or pPlayer:IsAdmin() ) then
+			if iValue > pPlayer:GetChar():GetMoney() then
+				return "У Вас нет такой суммы", 255, 0, 0;
 			end
-		else
-			pPlayer:GetChat():Send( "Syntax: /" + sCmd + " <player> <value>", 255, 255, 255 );
+			
+			local pTarget = g_pGame:GetPlayerManager():Get( sTarget );
+			
+			if not pTarget or not pTarget:IsInGame() then
+				return PLAYER_NOT_FOUND, 255, 0, 0;
+			end
+			
+			if pTarget == pPlayer then
+				return "Команда не применима к самому себе", 255, 0, 0;
+			end
+			
+			if pTarget:IsAdmin() or pTarget:GetDimension() ~= pPlayer:GetDimension() then
+				return TEXT_PLAYER_NOT_NEARBY, 255, 0, 0;
+			end
+			
+			local pVehicle	= pPlayer:GetVehicle();
+			
+			if ( pVehicle and pVehicle == pTarget:GetVehicle() ) or pPlayer:GetPosition():Distance( pTarget:GetPosition() ) < 3.0 then
+				if not pVehicle and not pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_ALL, "VENDING", "VEND_USE", 1000, false, true, true, false ) then
+					return "Команда не доступна в данный момент", 255, 0, 0;
+				end
+				
+				pPlayer:Me( pPlayer:Gender( "передал", "передала" ) + " деньги " + pTarget:GetChar():GetName() );
+				
+				pChar:TakeMoney( iValue );
+				pTarget:GetChar():GiveMoney( iValue );
+				
+				pPlayer:PlaySoundFrontEnd( 14 );
+				pTarget:PlaySoundFrontEnd( 6 );
+				
+				g_pMoneyLog:Write( "[%d] %s (%s) transfered $%d to [%d] %s (%s)", pPlayer:GetID(), pChar:GetName(), pPlayer:GetUserName(), iValue, pTarget:GetID(), pTarget:GetName(), pTarget:GetUserName() );
+				
+				return true;
+			end
+			
+			return TEXT_PLAYER_NOT_NEARBY, 255, 0, 0;
 		end
+		
+		return "Сумма должна быть не более $5000 и не менее $1", 255, 0, 0;
 	end
+	
+	return "Syntax: /" + sCmd + " <player> <value>", 255, 255, 255;
 end
 
 function CCommands:WeaponSlot( pPlayer, sCmd, siSlot )
@@ -511,8 +517,8 @@ function CCommands:PhoneText( pPlayer, sCmd, ... )
 			pOtherPlayer:GetChat():Send( ( pPlayer.m_bCallNumberHidden and "Телефон: Номер скрыт" or "Телефон: " + pPlayer:GetChar():GetPhoneNumber() ) + ": " + sText, 255, 255, 0 );
 			pPlayer:LocalMessage( "*" + pPlayer:GetChar():GetName() + " (" + pPlayer:GetID() + ") [Телефон] " + pPlayer:Gender( "сказал", "сказала" ) + ": " + sText, 240, 240, 240, 10.0, 64, 64, 64 );
 			
-			pOtherPlayer:SetAnimationSafe( "PED", "phone_talk", 1, true, true, false, true );
-			pPlayer:SetAnimationSafe( "PED", "phone_talk", 1, true, true, false, true );
+			pOtherPlayer:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_talk", 1, true, true, false, true );
+			pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_talk", 1, true, true, false, true );
 			
 			return true;
 		end
@@ -533,7 +539,7 @@ function CCommands:PhoneHangup( pPlayer )
 			pPlayer.m_iCallNumber			= NULL;
 			pPlayer.m_bCallNumberHidden		= NULL;
 			
-			pPlayer:SetAnimationSafe( "PED", "phone_out", 3000, false, true, false, false );
+			pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_out", 3000, false, true, false, false );
 			
 			return "Вызов завершен", 255, 255, 255;
 		end
@@ -545,7 +551,7 @@ function CCommands:PhoneHangup( pPlayer )
 				pPlr.m_iCallNumber			= NULL;
 				pPlr.m_bCallNumberHidden	= NULL;
 				
-				pPlr:SetAnimationSafe( "PED", "phone_out", 3000, false, true, false, false );
+				pPlr:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_out", 3000, false, true, false, false );
 			end
 		end
 	end
@@ -570,7 +576,7 @@ function CCommands:PhonePickup( pPlayer )
 						pPlr:GetChat():Send( "Отвечает на звонок ..", 255, 255, 255 );
 						pPlayer:GetChat():Send( "Используйте /p <text> для разговора по телефону (/h(angup) для окончания)", 255, 255, 255 );
 						
-						pPlayer:SetAnimationSafe( "PED", "phone_in", 1, false, true, false, true );
+						pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_in", 1, false, true, false, true );
 						
 						bCall = true;
 					end
@@ -640,7 +646,7 @@ function CCommands:PhoneCall( pPlayer, sCmd, iNumber, bHidden )
 					
 					pPlayer:Me( "звонит по телефону" );
 					
-					pPlayer:SetAnimationSafe( "PED", "phone_in", 1, false, true, false, true );
+					pPlayer:SetAnimation( CPlayerAnimation.PRIORITY_PHONE, "PED", "phone_in", 1, false, true, false, true );
 					
 					if bHidden then
 						return "Внимание! Ваш номер будет скрыт!", 255, 128, 0;

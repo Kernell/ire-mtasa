@@ -1,146 +1,97 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CServer"
+enum "eServerCountDown"
 {
-	m_iShutDownCountdown	= 0;
-	m_iRestartCountDown		= 0;
-}
+	SERVER_COUNTDOWN_NONE		= 0;
+	SERVER_COUNTDOWN_SHUTDOWN	= 1;
+	SERVER_COUNTDOWN_RESTART	= 2;
+};
 
-function CServer:CServer()
-	self.m_pGame = NULL;
-end
+class: CServer
+{
+	m_iCountDown		= 0;
+	m_iCountDownType	= SERVER_COUNTDOWN_NONE;
 
-function CServer:_CServer()
-	if self.m_pDoPulseTimer then
-		self.m_pDoPulseTimer:Kill();
-		self.m_pDoPulseTimer = NULL;
-	end
+	CServer		= function( this )
+		this.m_pGame = NULL;
+	end;
 	
-	delete ( self.m_pGame );
-	
-	delete ( IPSMember.DB );
-	delete ( g_pDB );
-end
-
-function CServer:Startup()
-	if not self.m_pGame then
-		self.m_pGame = CGame();
-		
-		self.m_pDoPulseTimer = CTimer( 
-			function()
-				self:DoPulse();
-			end, 1000, 0
-		);
-	end
-end
-
-function CServer:SetRestartTimer( iSeconds )
-	self.m_iShutDownCountdown	= 0;
-	self.m_iRestartCountDown	= iSeconds;
-end
-
-function CServer:SetShutDownTimer( iSeconds )
-	self.m_iShutDownCountdown	= iSeconds;
-	self.m_iRestartCountDown	= 0;
-end
-
-function CServer:DoPulse()
-	if self.m_iShutDownCountdown > 0 then 
-		self.m_iShutDownCountdown = self.m_iShutDownCountdown - 1;
-		
-		if self.m_iShutDownCountdown == 0 then
-			return self:Shutdown( 'System timer' );
+	_CServer	= function( this )
+		if this.m_pDoPulseTimer then
+			this.m_pDoPulseTimer:Kill();
+			this.m_pDoPulseTimer = NULL;
 		end
-	elseif self.m_iRestartCountDown > 0 then
-		self.m_iRestartCountDown = self.m_iRestartCountDown - 1;
 		
-		if self.m_iRestartCountDown == 0 then
-			return self:Restart();
+		delete ( this.m_pGame );
+		
+		delete ( IPSMember.DB );
+		delete ( g_pDB );
+	end;
+	
+	Startup		= function( this )
+		if not this.m_pGame then
+			this.m_pGame = CGame();
+			
+			this.m_pDoPulseTimer = CTimer( 
+				function()
+					this:DoPulse();
+				end, 1000, 0
+			);
 		end
-	end
+	end;
 	
-	if self.m_pGame then
-		self.m_pGame:DoPulse();
-	end
-end
-
-function CServer:SetConfigSetting( sName, sValue, bSave )
-	return setServerConfigSetting( sName, sValue, bSave );
-end
-
-function CServer:GetConfigSetting( sName )
-	return getServerConfigSetting( sName );
-end
-
-function CServer:SetFPSLimit( iFPS )
-	return setFPSLimit( iFPS );
-end
-
-function CServer:GetFPSLimit()
-	return getFPSLimit();
-end
-
-function CServer:Print( ... )
-	local result, message = pcall( string.format, ... );
-
-	if not result then error( message, 2 ) end
+	DoPulse		= function( this )
+		if this.m_pGame then
+			this.m_pGame:DoPulse();
+		end
+		
+		if this.m_iCountDown > 0 then 
+			this.m_iCountDown = this.m_iCountDown - 1;
+			
+			if this.m_iCountDown == 0 then
+				if this.m_iCountDownType == SERVER_COUNTDOWN_RESTART then
+					this:Restart();
+				elseif this.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN then
+					this:Shutdown( "System timer" );
+				end
+			end
+		end
+	end;
 	
-	return outputServerLog( message );
-end
+	Print		= function( this, ... )
+		local bResult, sMessage = pcall( string.format, ... );
 
-function CServer:Restart()
-	return restartResource( resource ) and restartResource( getResourceFromName( "WORP" ) );
-end
-
-function CServer:Stop()
-	return stopResource( resource ) and stopResource( getResourceFromName( "WORP" ) );
-end
-
-function CServer:Shutdown( sReason )
-	return shutdown( sReason );
-end
-
-function CServer:GetVersion()
-	return getVersion();
-end
-
-function CServer:GetPort()
-	return getServerPort();
-end
-
-function CServer:GetHTTPPort()
-	return getServerHttpPort();
-end
-
-function CServer:GetPassword()
-	return getServerPassword();
-end
-
-function CServer:SetPassword( sPasswd )
-	return setServerPassword( sPasswd );
-end
-
-function CServer:GetName()
-	return getServerName();
-end
-
-function CServer:GetMaxPlayers()
-	return getMaxPlayers();
-end
-
-function CServer:SetMaxPlayers( iMax )
-	return setMaxPlayers( iMax );
-end
-
-function CServer:IsGlitchEnabled( sGlitchName )
-	return isGlitchEnabled( sGlitchName );
-end
-
-function CServer:SetGlitchEnabled( sGlitchName )
-	return setGlitchEnabled( sGlitchName );
-end
+		if not bResult then error( sMessage, 2 ) end
+		
+		return outputServerLog( sMessage );
+	end;
+	
+	Restart		= function( this )
+		return restartResource( resource ) and restartResource( getResourceFromName( "WORP" ) );
+	end;
+	
+	Stop		= function( this )
+		return stopResource( resource ) and stopResource( getResourceFromName( "WORP" ) );
+	end;
+	
+	Shutdown			= shutdown;
+	SetConfigSetting	= setServerConfigSetting;
+	GetConfigSetting	= getServerConfigSetting;
+	SetFPSLimit			= setFPSLimit;
+	GetFPSLimit			= getFPSLimit;
+	GetVersion			= getVersion;
+	GetPort				= getServerPort;
+	GetHTTPPort			= getServerHttpPort;
+	GetPassword			= getServerPassword;
+	SetPassword			= setServerPassword;
+	GetName				= getServerName;
+	GetMaxPlayers		= getMaxPlayers;
+	SetMaxPlayers		= setMaxPlayers;
+	IsGlitchEnabled		= isGlitchEnabled;
+	SetGlitchEnabled	= setGlitchEnabled;
+};

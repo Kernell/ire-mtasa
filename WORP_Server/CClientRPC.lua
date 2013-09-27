@@ -529,7 +529,7 @@ function CClientRPC:LogoutCharacter()
 end
 
 function CClientRPC:SetAnimation( ... )
-	self:SetAnimationSafe( ... );
+	return not self:IsInVehicle() and self:SetAnimation( CPlayerAnimation.PRIORITY_ALL, ... );
 end
 
 function CClientRPC:SetSpawn( iInteriorID )
@@ -1570,11 +1570,26 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 			
 			if pOffer and pOffer:IsInGame() then
 				if bAccepted then
-					if not pOffer:IsAdmin() and self:GetDimension() == pOffer:GetDimension() and self:GetPosition():Distance( pOffer:GetPosition() ) < 2 then
+					if not pOffer:IsAdmin() and self:GetDimension() == pOffer:GetDimension() and self:GetPosition():Distance( pOffer:GetPosition() ) < 2.0 then
 						if sOption == "kiss" then
-							if self:GetSkin().GetGender() == pOffer:GetSkin().GetGender() then
-								self:GetChat():Send( "Партнёр должен быть противоположного пола", 255, 0, 0 );
-								pOffer:GetChat():Send( "Партнёр должен быть противоположного пола", 255, 0, 0 );
+							local sMyAnimation		= self:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
+							local sOfferAnimation	= pOffer:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
+							
+							if pOffer:GetSkin().GetGender() == self:GetSkin().GetGender() then
+								sMyAnimation	= "Grlfrd_Kiss_02";
+								sOfferAnimation	= "Playa_Kiss_02";
+							end
+							
+							if not self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false ) then
+								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								
+								return;
+							end
+							
+							if not pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false ) then
+								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
 								
 								return;
 							end
@@ -1584,8 +1599,6 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 							
 							pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
 							
-							self:SetAnimation( "KISSING", self:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02", -1, false, false, false, false );
-							pOffer:SetAnimation( "KISSING", pOffer:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02", -1, false, false, false, false );
 						elseif sOption == "propose" then
 							if self:GetChar():IsMarried() then
 								self:GetChat():Send( "Вы уже " + self:Gender( 'женаты на ', 'замужем за ' ) + self:GetChar():GetMarried(), 255, 0, 0 );
@@ -1599,14 +1612,7 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 								return;
 							end
 							
-							if self:GetPosition():Distance( Vector3( 2243.895, -1356.061, 24.478 ) ) < 5 then
-								if self:GetSkin().GetGender() == pOffer:GetSkin().GetGender() then
-									self:GetChat():Send( "Партнёр должен быть противоположного пола", 255, 0, 0 );
-									pOffer:GetChat():Send( "Партнёр должен быть противоположного пола", 255, 0, 0 );
-								
-									return;
-								end
-								
+							if self:GetPosition():Distance( Vector3( 2243.895, -1356.061, 24.478 ) ) < 5.0 then
 								local pMale		= self:GetSkin().GetGender() == 'male' and self:GetChar() or pOffer:GetChar();
 								local pFemale	= self:GetSkin().GetGender() == 'female' and self:GetChar() or pOffer:GetChar();
 								
@@ -1637,13 +1643,24 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 								pOffer:GetChat():Send( "Вы не " + pOffer:Gender( "женаты на ", "замужем за " ) + self:GetName(), 255, 0, 0 );
 							end
 						elseif sOption == "hello" then
+							if not self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false ) then
+								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								
+								return;
+							end
+							
+							if not pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false ) then
+								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								
+								return;
+							end
+							
 							pOffer:SetRotationAt( self:GetPosition() );
 							self:SetRotationAt( pOffer:GetPosition() );
 							
 							pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
-							
-							self:SetAnimation( "GANGS", "hndshkfa_swt", -1, false, false, false, false );
-							pOffer:SetAnimation( "GANGS", "hndshkfa_swt", -1, false, false, false, false );
 						end
 					else
 						self:GetChat():Error( TEXT_PLAYER_NOT_NEARBY );

@@ -43,6 +43,7 @@
   
   <script src="Shared/Globals.lua"/>
   
+  <script src="CPlayer/CPlayerAnimation.lua"/>
   <script src="CPlayer/CPlayerTutorial.lua"/>
   <script src="CPlayer/CPlayer.lua"/>
   

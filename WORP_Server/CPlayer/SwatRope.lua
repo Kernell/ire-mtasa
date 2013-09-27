@@ -18,7 +18,7 @@ function CPlayer:AttachToSWATRope( swat_rope )
 		end
 		
 		self:SetPosition( swat_rope + Vector3( 0, 0, -1 ) );
-		self:SetAnimation( "PED", "abseil", -1, false, true, false, true );
+		self:SetAnimation( CPlayerAnimation.PRIORITY_SWATROPE, "PED", "abseil", -1, false, true, false, true );
 		self:SetGravity( 0.001 );
 		self:SetVelocity( Vector3( 0, 0, -.1 ) );
 		
@@ -32,9 +32,9 @@ function CClientRPC:DetachFromSWATRope( is_ground )
 	if is_ground then
 		self:SetVelocity( Vector3( 0, 0, 0 ) );
 		
-		self:SetAnimation( "PED", "FALL_land", -1, false, true, false, false );
+		self:SetAnimation( CPlayerAnimation.PRIORITY_SWATROPE, "PED", "FALL_land", -1, false, true, false, false );
 	else
-		self:SetAnimation();
+		self:SetAnimation( CPlayerAnimation.PRIORITY_SWATROPE );
 	end
 
 	self:SetGravity( .008 );

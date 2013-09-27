@@ -220,7 +220,7 @@ function CChar:ReloadWeapon()
 	local pWeaponItem = self:GetWeapon();
 	
 	if pWeaponItem then
-		if self.m_pClient:SetAnimationSafe( pWeaponItem.m_AnimReload[ 1 ], pWeaponItem.m_AnimReload[ 2 ], pWeaponItem.m_AnimReload[ 3 ], false, true, false, false ) then
+		if self.m_pClient:SetAnimation( CPlayerAnimation.PRIORITY_WEAPON, pWeaponItem.m_AnimReload[ 1 ], pWeaponItem.m_AnimReload[ 2 ], pWeaponItem.m_AnimReload[ 3 ], false, true, false, false ) then
 			self.m_pReloadTime = CTimer(
 				function()
 					self.m_pReloadTime = NULL;

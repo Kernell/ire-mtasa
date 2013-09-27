@@ -17,7 +17,7 @@ CPlayerCMD		= {};
 addEvent 'onCharacterLogin'
 addEvent 'onCharacterLogout'
 
-class: CPlayer ( CPed, CPlayerTutorial )
+class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 {
 	GetNametagText		= getPlayerNametagText;
 	GetNametagColor		= getPlayerNametagColor;
@@ -168,11 +168,14 @@ function CPlayer:GetOldVehicle()
 end
 
 function CPlayer:DoPulse( tReal )
-	if g_pServer.m_iShutDownCountdown > 0 or g_pServer.m_iRestartCountDown > 0 then
-		local time = g_pServer.m_iShutDownCountdown > 0 and g_pServer.m_iShutDownCountdown or g_pServer.m_iRestartCountDown;
-		local type = g_pServer.m_iShutDownCountdown > 0 and 'Выключение' or 'Рестарт';
+	if g_pServer.m_iCountDownType ~= SERVER_COUNTDOWN_NONE then
+		local iCount	= g_pServer.m_iCountDown;
 		
-		self:Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( type, time % 3600 / 60, time % 60  ) );
+		if iCount <= 10 or iCount % 60 == 0 then
+			local sType		= g_pServer.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN and "Выключение" or "Рестарт";
+			
+			self:Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( sType, iCount % 3600 / 60, iCount % 60  ) );
+		end
 	end
 	
 	self.m_pNametag:Update();
@@ -187,18 +190,12 @@ function CPlayer:DoPulse( tReal )
 			if self.m_iMuteSeconds <= 0 then
 				self:SetMuted( false );
 				
-				self:GetChat():Send( 'Время молчанки истекло', 255, 128, 0 );
+				self:GetChat():Send( "Время молчанки истекло", 255, 128, 0 );
 			end
 		end
 		
 		if self.m_iAntiflood and self.m_iAntiflood > 0 then
 			self.m_iAntiflood = self.m_iAntiflood - 1;
-		end
-		
-		if self:GetData( 'bubble_text' ) then
-			if tReal.timestamp - ( self.bubble_text or 0 ) > 10 then
-				self:RemoveData( 'bubble_text' );
-			end
 		end
 		
 		local iHealth	= math.ceil( not self:IsDead() and self:GetHealth() or 0.0 );
@@ -210,19 +207,19 @@ function CPlayer:DoPulse( tReal )
 						self:Kill( NULL, NULL, NULL, true );
 					else
 						if not self.m_bLowHPAnim then
-							self:SetAnimation( "PED", "KO_skid_front", -1, false, false, false, true );
+							self:SetAnimation( CPlayerAnimation.PRIORITY_LOWHP, "PED", "KO_skid_front", -1, false, false, false, true );
 							
 							self.m_bLowHPAnim = true;
 							
 							self:Hint( "Info", "Ваше текущее состояние не позволяет Вам передвигаться дальше", "info" );
 						else
-							-- self:SetAnimation( "PED", "KO_skid_front", -1, false, false, false, true );
+							-- self:SetAnimation( CPlayerAnimation.PRIORITY_LOWHP, "PED", "KO_skid_front", -1, false, false, false, true );
 							
 							-- self:SetAnimationProgress( "KO_skid_front", 1.0 );
 						end
 					end
 				elseif self.m_bLowHPAnim then
-					self:SetAnimation( "PED", "getup", -1, false, false, false, false );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_LOWHP, "PED", "getup", -1, false, false, false, false );
 					
 					self.m_bLowHPAnim = false;
 				end
@@ -250,14 +247,7 @@ function CPlayer:DoPulse( tReal )
 			
 			if not self.m_bLowHPAnim and not self:IsCuffed() then
 				if fPower <= 0 then
-					self:SetAnimation( "FAT", "IDLE_tired", -1, true, false, false, false );
-					
-					self.m_bIDLE_tired = true;
-				elseif self.m_bIDLE_tired then
-					-- self:SetAnimation( NULL );
-					self:SetAnimation( "FAT", "IDLE_tired", 10000, true, false, false, false );
-					
-					self.m_bIDLE_tired = false;
+					self:SetAnimation( CPlayerAnimation.PRIORITY_TIRED, "FAT", "IDLE_tired", 10000, true, false, false, false );
 				end
 			end
 		end
@@ -356,10 +346,6 @@ function CPlayer:Spawn( pos, rotation, skin, int, dim, team )
 	pos = pos or Vector3();
 	
 	return spawnPlayer( self.__instance, pos.X, pos.Y, pos.Z, rotation or 0, skin or 0, int or 0, dim or 0, type( team ) == 'table' and team.__instance or team or nil );
-end
-
-function CPlayer:SetAnimationSafe( ... )
-	return not self:IsInVehicle() and not self:IsCuffed() and not self.m_bLowHPAnim and not self.m_bIDLE_tired and self:SetAnimation( ... );
 end
 
 function CPlayer:SetAnnounceValue( key, value )

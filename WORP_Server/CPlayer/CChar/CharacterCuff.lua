@@ -61,17 +61,17 @@ function CPlayer:UpdateCuff()
 			
 			if not self:IsInVehicle() then
 				if fDistance > 7 or ( bPlayerMoved and pPlayer:GetControlState( 'sprint' ) ) then
-					self:SetAnimation( "PED", "SPRINT_civi" );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "SPRINT_civi" );
 				elseif fDistance > 4 or ( bPlayerMoved and not pPlayer:GetControlState( 'walk' ) ) then
-					self:SetAnimation( "PED", "RUN_player" );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "RUN_player" );
 				elseif fDistance > 1 or ( bPlayerMoved ) then
-					self:SetAnimation( "PED", "WALK_player" );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "WALK_player" );
 				else
-					self:SetAnimation( "PED", "IDLE_stance" );
+					self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 				end
 			end
 		elseif not self:IsInVehicle() then
-			self:SetAnimation( "PED", "IDLE_stance" );
+			self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 		end
 	end
 end
@@ -93,10 +93,10 @@ function CPlayer:SetCuffed( bCuffed, pPlayer )
 			self:Client().UpdateCuffed( self.m_pCuffedTo and self.m_pCuffedTo.__instance );
 			
 			if not self:IsInVehicle() and not self.m_bLowHPAnim then
-				self:SetAnimation( "PED", "IDLE_stance" );
+				self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 			end
 		elseif not self.m_bLowHPAnim then
-			self:SetAnimation();
+			self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS );
 			self:Client().UpdateCuffed();
 		end
 		
