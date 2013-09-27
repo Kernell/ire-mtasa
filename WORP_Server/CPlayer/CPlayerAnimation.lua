@@ -60,7 +60,7 @@ class: CPlayerAnimation
 		bInterruptable		= bInterruptable == NULL or (bool)(bInterruptable);
 		bFreezeLastFrame	= bFreezeLastFrame == NULL or (bool)(bFreezeLastFrame);
 		
-		if pAnimation.iTime ~= 0 then
+		if iTime ~= 0 then
 			this.m_pLastAnimation	=
 			{
 				m_iPriority			= iPriority;
