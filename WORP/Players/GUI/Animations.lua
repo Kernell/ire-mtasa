@@ -1,7 +1,6 @@
 -- Author:      	Kernell
 -- Version:     	1.0.0
 
-local scrX, scrY	= guiGetScreenSize();
 local pDialog		= NULL;
 
 class "CGUIAnimations" ( CGUI )
@@ -45,8 +44,8 @@ local Animations	=
 function CGUIAnimations:CGUIAnimations( Anims )
 	self.Window		= self:CreateWindow( "Анимации" )
 	{
-		X			= scrX / 2;
-		Y			= 'center';
+		X			= g_iScreenX / 2;
+		Y			= "center";
 		Width		= 250;
 		Height		= 390;
 		Sizable		= false;
