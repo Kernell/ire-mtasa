@@ -76,7 +76,7 @@ function OnDataChange( sDataName, vPrevValue )
 	if sDataName == "Weapon::SoundEmptyPlay" then
 		source:PlayWeaponSound( "Empty" );
 	elseif sDataName == "m_pWeapon" and source == CLIENT then
-		CLIENT.m_pWeapon	= CLIENT:GetData( sDataName ) or NULL;
+		CLIENT.m_pWeapon = CLIENT:GetData( sDataName ) or NULL;
 		
 		setControlState( 'fire', false );
 	end
@@ -84,10 +84,10 @@ end
 
 function OnClientPreStopFire()
 	if CLIENT.m_pWeapon then
-		local FireMode	= CLIENT.m_pWeapon.m_FireModes and CLIENT.m_pWeapon.m_FireModes[ CLIENT.m_pWeapon.m_Data.m_iFireMode or 1 ];
+		local iFireMode	= CLIENT.m_pWeapon.m_FireModes and CLIENT.m_pWeapon.m_FireModes[ CLIENT.m_pWeapon.m_Data.m_iFireMode or 1 ];
 		
-		if FireMode and FireMode > 0 then
-			if CLIENT.m_iShootsCount < FireMode then
+		if iFireMode and iFireMode > 0 then
+			if CLIENT.m_iShootsCount < iFireMode then
 				-- setControlState( 'fire', true );
 				
 				return;
@@ -143,7 +143,7 @@ function OnClientFire( iWeaponID )
 			CLIENT.m_pWeapon.m_iValue = CLIENT.m_pWeapon.m_iValue - 1;
 		end
 		
-		if math.random( 0, 100 ) / 100 <= CLIENT.m_pWeapon.m_fMisfireProbability / CLIENT.m_pWeapon.m_fCondition then
+		if math.random( 0, CLIENT.m_pWeapon.m_fCondition * ( 1.0 - CLIENT.m_pWeapon.m_fMisfireProbability ) ) == 0 then
 			CLIENT.m_pWeapon.m_bFail = true;
 		end
 		
@@ -152,17 +152,17 @@ function OnClientFire( iWeaponID )
 			
 			CLIENT.m_iShootsCount = 0;
 			
-			setControlState( 'fire', false );
+			setControlState( "fire", false );
 			
 			if CLIENT.m_pWeapon.m_bFail then
 				Hint( "Info", "Оружие заклинило, нажмите R для перезарядки", "info" );
 			end
 		end
 		
-		local FireMode	= CLIENT.m_pWeapon.m_FireModes[ CLIENT.m_pWeapon.m_Data.m_iFireMode or 1 ];
+		local iFireMode	= CLIENT.m_pWeapon.m_FireModes[ CLIENT.m_pWeapon.m_Data.m_iFireMode or 1 ];
 		
-		if FireMode and FireMode > 0 then
-			if CLIENT.m_iShootsCount >= FireMode then
+		if iFireMode and iFireMode > 0 then
+			if CLIENT.m_iShootsCount >= iFireMode then
 				CLIENT.m_iShootsCount = 0;
 				
 				setControlState( 'fire', false );

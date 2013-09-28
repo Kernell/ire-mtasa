@@ -7,11 +7,13 @@
 
 local IgnoredElementData	= 
 {
-	console_active			= true;
-	chatbox_active			= true;
-	['i:left']				= true;
-	['i:right']				= true;
-	[ 'Headmove:LookAt' ]	= true;
+	[ "console_active" ]			= true;
+	[ "chatbox_active" ]			= true;
+	[ "i:left" ]					= true;
+	[ "i:right" ]					= true;
+	[ "Headmove:LookAt" ]			= true;
+	[ "Weapon::SoundEmptyPlay" ]	= true;
+	[ "CChar::m_fPower" ]			= true;
 };
 
 function onElementDataChange( sName, OldValue )
