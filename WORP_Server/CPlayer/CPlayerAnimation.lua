@@ -67,7 +67,7 @@ class: CPlayerAnimation
 			{
 				m_iPriority			= iPriority;
 				m_iStart			= pRealTime.timestamp;
-				m_iTime				= bLoop and -1 or iTime;
+				m_iTime				= -1;
 			};
 		end
 		
