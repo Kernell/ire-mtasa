@@ -11,7 +11,7 @@ function CSystemCommands:Restart( pPlayer, sCmd, sOption, sSeconds )
 	local iSeconds = tonumber( sSeconds );
 	
 	if iSeconds then
-		iSeconds = Clamp( 0, iSeconds, 600 );
+		iSeconds = Clamp( 0, (int)(iSeconds), 600 );
 		
 		g_pServer.m_iCountDown		= iSeconds;
 		g_pServer.m_iCountDownType	= iSeconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_RESTART;
@@ -30,7 +30,7 @@ function CSystemCommands:Shutdown( pPlayer, sCmd, sOption, sSeconds )
 	local iSeconds = tonumber( sSeconds );
 	
 	if iSeconds then
-		iSeconds = Clamp( 0, iSeconds, 600 );
+		iSeconds = Clamp( 0, (int)(iSeconds), 600 );
 		
 		g_pServer.m_iCountDown		= iSeconds;
 		g_pServer.m_iCountDownType	= iSeconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_SHUTDOWN;

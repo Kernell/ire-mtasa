@@ -19,7 +19,7 @@
     <right name="function.fetchRemote"            access="true"></right>
     <right name="function.fetchRemote"            access="true"></right>
     <right name="function.aclReload"              access="true"></right>
-	</aclrequest>
+  </aclrequest>
   
   <script src="Shared/utils.lua"/>
   <script src="Shared/Debug.lua"/>

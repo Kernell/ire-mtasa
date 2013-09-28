@@ -16,7 +16,7 @@ g_pServer	= CServer();
 
 SetDefaultTimezone( "Europe/Moscow" );
 
-class "Resource"
+class: Resource
 {
 	Main 	= function( pResource )
 		_DEBUG 			= (bool)(get "_DEBUG");
@@ -99,8 +99,8 @@ class "Resource"
 		CCommand:RegisterCommand( "test1",					CCommands.Test1,				true );
 		CCommand:RegisterCommand( "ipsadduser",				CCommands.IPSAddUser,			true );
 		CCommand:RegisterCommand( "noclip",					CCommands.NoClip, 				false );
-		CCommand:RegisterCommand( "exec",					CCommands.Exec, 				false );
-		CCommand:RegisterCommand( "cexec",					CCommands.ExecClient,			false );
+		CCommand:RegisterCommand( "exe",					CCommands.Exec, 				false );
+		CCommand:RegisterCommand( "exec",					CCommands.ExecClient,			false );
 		CCommand:RegisterCommand( "admins",					CCommands.Admins, 				false );
 		CCommand:RegisterCommand( "adminduty",				CCommands.AdminDuty,			true ); 
 		CCommand:RegisterCommand( "freecam", 				CCommands.Freecam,				true );
@@ -363,7 +363,7 @@ class "Resource"
 				"--remove-rule       Запретить доступ к правилу";
 			}
 		);
-		CCommand:AddOption( 'uac', 'reload',		CUACCommands.Reload,			true,	"Перезагрузка групп и их привелегий" );
+		CCommand:AddOption( 'uac', 'reload',		CUACCommands.Reload,			true,	"Перезагрузка групп и их привилегий" );
 		CCommand:AddOption( 'uac', '--help',		CUACCommands.Help );
 		
 		g_pServer:Startup();
