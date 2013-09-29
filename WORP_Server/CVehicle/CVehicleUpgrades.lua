@@ -78,6 +78,14 @@ local ComponentTypes	=
 
 local DefaultComponents	=
 {
+	[ BUFFALO ]	=
+	{
+		Spoiler			= "SPOILER_0";
+		SideSkirt		= "SSKIRT_0";
+		Bonnet			= "bonnet_dummy";
+		BumperFront		= "bump_front_dummy";
+		BumperRear		= "bump_rear_dummy";
+	};
 	[ ELEGANT ]	=
 	{
 		SideSkirt		= "SSKIRT_0";

@@ -55,6 +55,38 @@ local handling	=
 	{
 		steeringLock	= 40;
 	};
+	[ BUFFALO ] =
+	{
+		mass 							= 1642;
+		turnMass 						= 6000;
+		dragCoeff 						= 2.0;
+		centerOfMass 					= { 0.0, 0.0, -0.1, };
+		percentSubmerged 				= 50;
+		tractionMultiplier				= 0.7;
+		tractionLoss 					= 0.9;
+		tractionBias 					= 0.55;
+		numberOfGears 					= 5;
+		maxVelocity						= 300.0;
+		engineAcceleration				= 10.0;
+		engineInertia					= 10.0;
+		driveType						= "rwd";
+		engineType 						= "petrol";
+		brakeDeceleration 				= 7;
+		brakeBias 						= 0.75;
+		ABS 							= true;
+		steeringLock 					= 45.0;
+		suspensionForceLevel 			= 1.2;
+		suspensionDamping 				= 0.12;
+		suspensionHighSpeedDamping 		= 0;
+		suspensionUpperLimit 			= 0.28;
+		suspensionLowerLimit 			= -0.05;
+		suspensionFrontRearBias 		= 0.5;
+		seatOffsetDistance 				= 0.25;
+		collisionDamageMultiplier 		= 0.5;
+		suspensionAntiDiveMultiplier 	= 0.4;
+		modelFlags 						= 0x2004;
+		handlingFlags 					= 0x1000000;
+	};
 	[ ELEGANT ] =
 	{
 		mass 							= 1565;
