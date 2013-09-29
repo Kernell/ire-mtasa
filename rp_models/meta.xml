@@ -85,4 +85,7 @@
   
   <file src="vehicles/falcon.dff"/>
   <file src="vehicles/falcon.txd"/>
+  
+  <file src="vehicles/mustang.dff"/>
+  <file src="vehicles/mustang.txd"/>
 </meta>

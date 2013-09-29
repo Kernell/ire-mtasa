@@ -53,6 +53,7 @@ local Models	=
 	};
 	vehicles	=
 	{
+		[402]	= { TXD = 'mustang';		DFF = 'mustang'			};
 --		[562]	= { TXD = 'elegy';			DFF = 'elegy'			};
 --		[599]	= { TXD = 'copcarru';		DFF = 'copcarru'		};
 		[490]	= { TXD = 'copcarru';		DFF = 'copcarru'		};
