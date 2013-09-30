@@ -13,6 +13,7 @@ function InitShaders()
 	dxSetShaderValue( pColorShaderOrange, 	"Color", 3, 1, 0 );
 	
 	if pColorShaderOrange then
+		engineApplyShaderToWorldTexture( pColorShaderOrange, "LIGHTS_ON" );
 		engineApplyShaderToWorldTexture( pColorShaderOrange, "MISC_ON" );
 		engineApplyShaderToWorldTexture( pColorShaderOrange, "CHARGER_RT_MISC_ON" );
 	end
