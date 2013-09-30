@@ -5,7 +5,7 @@
   
   <include resource="shader_radial_blur" />
   <include resource="shader_glow" />
-  <include resource="shader_car_paint_reflect" />
+  <include resource="shader_car_paint_reflect_ire" />
   
   <sync_map_element_data>false</sync_map_element_data>
   
