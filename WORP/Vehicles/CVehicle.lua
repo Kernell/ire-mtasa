@@ -316,6 +316,15 @@ class: CVehicle ( CElement )
 	{
 		m_pRoot				= getElementByID "CVehicle";
 		m_fUnit				= 879.66625976563 / 1000.0;
+		
+		LightTextures		=
+		{
+			[ BUFFALO ]		=
+			{
+				on	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
+				off	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
+			};
+		};
 	};
 	
 	m_iWiperState			= VEHICLE_WIPER_DISABLED;
@@ -370,6 +379,22 @@ function CVehicle:CVehicle( pVehicle )
 		for sVehicleComponent, pDefaultData in pairs( gl_Components ) do
 			setVehicleComponentVisible( pVehicle, sVehicleComponent, (bool)(pDefaultData.m_bVisible) );
 		end
+	end
+	
+	if self.m_pLightsShader then
+		delete ( self.m_pLightsShader );
+		self.m_pLightsShader = NULL;
+	end
+	
+	if CVehicle.LightTextures[ getElementModel( pVehicle ) ] then
+		self.m_pLightsOnShader	= CShader( "Resources/Shaders/ReplaceTexture.fx" );
+		self.m_pLightsOffShader	= CShader( "Resources/Shaders/ReplaceTexture.fx" );
+		
+		self.m_pLightsOnShader:SetValue( "Tex0", CVehicle.LightTextures[ getElementModel( pVehicle ) ][ "on" ] );
+		self.m_pLightsOffShader:SetValue( "Tex0", CVehicle.LightTextures[ getElementModel( pVehicle ) ][ "off" ] );
+		
+		self.m_pLightsOnShader:ApplyToWorldTexture( "vehiclelightson128", pVehicle, false );
+		self.m_pLightsOffShader:ApplyToWorldTexture( "vehiclelights128", pVehicle, false );
 	end
 end
 
