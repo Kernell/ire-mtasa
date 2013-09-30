@@ -242,7 +242,7 @@ technique car_reflect_shield
 		DepthBias = -0.0003;
 		AlphaBlendEnable = TRUE;
 		SrcBlend = SRCALPHA;
-		DestBlend = INVSRCALPHA;
+		// DestBlend = INVSRCALPHA;
         VertexShader = compile vs_2_0 VertexShaderFunction();
         PixelShader  = compile ps_2_0 PixelShaderFunction();
     }
