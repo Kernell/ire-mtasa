@@ -225,9 +225,9 @@ float4 PixelShaderFunction(PSInput PS) : COLOR0
 	Color.a *= PS.Specular.a;
 	if (gCameraDirection.z < -0.5) {Color.a*=(2*(1+gCameraDirection.z)); }
 
-    // if (gShatt ==0){
-      // if (PS.Diffuse.a >=0.8) {Color.rgba=0;}  
-	 // }
+	if( gShatt == 0 )
+		if( PS.Diffuse.a >= 0.8 ) 
+			Color.rgba -= 0.2;  
 
     return Color;
 }
