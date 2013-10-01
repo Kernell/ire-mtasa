@@ -58,13 +58,13 @@ local handling	=
 	[ BUFFALO ] =
 	{
 		mass 							= 1642;
-		turnMass 						= 9000;
+		turnMass 						= 6000;
 		dragCoeff 						= 2.0;
-		centerOfMass 					= { 0.0, 0.2, -0.1, };
+		centerOfMass 					= { 0.0, 0.1, -0.1, };
 		percentSubmerged 				= 70;
-		tractionMultiplier				= 0.6;
-		tractionLoss 					= 0.9;
-		tractionBias 					= 0.55;
+		tractionMultiplier				= 1.0;
+		tractionLoss 					= 0.5;
+		tractionBias 					= 0.6;
 		numberOfGears 					= 5;
 		maxVelocity						= 250.0;
 		engineAcceleration				= 9.0;
@@ -190,7 +190,7 @@ local handling	=
 	[ PREMIER ] = -- Dodge Charger R/T 2007
 	{
 		mass							= 1828.0;
-		turnMass						= 9000.0;
+		turnMass						= 7000.0;
 		dragCoeff						= 2.0;
 		centerOfMass					= { 0.0, 0.0, -0.1 };
 		percentSubmerged				= 70;
