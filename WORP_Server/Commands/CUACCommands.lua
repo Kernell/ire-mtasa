@@ -75,7 +75,7 @@ function CUACCommands:AddUser( pPlayer, sCmd, sOption, sEmail, ... )
 				local iID = g_pDB:Insert( "uac_users",
 					{
 						login		= sEmail;
-						password	= sPassword;
+						password	= g_pBlowfish:Encrypt( sPassword );
 						name		= sName;
 						groups		= table.concat( Groups, "," );
 					}
@@ -177,7 +177,7 @@ function CUACCommands:UserMod( pPlayer, sCmd, sOption, ... )
 			local Updates = {};
 			
 			if sNewPasswd then
-				table.insert( Updates, "password = '" + g_pDB:EscapeString( sNewPasswd ) + "'" );
+				table.insert( Updates, "password = '" + g_pBlowfish:Encrypt( sNewPasswd ) + "'" );
 			end
 			
 			if sNewEmail then

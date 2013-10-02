@@ -54,7 +54,7 @@ class "CMySQL"
 				return false;
 			end
 			
-			Debug( "MySQL connected (" + sHost + ")" );
+			Debug( "MySQL connected (" + this.DBHOST + ")" );
 			
 			this:Query( "SET NAMES utf8" );
 			this:Query( "SET lc_time_names = 'ru_RU'" );
