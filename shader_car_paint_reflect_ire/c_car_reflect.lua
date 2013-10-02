@@ -1,5 +1,6 @@
 local GrunTextures =
 {
+	"bos_main",
 	"?emap*", "vehiclegrunge256",
 	"predator92body128", "monsterb92body256a", "monstera92body256a", "andromeda92wing","fcr90092body128",
 	"hotknifebody128b", "hotknifebody128a", "rcbaron92texpage64", "rcgoblin92texpage128", "rcraider92texpage128", 
