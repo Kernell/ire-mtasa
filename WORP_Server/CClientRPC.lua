@@ -1572,6 +1572,13 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 				if bAccepted then
 					if not pOffer:IsAdmin() and self:GetDimension() == pOffer:GetDimension() and self:GetPosition():Distance( pOffer:GetPosition() ) < 2.0 then
 						if sOption == "kiss" then
+							if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
+								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+								
+								return;
+							end
+							
 							local sMyAnimation		= self:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
 							local sOfferAnimation	= pOffer:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
 							
@@ -1580,25 +1587,13 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 								sOfferAnimation	= "Playa_Kiss_02";
 							end
 							
-							if not self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false ) then
-								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								
-								return;
-							end
-							
-							if not pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false ) then
-								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								
-								return;
-							end
-							
 							pOffer:SetRotationAt( self:GetPosition() );
 							self:SetRotationAt( pOffer:GetPosition() );
 							
-							pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
+							pOffer:SetPosition( self:GetPosition():Offset( 0.9, self:GetRotation() ) );
 							
+							pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false );
+							self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false );
 						elseif sOption == "propose" then
 							if self:GetChar():IsMarried() then
 								self:GetChat():Send( "Вы уже " + self:Gender( 'женаты на ', 'замужем за ' ) + self:GetChar():GetMarried(), 255, 0, 0 );
@@ -1643,14 +1638,7 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 								pOffer:GetChat():Send( "Вы не " + pOffer:Gender( "женаты на ", "замужем за " ) + self:GetName(), 255, 0, 0 );
 							end
 						elseif sOption == "hello" then
-							if not self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false ) then
-								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								
-								return;
-							end
-							
-							if not pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false ) then
+							if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
 								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
 								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
 								
@@ -1661,9 +1649,12 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 							self:SetRotationAt( pOffer:GetPosition() );
 							
 							pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
+							
+							self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
+							pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
 						end
 					else
-						self:GetChat():Error( TEXT_PLAYER_NOT_NEARBY );
+						self:Hint( "Ошибка", TEXT_PLAYER_NOT_NEARBY, "error" );
 					end
 				else
 					local sOfferTitle = NULL;
@@ -1680,11 +1671,11 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 						return false;
 					end
 					
-					pOffer:GetChat():Send( self:GetName() + " " + self:Gender( "отказался", "отказалась", "отказывается" ) + " от " + sOfferTitle + " с Вами", 0, 210, 255 );
-					self:GetChat():Send( "Вы отказались от " + sOfferTitle + " с " + pOffer:GetName(), 0, 210, 255 );
+					pOffer:Hint( "Ошибка", self:GetName() + " " + self:Gender( "отказался", "отказалась", "отказывается" ) + " от " + sOfferTitle + " с Вами", "error" );
+					self:Hint( "Ошибка", "Вы отказались от " + sOfferTitle + " с " + pOffer:GetName(), "error" );
 				end
 			else
-				self:GetChat():Error( TEXT_PLAYER_NOT_FOUND );
+				self:Hint( "Ошибка", TEXT_PLAYER_NOT_FOUND, "error" );
 			end
 			
 			self.m_Offers[ sOfferID ] = NULL;

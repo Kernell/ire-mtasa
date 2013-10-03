@@ -31,6 +31,22 @@ class: CPlayerAnimation
 		this.m_pLastAnimation	= NULL;
 	end;
 	
+	CheckPriority		= function( this, iPriority )
+		if type( iPriority ) ~= "number" then
+			return false;
+		end
+		
+		if this.m_pLastAnimation and iPriority <= this.m_pLastAnimation.m_iPriority then
+			if this.m_pLastAnimation.m_iTime == -1 and iPriority == this.m_pLastAnimation.m_iPriority then
+				return true;
+			elseif this.m_pLastAnimation.m_iTime == -1 or this.m_pLastAnimation.m_iStart + ( this.m_pLastAnimation.m_iTime / 1000 ) > pRealTime.timestamp then
+				return false;
+			end
+		end
+		
+		return true;
+	end;
+	
 	SetAnimation		= function( this, iPriority, sBlock, sAnimation, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame )
 		if iPriority == NULL then
 			this.m_pLastAnimation = NULL;
@@ -42,12 +58,8 @@ class: CPlayerAnimation
 
 		iPriority			= (int)(iPriority);
 		
-		if this.m_pLastAnimation and iPriority <= this.m_pLastAnimation.m_iPriority then
-			if this.m_pLastAnimation.m_iTime == -1 and iPriority == this.m_pLastAnimation.m_iPriority then
-				-- TODO: nothing ..
-			elseif this.m_pLastAnimation.m_iTime == -1 or this.m_pLastAnimation.m_iStart + ( this.m_pLastAnimation.m_iTime / 1000 ) > pRealTime.timestamp then
-				return false;
-			end
+		if not this:CheckPriority( iPriority ) then
+			return false;
 		end
 		
 		this.m_pLastAnimation	= NULL;
@@ -67,7 +79,7 @@ class: CPlayerAnimation
 			{
 				m_iPriority			= iPriority;
 				m_iStart			= pRealTime.timestamp;
-				m_iTime				= -1;
+				m_iTime				= iTime;
 			};
 		end
 		

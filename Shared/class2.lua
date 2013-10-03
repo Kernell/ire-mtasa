@@ -208,6 +208,17 @@ class			=
 
 setmetatable( class, class );
 
+new		=
+{
+	__index		= function( this, sName )
+		local pClass	= _G[ sName ];
+		
+		return pClass and pClass:__NewObject();
+	end;
+}
+
+setmetatable( new, new );
+
 function static( Values )
 	Values.__static = true;
 	
