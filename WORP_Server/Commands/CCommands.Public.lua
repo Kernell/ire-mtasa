@@ -184,7 +184,7 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 		
 		local Stats	=
 		{
-			[ "Platform" ]					= true;
+		--	[ "Platform" ]					= true;
 			[ "Server FPS sync (logic)" ]	= true;
 		--	[ "MinClientVersion" ]			= true;
 		--	[ "RecommendedClientVersion" ]	= true;
@@ -211,12 +211,14 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 
 		local pChat = pPlayer:GetChat();
 		
-		for i = 1, 6, 2 do
-			local sKey		= Rows[ 1 ][ i ];
-			local sValue	= Rows[ 1 ][ i + 1 ];
-			
-			if Stats[ sKey ] then
-				pChat:Send( ( "%s: %s" ):format( sKey, sValue ), 255, 255, 255 );
+		for iter, pRow in ipairs( Rows ) do
+			for i = 1, 6, 2 do
+				local sKey		= pRow[ i ];
+				local sValue	= pRow[ i + 1 ];
+				
+				if Stats[ sKey ] then
+					pChat:Send( ( "%s: %s" ):format( sKey, sValue ), 255, 255, 255 );
+				end
 			end
 		end
 	elseif pPlayer:IsInGame() then
