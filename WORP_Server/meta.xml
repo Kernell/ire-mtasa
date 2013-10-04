@@ -201,8 +201,7 @@
   <script src="CJob/Job_Rancher.lua"/>
   
   <!-- CInterior -->
-
-  <script src="CPropertyUpgrades.lua"/>
+  
   <script src="CInterior.lua"/>
   <script src="CInteriorManager.lua"/>
   <script src="Interiors.lua"/>

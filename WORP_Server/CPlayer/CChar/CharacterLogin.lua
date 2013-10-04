@@ -56,6 +56,8 @@ function CPlayer:LoginCharacter( name, surname, bForce )
 				self:SetCollisionsEnabled( true );
 				self:SetData( "player_level", self.m_pCharacter:GetLevel() );
 				
+				self.m_pNametag:Update();
+				
 				setTimer(
 					function()
 						self:Client().OnCharacterLogin( self.m_pCharacter:GetID(), self.m_pCharacter.m_sName, self.m_pCharacter.m_sSurname );

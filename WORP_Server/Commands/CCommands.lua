@@ -23,8 +23,8 @@ function CCommands:Test1( pPlayer, sCmd, iCount )
 	return ( "CClientRPC::Character__Create - %d leaps | %d ms" ):format( iCount, getTickCount() - iTick ), 255, 255, 255;
 end
 
-function CCommands:IPSAddUser( pPlayer, sCmd, sNickname, sPassword, sEmail, ip_address )
-	if sNickname and sPassword and sEmail and ip_address then
+function CCommands:IPSAddUser( pPlayer, sCmd, sNickname, sPassword, sEmail, sIP )
+	if sNickname and sPassword and sEmail and sIP then
 		if IPSMember.DB.m_pHandler then
 			if IPSMember:Create(
 				{
@@ -33,7 +33,7 @@ function CCommands:IPSAddUser( pPlayer, sCmd, sNickname, sPassword, sEmail, ip_a
 						password				= sPassword;
 						name					= sNickname;
 						email					= sEmail; 
-						ip_address				= ip_address; 
+						ip_address				= sIP; 
 						members_display_name	= sNickname;
 					};
 				},
@@ -157,24 +157,32 @@ function CCommands:Freecam( pPlayer, sCmd, sbEnabled )
 end
 
 function CCommands:Admins( pPlayer )
-	if pPlayer:HaveAccess( 'command.adminchat' ) then
+	if pPlayer:HaveAccess( "command.adminchat" ) then
 		pPlayer:GetChat():Send( "Список администраторов в сети", 255, 255, 0 );
 		
 		for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
-			local Groups		= pPlr:GetGroups();
+			local Groups = pPlr:GetGroups();
 			
-			if Groups and table.getn( Groups ) > 0 then
-				local GroupNames	= {};
+			if Groups and Groups[ 1 ] then
+				local iR, iG, iB	= 200, 200, 200;
+				local sGroups		= "";
+				local sIP			= pPlr:GetIP();
 				
-				for i, g in ipairs( Groups ) do
-					table.insert( GroupNames, g:GetName() );
+				for i, pGrp in ipairs( Groups ) do
+					if i > 1 then
+						sGroups = ", " + pGrp:GetName();
+					end
+					
+					if pGrp:GetID() == 0 then
+						sIP = NULL;
+					end
 				end
-			
+				
 				if pPlr:IsAdmin() then
-					pPlayer:GetChat():Send( "   " + pPlr:GetUserName() + " (" + pPlr:GetID() + ") IP: " + ( GroupNames[1] == "Разработчики" and "Скрыт" or (string)( pPlr:GetIP() ) ) + " Группы: " + table.concat( GroupNames, ', ' ), unpack( Groups[ 1 ]:GetColor() ) );
-				else
-					pPlayer:GetChat():Send( "   " + pPlr:GetUserName() + " (" + pPlr:GetID() + ") IP: " + ( GroupNames[1] == "Разработчики" and "Скрыт" or (string)( pPlr:GetIP() ) ) + " Группы: " + table.concat( GroupNames, ', ' ), 200, 200, 200 );
+					iR, iG, iB = unpack( Groups[ 1 ]:GetColor() );
 				end
+				
+				pPlayer:GetChat():Send( "   " + pPlr:GetUserName() + " (" + pPlr:GetID() + ") IP: " + ( sIP or "Скрыт" ) + " Группы: " + sGroups, iR, iG, iB );
 			end
 		end
 	end
@@ -186,15 +194,15 @@ function CCommands:AdminDuty( pPlayer )
 	if pChar then
 		pPlayer.m_bAdmin = not pPlayer.m_bAdmin;
 		
-		pPlayer:SetData( 'adminduty', 		pPlayer.m_bAdmin );
-		pPlayer:SetData( 'nametag_color',	pPlayer.m_bAdmin and pPlayer:GetGroups()[ 1 ]:GetColor() );
+		pPlayer:SetData( "adminduty", 		pPlayer.m_bAdmin );
+		pPlayer:SetData( "nametag_color",	pPlayer.m_bAdmin and pPlayer:GetGroups()[ 1 ]:GetColor() );
 		pPlayer:SetGhost( pPlayer.m_bAdmin );
 		
 		if pChar and pChar:GetAlcohol() > 0 then
 			pChar:SetAlcohol();
 		end
 		
-		SendAdminsMessage( pPlayer:GetUserName() + ( pPlayer:IsAdmin() and ' перешёл в режим' or ' вышел из режима' ) + ' администратора' );
+		SendAdminsMessage( pPlayer:GetUserName() + ( pPlayer:IsAdmin() and " перешёл в режим" or " вышел из режима" ) + " администратора" );
 		
 		pPlayer:GetNametag():Update();
 		

@@ -289,6 +289,8 @@ function CChar:SetName( sName, sSurname )
 				self.m_sName	= sName;
 				self.m_sSurname	= sSurname;
 				
+				self.m_pClient.m_pNametag:Update();
+				
 				return true, false;
 			else
 				return false, 1;

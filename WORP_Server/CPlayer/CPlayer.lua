@@ -168,18 +168,6 @@ function CPlayer:GetOldVehicle()
 end
 
 function CPlayer:DoPulse( tReal )
-	if g_pServer.m_iCountDownType ~= SERVER_COUNTDOWN_NONE then
-		local iCount	= g_pServer.m_iCountDown;
-		
-		if iCount <= 10 or iCount % 60 == 0 then
-			local sType		= g_pServer.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN and "Выключение" or "Рестарт";
-			
-			self:Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( sType, iCount % 3600 / 60, iCount % 60  ) );
-		end
-	end
-	
-	self.m_pNametag:Update();
-	
 	if self:IsInGame() then
 		self.m_iInGameCount	= self.m_iInGameCount + 1;
 		self.m_tPayDay		= ( self.m_tPayDay or 0 ) + 1;
@@ -482,82 +470,6 @@ function CPlayer:ExecuteCommand( command, ... )
 	return executeCommandHandler( command, self.__instance, table.concat( { ... }, ' ' ) );
 end
 
-function CPlayer:AddCommand( vCommand, bRestricted )
-	Warning( 2, 8106, "CPlayer::AddCommand" );
-	
-	if type( vCommand ) == 'string' then
-		vCommand = { vCommand };
-	end
-	
-	for _, cmd in ipairs( vCommand ) do
-		addCommandHandler( cmd,
-			function( pPlayer, sCommand, ... )
-				if ( not bRestricted or ( pPlayer:IsLoggedIn() and pPlayer:HaveAccess( 'command.' + vCommand[ 1 ] ) ) ) then
-					if not CPlayerCMD[ vCommand[ 1 ] ] then
-						error( "Undeclared command handler '" + (string)( cmd ) + "'", 2 );
-					end
-					
-					return CPlayerCMD[ vCommand[ 1 ] ]( pPlayer, cmd, ... );
-				else
-					pPlayer:GetChat():Send( ( "UAC: Access denied for '%s'" ):format( cmd ), 255, 164, 0 );
-					g_pServer:Print( "DENIED: Denied '%s' access to command '%s'", pPlayer:GetName(), vCommand[ 1 ] );
-				end
-			end,
-			false,
-			false
-		);
-	end
-end
-
-function CPlayer:AddCommandEx( command, bRestricted )
-	Warning( 2, 8106, "CPlayer::AddCommandEx" );
-	
-	return function( options )
-		if type( command ) == 'string' then
-			command = { command };
-		end
-		
-		for _, cmd in ipairs( command ) do
-			addCommandHandler( cmd,
-				function( pPlayer, cmd_name, option, ... )
-					local pChat = pPlayer:GetChat();
-					
-					if ( not bRestricted or ( pPlayer:IsLoggedIn() and pPlayer:HaveAccess( 'command.' + command[ 1 ] ) ) ) then
-						if type( option ) == 'string' then
-							if options[ option ] then
-								if not options[ option ][ 2 ] or pPlayer:HaveAccess( 'command.' + cmd + ':' + option ) then
-									if tobool( assert( CPlayerCMD[ cmd + '_' + option ], "Undeclared command handler '" + cmd + '_' + option + "'" )( pPlayer, cmd, option, ... ) ) == false then
-										pChat:Send( "Syntax: /" + cmd + " " + option + " " + options[ option ][ 1 ], 255, 255, 255 );
-									end
-								else
-									pChat:Send( ( "UAC: Access denied for '%s %s'" ):format( cmd, option ), 255, 164, 0 );
-									g_pServer:Print( "DENIED: Denied '%s' access to command '%s %s'", pPlayer:GetName(), cmd, option );
-								end
-							else
-								pChat:Send(  cmd + ": Неизвестный параметр '" + option + "'", 200, 200, 200 );
-							end
-						else
-							pChat:Send( "Syntax: / " + cmd + " <option>", 255, 255, 255 );
-							pChat:Send( "List of options:", 200, 200, 200 );
-							
-							for key, value in pairs( options ) do
-								if not value[ 2 ] or pPlayer:HaveAccess( 'command.' + cmd + ':' + key ) then
-									pChat:Send( key + ": " + value[ 1 ], 200, 200, 200 );
-								end
-							end
-						end
-					else
-						pChat:Send( ( "UAC: Access denied for '%s'" ):format( cmd ), 255, 164, 0 );
-						g_pServer:Print( "DENIED: Denied '%s' access to command '%s'", pPlayer:GetName(), command[ 1 ] );
-					end
-				end,
-				false,
-				false
-			);
-		end
-	end;
-end
-
 function CPlayer:SetMuted( iTime )
 	iTime = (int)(iTime);
 	
@@ -632,7 +544,6 @@ end
 function CPlayer:TakeScreenShot( fWidth, fHeight, sTag, iQuality, iMaxBandwith )
 	return takePlayerScreenShot( self.__instance, fWidth, fHeight, sTag or "", iQuality or 100, iMaxBandwith or 5000  );
 end
-
 
 function CPlayer:SprintHandler( key, state )
 	self:SetControlState( 'walk', state == 'up' );

@@ -53,11 +53,19 @@ class: CServer
 		if this.m_iCountDown > 0 then 
 			this.m_iCountDown = this.m_iCountDown - 1;
 			
-			if this.m_iCountDown == 0 then
-				if this.m_iCountDownType == SERVER_COUNTDOWN_RESTART then
-					this:Restart();
-				elseif this.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN then
-					this:Shutdown( "System timer" );
+			if this.m_iCountDownType ~= SERVER_COUNTDOWN_NONE then
+				if this.m_iCountDown <= 10 or this.m_iCountDown % 60 == 0 then
+					local sType		= this.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN and "Выключение" or "Рестарт";
+					
+					CPlayer:Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( sType, this.m_iCountDown % 3600 / 60, this.m_iCountDown % 60  ) );
+				end
+			
+				if this.m_iCountDown == 0 then
+					if this.m_iCountDownType == SERVER_COUNTDOWN_RESTART then
+						this:Restart();
+					elseif this.m_iCountDownType == SERVER_COUNTDOWN_SHUTDOWN then
+						this:Shutdown( "System timer" );
+					end
 				end
 			end
 		end

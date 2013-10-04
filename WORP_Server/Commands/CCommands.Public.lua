@@ -1,4 +1,4 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
@@ -179,19 +179,31 @@ function CCommands:ViewHelp( pPlayer )
 end
 
 function CCommands:Stats( pPlayer, sCmd, sTargetID )
-	if pPlayer:IsInGame() then
+	if sTargetID == 0 or pPlayer:GetID() == 0 then
+		local Cols, Rows = getPerformanceStats( "Server info" );
+		
+		local pChat = pPlayer:GetChat();
+		
+		for i, pRow in ipairs( Rows ) do
+			local sRow = ( "%s: %s | %s: %s | %s: %s" ):format( unpack( pRow ) );
+			
+			pChat:Send( sRow, 255, 255, 255 );
+		end
+	elseif pPlayer:IsInGame() then
 		local pTarget = g_pGame:GetPlayerManager():Get( pPlayer:HaveAccess( "command.player:stats" ) and sTargetID or pPlayer:GetID() );
 		
 		if pTarget then
 			if pTarget:IsInGame() then
 				pPlayer:ShowStats( pTarget );
 			else
-				pPlayer:GetChat():Error( TEXT_PLAYER_NOT_IN_GAME );
+				return TEXT_PLAYER_NOT_IN_GAME, 255, 0, 0;
 			end
 		else
-			pPlayer:GetChat():Error( TEXT_PLAYER_NOT_FOUND );
+			return TEXT_PLAYER_NOT_FOUND, 255, 0, 0;
 		end
 	end
+	
+	return true;
 end
 
 function CCommands:Pay( pPlayer, sCmd, sTarget, sValue )

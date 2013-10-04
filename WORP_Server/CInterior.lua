@@ -22,7 +22,7 @@ class: CInterior
 	m_pColShape			= NULL;
 };
 
-function CInterior:CInterior( iID, sInteriorID, iCharacterID, sName, sType, iPrice, bLocked, iFactionID, vecOutsidePosition, fOutsideRotation, Store, Upgrades )
+function CInterior:CInterior( iID, sInteriorID, iCharacterID, sName, sType, iPrice, bLocked, iFactionID, vecOutsidePosition, fOutsideRotation, Store )
 	local pInt = g_pGame:GetInteriorManager():GetInterior( sInteriorID )
 	
 	if pInt then
@@ -37,7 +37,6 @@ function CInterior:CInterior( iID, sInteriorID, iCharacterID, sName, sType, iPri
 		self.m_p3DText				= C3DText();
 		self.m_pColShape			= pInt.BoundingBox and CColShape( "Cuboid", unpack( pInt.BoundingBox ) ) or NULL;
 		self.m_Store				= pInt.Store and Store or NULL;
-		self.m_pUpgrades			= CPropertyUpgrades( self, Upgrades );
 		
 		if self.m_pColShape then
 			self.m_pColShape:SetID( "interior:" + self:GetID() );
@@ -69,12 +68,10 @@ end
 function CInterior:_CInterior()
 	g_pGame:GetInteriorManager():RemoveFromList( self );
 	
-	delete ( self.m_pUpgrades );
 	delete ( self.m_p3DText );
 	delete ( self.m_pOutsideMarker );
 	delete ( self.m_pInsideMarker );
 	
-	self.m_pUpgrades		= NULL;
 	self.m_p3DText			= NULL;
 	self.m_pOutsideMarker	= NULL;
 	self.m_pInsideMarker	= NULL;
@@ -85,34 +82,6 @@ function CInterior:_CInterior()
 	end
 	
 	self.m_Store	= NULL;
-end
-
-function CInterior:AddUpgrade( sUpgrade, Data )
-	if self.m_pUpgrades then
-		if self.m_pUpgrades:Add( sUpgrade, Data ) then		
-			if g_pDB:Query( "UPDATE " + DBPREFIX + "interiors SET upgrades = " + (string)(self.m_pUpgrades) + " WHERE id = " + self:GetID() ) then
-				return true;
-			end
-			
-			Debug( g_pDB:Error(), 1 );
-		end
-	end
-	
-	return false;
-end
-
-function CInterior:RemoveUpgrade( sUpgrade )
-	if self.m_pUpgrades then
-		if self.m_pUpgrades:Remove( sUpgrade ) then		
-			if g_pDB:Query( "UPDATE " + DBPREFIX + "interiors SET upgrades = " + (string)(self.m_pUpgrades) + " WHERE id = " + self:GetID() ) then
-				return true;
-			end
-			
-			Debug( g_pDB:Error(), 1 );
-		end
-	end
-	
-	return false;
 end
 
 function CInterior:OnColShapeHit( pClient, bMatching )
@@ -459,12 +428,6 @@ function CInterior:OpenMenu( pPlayer, bForce )
 
 			delete ( pResult );
 			
-			local Upgrades	= {};
-			
-			for sUpgrade in pairs( self.m_pUpgrades.m_Upgrades ) do
-				Upgrades[ sUpgrade ] = true;
-			end
-			
 			local Data		=
 			{
 				ID			= self:GetID();
@@ -478,7 +441,6 @@ function CInterior:OpenMenu( pPlayer, bForce )
 				Faction		= pFaction and pFaction:GetName() or "N/A";
 				FactionID	= pFaction and pFaction:GetID() or 0;
 				Store		= bAccess and self.m_Store;
-				Upgrades	= bAccess and Upgrades;
 			};			
 			
 			pPlayer:GetChar():ShowUI( "CUIPropertyMenu", Data, bForce, bAccess, bAdmin );

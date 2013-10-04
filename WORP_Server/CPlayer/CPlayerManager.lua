@@ -73,31 +73,30 @@ function CPlayerManager:CPlayerManager()
 
 	self.m_List	= {};
 	
---	setTimer(
---		function()
---			local pFakePlayer	= CFakePlayer( self, createPed( 0, 0.0, 0.0, 0.0, 0.0, true ) );
---		end,
---		50, 4000
---	);
-
 	function self.__onPlayerModInfo( sFile, List )
 		self:OnPlayerModInfo( source, sFile, List );
 	end
 	
 	addEventHandler( "onPlayerModInfo", root, self.__onPlayerModInfo );
+	
+	return true;
 end
 
 function CPlayerManager:_CPlayerManager()
 	self:DeleteAll();
 	
+	self.m_List	= NULL;
+	
 	removeEventHandler( "onPlayerModInfo", root, self.__onPlayerModInfo );
 end
 
 function CPlayerManager:OnPlayerModInfo( pPlayer, sFile, List )
-	Debug( "ModInfo: " + pPlayer:GetName() + " - " + sFile );
-	
-	for i, pMod in ipairs( List ) do
-		Debug( (string)(pMod.id) + ": " + (string)(pMod.name) + " (" + (string)(pMod.hash) + ")" );
+	if _DEBUG then
+		Debug( "ModInfo: " + pPlayer:GetName() + " - " + sFile );
+		
+		for i, pMod in ipairs( List ) do
+			Debug( (string)(pMod.id) + ": " + (string)(pMod.name) + " (" + (string)(pMod.hash) + ")" );
+		end
 	end
 end
 
@@ -159,8 +158,10 @@ function CPlayerManager:DeleteAll()
 	local iTick, iCount = getTickCount(), 0;
 	
     for iter, pPlayer in pairs( self.m_List ) do
-		pPlayer:Unlink()
-		pPlayer = NULL;
+		pPlayer:InitLoginCamera();
+		pPlayer:Unlink();
+		
+		self.m_List[ iter ] = NULL;
 		
 		iCount = iCount + 1;
 	end
@@ -179,7 +180,7 @@ function CPlayerManager:AddToList( pPlayer )
 	
 	self.m_List[ pPlayer.m_iID ]	= pPlayer.__instance;
 	
-	pPlayer:SetID( 'player:' + pPlayer.m_iID );
+	pPlayer:SetID( "player:" + pPlayer.m_iID );
 end
 
 function CPlayerManager:RemoveFromList( pPlayer )
