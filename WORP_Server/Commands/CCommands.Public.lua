@@ -182,12 +182,37 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 	if sTargetID == 0 or pPlayer:GetID() == 0 then
 		local Cols, Rows = getPerformanceStats( "Server info" );
 		
+		local Stats	=
+		{
+			Platform					= Rows[ 1 ][ "Platform" ];
+			FPS							= Rows[ 1 ][ "Server FPS sync (logic)" ];
+		--	MinClientVersion			= Rows[ 1 ][ "MinClientVersion" ];
+		--	RecommendedClientVersion	= Rows[ 1 ][ "RecommendedClientVersion" ];
+		--	NetworkEncryptionEnabled	= Rows[ 1 ][ "NetworkEncryptionEnabled" ];
+		--	BandwidthReductionMode		= Rows[ 1 ][ "BandwidthReductionMode" ];
+		--	Version						= Rows[ 1 ][ "Version" ];
+			Players						= Rows[ 1 ][ "Players" ];
+		--	BytesIn						= Rows[ 1 ][ "Bytes/sec incoming" ];
+		--	BytesOut					= Rows[ 1 ][ "Bytes/sec outgoing" ];
+		--	PacketsIn					= Rows[ 1 ][ "Packets/sec incoming" ];
+		--	PacketsOut					= Rows[ 1 ][ "Packets/sec outgoing" ];
+		--	PacketsLossOut				= Rows[ 1 ][ "Packet loss outgoing" ];
+		--	BusySleep					= Rows[ 1 ][ "Busy sleep time" ];
+		--	IdleSleep					= Rows[ 1 ][ "Idle sleep time" ];
+			Uptime						= Rows[ 1 ][ "Uptime" ];
+		--	VoiceEnabled				= Rows[ 1 ][ "VoiceEnabled" ];
+			Memory						= Rows[ 1 ][ "Memory" ];
+		--	Approx						= Rows[ 1 ][ "Approx network usage" ];
+		--	LightSyncEnabled			= Rows[ 1 ][ "LightSyncEnabled" ];
+		--	ThreadNetEnabled			= Rows[ 1 ][ "ThreadNetEnabled" ];
+		--	MsgQueueIn					= Rows[ 1 ][ "Msg queue incoming" ];
+		--	MsgQueueOut					= Rows[ 1 ][ "Msg queue outgoing" ];
+		};
+		
 		local pChat = pPlayer:GetChat();
 		
-		for i, pRow in ipairs( Rows ) do
-			local sRow = ( "%s: %s | %s: %s | %s: %s" ):format( unpack( pRow ) );
-			
-			pChat:Send( sRow, 255, 255, 255 );
+		for sStatName, sStatValue in pairs( Stats ) do
+			pChat:Send( ( "%s: %s" ):format( sStatName, sStatValue ), 255, 255, 255 );
 		end
 	elseif pPlayer:IsInGame() then
 		local pTarget = g_pGame:GetPlayerManager():Get( pPlayer:HaveAccess( "command.player:stats" ) and sTargetID or pPlayer:GetID() );
