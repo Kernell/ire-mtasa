@@ -184,29 +184,29 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 		
 		local Stats	=
 		{
-			Platform					= Rows[ 1 ][ "Platform" ];
-			FPS							= Rows[ 1 ][ "Server FPS sync (logic)" ];
-		--	MinClientVersion			= Rows[ 1 ][ "MinClientVersion" ];
-		--	RecommendedClientVersion	= Rows[ 1 ][ "RecommendedClientVersion" ];
-		--	NetworkEncryptionEnabled	= Rows[ 1 ][ "NetworkEncryptionEnabled" ];
-		--	BandwidthReductionMode		= Rows[ 1 ][ "BandwidthReductionMode" ];
-		--	Version						= Rows[ 1 ][ "Version" ];
-			Players						= Rows[ 1 ][ "Players" ];
-		--	BytesIn						= Rows[ 1 ][ "Bytes/sec incoming" ];
-		--	BytesOut					= Rows[ 1 ][ "Bytes/sec outgoing" ];
-		--	PacketsIn					= Rows[ 1 ][ "Packets/sec incoming" ];
-		--	PacketsOut					= Rows[ 1 ][ "Packets/sec outgoing" ];
-		--	PacketsLossOut				= Rows[ 1 ][ "Packet loss outgoing" ];
-		--	BusySleep					= Rows[ 1 ][ "Busy sleep time" ];
-		--	IdleSleep					= Rows[ 1 ][ "Idle sleep time" ];
-			Uptime						= Rows[ 1 ][ "Uptime" ];
-		--	VoiceEnabled				= Rows[ 1 ][ "VoiceEnabled" ];
-			Memory						= Rows[ 1 ][ "Memory" ];
-		--	Approx						= Rows[ 1 ][ "Approx network usage" ];
-		--	LightSyncEnabled			= Rows[ 1 ][ "LightSyncEnabled" ];
-		--	ThreadNetEnabled			= Rows[ 1 ][ "ThreadNetEnabled" ];
-		--	MsgQueueIn					= Rows[ 1 ][ "Msg queue incoming" ];
-		--	MsgQueueOut					= Rows[ 1 ][ "Msg queue outgoing" ];
+			Platform					= Rows[ "1" ][ "Platform" ];
+			FPS							= Rows[ "1" ][ "Server FPS sync (logic)" ];
+		--	MinClientVersion			= Rows[ "1" ][ "MinClientVersion" ];
+		--	RecommendedClientVersion	= Rows[ "1" ][ "RecommendedClientVersion" ];
+		--	NetworkEncryptionEnabled	= Rows[ "1" ][ "NetworkEncryptionEnabled" ];
+		--	BandwidthReductionMode		= Rows[ "1" ][ "BandwidthReductionMode" ];
+		--	Version						= Rows[ "1" ][ "Version" ];
+			Players						= Rows[ "1" ][ "Players" ];
+		--	BytesIn						= Rows[ "1" ][ "Bytes/sec incoming" ];
+		--	BytesOut					= Rows[ "1" ][ "Bytes/sec outgoing" ];
+		--	PacketsIn					= Rows[ "1" ][ "Packets/sec incoming" ];
+		--	PacketsOut					= Rows[ "1" ][ "Packets/sec outgoing" ];
+		--	PacketsLossOut				= Rows[ "1" ][ "Packet loss outgoing" ];
+		--	BusySleep					= Rows[ "1" ][ "Busy sleep time" ];
+		--	IdleSleep					= Rows[ "1" ][ "Idle sleep time" ];
+			Uptime						= Rows[ "1" ][ "Uptime" ];
+		--	VoiceEnabled				= Rows[ "1" ][ "VoiceEnabled" ];
+			Memory						= Rows[ "1" ][ "Memory" ];
+		--	Approx						= Rows[ "1" ][ "Approx network usage" ];
+		--	LightSyncEnabled			= Rows[ "1" ][ "LightSyncEnabled" ];
+		--	ThreadNetEnabled			= Rows[ "1" ][ "ThreadNetEnabled" ];
+		--	MsgQueueIn					= Rows[ "1" ][ "Msg queue incoming" ];
+		--	MsgQueueOut					= Rows[ "1" ][ "Msg queue outgoing" ];
 		};
 		
 		local pChat = pPlayer:GetChat();
