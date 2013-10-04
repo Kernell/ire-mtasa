@@ -184,35 +184,40 @@ function CCommands:Stats( pPlayer, sCmd, sTargetID )
 		
 		local Stats	=
 		{
-			Platform					= Rows[ "1" ][ "Platform" ];
-			FPS							= Rows[ "1" ][ "Server FPS sync (logic)" ];
-		--	MinClientVersion			= Rows[ "1" ][ "MinClientVersion" ];
-		--	RecommendedClientVersion	= Rows[ "1" ][ "RecommendedClientVersion" ];
-		--	NetworkEncryptionEnabled	= Rows[ "1" ][ "NetworkEncryptionEnabled" ];
-		--	BandwidthReductionMode		= Rows[ "1" ][ "BandwidthReductionMode" ];
-		--	Version						= Rows[ "1" ][ "Version" ];
-			Players						= Rows[ "1" ][ "Players" ];
-		--	BytesIn						= Rows[ "1" ][ "Bytes/sec incoming" ];
-		--	BytesOut					= Rows[ "1" ][ "Bytes/sec outgoing" ];
-		--	PacketsIn					= Rows[ "1" ][ "Packets/sec incoming" ];
-		--	PacketsOut					= Rows[ "1" ][ "Packets/sec outgoing" ];
-		--	PacketsLossOut				= Rows[ "1" ][ "Packet loss outgoing" ];
-		--	BusySleep					= Rows[ "1" ][ "Busy sleep time" ];
-		--	IdleSleep					= Rows[ "1" ][ "Idle sleep time" ];
-			Uptime						= Rows[ "1" ][ "Uptime" ];
-		--	VoiceEnabled				= Rows[ "1" ][ "VoiceEnabled" ];
-			Memory						= Rows[ "1" ][ "Memory" ];
-		--	Approx						= Rows[ "1" ][ "Approx network usage" ];
-		--	LightSyncEnabled			= Rows[ "1" ][ "LightSyncEnabled" ];
-		--	ThreadNetEnabled			= Rows[ "1" ][ "ThreadNetEnabled" ];
-		--	MsgQueueIn					= Rows[ "1" ][ "Msg queue incoming" ];
-		--	MsgQueueOut					= Rows[ "1" ][ "Msg queue outgoing" ];
+			[ "Platform" ]					= true;
+			[ "Server FPS sync (logic)" ]	= true;
+		--	[ "MinClientVersion" ]			= true;
+		--	[ "RecommendedClientVersion" ]	= true;
+		--	[ "NetworkEncryptionEnabled" ]	= true;
+		--	[ "BandwidthReductionMode" ]	= true;
+		--	[ "Version" ]					= true;
+			[ "Players" ]					= true;
+		--	[ "Bytes/sec incoming" ]		= true;
+		--	[ "Bytes/sec outgoing" ]		= true;
+		--	[ "Packets/sec incoming" ]		= true;
+		--	[ "Packets/sec outgoing" ]		= true;
+		--	[ "Packet loss outgoing" ]		= true;
+		--	[ "Busy sleep time" ]			= true;
+		--	[ "Idle sleep time" ]			= true;
+			[ "Uptime" ]					= true;
+		--	[ "VoiceEnabled" ]				= true;
+			[ "Memory" ]					= true;
+		--	[ "Approx network usage" ]		= true;
+		--	[ "LightSyncEnabled" ]			= true;
+		--	[ "ThreadNetEnabled" ]			= true;
+		--	[ "Msg queue incoming" ]		= true;
+		--	[ "Msg queue outgoing" ]		= true;
 		};
-		
+
 		local pChat = pPlayer:GetChat();
 		
-		for sStatName, sStatValue in pairs( Stats ) do
-			pChat:Send( ( "%s: %s" ):format( sStatName, sStatValue ), 255, 255, 255 );
+		for i = 1, 6, 2 do
+			local sKey		= Rows[ 1 ][ i ];
+			local sValue	= Rows[ 1 ][ i + 1 ];
+			
+			if Stats[ sKey ] then
+				pChat:Send( ( "%s: %s" ):format( sKey, sValue ), 255, 255, 255 );
+			end
 		end
 	elseif pPlayer:IsInGame() then
 		local pTarget = g_pGame:GetPlayerManager():Get( pPlayer:HaveAccess( "command.player:stats" ) and sTargetID or pPlayer:GetID() );
