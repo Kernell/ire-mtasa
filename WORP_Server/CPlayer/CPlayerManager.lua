@@ -158,7 +158,6 @@ function CPlayerManager:DeleteAll()
 	local iTick, iCount = getTickCount(), 0;
 	
     for iter, pPlayer in pairs( self.m_List ) do
-		pPlayer:InitLoginCamera();
 		pPlayer:Unlink();
 		
 		self.m_List[ iter ] = NULL;
@@ -178,7 +177,7 @@ function CPlayerManager:AddToList( pPlayer )
 	
 	pPlayer.m_iID = iID + 1;
 	
-	self.m_List[ pPlayer.m_iID ]	= pPlayer.__instance;
+	self.m_List[ pPlayer.m_iID ] = pPlayer.__instance;
 	
 	pPlayer:SetID( "player:" + pPlayer.m_iID );
 end

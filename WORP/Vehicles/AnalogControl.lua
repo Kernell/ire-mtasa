@@ -7,8 +7,15 @@
 
 AnalogControl = 
 {
-	fMouseX = 0;
-	fMouseY = 0;
+	fMouseX 	= 0;
+	fMouseY 	= 0;
+	
+	AnalogControl	= function()
+		
+		
+		addEventHandler( "onClientCursorMove", root, AnalogControl.UpdateMouse );
+		addEventHandler( "onClientRender", root, AnalogControl.UpdateControl );
+	end;
 	
 	UpdateMouse		= function( fX, fY, fAbsoluteX, fAbsoluteY )
 		if Settings.AnalogControl.Enabled == false then return; end
@@ -35,14 +42,14 @@ AnalogControl =
 		AnalogControl.fMouseY			= Clamp( -1.0, AnalogControl.fMouseY, 1.0 );
 	end;
 	
-	UpdateControl	= function( iTimeSlice )
-		if Settings.AnalogControl.Enabled == false then return; end
+	UpdateControl	= function()
+		if Settings.AnalogControl.Enabled == false then
+			return false;
+		end
 		
 		if AnalogControl.fMouseX > 0.0 then
-			-- setAnalogControlState( "vehicle_left", 0.0 );
 			setAnalogControlState( "vehicle_right", Easing[ Settings.AnalogControl.EasingOut ]( Easing, AnalogControl.fMouseX ) );
 		elseif AnalogControl.fMouseX < 0.0 then
-			-- setAnalogControlState( "vehicle_right", 0.0 );
 			setAnalogControlState( "vehicle_left", Easing[ Settings.AnalogControl.EasingOut ]( Easing, -AnalogControl.fMouseX ) );
 		else
 			setAnalogControlState( "vehicle_right", 0.0 );
@@ -51,5 +58,4 @@ AnalogControl =
 	end;
 };
 
-addEventHandler( "onClientCursorMove", root, AnalogControl.UpdateMouse );
-addEventHandler( "onClientRender", root, AnalogControl.UpdateControl );
+addEventHandler( "onClientResourceStart", resourceRoot, AnalogControl.AnalogControl );

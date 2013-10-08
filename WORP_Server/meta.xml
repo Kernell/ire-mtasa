@@ -16,6 +16,7 @@
     <right name="function.shutdown"               access="true"></right>
     <right name="function.redirectPlayer"         access="true"></right>
     <right name="function.kickPlayer"             access="true"></right>
+    <right name="function.banPlayer"              access="true"></right>
     <right name="function.fetchRemote"            access="true"></right>
     <right name="function.fetchRemote"            access="true"></right>
     <right name="function.aclReload"              access="true"></right>
@@ -180,6 +181,7 @@
   <!-- CFaction -->
   
   <script src="CFaction/CFaction.lua"/>
+  <script src="CFaction/CFactionDocks.lua"/>
   <script src="CFaction/CFactionGov.lua"/>
   <script src="CFaction/CFactionPolice.lua"/>
   <script src="CFaction/CFactionNews.lua"/>

@@ -226,14 +226,13 @@ function gl_Components.speedo_needle_ok:Update( pVehicle )
 end
 
 function gl_Components.stwheel_ok:Update( pVehicle )
-	local fAngle	= 0.0;
-	
 	local pDriver = pVehicle:GetDriver();
 	
 	if pDriver then
 		if pDriver == CLIENT and Settings.AnalogControl.Enabled and AnalogControl then
-			fAngle = -AnalogControl.fMouseX;
+			pVehicle.m_pStWheel.fAngle = -AnalogControl.fMouseX;
 		else
+			local fAngle	= 0.0;
 			local fLeft		= getPedAnalogControlState( pDriver, "vehicle_left" ) or 0.0;
 			local fRight	= getPedAnalogControlState( pDriver, "vehicle_right" ) or 0.0;
 			
@@ -248,10 +247,22 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 			if fLeft > 0.0 and fRight > 0.0 then
 				fAngle = 0.0;
 			end
+			
+			local iTick = getTickCount();
+			
+			if pVehicle.m_pStWheel.fTargetAngle ~= fAngle then
+				pVehicle.m_pStWheel.iTime			= ( 250 * math.abs( fAngle - pVehicle.m_pStWheel.fAngle ) ) + 50;
+				pVehicle.m_pStWheel.iTickEnd		= iTick + pVehicle.m_pStWheel.iTime;
+				pVehicle.m_pStWheel.fTargetAngle	= fAngle;
+			end
+			
+			local fProgress = 1.0 - ( pVehicle.m_pStWheel.iTickEnd - iTick ) / pVehicle.m_pStWheel.iTime;
+			
+			pVehicle.m_pStWheel.fAngle	= Lerp( pVehicle.m_pStWheel.fAngle, fAngle, fProgress );
 		end
 	end
 	
-	setVehicleComponentRotation( pVehicle, self, 0.0, Settings.AnalogControl.Angle * fAngle, 0.0 );
+	setVehicleComponentRotation( pVehicle, self, 0.0, Settings.AnalogControl.Angle * pVehicle.m_pStWheel.fAngle, 0.0 );
 end
 
 --[[ function gl_Components.caliper_rf:Update( pVehicle )
@@ -321,8 +332,13 @@ class: CVehicle ( CElement )
 		{
 			[ BUFFALO ]		=
 			{
-				on	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
 				off	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
+				on	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
+			};
+			[ VINCENT ]		=
+			{
+				off	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
+				on	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 			};
 		};
 	};
@@ -396,6 +412,14 @@ function CVehicle:CVehicle( pVehicle )
 		self.m_pLightsOnShader:ApplyToWorldTexture( "vehiclelightson128", pVehicle, false );
 		self.m_pLightsOffShader:ApplyToWorldTexture( "vehiclelights128", pVehicle, false );
 	end
+	
+	self.m_pStWheel =
+	{
+		fAngle			= 0.0;
+		fTargetAngle	= 0.0;
+		iTime			= 50;
+		iTickEnd		= 0;
+	};
 end
 
 function CVehicle.SetComponentPosition( sVehicleComponent, vecPosition )

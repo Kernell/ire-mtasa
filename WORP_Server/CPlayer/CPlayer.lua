@@ -124,6 +124,7 @@ function CPlayer:Unlink( sType, sReason, pResponsePlayer )
 	end
 	
 	self:Save();
+	self:InitLoginCamera();
 	self.m_pPlayerManager:RemoveFromList( self );
 end
 

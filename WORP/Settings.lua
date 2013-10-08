@@ -22,14 +22,14 @@ Settings	=
 			Water			= false;
 		};
 		Blur		= 0;
-		Clouds		= true;		
-		Birds		= true;		
+		Clouds		= false;		
+		Birds		= false;		
 	};
 	AnalogControl	=
 	{
 		Enabled			= false;
 		Sensitivity		= 0.1;
-		Angle			= 270.0;
+		Angle			= 90.0;
 		EasingIn		= "InCirc";
 		EasingOut		= "OutCirc";
 	};
