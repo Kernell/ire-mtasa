@@ -39,7 +39,7 @@ class: CPlayerAnimation
 		if this.m_pLastAnimation and iPriority <= this.m_pLastAnimation.m_iPriority then
 			if this.m_pLastAnimation.m_iTime == -1 and iPriority == this.m_pLastAnimation.m_iPriority then
 				return true;
-			elseif this.m_pLastAnimation.m_iTime == -1 or this.m_pLastAnimation.m_iStart + ( this.m_pLastAnimation.m_iTime / 1000 ) > pRealTime.timestamp then
+			elseif this.m_pLastAnimation.m_iTime == -1 or this.m_pLastAnimation.m_iStart + ( this.m_pLastAnimation.m_iTime / 1000 ) > getRealTime().timestamp then
 				return false;
 			end
 		end
@@ -53,8 +53,6 @@ class: CPlayerAnimation
 			
 			return setPedAnimation( this.__instance );
 		end
-		
-		local pRealTime		= getRealTime();
 
 		iPriority			= (int)(iPriority);
 		
@@ -78,7 +76,7 @@ class: CPlayerAnimation
 			this.m_pLastAnimation	=
 			{
 				m_iPriority			= iPriority;
-				m_iStart			= pRealTime.timestamp;
+				m_iStart			= getRealTime().timestamp;
 				m_iTime				= iTime;
 			};
 		end
