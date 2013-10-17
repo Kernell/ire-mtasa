@@ -170,7 +170,7 @@ function CCommands:Admins( pPlayer )
 				
 				for i, pGrp in ipairs( Groups ) do
 					if i > 1 then
-						sGroups = ", ";
+						sGroups = sGroups + ", ";
 					end
 					
 					sGroups = sGroups + pGrp:GetName();
