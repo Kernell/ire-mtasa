@@ -170,8 +170,10 @@ function CCommands:Admins( pPlayer )
 				
 				for i, pGrp in ipairs( Groups ) do
 					if i > 1 then
-						sGroups = ", " + pGrp:GetName();
+						sGroups = ", ";
 					end
+					
+					sGroups = sGroups + pGrp:GetName();
 					
 					if pGrp:GetID() == 0 then
 						sIP = NULL;
