@@ -12,6 +12,7 @@ local IgnoredElementData	=
 	[ "i:left" ]					= true;
 	[ "i:right" ]					= true;
 	[ "Headmove:LookAt" ]			= true;
+	[ "Headmove:Pause" ]			= true;
 	[ "Weapon::SoundEmptyPlay" ]	= true;
 	[ "CChar::m_fPower" ]			= true;
 };
