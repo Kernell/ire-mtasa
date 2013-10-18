@@ -12,16 +12,18 @@ local DoPulse, OnDataChange;
 local fScreenX, fScreenY = guiGetScreenSize();
 
 function DoPulse()
+	local iTime			= 999999999;
+	local fX, fY, fZ	= getWorldFromScreenPosition( fScreenX / 2, fScreenY / 2, 20.0 );
+	
 	if iPause > 0 then
 		if getTickCount() - iPause <= 0 then
-			setElementData( localPlayer, "Headmove:LookAt", { 1, 2, 3, 0 } );
+			fX, fY, fZ, iTime = 1, 2, 3, 0;
 		else
-			local fX, fY, fZ	= getWorldFromScreenPosition( fScreenX / 2, fScreenY / 2, 20.0 );
-			
 			setElementData( localPlayer, "Headmove:Pause", false );
-			setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ, 999999999 } );
 		end
 	end
+	
+	setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ, iTime } );
 	
 	for i, pPlayer in ipairs( getElementsByType( "player", root, true ) ) do
 		if isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
