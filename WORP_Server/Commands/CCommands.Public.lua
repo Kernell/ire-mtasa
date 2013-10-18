@@ -5,6 +5,12 @@
 -- License		Proprietary Software
 -- Version		1.0
 
+function CCommands:Settings( pPlayer )
+	if pPlayer:IsLoggedIn() then
+		pPlayer:Client().CUISettings( pPlayer.m_Settings );
+	end
+end
+
 function CCommands:ShowDoPulseStat( pPlayer )
 	pPlayer:Client().ShowDoPulseStat();
 end
@@ -28,6 +34,10 @@ function CCommands:Passport( pPlayer, sCmd, sTarget )
 		end
 		
 		if pTarget and pTarget:IsInGame() then
+			if pTarget:IsAdmin() or pTarget:GetDimension() ~= pPlayer:GetDimension() or pTarget:GetPosition():Distance( pPlayer:GetPosition() ) > 2 then
+				return TEXT_PLAYER_NOT_NEARBY, 255, 0, 0;
+			end
+			
 			local sMarried		= pChar:GetMarried();
 			
 			pTarget:Client().CGUIPassport(

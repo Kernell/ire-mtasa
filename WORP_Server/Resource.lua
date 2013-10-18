@@ -67,6 +67,7 @@ class: Resource
 		CCommand:RegisterCommand( "call",				CCommands.PhoneCall		);
 		CCommand:RegisterCommand( "sms",				CCommands.PhoneSMS		);
 		
+		CCommand:RegisterCommand( "settings", 			CCommands.Settings );
 		CCommand:RegisterCommand( "enter", 				CCommands.Enter );
 		CCommand:RegisterCommand( 'showdopulsestat',	CCommands.ShowDoPulseStat	);
 		CCommand:RegisterCommand( 'passport',			CCommands.Passport		);

@@ -15,8 +15,8 @@ class: CVehicleHUDSpeed ( C3DHUD )
 		[ DODO ]		= { 0.5, -6.0, 0.6 };
 		[ HYDRA ]		= { 0.7, -7.0, 0.6 };
 		[ HUNTER ]		= { 0.6, -9.0, 1.2 };
-		[ MAVERICK ]	= { 0.5, -7.0, 1.0 };
-		[ POLMAV ]		= { 0.5, -7.0, 1.0 };
+		[ MAVERICK ]	= { 0.6, -7.0, 1.0 };
+		[ POLMAV ]		= { 0.6, -7.0, 1.0 };
 		[ VCNMAV ]		= { 0.5, -6.0, 1.0 };
 	};
 	

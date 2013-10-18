@@ -1561,7 +1561,9 @@ end
 function CClientRPC:ReturnOffer( bAccepted, sOfferID )	
 	if self:IsInGame() then
 		if self:IsInVehicle() then
-			return self:GetChat():Send( "Функция не доступна в автомобиле", 255, 0, 0 );
+			self:GetChat():Send( "Функция не доступна в автомобиле", 255, 0, 0 );
+			
+			return;
 		end
 		
 		if self.m_Offers and self.m_Offers[ sOfferID ] then
@@ -1570,91 +1572,107 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 			
 			if pOffer and pOffer:IsInGame() then
 				if bAccepted then
-					if not pOffer:IsAdmin() and self:GetDimension() == pOffer:GetDimension() and self:GetPosition():Distance( pOffer:GetPosition() ) < 2.0 then
-						if sOption == "kiss" then
-							if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
-								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								
-								return;
-							end
+					local vecSelfPosition	= self:GetPosition();
+					local vecOfferPosition	= pOffer:GetPosition();
+					
+					if pOffer:IsAdmin() or self:GetDimension() ~= pOffer:GetDimension() or vecSelfPosition:Distance( vecOfferPosition ) > 2.0 then
+						self:Hint	( "Ошибка", TEXT_PLAYER_NOT_NEARBY, "error" );
+						pOffer:Hint	( "Ошибка", TEXT_PLAYER_NOT_NEARBY, "error" );
+						
+						return;
+					end
+					
+					if vecSelfPosition.Z:floor() ~= vecOfferPosition.Z:floor() then
+						self:Hint	( "Ошибка", "Вы должны быть на одной высоте с другим игроком", "error" );
+						pOffer:Hint	( "Ошибка", "Вы должны быть на одной высоте с другим игроком", "error" );
+						
+						return;
+					end
+					
+					if sOption == "kiss" then
+						if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
+							self:Hint	( "Ошибка", "Эта функция недоступна в данный момент", "error" );
+							pOffer:Hint	( "Ошибка", "Эта функция недоступна в данный момент", "error" );
 							
-							local sMyAnimation		= self:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
-							local sOfferAnimation	= pOffer:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
-							
-							if pOffer:GetSkin().GetGender() == self:GetSkin().GetGender() then
-								sMyAnimation	= "Grlfrd_Kiss_02";
-								sOfferAnimation	= "Playa_Kiss_02";
-							end
-							
-							pOffer:SetRotationAt( self:GetPosition() );
-							self:SetRotationAt( pOffer:GetPosition() );
-							
-							pOffer:SetPosition( self:GetPosition():Offset( 0.9, self:GetRotation() ) );
-							
-							pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false );
-							self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false );
-						elseif sOption == "propose" then
-							if self:GetChar():IsMarried() then
-								self:GetChat():Send( "Вы уже " + self:Gender( 'женаты на ', 'замужем за ' ) + self:GetChar():GetMarried(), 255, 0, 0 );
-								
-								return;
-							end
-							
-							if pOffer:GetChar():IsMarried() then
-								pOffer:GetChat():Send( "Вы уже " + pOffer:Gender( 'женаты на ', 'замужем за ' ) + pOffer:GetChar():GetMarried(), 255, 0, 0 );
-								
-								return;
-							end
-							
-							if self:GetPosition():Distance( Vector3( 2243.895, -1356.061, 24.478 ) ) < 5.0 then
-								local pMale		= self:GetSkin().GetGender() == 'male' and self:GetChar() or pOffer:GetChar();
-								local pFemale	= self:GetSkin().GetGender() == 'female' and self:GetChar() or pOffer:GetChar();
-								
-								if pMale:GetMoney() >= 10000 then
-									pMale:TakeMoney( 10000 );
-									
-									pMale:SetMarried( pFemale );
-									pFemale:SetMarried( pMale );
-									
-									pMale.m_pPlayer:Hint( "Поздравляем!", "Теперь Вы женаты на " + pFemale:GetName(), "ok" );
-									pFemale.m_pPlayer:Hint( "Поздравляем!", "Теперь Вы замужем за " + pMale:GetName(), "ok" );
-								else
-									pMale.m_pClient:GetChat():Send( "Затраты приёма брака - $10000", 222, 222, 222 );
-								end
-							else
-								self:GetChat():Send( "Вы должны быть у церкви в Los Angeles", 255, 32, 32 );
-								pOffer:GetChat():Send( "Вы должны быть у церкви в Los Angeles", 255, 32, 32 );
-							end
-						elseif sOption == "divorce" then
-							if self:GetChar():GetMarried() == pOffer:GetChar():GetName() and pOffer:GetChar():GetMarried() == self:GetChar():GetName() then
-								self:GetChar():SetMarried();
-								pOffer:GetChar():SetMarried();
-								
-								pOffer:GetChat():Send( "Теперь Вы больше не " + pOffer:Gender( "женаты", "замужем" ), 255, 64, 64 );
-								self:GetChat():Send( "Теперь Вы больше не " + self:Gender( "женаты", "замужем" ), 255, 64, 64 );
-							else
-								self:GetChat():Send( "Вы не " + self:Gender( "женаты на ", "замужем за " ) + pOffer:GetName(), 255, 0, 0 );
-								pOffer:GetChat():Send( "Вы не " + pOffer:Gender( "женаты на ", "замужем за " ) + self:GetName(), 255, 0, 0 );
-							end
-						elseif sOption == "hello" then
-							if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
-								self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
-								
-								return;
-							end
-							
-							pOffer:SetRotationAt( self:GetPosition() );
-							self:SetRotationAt( pOffer:GetPosition() );
-							
-							pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
-							
-							self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
-							pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
+							return;
 						end
-					else
-						self:Hint( "Ошибка", TEXT_PLAYER_NOT_NEARBY, "error" );
+						
+						local sMyAnimation		= self:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
+						local sOfferAnimation	= pOffer:GetSkin().GetGender() == "female" and "Grlfrd_Kiss_02" or "Playa_Kiss_02";
+						
+						if pOffer:GetSkin().GetGender() == self:GetSkin().GetGender() then
+							sMyAnimation	= "Grlfrd_Kiss_02";
+							sOfferAnimation	= "Playa_Kiss_02";
+						end
+						
+						pOffer:SetRotationAt( self:GetPosition() );
+						self:SetRotationAt( pOffer:GetPosition() );
+						
+						pOffer:SetPosition( self:GetPosition():Offset( 0.9, self:GetRotation() ) );
+						
+						pOffer:SetData	( "Headmove:Pause", 6 + getRealTime().timestamp );
+						self:SetData	( "Headmove:Pause", 6 + getRealTime().timestamp );
+						
+						pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false );
+						self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false );
+					elseif sOption == "propose" then
+						if self:GetChar():IsMarried() then
+							self:GetChat():Send( "Вы уже " + self:Gender( 'женаты на ', 'замужем за ' ) + self:GetChar():GetMarried(), 255, 0, 0 );
+							
+							return;
+						end
+						
+						if pOffer:GetChar():IsMarried() then
+							pOffer:GetChat():Send( "Вы уже " + pOffer:Gender( 'женаты на ', 'замужем за ' ) + pOffer:GetChar():GetMarried(), 255, 0, 0 );
+							
+							return;
+						end
+						
+						if self:GetPosition():Distance( Vector3( 2243.895, -1356.061, 24.478 ) ) < 5.0 then
+							local pMale		= self:GetSkin().GetGender() == 'male' and self:GetChar() or pOffer:GetChar();
+							local pFemale	= self:GetSkin().GetGender() == 'female' and self:GetChar() or pOffer:GetChar();
+							
+							if pMale:GetMoney() >= 10000 then
+								pMale:TakeMoney( 10000 );
+								
+								pMale:SetMarried( pFemale );
+								pFemale:SetMarried( pMale );
+								
+								pMale.m_pPlayer:Hint( "Поздравляем!", "Теперь Вы женаты на " + pFemale:GetName(), "ok" );
+								pFemale.m_pPlayer:Hint( "Поздравляем!", "Теперь Вы замужем за " + pMale:GetName(), "ok" );
+							else
+								pMale.m_pClient:GetChat():Send( "Затраты приёма брака - $10000", 222, 222, 222 );
+							end
+						else
+							self:GetChat():Send( "Вы должны быть у церкви в Los Angeles", 255, 32, 32 );
+							pOffer:GetChat():Send( "Вы должны быть у церкви в Los Angeles", 255, 32, 32 );
+						end
+					elseif sOption == "divorce" then
+						if self:GetChar():GetMarried() == pOffer:GetChar():GetName() and pOffer:GetChar():GetMarried() == self:GetChar():GetName() then
+							self:GetChar():SetMarried();
+							pOffer:GetChar():SetMarried();
+							
+							pOffer:GetChat():Send( "Теперь Вы больше не " + pOffer:Gender( "женаты", "замужем" ), 255, 64, 64 );
+							self:GetChat():Send( "Теперь Вы больше не " + self:Gender( "женаты", "замужем" ), 255, 64, 64 );
+						else
+							self:GetChat():Send( "Вы не " + self:Gender( "женаты на ", "замужем за " ) + pOffer:GetName(), 255, 0, 0 );
+							pOffer:GetChat():Send( "Вы не " + pOffer:Gender( "женаты на ", "замужем за " ) + self:GetName(), 255, 0, 0 );
+						end
+					elseif sOption == "hello" then
+						if not pOffer:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) or not self:CheckPriority( CPlayerAnimation.PRIORITY_OFFERS ) then
+							self:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+							pOffer:Hint( "Ошибка", "Эта функция не доступна в данный момент", "error" );
+							
+							return;
+						end
+						
+						pOffer:SetRotationAt( self:GetPosition() );
+						self:SetRotationAt( pOffer:GetPosition() );
+						
+						pOffer:SetPosition( self:GetPosition():Offset( .9, self:GetRotation() ) );
+						
+						self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
+						pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "GANGS", "hndshkfa_swt", 4000, false, false, false, false );
 					end
 				else
 					local sOfferTitle = NULL;

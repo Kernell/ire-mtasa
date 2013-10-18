@@ -40,31 +40,23 @@ class: C3DHUD
 			end
 		end
 		
+		this.m_pRender = dxCreateRenderTarget( 200, 100, true );
+		
         addEventHandler( "onClientPreRender", root, this.__Render );
 	end;
 	
 	_C3DHUD		= function( this )
 		removeEventHandler( "onClientPreRender", root, this.__Render );
 		
-		if this.m_pRender then
-			destroyElement( this.m_pRender );
-		end
+		destroyElement( this.m_pRender );
 		
 		this.m_pRender	= NULL;
 		this.__Render	= NULL;
 	end;
 	
 	SetText		= function( this, sText )
-		if this.m_pRender then
-			destroyElement( this.m_pRender );
-			
-			this.m_pRender	= NULL;
-		end
-		
 		if sText then
-			this.m_pRender = dxCreateRenderTarget( 200, 100, true );
-			
-			dxSetRenderTarget( this.m_pRender );		
+			dxSetRenderTarget( this.m_pRender, true );		
 			
 			this:DrawText( sText, this.m_fX, this.m_fY, this.m_fWidth, this.m_fHeight, this.m_iColor );
 			
