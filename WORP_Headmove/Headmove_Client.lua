@@ -18,7 +18,7 @@ function DoPulse()
 	setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ } );
 	
 	for i, pPlayer in ipairs( getElementsByType( "player", root, true ) ) do
-		local iPause = Players[ source ] and Players[ source ].Pause or 0;
+		local iPause = Players[ pPlayer ] and Players[ pPlayer ].Pause or 0;
 		
 		if iTick - iPause <= 0 or isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
 			setPedLookAt( pPlayer, 1, 2, 3, 0 );
