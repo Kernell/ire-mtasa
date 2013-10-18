@@ -39,7 +39,7 @@ end
 
 function OnDataChange( sData )
 	if sData == "Headmove:Pause" and source == localPlayer then
-		local iPause = getElementData( source, sData );
+		local iValue = getElementData( source, sData );
 		
 		iPause = iValue and ( getTickCount() + iValue ) or 0;
 	end
