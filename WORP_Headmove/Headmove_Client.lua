@@ -5,20 +5,22 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-local DoPulse;
+local Players	= {};
+
+local DoPulse, OnDataChange;
 
 local fScreenX, fScreenY = guiGetScreenSize();
 
 function DoPulse()
-	local iTimestamp	= getRealTime().timestamp;
+	local iTick			= getTickCount();
 	local fX, fY, fZ	= getWorldFromScreenPosition( fScreenX / 2, fScreenY / 2, 20.0 );
 	
 	setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ } );
 	
 	for i, pPlayer in ipairs( getElementsByType( "player", root, true ) ) do
-		local iPause = getElementData( pPlayer, "Headmove:Pause" ) or 0;
+		local iPause = Players[ source ] and Players[ source ].Pause or 0;
 		
-		if iTimestamp - iPause <= 0 or isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
+		if iTick - iPause <= 0 or isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
 			setPedLookAt( pPlayer, 1, 2, 3, 0 );
 		else
 			local LookAt = getElementData( pPlayer, "Headmove:LookAt" );
@@ -31,4 +33,16 @@ function DoPulse()
 	end
 end
 
+function OnDataChange( sData )
+	if sData == "Headmove:Pause" then
+		if not Players[ source ] then
+			Players[ source ] = {};
+		end
+		
+		Players[ source ].Pause = getTickCount() + getElementData( source, sData );
+	end
+end
+
 setTimer( DoPulse, 300, 0 );
+
+addEventHandler( "onClientElementDataChange", root, OnDataChange );

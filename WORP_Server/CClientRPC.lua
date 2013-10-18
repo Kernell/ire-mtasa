@@ -1610,8 +1610,8 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 						
 						pOffer:SetPosition( self:GetPosition():Offset( 0.9, self:GetRotation() ) );
 						
-						pOffer:SetData	( "Headmove:Pause", 6 + getRealTime().timestamp );
-						self:SetData	( "Headmove:Pause", 6 + getRealTime().timestamp );
+						pOffer:SetData	( "Headmove:Pause", 6000 );
+						self:SetData	( "Headmove:Pause", 6000 );
 						
 						pOffer:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sOfferAnimation, 6000, false, false, false, false );
 						self:SetAnimation( CPlayerAnimation.PRIORITY_OFFERS, "KISSING", sMyAnimation, 6000, false, false, false, false );
