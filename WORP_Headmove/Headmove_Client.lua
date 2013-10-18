@@ -18,7 +18,7 @@ function DoPulse()
 	for i, pPlayer in ipairs( getElementsByType( "player", root, true ) ) do
 		local iPause = getElementData( pPlayer, "Headmove:Pause" ) or 0;
 		
-		if iPause - iTimestamp > 0 or isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
+		if iTimestamp - iPause <= 0 or isPedInVehicle( pPlayer ) or getPedControlState( pPlayer, "aim_weapon" ) then
 			setPedLookAt( pPlayer, 1, 2, 3, 0 );
 		else
 			local LookAt = getElementData( pPlayer, "Headmove:LookAt" );

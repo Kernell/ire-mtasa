@@ -1582,7 +1582,7 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 						return;
 					end
 					
-					if vecSelfPosition.Z:floor() ~= vecOfferPosition.Z:floor() then
+					if ( vecSelfPosition.Z - vecOfferPosition.Z ):abs() > 0.5 then
 						self:Hint	( "Ошибка", "Вы должны быть на одной высоте с другим игроком", "error" );
 						pOffer:Hint	( "Ошибка", "Вы должны быть на одной высоте с другим игроком", "error" );
 						

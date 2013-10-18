@@ -55,13 +55,13 @@ class: C3DHUD
 	end;
 	
 	SetText		= function( this, sText )
+		dxSetRenderTarget( this.m_pRender, true );		
+			
 		if sText then
-			dxSetRenderTarget( this.m_pRender, true );		
-			
 			this:DrawText( sText, this.m_fX, this.m_fY, this.m_fWidth, this.m_fHeight, this.m_iColor );
-			
-			dxSetRenderTarget();
 		end
+			
+		dxSetRenderTarget();
 	end;
 	
 	DrawText	= function( this, sText, fX, fY, fWidth, fHeight, iColor )

@@ -83,19 +83,19 @@ function CPlayerCommands:Kick( pPlayer, sCmd, sOption, sTargetPlayer, ... )
 			if pPlayer:GetUserID() == 1 or not pTarget:HaveAccess( "general.immunity" ) then
 				local date = getRealTime();
 				
-				outputChatBox( ( "%s кикнут с сервера администратором %s, прична: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), pPlayer:GetUserName(), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
-				
-				g_pAdminLog:Write( "%s kicked %s (%s) (%s)", pPlayer:GetUserName(), pTarget:GetName(), pTarget:GetUserName(), sReason );
+				outputChatBox( ( "%s кикнут с сервера администратором %s, причина: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), pPlayer:GetUserName(), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
 				
 				pTarget:Kick( sReason );
-			else
-				pPlayer:GetChat():Error( TEXT_PLAYER_HAS_IMMUNITY ); 
+				
+				g_pAdminLog:Write( "%s kicked %s (%s)", pPlayer:GetUserName(), pTarget:GetName(), sReason );
+				
+				return true;
 			end
-		else
-			pPlayer:GetChat():Error( TEXT_PLAYER_NOT_FOUND );
+			
+			return TEXT_PLAYER_HAS_IMMUNITY, 255, 0, 0;
 		end
 		
-		return true;
+		return TEXT_PLAYER_NOT_FOUND, 255, 0, 0;
 	end
 	
 	return false;

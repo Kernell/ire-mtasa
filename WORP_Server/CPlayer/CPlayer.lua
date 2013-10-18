@@ -589,6 +589,7 @@ function CPlayer:InitLoginCamera()
 	self:SetName( 'not_logged_in_' + self:GetID() );
 	
 	self:GetNametag():Hide();
+	self:GetNametag():Update();
 	
 	self:SetAlpha( 0 );
 	self:SetCollisionsEnabled( false );
