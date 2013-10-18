@@ -12,14 +12,14 @@ local DoPulse, OnDataChange;
 local fScreenX, fScreenY = guiGetScreenSize();
 
 function DoPulse()
-	local iTick			= getTickCount();
-	local fX, fY, fZ	= getWorldFromScreenPosition( fScreenX / 2, fScreenY / 2, 20.0 );
-	
-	setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ, 999999999 } );
-	
 	if iPause > 0 then
-		if iTick - iPause > 0 then
+		if getTickCount() - iPause <= 0 then
+			setElementData( localPlayer, "Headmove:LookAt", { 1, 2, 3, 0 } );
+		else
+			local fX, fY, fZ	= getWorldFromScreenPosition( fScreenX / 2, fScreenY / 2, 20.0 );
+			
 			setElementData( localPlayer, "Headmove:Pause", false );
+			setElementData( localPlayer, "Headmove:LookAt", { fX, fY, fZ, 999999999 } );
 		end
 	end
 	
