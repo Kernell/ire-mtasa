@@ -202,7 +202,7 @@ function CUIFactionCreate:CUIFactionCreate( sName, sSurname, eFactionType, Inter
 				self.ButtonCancel.Click();
 			end
 			
-			self:AsyncQuery( Complete, "Faction_Create", sTitle, sAbbr, Interiors[ iInterior + 1 ].ID, iType + 1 );
+			self:AsyncQuery( Complete, "Faction__Create", sTitle, sAbbr, Interiors[ iInterior + 1 ].ID, iType + 1 );
 		end;
 	};
 	

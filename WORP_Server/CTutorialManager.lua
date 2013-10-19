@@ -83,8 +83,6 @@ class: CTutorialManager ( CManager )
 	
 	HandleNewCharacter	= function( this, pClient )
 		if this.m_TutorialStrings[ eTutorialType.NEW_CHARACTER ] then
-			Debug( "HandleNewCharacter( " + tostring( pClient ) + " )" );
-			
 			local pChar	= pClient:GetChar();
 			
 			if pChar and not pChar:IsEventComplete( eTutorialType.NEW_CHARACTER ) then
