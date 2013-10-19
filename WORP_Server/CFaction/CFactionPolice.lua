@@ -22,7 +22,7 @@ function CFactionPolice:ShowMenu( pPlayer, bForce )
 			local pVehicle = pPlayer:GetVehicle();
 			
 			if pVehicle and pVehicle:GetFaction() == self then
-				pPlayer:Client().CGUISAPD( pChar.m_PoliceStats );
+				pPlayer:Client().CGUISAPD();
 			
 				return true;
 			end
@@ -50,8 +50,6 @@ function CClientRPC:SAPD_RequestBackup()
 				pVehicle.m_pBlip:SetParent( pVehicle );
 				
 				self:OnChat( pVehicle:GetRegPlate() + " запрашивает подкрепление на " + pVehicle:GetZoneName(), 2 );
-				
-				pChar.m_PoliceStats.backup_calls = pChar.m_PoliceStats.backup_calls + 1;
 			end
 		end
 	end

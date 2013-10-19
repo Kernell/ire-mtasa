@@ -34,7 +34,6 @@ function CPlayer:LoginCharacter( name, surname, bForce )
 		DATE_FORMAT( last_login, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS last_login, \
 		DATE_FORMAT( date_of_birdth, '%%d/%%m/%%Y' ) AS date_of_birdth, \
 		UNIX_TIMESTAMP( c.last_logout ) AS last_logout_t FROM " + DBPREFIX + "characters c\
-		LEFT JOIN " + DBPREFIX + "police_stats ps ON ps.character_id = c.id\
 		WHERE c.name = %q AND c.surname = %q AND c.status = 'Активен'", name, surname ) or not Debug( g_pDB:Error(), 1 );
 		
 		if pResult then
@@ -43,8 +42,6 @@ function CPlayer:LoginCharacter( name, surname, bForce )
 			delete ( pResult );
 			
 			if pRow then
-				g_pDB:Query( "INSERT INTO " + DBPREFIX + "police_stats ( character_id ) VALUES ( " + pRow.id + " )" );
-				
 				self.m_pCamera:Fade( false );
 				
 				self.m_iInGameCount	= 0;
@@ -65,13 +62,9 @@ function CPlayer:LoginCharacter( name, surname, bForce )
 						
 						local vecSpawn, fRotation, iInterior, iDimension;
 						
-						pRow.last_logout_t = (int)(pRow.last_logout_t);
+						vecSpawn, fRotation, iInterior, iDimension = Vector3( pRow.position ), pRow.rotation, pRow.interior, pRow.dimension;
 						
-						if pRow.last_logout_t + 3600 >= getRealTime().timestamp then
-							vecSpawn, fRotation, iInterior, iDimension = Vector3( pRow.position ), pRow.rotation, pRow.interior, pRow.dimension;
-						else
-							vecSpawn, fRotation, iInterior, iDimension = self:GetSpawnCoords();
-						end
+						pRow.last_logout_t = (int)(pRow.last_logout_t);
 						
 						self.m_pCharacter:LoadItems();
 						

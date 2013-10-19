@@ -73,16 +73,6 @@ function CChar:CChar( pClient, pDBField )
 		self.m_pClient:SetStat( _G[ weapon ], value );
 	end
 	
-	self.m_PoliceStats =
-	{
-		tickets				= (int)(pDBField.tickets);
-		arrests				= (int)(pDBField.arrests);
-		unauthorized_kills	= (int)(pDBField.unauthorized_kills);
-		authorized_kills	= (int)(pDBField.authorized_kills);
-		on_duty_death		= (int)(pDBField.on_duty_death);
-		backup_calls		= (int)(pDBField.backup_calls);
-	};
-	
 	self.m_Events		= {};
 	
 	if pDBField.events then
@@ -147,10 +137,6 @@ function CChar:Save()
 	);
 	
 	if not g_pDB:Query( query ) then
-		Debug( g_pDB:Error(), 1 );
-	end
-	
-	if not g_pDB:Query( "UPDATE " + DBPREFIX + "police_stats SET " + table.concat_assoc( self.m_PoliceStats, "', ", " = '" ) + "' WHERE character_id = " + self:GetID() ) then
 		Debug( g_pDB:Error(), 1 );
 	end
 	
