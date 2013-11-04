@@ -100,13 +100,13 @@
   <script src="CVehicleHUDRaceLaps.lua"                 type="client"/>
   <script src="CVehicleHUDRaceTime.lua"                 type="client"/>
   <script src="CVehicleHUDRacePosition.lua"             type="client"/>
-  <script src="Vehicles/CVehicle.lua"                   type="client"/>
-  <script src="Vehicles/CVehicleIndicator.lua"          type="client"/>
-  <script src="Vehicles/CVehicleIndicators.lua"         type="client"/>
-  <script src="Vehicles/CVehicleIndicatorsManager.lua"  type="client"/>
-  <script src="Vehicles/CVehicleTuning.lua"             type="client"/>
-  <script src="Vehicles/CVehicleWhelen.lua"             type="client"/>
-  <script src="Vehicles/CVehicleWhelenManager.lua"      type="client"/>
+  <script src="CVehicle.lua"                   type="client"/>
+  <script src="CVehicleIndicator.lua"          type="client"/>
+  <script src="CVehicleIndicators.lua"         type="client"/>
+  <script src="CVehicleIndicatorsManager.lua"  type="client"/>
+  <script src="CVehicleTuning.lua"             type="client"/>
+  <script src="CVehicleWhelen.lua"             type="client"/>
+  <script src="CVehicleWhelenManager.lua"      type="client"/>
   <script src="Vehicles/DrawLabels.lua"                 type="client"/>
   <script src="Vehicles/ShopDialog.lua"                 type="client"/>
   <script src="Vehicles/DamageManager.lua"              type="client"/>
