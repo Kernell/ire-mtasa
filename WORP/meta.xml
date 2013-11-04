@@ -39,7 +39,6 @@
   <script src="CContextMenu.lua"      type="client"/>
   <script src="ElementGhostMode.lua"  type="client"/>
   <script src="ElementStream.lua"     type="client"/>
-  <script src="D3DX.lua"              type="client"/>
   <script src="MessageBox.lua"        type="client"/>
   <script src="Race.lua"              type="client"/>
   <script src="CCutScene.lua"         type="client"/>
@@ -107,7 +106,6 @@
   <script src="CVehicleWhelen.lua"             type="client"/>
   <script src="CVehicleWhelenManager.lua"      type="client"/>
   <script src="Vehicles/DrawLabels.lua"                 type="client"/>
-  <script src="Vehicles/ShopDialog.lua"                 type="client"/>
   <script src="Vehicles/DamageManager.lua"              type="client"/>
   <script src="Vehicles/RemapBody.lua"                  type="client"/>
   <script src="Vehicles/AnalogControl.lua"              type="client"/>
@@ -238,15 +236,6 @@
   <file src="Resources/Images/Items/ammo_og_7b.png"/>
   <file src="Resources/Images/Items/ammo_5_45x39.png"/>
   <file src="Resources/Images/Items/ammo_5_56x45.png"/>
-  
-  <file src="Resources/Images/Speedo/engine.png"/>
-  <file src="Resources/Images/Speedo/handbrake.png"/>
-  <file src="Resources/Images/Speedo/left.png"/>
-  <file src="Resources/Images/Speedo/lights.png"/>
-  <file src="Resources/Images/Speedo/needle.png"/>
-  <file src="Resources/Images/Speedo/needle_fuel.png"/>
-  <file src="Resources/Images/Speedo/right.png"/>
-  <file src="Resources/Images/Speedo/speedo.png"/>
   
   <file src="Resources/Sounds/pkm_btr_shoot.mp3"/>
   <file src="Resources/Sounds/weapon_switch.wav"/>
