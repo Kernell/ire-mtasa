@@ -7,17 +7,6 @@
 
 -- TODO: Refactoring
 
--- fadeCamera( false, 0 );
-showPlayerHudComponent( 'all', false );
-showChat( false );
-
-local function Init()
-	setAmbientSoundEnabled( "gunfire", false );
-	guiSetInputMode( "no_binds_when_editing" );
-	
-	SERVER.Ready( g_iScreenX, g_iScreenY );
-end
-
 local sounds = {};
 
 function PlaySound3D( file, volume, max_distance, min_distance )
@@ -197,7 +186,6 @@ end
 
 addEventHandler( 'onClientPreRender', root, ProcessStaffAlpha );
 addEventHandler( 'onClientPreRender', root, UpdatePlayer );
-addEventHandler( "onClientResourceStart", resourceRoot, Init );
 
 function GetGroundPosition( sCallback )
 	SERVER[ sCallback ]( getGroundPosition( getElementPosition( localPlayer ) ) );

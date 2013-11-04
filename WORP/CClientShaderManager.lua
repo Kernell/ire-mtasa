@@ -8,15 +8,18 @@
 class: CClientShaderManager
 {
 	CClientShaderManager	= function( this )
-		this.m_Shaders	= {};
-		
-		this.m_Shaders.GrayScale	= CClientShaderGrayScale();
-		this.m_Shaders.MotionBlur	= CClientShaderMotionBlur();
+		this.m_Shaders	=
+		{
+			GrayScale	= CClientShaderGrayScale();
+			MotionBlur	= CClientShaderMotionBlur();
+			CarPaint	= CClientShaderCarPaint();
+		};		
 	end;
 	
 	_CClientShaderManager	= function( this )
 		delete ( this.m_Shaders.GrayScale );
 		delete ( this.m_Shaders.MotionBlur );
+		delete ( this.m_Shaders.CarPaint );
 		
 		this.m_Shaders		= NULL;
 	end;

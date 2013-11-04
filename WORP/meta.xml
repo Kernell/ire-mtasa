@@ -9,16 +9,16 @@
   
   <sync_map_element_data>false</sync_map_element_data>
   
-  <script src="Shared/utils.lua"      type="client"   cache="false"/>
+  <script src="Shared/utils.lua"      type="client"/>
   <script src="Shared/Debug.lua"      type="client"/>
-  <script src="Shared/class.lua"      type="client"   cache="false"/>
-  <script src="Shared/base64.lua"     type="client"   cache="false"/>
-  <script src="Shared/Easing.lua"     type="client"   cache="false"/>
+  <script src="Shared/class.lua"      type="client"/>
+  <script src="Shared/base64.lua"     type="client"/>
+  <script src="Shared/Easing.lua"     type="client"/>
   <script src="Shared/CVector.lua"    type="client"/>
   <script src="Shared/CElement.lua"   type="client"/>
-    <script src="CElement.lua"      type="client"/>
+    <script src="CElement.lua"          type="client"/>
   <script src="Shared/CPed.lua"       type="client"/>
-    <script src="CPed.lua"          type="client"/>
+    <script src="CPed.lua"              type="client"/>
   <script src="Shared/CPlayer.lua"    type="client"/>
   <script src="Shared/CBlip.lua"      type="client"/>
   <script src="Shared/CColShape.lua"  type="client"/>
@@ -50,9 +50,12 @@
   <script src="CSound.lua"            type="client"/>
   <script src="CSoundManager.lua"     type="client"/>
 
-  <script src="CTeleport.lua"   type="client"/>
-  <script src="C3DHUD.lua"      type="client"/>
-  <script src="C3DText.lua"     type="client"/>
+  <script src="CTeleport.lua"         type="client"/>
+  <script src="C3DHUD.lua"            type="client"/>
+  <script src="C3DText.lua"           type="client"/>
+  
+  <script src="CNetManager.lua"       type="client"/>
+  <script src="CClientManager.lua"    type="client"/>
 
   <!-- Players -->
 
@@ -267,7 +270,9 @@
   <file src="Resources/Shaders/ReplaceTexture.fx" />
   <file src="Resources/Shaders/tex_color.fx" />
   <file src="Resources/Shaders/grayscale.fx" />
-  
+  <file src="Resources/Shaders/car_refgrun.fx" />
+	<file src="Resources/Shaders/car_refgene.fx" />
+    
   <file src="Resources/Sounds/Weapons/generic_empty.ogg" />
 
   <file src="Resources/Sounds/Weapons/ak47_fire.wav" />
@@ -280,6 +285,8 @@
   <file src="Resources/Sounds/Weapons/dagnv_fire.wav" />
   <file src="Resources/Sounds/Weapons/m1014_fire.wav" />
   <file src="Resources/Sounds/Weapons/m3-1.wav" />
+
+	<file src="Resources/Textures/smallnoise3d.dds" />
   
   <file src="Resources/Textures/HUD/Background.png" />
   <file src="Resources/Textures/HUD/Background2.png" />

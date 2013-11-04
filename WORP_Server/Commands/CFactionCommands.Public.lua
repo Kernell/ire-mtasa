@@ -1,5 +1,9 @@
--- Author:      	Kernell
--- Version:     	1.0.0
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2013
+-- License		Proprietary Software
+-- Version		1.0
 
 -- Flag: news
 local SN_BASE_POSITION		= Vector3( 363.486, 271.150, 1008.673 );
@@ -438,7 +442,7 @@ function CFactionCommands:SetCuffed( pClient, sCmd, sPlayer, bCuffed, bFollow )
 		return TEXT_PLAYER_NOT_FOUND, 255, 0, 0;	
 	end
 	
-	if pPlayer:IsAdmin() or pPlayer:GetPosition():DistanceTo( pClient:GetPosition() ) > 1.0 then
+	if pPlayer:IsAdmin() or pPlayer:GetPosition():DistanceTo( pClient:GetPosition() ) > 2.0 then
 		return TEXT_PLAYER_NOT_NEARBY, 255, 0, 0;
 	end
 	

@@ -7,7 +7,7 @@
 
 function CCommands:Settings( pPlayer )
 	if pPlayer:IsLoggedIn() then
-		pPlayer:Client().CUISettings( pPlayer.m_Settings );
+		pPlayer:Client().CUISettings();
 	end
 end
 

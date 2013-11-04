@@ -975,7 +975,7 @@ function CClientRPC:Bank__CreateAccount( sType, sCurrencyID, iFactionID, sCard )
 				return "Организации с таким именем не существует";
 			end
 			
-			if pFaction.m_sBankAccountID then
+			if pFaction.m_sBankAccountID == "0" then
 				return "Для этой организации уже создан счёт";
 			end
 		end
