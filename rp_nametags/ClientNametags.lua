@@ -31,10 +31,13 @@ function Draw( pPlayer, bPed )
 			if fScreenX and fScreenY then
 				local fScale 	= 1.4;
 				local r, g, b 	= 255, 255, 255;
-				local sText		= --[[ not bPed and pPlayer:GetNametagText( pPlayer ) or ]] pPlayer:GetData( 'Nametag:Text' );
+				local fAlpha	= Lerp( 255, 0, fDistance / g_fMaxDistance );
+				local sText		= pPlayer:GetData( 'Nametag:Text' );
+				
+				local iColor3	= tocolor( 0, 0, 0, fAlpha );
 				
 				if sText then					
-					local Color = pPlayer:GetData( 'nametag_color' );
+					local Color = pPlayer:GetData( 'Nametag:Color' );
 					
 					if Color then
 						r, g, b		= Color[ 1 ], Color[ 2 ], Color[ 3 ];
@@ -42,11 +45,14 @@ function Draw( pPlayer, bPed )
 						r, g, b 	= pPlayer:GetNametagColor();
 					end
 					
-					dxDrawText( sText, fScreenX + 1, fScreenY + 1, fScreenX + 1, fScreenY + 1, -16777216, 1.0, arialbd, 'center', 'bottom' );
-					dxDrawText( sText, fScreenX - 1, fScreenY - 1, fScreenX - 1, fScreenY - 1, -16777216, 1.0, arialbd, 'center', 'bottom' );
-					dxDrawText( sText, fScreenX + 1, fScreenY - 1, fScreenX + 1, fScreenY - 1, -16777216, 1.0, arialbd, 'center', 'bottom' );
-					dxDrawText( sText, fScreenX - 1, fScreenY + 1, fScreenX - 1, fScreenY + 1, -16777216, 1.0, arialbd, 'center', 'bottom' );
-					dxDrawText( sText, fScreenX, fScreenY, fScreenX, fScreenY, tocolor( r, g, b, 255 ), 1.0, arialbd, 'center', 'bottom' );
+					local iColor1	= tocolor( r, g, b, fAlpha );
+					local iColor2	= tocolor( r, g, b, fAlpha * 0.4 );
+					
+					dxDrawText( sText, fScreenX + 1, fScreenY + 1, fScreenX + 1, fScreenY + 1, iColor3, 1.0, arialbd, 'center', 'bottom' );
+					dxDrawText( sText, fScreenX - 1, fScreenY - 1, fScreenX - 1, fScreenY - 1, iColor3, 1.0, arialbd, 'center', 'bottom' );
+					dxDrawText( sText, fScreenX + 1, fScreenY - 1, fScreenX + 1, fScreenY - 1, iColor3, 1.0, arialbd, 'center', 'bottom' );
+					dxDrawText( sText, fScreenX - 1, fScreenY + 1, fScreenX - 1, fScreenY + 1, iColor3, 1.0, arialbd, 'center', 'bottom' );
+					dxDrawText( sText, fScreenX, fScreenY, fScreenX, fScreenY, iColor1, 1.0, arialbd, 'center', 'bottom' );
 				end
 				
 				fScreenY		= fScreenY + 8;
@@ -59,23 +65,29 @@ function Draw( pPlayer, bPed )
 				local fArmor = math.min( 100, pPlayer:GetArmor() );
 				
 				if fArmor > 0 then
-					dxDrawRectangle( fScreenX, fScreenY, fWidth, fHeight, -16777216 );
+					dxDrawRectangle( fScreenX, fScreenY, fWidth, fHeight, iColor3 );
 					
 					local r, g, b = 225, 225, 225;
 					
-					dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, fWidth - 2 * fBorder, fHeight - 2 * fBorder, tocolor( r, g, b, 100 ) );
-					dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, math.floor( ( fWidth - 2 * fBorder ) / 100 * fArmor ), fHeight - 2 * fBorder, tocolor( r, g, b, 255 ) );
+					local iColor1	= tocolor( r, g, b, fAlpha );
+					local iColor2	= tocolor( r, g, b, fAlpha * 0.4 );
+					
+					dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, fWidth - 2 * fBorder, fHeight - 2 * fBorder, iColor2 );
+					dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, math.floor( ( fWidth - 2 * fBorder ) / 100 * fArmor ), fHeight - 2 * fBorder, iColor1 );
 					
 					fScreenY = fScreenY + 1.2 * fHeight;
 				end
 				
-				dxDrawRectangle( fScreenX, fScreenY, fWidth, fHeight, tocolor( 0, 0, 0, 255 ) );
+				dxDrawRectangle( fScreenX, fScreenY, fWidth, fHeight, iColor3 );
 				
 				local fHealth	= math.min( 100, pPlayer:GetHealth() );
 				local r, g, b	= 180, 25, 29;
 				
-				dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, fWidth - 2 * fBorder, fHeight - 2 * fBorder, tocolor( r, g, b, 100 ) );
-				dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, math.floor( ( fWidth - 2 * fBorder ) / 100 * fHealth ), fHeight - 2 * fBorder, tocolor( r, g, b, 255 ) );
+				local iColor1	= tocolor( r, g, b, fAlpha );
+				local iColor2	= tocolor( r, g, b, fAlpha * 0.4 );
+				
+				dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, fWidth - 2 * fBorder, fHeight - 2 * fBorder, iColor2 );
+				dxDrawRectangle( fScreenX + fBorder, fScreenY + fBorder, math.floor( ( fWidth - 2 * fBorder ) / 100 * fHealth ), fHeight - 2 * fBorder, iColor1 );
 				
 				fScreenY = fScreenY + 16;
 				
@@ -91,7 +103,7 @@ function Draw( pPlayer, bPed )
 	end
 end
 
-addEventHandler( 'onClientRender', root, 
+addEventHandler( 'onClientPreRender', root, 
 	function()
 		g_fMaxDistance		= tonumber( CLIENT:GetData( 'Nametag->MaxDistance' ) ) or 8.0;
 		

@@ -8,7 +8,7 @@
 class: CClientShader
 {
 	CClientShader		= function( this )
-		assert( getVersion().sortable < "1.3.0", "Invalid MTA version" );
+		assert( getVersion().sortable >= "1.3.0", "Invalid MTA version" );
 	end;
 	
 	_CClientShader		= function( this )
@@ -221,7 +221,7 @@ class: CClientShaderCarPaint ( CClientShader )
 		this.m_pGeneralShader	= CShader( "Resources/Shaders/car_refgene.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, true, "vehicle" );
 		this.m_pShatShader		= CShader( "Resources/Shaders/car_refgene.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, true, "vehicle" );
 		
-		assert( not this.m_pGrunShader or not this.m_pGeneralShader or not this.m_pShatShader, "Could not create shader" );
+		assert( this.m_pGrunShader and this.m_pGeneralShader and this.m_pShatShader, "Could not create shader" );
 		
 		this.m_pScreenSource	= dxCreateScreenSource( g_iScreenX, g_iScreenY );
 		

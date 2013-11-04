@@ -197,7 +197,7 @@ function CCommands:AdminDuty( pPlayer )
 		pPlayer.m_bAdmin = not pPlayer.m_bAdmin;
 		
 		pPlayer:SetData( "adminduty", 		pPlayer.m_bAdmin );
-		pPlayer:SetData( "nametag_color",	pPlayer.m_bAdmin and pPlayer:GetGroups()[ 1 ]:GetColor() );
+		pPlayer:SetData( "Nametag:Color",	pPlayer.m_bAdmin and pPlayer:GetGroups()[ 1 ]:GetColor() );
 		pPlayer:SetGhost( pPlayer.m_bAdmin );
 		
 		if pChar and pChar:GetAlcohol() > 0 then

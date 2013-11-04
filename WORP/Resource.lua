@@ -8,6 +8,10 @@
 class: Resource
 {
 	OnStart		= function()
+		this.GetNetManager				= function( this ) return this.m_pNetManager; 			end;
+		this.GetClientManager			= function( this ) return this.m_pClientManager; 		end;
+		this.GetClientShaderManager		= function( this ) return this.m_pClientShaderManager; 	end;
+		
 		this.m_pNetManager				= CNetManager();
 		this.m_pClientManager			= CClientManager();
 		this.m_pClientShaderManager		= CClientShaderManager();
@@ -26,10 +30,6 @@ class: Resource
 		this.m_pClientShaderManager		= NULL;
 		this.m_pVehicleHUD				= NULL;
 	end;
-	
-	GetNetManager				= function( this ) return this.m_pNetManager; 			end;
-	GetClientManager			= function( this ) return this.m_pClientManager; 		end;
-	GetClientShaderManager		= function( this ) return this.m_pClientShaderManager; 	end;
 };
 
 addEventHandler( "onClientResourceStart", 	resourceRoot, 	Resource.OnStart, 	true, "high" );

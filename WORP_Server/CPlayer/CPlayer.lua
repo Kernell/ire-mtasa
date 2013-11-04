@@ -730,7 +730,7 @@ function CPlayer:InitGroups( sGroups, bAlert )
 		self.m_bAdmin = self.m_bAdmin and self:HaveAccess( 'command.adminduty' );
 		
 		self:SetData( 'adminduty', 		self.m_bAdmin );
-		self:SetData( 'nametag_color',  self.m_bAdmin and self:GetGroups()[ 1 ]:GetColor() );
+		self:SetData( "Nametag:Color",  self.m_bAdmin and self:GetGroups()[ 1 ]:GetColor() );
 		self:SetGhost( self.m_bAdmin );
 		
 		return true;
