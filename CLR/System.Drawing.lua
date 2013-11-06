@@ -5,7 +5,6 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-System					= {};
 System.Drawing			= {};
 System.Drawing.Forms	= {};
 

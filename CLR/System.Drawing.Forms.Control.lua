@@ -412,7 +412,7 @@ class "System.Drawing.Forms.Control.ControlCollection"
 			local i	= 0;
 			local l	= table.getn( this.m_List );
 			
-			function iter()
+			local function iter()
 				i = i + 1;
 				
 				if i <= l then

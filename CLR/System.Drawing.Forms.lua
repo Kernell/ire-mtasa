@@ -28,14 +28,14 @@ class "System.Drawing.Forms.Form"
 {
 -- private:
 	m_sHelpIcon			= NULL;
-	m_sMinimizeicon		= "Resources/Textures/System.Drawing.Forms/hide.png";
-	m_sMaximizeIcon		= "Resources/Textures/System.Drawing.Forms/maximize.png";
-	m_sMaximizeIcon2	= "Resources/Textures/System.Drawing.Forms/minimize.png";
-	m_sCloseIcon		= "Resources/Textures/System.Drawing.Forms/close.png";
+	m_sMinimizeicon		= "Resources/Textures/hide.png";
+	m_sMaximizeIcon		= "Resources/Textures/maximize.png";
+	m_sMaximizeIcon2	= "Resources/Textures/minimize.png";
+	m_sCloseIcon		= "Resources/Textures/close.png";
 	
 -- public:
 	Visible			= true;
-	Icon			= "Resources/Textures/System.Drawing.Forms/Windows 7.5.png";
+	Icon			= "Resources/Textures/Windows 7.5.png";
 	Location		= NULL;
 	Size			= NULL;
 	Text			= "";
@@ -190,8 +190,8 @@ class "System.Drawing.Forms.Form"
 				Control.Width	= Control.Size.Width;
 				Control.Height	= Control.Size.Height;
 			end
-
-			if IsInRectangle( iCurX, iCurY, Control.Left, Control.Top, Control.Width, Control.Height ) then
+			
+			if iCurX > Control.Left and iCurX < Control.Left + Control.Width and iCurY > Control.Top and iCurY < Control.Top + Control.Height then
 				this.MouseOverControl = ( this.MouseDownControl == NULL or this.MouseDownControl == Control ) and Control or NULL;
 			end
 			

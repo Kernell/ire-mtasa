@@ -51,7 +51,7 @@ class "System.Drawing.Forms.ComboBox" ( System.Drawing.Forms.Control )
 		dxDrawRectangle( this.Left, this.Top, this.Width, this.Height, this.BackColor:ToArgb(), true );
 		
 		dxDrawRectangle( this.Left + this.Width - 16, this.Top, 16, this.Height, this.BackColor:ToArgb(), true );
-		dxDrawImage( this.Left + this.Width - 16, this.Top + 3, 16, 16, "Resources/Textures/System.Drawing.Forms/dropdown.png", 0, 0, 0, this.ForeColor:ToArgb(), true );
+		dxDrawImage( this.Left + this.Width - 16, this.Top + 3, 16, 16, "Resources/Textures/dropdown.png", 0, 0, 0, this.ForeColor:ToArgb(), true );
 		
 		dxDrawText( this.Text, this.Left + 5, this.Top, this.Left + this.Width, this.Top + this.Height, this.ForeColor:ToArgb(), 1.0, this.Font or "default", "left", "center", false, false, true );
 	end;

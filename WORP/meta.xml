@@ -373,11 +373,4 @@
   <file src="Resources/Textures/HUD/Weapon-wpn_usp45.png" />
   <file src="Resources/Textures/HUD/Weapon-wpn_usp45_sil.png" />
   <file src="Resources/Textures/HUD/Weapon-wpn_vibrator.png" />
-  
-  <file src="Resources/Textures/System.Drawing.Forms/Windows 7.5.png" />
-  <file src="Resources/Textures/System.Drawing.Forms/hide.png" />
-  <file src="Resources/Textures/System.Drawing.Forms/maximize.png" />
-  <file src="Resources/Textures/System.Drawing.Forms/minimize.png" />
-  <file src="Resources/Textures/System.Drawing.Forms/close.png" />
-  <file src="Resources/Textures/System.Drawing.Forms/dropdown.png" />
 </meta>

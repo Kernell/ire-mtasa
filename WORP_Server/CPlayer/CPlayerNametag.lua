@@ -25,12 +25,10 @@ end
 
 function CPlayerNametag:GetText()
 	return self.m_pPlayer:GetData( "Nametag:Text" );
---	return getPlayerNametagText( self.m_pPlayer.__instance );
 end
 
 function CPlayerNametag:SetText( sText )
 	return self.m_pPlayer:SetData( "Nametag:Text", sText );
---	return setPlayerNametagText( self.m_pPlayer.__instance, sText );
 end
 
 function CPlayerNametag:IsShowing()
@@ -39,12 +37,10 @@ end
 
 function CPlayerNametag:Show()
 	return self.m_pPlayer:SetData( "Nametag:Showing", true );
---	return setPlayerNametagShowing( self.m_pPlayer.__instance, true );
 end
 
 function CPlayerNametag:Hide()
 	return self.m_pPlayer:SetData( "Nametag:Showing", false );
---	return setPlayerNametagShowing( self.m_pPlayer.__instance, false );
 end
 
 function CPlayerNametag:Update()

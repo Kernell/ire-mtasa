@@ -5,6 +5,8 @@
 -- License		Proprietary Software
 -- Version		1.0
 
+g_iScreenX, g_iScreenY = guiGetScreenSize();
+
 class: Form1 ( System.Drawing.Forms.Form )
 {
 	Form1	= function( this )
@@ -22,7 +24,7 @@ class: Form1 ( System.Drawing.Forms.Form )
 		-- 
 		-- pictureBox1
 		-- 
-		this.pictureBox1.Image					= System.Drawing.Image.FromFile( "Resources/Images/Popup/Info.png" );
+		this.pictureBox1.Image					= System.Drawing.Image.FromFile( "Resources/Images/Info.png" );
 		this.pictureBox1.Location				= System.Drawing.Point( 20, 20 );
 		this.pictureBox1.Size					= System.Drawing.Size( 64, 64 );
 		this.pictureBox1.Name					= "pictureBox1";

@@ -123,6 +123,8 @@ function CPlayer:Unlink( sType, sReason, pResponsePlayer )
 		self.m_pCharacter:Logout( sType, sReason, pResponsePlayer );
 	end
 	
+	self.m_bAdmin = false;
+	
 	self:Save();
 	self:InitLoginCamera();
 	self.m_pPlayerManager:RemoveFromList( self );

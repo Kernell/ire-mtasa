@@ -7,6 +7,7 @@
   <script src="Shared/Debug.lua"                      type="client"/>
   <script src="Shared/class.lua"                      type="client"/>
   
+  <script src="System.lua"                            type="client"/>
   <script src="System.EventHandler.lua"               type="client"/>
   <script src="System.Drawing.lua"                    type="client"/>
   <script src="System.Drawing.Font.lua"               type="client"/>
@@ -21,4 +22,21 @@
   <script src="System.Drawing.Forms.Label.lua"        type="client"/>
   
   <script src="Form1.lua"         type="client"/>
+  
+  <file src="Resources/Images/Info.png"/>
+  
+  <file src="Resources/Fonts/consola.ttf"/>
+  <file src="Resources/Fonts/consolab.ttf"/>
+  
+  <file src="Resources/Fonts/segoeui.ttf"/>
+  <file src="Resources/Fonts/segoeuib.ttf"/>
+  
+  <file src="Resources/Fonts/micross.ttf"/>
+  
+  <file src="Resources/Textures/Windows 7.5.png" />
+  <file src="Resources/Textures/hide.png" />
+  <file src="Resources/Textures/maximize.png" />
+  <file src="Resources/Textures/minimize.png" />
+  <file src="Resources/Textures/close.png" />
+  <file src="Resources/Textures/dropdown.png" />
 </meta>
