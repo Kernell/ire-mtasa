@@ -7,7 +7,23 @@
 
 class "Android.UI.Window" ( Android.UI.Control )
 {
+	Window	= function( this )
+		this:Control();
+		this.Control = NULL;
+		
+		this:Init();
+	end;
+	
+	_Window	= function( this )
+		this:Release();
+	end;
+	
 	Draw	= function( this, iCurX, iCurY )
+		if this.DragDropOffset and this.MouseDownControl == this.TitleBarCaption then
+			this.Location.X	= ( iCurX - this.DragDropOffset.X );
+			this.Location.Y	= ( iCurY - this.DragDropOffset.Y );
+		end
+		
 		dxDrawRectangle( this.X + 1, 	this.Y, 	this.Width - 2, 1,  this.BackColor1, false );
 		dxDrawRectangle( this.X, 		this.Y + 1, this.Width, 1, 		this.BackColor1, false );
 		dxDrawRectangle( this.X, 		this.Y, 	this.Width, 1, 		this.BackColor4, false );

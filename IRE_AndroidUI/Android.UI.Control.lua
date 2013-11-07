@@ -50,7 +50,7 @@ class "Android.UI.Control"
 		
 		this.Controls	= this:ControlCollection( pParent );
 		
-	--	this.Click		= System.EventHandler( this );
+		this.Click		= Android.EventHandler( this );
 	end;
 	
 	_Control = function( this )
@@ -58,25 +58,42 @@ class "Android.UI.Control"
 	end;
 	
 	Init	= function( this )
-		if not this.__Draw then
-			this.__Draw		= function()
-				local iCurX, iCurY = getCursorPosition();
-				
-				iCurX, iCurY = ( iCurX or 0 ) * g_iScreenX, ( iCurY or 0 ) * g_iScreenY;
-				
-				this:Draw( iCurX, iCurY );
-			end
+		this.__Draw		= function()
+			local iCurX, iCurY = getCursorPosition();
 			
-			addEventHandler( "onClientRender", root, this.__Draw );
+			iCurX, iCurY = ( iCurX or 0 ) * g_iScreenX, ( iCurY or 0 ) * g_iScreenY;
+			
+			this:Draw( iCurX, iCurY );
 		end
+		
+		function this.__Click( sMouseButton, sState, iCurX, iCurY )
+			if sState == "down" then
+				if this.MouseOverControl then
+					this.MouseDownControl = this.MouseOverControl;
+					
+					if sMouseButton == "left" then
+						this.DragDropOffset	= Android.UI.Point( iCurX - this.Location.X, iCurY - this.Location.Y );
+					end
+				end
+			elseif sState == "up" then
+				if this.MouseDownControl and this.MouseOverControl and this.MouseOverControl == this.MouseDownControl then
+					this.MouseDownControl.Click:Call();
+				end
+				
+				this.MouseDownControl = NULL;
+			end
+		end
+		
+		addEventHandler( "onClientRender", root, this.__Draw );
+		addEventHandler( "onClientClick", root, this.__Click );
 	end;
 	
 	Release	= function( this )
-		if this.__Draw then
-			removeEventHandler( "onClientRender", root, this.__Draw );
-		end
+		removeEventHandler( "onClientRender", root, this.__Draw );
+		removeEventHandler( "onClientClick", root, this.__Click );
 		
-		this.__Draw = NULL;
+		this.__Draw		= NULL;
+		this.__Click	= NULL;
 	end;
 	
 	Draw = function( this, iCurX, iCurY )

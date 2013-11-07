@@ -13,6 +13,22 @@ class "Android.UI"
 	IMAGES_PATH			= "Resources/icons/";
 };
 
+class "Android.UI.Point"
+{
+	Point = function( this, fX, fY )
+		this.X	= (int)(fX);
+		this.Y	= (int)(fY);
+	end
+};
+
+class "Android.UI.Size"
+{
+	Size = function( this, fWidth, fHeight )
+		this.Width	= (int)(fWidth);
+		this.Height	= (int)(fHeight);
+	end
+};
+
 Settings		=
 {
 	Android		=

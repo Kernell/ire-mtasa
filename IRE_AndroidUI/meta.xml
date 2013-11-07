@@ -1,11 +1,12 @@
 <meta>
-  <info author="Kernell" version="1.0.0" type="script" />
+  <info author="Kernell" version="1.0" type="script" />
   
   <script src="Shared/utils.lua"      type="client"/>
   <script src="Shared/Debug.lua"      type="client"/>
   <script src="Shared/class.lua"      type="client"/>
   
   <script src="Android.lua"                         type="client"/>
+  <script src="Android.EventHandler.lua"            type="client"/>
   <script src="Android.UI.lua"                      type="client"/>
   <script src="Android.UI.Color.lua"                type="client"/>
   <script src="Android.UI.Control.lua"              type="client"/>
