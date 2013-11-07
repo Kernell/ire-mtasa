@@ -9,6 +9,8 @@ class "Android.UI"
 {
 	THEME_HOLO_DARK		= 0x00000002;
 	THEME_HOLO_LIGHT	= 0x00000003;
+	ICON_EXT			= ".png";
+	IMAGES_PATH			= "Resources/icons/";
 };
 
 Settings		=

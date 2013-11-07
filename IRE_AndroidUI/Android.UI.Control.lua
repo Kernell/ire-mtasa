@@ -115,6 +115,10 @@ class "Android.UI.Control"
 	Show = function( this )
 		this.Visible = true;
 	end;
+	
+	GetIconsPath	= function( this )
+		return Android.UI.IMAGES_PATH + ( this.Theme == Android.UI.THEME_HOLO_LIGHT and "holo_light/" or "holo_dark/" );
+	end;
 };
 
 class "Android.UI.Control.ControlCollection"
