@@ -5,10 +5,14 @@
   <script src="Shared/Debug.lua"      type="client"/>
   <script src="Shared/class.lua"      type="client"/>
   
-  <script src="AndroidUIManager.lua"  type="client"/>
-  <script src="AndroidUI.lua"         type="client"/>
-  <script src="AlertDialog.lua"       type="client"/>
-  
+  <script src="Android.lua"                         type="client"/>
+  <script src="Android.UI.lua"                      type="client"/>
+  <script src="Android.UI.Color.lua"                type="client"/>
+  <script src="Android.UI.Control.lua"              type="client"/>
+  <script src="Android.UI.Font.lua"                 type="client"/>
+  <script src="Android.UI.SystemColors.lua"         type="client"/>
+  <script src="Android.UI.Window.lua"               type="client"/>
+  <script src="Android.UI.Window.AlertDialog.lua"   type="client"/>
   
   <script src="Test.lua"       type="client"/>
   

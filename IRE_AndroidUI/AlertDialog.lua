@@ -10,6 +10,8 @@ class: AlertDialog ( AndroidUI )
 	Width		= 290;
 	Height		= 0;
 	
+	BackColor	= tocolor( 40, 40, 40, 255 );
+	
 	AlertDialog		= function( this, iTheme )
 		this.m_iTheme	= iTheme or AndroidUI.m_iTheme;
 		this.m_Buttons	= {};
@@ -21,8 +23,8 @@ class: AlertDialog ( AndroidUI )
 		this.m_Layout	= {};
 		
 		if this.m_pIcon then
-			table.insert( this.m_Layout, { Type = "Image",		Value = this.m_pIcon, 				X = 10, Y = 10, Width = 24, Height = 24 } );
-			table.insert( this.m_Layout, { Type = "Text",		Value = (string)(this.m_sTitle), 	X = 42, Y = 0, Width = this.Width - 48, Height = 48, Color = tocolor( 51, 181, 229, 255 ), Font = AndroidUI.FONT_DIALOG_TITLE } );
+			table.insert( this.m_Layout, { Type = "Image",	Value = this.m_pIcon, 			X = 10, Y = 10, Width = 24, Height = 24 } );
+			table.insert( this.m_Layout, { Type = "Text",	Value = (string)(this.m_sTitle), X = 42, Y = 0, Width = this.Width - 48, Height = 48, Color = tocolor( 51, 181, 229, 255 ), Font = AndroidUI.FONT_DIALOG_TITLE } );
 			
 			iY = iY + 48;
 			
