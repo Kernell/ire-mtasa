@@ -51,6 +51,8 @@ class "Android.UI.Control"
 		this.Controls	= this:ControlCollection( pParent );
 		
 		this.Click		= Android.EventHandler( this );
+		
+		pParent.Controls:Add( this );
 	end;
 	
 	_Control = function( this )
@@ -58,12 +60,12 @@ class "Android.UI.Control"
 	end;
 	
 	Init	= function( this )
-		this.__Draw		= function()
+		function this.__Draw()
 			local iCurX, iCurY = getCursorPosition();
 			
 			iCurX, iCurY = ( iCurX or 0 ) * g_iScreenX, ( iCurY or 0 ) * g_iScreenY;
 			
-			this:Draw( iCurX, iCurY );
+			this:Render( iCurX, iCurY );
 		end
 		
 		function this.__Click( sMouseButton, sState, iCurX, iCurY )
@@ -96,7 +98,11 @@ class "Android.UI.Control"
 		this.__Click	= NULL;
 	end;
 	
-	Draw = function( this, iCurX, iCurY )
+	Draw	= function( this )
+		
+	end;
+	
+	Render	= function( this, iCurX, iCurY )
 		if this.Visible then
 			if this.Location then				
 				this.X		= this.Location.X + ( this.Parent and this.Parent.X or 0 );

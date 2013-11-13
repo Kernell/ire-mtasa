@@ -16,9 +16,9 @@ class "Android.EventHandler"
 		table.insert( this.Handlers, Handler );
 	end;
 	
-	Call = function( this )
+	Call = function( this, ... )
 		for i, Handler in ipairs( this.Handlers ) do
-			Handler( this.Sender );
+			Handler( this.Sender, ... );
 		end
 	end;
 };
