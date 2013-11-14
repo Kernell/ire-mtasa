@@ -189,7 +189,7 @@ function CCommands:ViewHelp( pPlayer )
 end
 
 function CCommands:Stats( pPlayer, sCmd, sTargetID )
-	if sTargetID == 0 or pPlayer:GetID() == 0 then
+	if (int)(sTargetID) == 0 or pPlayer:GetID() == 0 then
 		local Cols, Rows = getPerformanceStats( "Server info" );
 		
 		local Stats	=

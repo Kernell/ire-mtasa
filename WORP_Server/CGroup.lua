@@ -44,7 +44,7 @@ class: CGroup
 	end;
 
 	GetRight		= function( this, sRight )
-		return this.m_Rights[ sRight ];
+		return this.m_Rights[ sRight ] == true;
 	end;
 
 	RemoveRight		= function( this, sRight )

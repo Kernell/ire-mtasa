@@ -197,7 +197,7 @@ function CGroupManager:Init()
 	
 	if pResult then
 		for _, row in pairs( pResult:GetArray() ) do
-			self:LoadGroup( row.id, row.name, row.caption, fromJSON( row.color ), row.rights );
+			self:LoadGroup( row.id, row.name, row.caption, fromJSON( row.color ), row );
 		end
 		
 		delete ( pResult );
