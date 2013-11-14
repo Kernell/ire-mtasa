@@ -60,7 +60,7 @@ function CPlayer:LocalizedMessage( sMessage, fRange, iType )
 							
 							break;
 						elseif table.getn( Result ) > 1 then
-							return CPlayerCMD.LocalOOC( self, 'LocalOOC', sMessage );
+							return CCommands:LocalOOC( self, 'LocalOOC', sMessage );
 						end
 					end
 				end

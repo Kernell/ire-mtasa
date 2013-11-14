@@ -9,7 +9,6 @@ class: CFactionPolice ( CFaction );
 
 function CFactionPolice:CFactionPolice( ... )
 	self:CFaction( ... );
-	self.CFaction = NULL;
 	
 	
 end

@@ -28,6 +28,8 @@ class: CPropertyManager ( CManager )
 	};
 	
 	CPropertyManager	= function( this )
+		this:CManager();
+		
 		g_pDB:CreateTable( DBPREFIX + CPropertyManager.m_sTableName,
 			{
 				{ Field = "id",					Type = "int(11) unsigned",		Null = "NO",	Key = "PRI", 	Default = NULL,	Extra = "auto_increment" };

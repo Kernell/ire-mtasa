@@ -13,7 +13,6 @@ class: CFactionManager ( CManager )
 
 function CFactionManager:CFactionManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( DBPREFIX + self.m_sTable,
 		{

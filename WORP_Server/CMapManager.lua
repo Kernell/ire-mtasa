@@ -12,9 +12,6 @@ class: CMapManager ( CManager )
 
 function CMapManager:CMapManager()
 	self:CManager();
-	self.CManager = NULL;
-	
-	if not g_pDB:Ping() then return; end
 	
 	g_pDB:CreateTable( DBPREFIX + "map_objects",
 		{

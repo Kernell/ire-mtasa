@@ -7,4 +7,7 @@
 
 class: CFactionTaxi ( CFaction )
 {
+	CFactionTaxi		= function( this, ... )
+		this:CFaction( ... );
+	end;
 };

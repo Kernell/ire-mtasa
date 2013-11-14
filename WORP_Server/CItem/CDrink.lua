@@ -9,7 +9,6 @@ class: CDrink ( CItem );
 
 function CDrink:CDrink( rItem )
 	self:CItem( rItem );
-	self.CItem = NULL;
 	
 	
 end

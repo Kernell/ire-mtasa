@@ -9,7 +9,6 @@ class: CPedManager ( CManager );
 
 function CPedManager:CPedManager()
 	self:CManager();
-	self.CManager = NULL;
 end
 
 function CPedManager:_CPedManager()
@@ -17,12 +16,6 @@ function CPedManager:_CPedManager()
 end
 
 function CPedManager:Init()
-	if not g_pDB then
-		Debug( TEXT_E2451:format( "g_pDB" ), 1 );
-		
-		return false;
-	end
-	
 	self.m_List	= {};
 	
 	local sQuery = 'SELECT id, model, position, rotation, dimension, interior, collisions_enabled, damage_proof, frozen, animation_lib, animation_name, animation_time, animation_loop, animation_update_position, animation_interruptable, animation_freeze_last_frame \

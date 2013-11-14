@@ -14,6 +14,8 @@ class: CEventMarkerManager ( CManager )
 };
 
 function CEventMarkerManager:CEventMarkerManager()
+	self:CManager();
+	
 	g_pDB:CreateTable( DBPREFIX + self.m_sTable,
 		{
 			{ Field = "id",			Type = "int(11) unsigned",			Null = "NO",	Key = "PRI", 	Default = NULL,	Extra = "auto_increment" };

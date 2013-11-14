@@ -20,6 +20,10 @@ class: CVehicleHUDFuel ( C3DHUD )
 		[ VCNMAV ]		= { 0.5, -6.0, 1.35 };
 	};
 	
+	CVehicleHUDFuel	= function( this )
+		this:C3DHUD();
+	end;
+	
 	DrawText	= function( this, sText, fX, fY, fWidth, fHeight, iColor )
 		dxDrawText( sText, fX, 0, fWidth, 0, iColor, 1.0, this.m_pFont, "right" );
         dxDrawText( "% fuel", fX + fWidth + 10, 0, fWidth + 15, 0, iColor, 1.0, this.m_pFont );

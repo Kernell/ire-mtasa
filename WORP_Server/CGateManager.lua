@@ -9,7 +9,6 @@ class: CGateManager ( CManager );
 
 function CGateManager:CGateManager()
 	self:CManager();
-	self.CManager = NULL;
 end
 
 function CGateManager:_CGateManager()

@@ -8,7 +8,7 @@
 class: CTaskManager ( CManager )
 {
 	CTaskManager	= function( this )
-		
+		this:CManager();
 	end;
 	
 	_CTaskManager	= function( this )

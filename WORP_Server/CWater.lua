@@ -15,6 +15,8 @@ function CWater:CWater( vecPosition1, vecPosition2, vecPosition3, vecPosition4, 
 		vecPosition4.X, vecPosition4.Y, vecPosition4.Z,
 		(bool)(bShallow)
 	);
+	
+	self:CElement();
 end
 
 function CWater:_CWater()

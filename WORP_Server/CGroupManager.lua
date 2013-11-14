@@ -9,7 +9,6 @@ class: CGroupManager ( CManager );
 
 function CGroupManager:CGroupManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( "uac_groups",
 		{

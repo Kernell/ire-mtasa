@@ -7,4 +7,7 @@
 
 class: CFactionDocks ( CFaction )
 {
+	CFactionDocks	= function( this, ... )
+		this:CFaction( ... );
+	end;
 };

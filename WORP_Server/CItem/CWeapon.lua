@@ -9,7 +9,6 @@ class: CWeapon ( CItem );
 
 function CWeapon:CWeapon( rItem )
 	self:CItem( rItem );
-	self.CItem = NULL;
 	
 	self.m_AmmoClass	= CItemManager:GetItem( self.m_sAmmoClass );
 end

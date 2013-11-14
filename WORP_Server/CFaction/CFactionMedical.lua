@@ -7,4 +7,7 @@
 
 class: CFactionMedical ( CFaction )
 {
+	CFactionMedical		= function( this, ... )
+		this:CFaction( ... );
+	end;
 };

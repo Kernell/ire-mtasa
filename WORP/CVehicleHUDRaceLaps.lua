@@ -22,6 +22,10 @@ class: CVehicleHUDRaceLaps ( C3DHUD )
 		[ VCNMAV ]		= { -1.5, -6.0, 1.70 };
 	};
 	
+	CVehicleHUDRaceLaps	= function( this )
+		this:C3DHUD();
+	end;
+	
 	Update		= function( this )
 		if this.m_pVehicle then
 			this:SetText( "круг " + this.m_iLap + "/" + this.m_iLaps );

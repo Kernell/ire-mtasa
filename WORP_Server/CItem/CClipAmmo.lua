@@ -9,7 +9,6 @@ class: CClipAmmo ( CItem );
 
 function CClipAmmo:CClipAmmo( rItem )
 	self:CItem( rItem );
-	self.CItem = NULL;
 	
 	self.m_iValue 	= (int)(rItem.m_iClipSize);
 end

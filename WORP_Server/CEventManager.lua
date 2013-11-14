@@ -14,6 +14,10 @@ enum "eEventType"
 
 class: CEventManager ( CManager )
 {
+	CEventManager	= function( this )
+		this:CManager();
+	end;
+	
 	Init			= function( this )
 		for i, sEventType in ipairs( eEventType ) do
 			addEvent( sEventType );

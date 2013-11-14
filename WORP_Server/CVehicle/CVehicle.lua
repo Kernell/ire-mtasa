@@ -56,8 +56,6 @@ class: CVehicle ( CElement )
 };
 
 function CVehicle:CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, DBField )
-	self.__initialized = 0;
-	
 	DBField = DBField or CVehicle.DefaultData;
 	
 	self.m_pVehicleManager = pVehicleManager;
@@ -212,11 +210,6 @@ function CVehicle:Create( iModel, vecPosition, vecRotation, sPlate, iVariant1, i
 		
 		self.__instance = createVehicle( iModel, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z, sPlate, false, iVariant1, iVariant2 );
 		
-		if self.__initialized == 0 then
-			self:CElement( self.__instance );
-			self.CElement = NULL;
-		end
-
 		CElement.AddToList( self );
 		
 		self.m_iModel		= iModel;

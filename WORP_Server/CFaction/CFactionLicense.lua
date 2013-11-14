@@ -9,7 +9,6 @@ class: CFactionLicense ( CFaction )
 {
 	CFactionLicense		= function( this, ... )
 		this:CFaction( ... );
-		this.CFaction = NULL;
 	end;
 	
 	_CFactionLicense	= function( this )

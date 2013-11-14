@@ -82,10 +82,6 @@ function CBlip:CBlip( vecPosition, ... )
 		error( "Bad argument #1 to 'CBlip.Create (wanted 'Vector3' or 'CElement', got '" + typeof( vecPosition ) + "')'", 2 );
 	end
 	
-
-	self:CElement( self.__instance );
-	self.CElement = NULL;
-	
 	if not self.__instance then error( "failed to create blip", 2 ) end
 end
 

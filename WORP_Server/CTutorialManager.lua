@@ -16,6 +16,10 @@ class: CTutorialManager ( CManager )
 {
 	m_TutorialStrings	= NULL;
 	
+	CTutorialManager	= function( this )
+		this:CManager();
+	end;
+	
 	Init				= function( this )
 		g_pDB:CreateTable( DBPREFIX + "tutorials",
 			{

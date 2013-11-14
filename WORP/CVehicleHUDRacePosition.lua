@@ -22,6 +22,10 @@ class: CVehicleHUDRacePosition ( C3DHUD )
 		[ VCNMAV ]		= { -1.5, -6.0, 1.35 };
 	};
 	
+	CVehicleHUDRacePosition	= function( this )
+		this:C3DHUD();
+	end;
+	
 	Update		= function( this )
 		if this.m_pVehicle then
 			this:SetText( this.m_iPosition + "-й" );

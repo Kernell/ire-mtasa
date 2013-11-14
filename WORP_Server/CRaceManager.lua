@@ -9,7 +9,6 @@ class: CRaceManager ( CManager );
 
 function CRaceManager:CRaceManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	self.m_List = {};
 end

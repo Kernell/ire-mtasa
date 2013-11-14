@@ -9,7 +9,6 @@ class: CBankManager ( CManager );
 
 function CBankManager:CBankManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( DBPREFIX + "currencies",
 		{

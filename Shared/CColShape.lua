@@ -41,9 +41,6 @@ function CColShape:CColShape( sType, ... )
 			);
 		end
 		
-		self:CElement( self.__instance );
-		self.CElement = NULL;
-		
 		return self.__instance;
 	end
 end

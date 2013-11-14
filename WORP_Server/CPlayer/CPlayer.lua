@@ -12,8 +12,6 @@ DEFAULT_CAMERA_TARGET		= Vector3( 1585.96, 0.0, 84.12 );
 NEW_CHAR_CAMERA_POSITION	= Vector3( 1714.2, -1670.7, 42.9 );
 NEW_CHAR_CAMERA_TARGET		= Vector3( 1628.2, -1719.5, 28.4 );
 
-CPlayerCMD		= {};
-
 addEvent 'onCharacterLogin'
 addEvent 'onCharacterLogout'
 
@@ -35,14 +33,11 @@ class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 function CPlayer:CPlayer( pPlayerManager, pPlayerEntity )
 	self.__instance			= pPlayerEntity;
 	
-	self:CElement( pPlayerEntity );
-	self.CElement = NULL;
+	self:CElement			( pPlayerEntity );
+	self:CPed				( pPlayerEntity );
 	
-	self:CPed( pPlayerEntity );
-	self.CPed = NULL;
-	
-	self:CPlayerTutorial( pPlayerEntity );
-	self.CPlayerTutorial = NULL;
+	self:CPlayerTutorial	( pPlayerEntity );
+	self:CPlayerAnimation	( pPlayerEntity );
 	
 	self.m_pPlayerManager	= pPlayerManager;
 	

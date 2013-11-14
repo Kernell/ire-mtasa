@@ -17,7 +17,6 @@ class: CFakePlayer ( CPlayer )
 		this:SetName( "FakePlayer" + this.m_iFakeID );
 		
 		this:CPlayer( pPlayerManager, pPlayerEntity );
-		this.CPlayer = NULL;
 		
 		CClientRPC.Ready( this );
 		

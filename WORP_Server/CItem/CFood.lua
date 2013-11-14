@@ -9,7 +9,6 @@ class: CFood ( CItem );
 
 function CFood:CFood( rItem )
 	self:CItem( rItem );
-	self.CItem = NULL;
 	
 	
 end

@@ -18,7 +18,6 @@ function CTeam:CTeam( sName, iRed, iGreen, iBlue )
 		if not self.__instance then error( "failed to create team", 2 ) end
 		
 		self:CElement( self.__instance );
-		self.CElement = NULL;
 		
 		CElement.AddToList( self );
 	else

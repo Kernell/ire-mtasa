@@ -152,6 +152,7 @@ class: CClientInventory ( CUIInventory )
 function CClientInventory:CClientInventory()
 	self.Tooltip		= table.clone( CClientInventory.Tooltip );
 	self.m_pContextMenu	= CContextMenu();
+	self:CUIInventory();
 end
 
 function CClientInventory:_CClientInventory()

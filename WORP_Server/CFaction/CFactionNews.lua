@@ -11,7 +11,6 @@ class: CFactionNews ( CFaction )
 	
 	CFactionNews = function( self, ... )
 		self:CFaction( ... );
-		self.CFaction = NULL;
 		
 		self.m_aAdverts = {};
 	end;

@@ -9,7 +9,6 @@ class: CFactionGov ( CFaction );
 
 function CFactionGov:CFactionGov( ... )
 	self:CFaction( ... );
-	self.CFaction = NULL;
 	
 	
 end

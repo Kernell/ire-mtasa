@@ -37,7 +37,7 @@ function CClientRPC:DetachFromSWATRope( is_ground )
 		self:SetAnimation( CPlayerAnimation.PRIORITY_SWATROPE );
 	end
 
-	self:SetGravity( .008 );
+	self:SetGravity( 0.008 );
 end
 
 function CClientRPC:SWATRopeResult( position )

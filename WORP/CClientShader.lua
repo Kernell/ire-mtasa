@@ -60,7 +60,6 @@ class: CClientShaderGrayScale ( CClientShader )
 	
 	CClientShaderGrayScale	= function( this )
 		this:CClientShader();
-		this.CClientShader = NULL;
 		
 		this.m_pShader			= CShader( "Resources/Shaders/grayscale.fx" );
 		this.m_pScreenSource	= dxCreateScreenSource( g_iScreenX, g_iScreenY );
@@ -118,7 +117,6 @@ class: CClientShaderMotionBlur ( CClientShader )
 {
 	CClientShaderMotionBlur		= function( this )
 		this:CClientShader();
-		this.CClientShader = NULL;
 		
 		this.m_pShader			= CShader( "Resources/Shaders/motionblur.fx" );
 		this.m_pScreenSource	= dxCreateScreenSource( g_iScreenX, g_iScreenY );
@@ -215,7 +213,6 @@ class: CClientShaderCarPaint ( CClientShader )
 	
 	CClientShaderCarPaint	= function( this )
 		this:CClientShader();
-		this.CClientShader = NULL;
 		
 		this.m_pGrunShader		= CShader( "Resources/Shaders/car_refgrun.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, false, "vehicle" );
 		this.m_pGeneralShader	= CShader( "Resources/Shaders/car_refgene.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, true, "vehicle" );

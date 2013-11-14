@@ -9,7 +9,6 @@ class: CTeleportManager ( CManager );
 
 function CTeleportManager:CTeleportManager()
 	self:CManager();
-	self.CManager = NULL;
 end
 
 function CTeleportManager:_CTeleportManager()

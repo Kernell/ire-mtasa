@@ -5,7 +5,12 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CShopManager ( CManager );
+class: CShopManager ( CManager )
+{
+	CShopManager	= function( this )
+		this:CManager();
+	end;
+};
 
 function CShopManager:Init()
 	self.m_List	= {};

@@ -27,7 +27,7 @@ local ClassMeta	=
 		setmetatable( pObject, this );
 		
 		for i, CClass in ipairs( this.__bases ) do
-			rawset( pObject, classname( CClass ), CClass[ classname( CClass ) ] );
+			rawset( pObject, CClass.__name, CClass[ CClass.__name ] );
 		end
 		
 		return pObject;
@@ -38,18 +38,8 @@ local ClassMeta	=
 		
 		local vResult = NULL;
 		
-		if pObject[ classname( this ) ] then
-			vResult = pObject[ classname( this ) ]( pObject, ... );
-		end
-		
-		pObject[ classname( this ) ]	= NULL;
-		
-		for i, CClass in ipairs( this.__bases ) do
-			if rawget( pObject, classname( CClass ) ) then
-				pObject[ classname( CClass ) ]( pObject, ... );
-			end
-			
-			pObject[ classname( CClass ) ]	= NULL;
+		if this[ this.__name ] then
+			vResult = this[ this.__name ]( pObject, ... );
 		end
 		
 		return vResult == NULL and pObject or vResult;
@@ -136,7 +126,7 @@ class			=
 		end;
 	end;
 	
-	Create		= function( this, sName--[[ , bEnv ]] )
+	Create		= function( this, sName )
 		local CClass	=
 		{
 			__type		= "class";
@@ -146,38 +136,6 @@ class			=
 		
 		CClass.__class 	= CClass;
 		CClass.__index 	= CClass;
-		
-		if bEnv then
-			function CClass:__index( key )
-				rawset( self, "__prevkey", key );
-				
-				if key == "this" then
-					return self;
-				end
-				
-				local vResult = rawget( self, key ) or rawget( CClass, key );
-				
-				if type( vResult ) == "function" then
-					setfenv( vResult, self );
-					
-					return vResult;
-				end
-				
-				if vResult == NULL then
-					return _G[ key ];
-				end
-				
-				return vResult;
-			end
-			
-			-- function CClass:__newindex( key, value )
-				-- if rawget( self, "__type" ) == "object" and rawget( CClass, key ) == NULL then
-					-- error( "error C2039 " + key + " is not a member of \"" + sName + "\"", 2 );
-				-- end
-				
-				-- rawset( self, key, value );
-			-- end
-		end
 		
 		setmetatable( CClass, ClassMeta );
 		
@@ -219,6 +177,12 @@ class			=
 				else
 					CClass[ key ] = value;
 				end
+			end
+		end
+		
+		if not CClass[ CClass.__name ] then
+			CClass[ CClass.__name ]	= function( self )
+				
 			end
 		end
 	end;

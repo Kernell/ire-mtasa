@@ -22,6 +22,10 @@ class: CVehicleHUDRaceTime ( C3DHUD )
 		[ VCNMAV ]		= { -1.5, -6.0, 1.0 };
 	};
 	
+	CVehicleHUDRaceTime	= function( this )
+		this:C3DHUD();
+	end;
+	
 	Update		= function( this )
 		if this.m_pVehicle then
 			local iTime = CLIENT:GetData( "CRace::m_iFinishTime" ) or this.m_iTime and ( this.m_iTime == 0 and 0 or getTickCount() - this.m_iTime );

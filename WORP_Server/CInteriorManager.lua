@@ -17,7 +17,6 @@ class: CInteriorManager ( CManager )
 
 function CInteriorManager:CInteriorManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( DBPREFIX + "interiors",
 		{

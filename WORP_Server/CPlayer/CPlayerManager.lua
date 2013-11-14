@@ -9,7 +9,6 @@ class: CPlayerManager ( CManager );
 
 function CPlayerManager:CPlayerManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( DBPREFIX + "characters",
 		{

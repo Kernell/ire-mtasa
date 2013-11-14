@@ -23,7 +23,6 @@ function CPed:CPed( ... )
 		end
 		
 		self:CElement( self.__instance );
-		self.CElement = NULL;
 	elseif arg[ 1 ] and isElement( arg[ 1 ] ) then
 		self.__instance = arg[ 1 ];
 	end

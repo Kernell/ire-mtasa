@@ -50,26 +50,6 @@ function CGUI_meta:__call()
 	return obj;
 end
 
-function CGUI:__init( ... )
-	if self.__initialized then
-		return;
-	end
-	
-	local void = NULL;
-	
-	if self[ self.__name ] then
-		void = self[ self.__name ]( self, ... );
-	end
-	
-	for _, base in ipairs( self.__bases ) do
-		self[ base.__name ]:__init( ... );
-	end
-	
-	self.__initialized = true;
-	
-	return void;
-end
-
 local CursorVisible = {};
 
 local function updateCursorVisible( bToggleControls )

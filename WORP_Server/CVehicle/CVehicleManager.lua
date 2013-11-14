@@ -228,7 +228,6 @@ class: CVehicleManager ( CManager )
 
 function CVehicleManager:CVehicleManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	self.m_ColorManager = CVehicleColorManager();
 	

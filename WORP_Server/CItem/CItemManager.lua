@@ -9,7 +9,6 @@ class: CItemManager ( CManager );
 
 function CItemManager:CItemManager()
 	self:CManager();
-	self.CManager = NULL;
 	
 	g_pDB:CreateTable( DBPREFIX + "items",
 		{

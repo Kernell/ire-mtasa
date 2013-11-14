@@ -83,6 +83,9 @@ function CChar:CChar( pClient, pDBField )
 	
 	self.m_pClient:SetData( "alcohol", self.m_iAlcohol );
 	self.m_pClient:SetData( "CChar::m_fPower", self.m_fPower );
+	
+	self:CCharacterFaction	( pClient, pDBField );
+	self:ICharacter			( pClient, pDBField );
 end
 
 function CChar:_CChar()
