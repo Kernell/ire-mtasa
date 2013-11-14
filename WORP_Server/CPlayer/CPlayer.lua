@@ -747,23 +747,10 @@ end
 
 function CPlayer:HaveAccess( sAccess )
 	if self:IsLoggedIn() then
-		local Access = sAccess:split( '.' );
-		local iRight = false;
-		
-		if Access[ 1 ] == 'general' then
-			iRight = CGroupRight.RIGHT_TYPE_GENERAL;
-		elseif Access[ 1 ] == 'command' then
-			iRight = CGroupRight.RIGHT_TYPE_COMMAND;
-		end
-		
-		if iRight then
-			for i, pGroup in pairs( self:GetGroups() ) do
-				if pGroup:GetID() == 0 or pGroup:GetRight( Access[ 2 ], iRight ) then
-					return true;
-				end
+		for i, pGroup in pairs( self:GetGroups() ) do
+			if pGroup:GetID() == 0 or pGroup:GetRight( sAccess ) then
+				return true;
 			end
-		else
-			Debug( "invalid right " + (string)(Access[ 1 ]), 0, 200, 0, 0 );
 		end
 	end
 	

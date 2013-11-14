@@ -1,61 +1,53 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2013
 -- License		Proprietary Software
 -- Version		1.0
 
-enum "CGroupRight"
+class: CGroup
 {
-	RIGHT_TYPE_GENERAL	= 0;
-	RIGHT_TYPE_COMMAND	= 1;
+	CGroup			= function( this, pGroupManager, iID, sName, sCaption, aColor )
+		this.m_pGroupManager	= pGroupManager;
+		
+		this.m_iID		= iID;
+		this.m_sName	= sName;
+		this.m_sCaption	= sCaption;
+		this.m_aColor	= aColor;
+		this.m_Rights	= {};
+		
+		pGroupManager:AddToList( this );
+	end;
+
+	_CGroup			= function( this )
+		this.m_pGroupManager:RemoveFromList( this );
+	end;
+
+	GetID			= function( this )
+		return this.m_iID;
+	end;
+
+	GetName			= function( this )
+		return this.m_sName;
+	end;
+
+	GetCaption		= function( this )
+		return this.m_sCaption;
+	end;
+
+	GetColor		= function( this )
+		return this.m_aColor;
+	end;
+
+	AddRight		= function( this, sRight )
+		this.m_Rights[ sRight ] = true;
+	end;
+
+	GetRight		= function( this, sRight )
+		return this.m_Rights[ sRight ];
+	end;
+
+	RemoveRight		= function( this, sRight )
+		this.m_Rights[ sRight ] = NULL;
+	end;
 };
-
-class "CGroup"
-
-function CGroup:CGroup( pGroupManager, iID, sName, sCaption, aColor )
-	self.m_pGroupManager	= pGroupManager;
-	
-	self.m_iID		= iID;
-	self.m_sName	= sName;
-	self.m_sCaption	= sCaption;
-	self.m_aColor	= aColor;
-	self.m_Rights	= {};
-	
-	self.m_Rights[ CGroupRight.RIGHT_TYPE_GENERAL ] = {};
-	self.m_Rights[ CGroupRight.RIGHT_TYPE_COMMAND ] = {};
-	
-	pGroupManager:AddToList( self );
-end
-
-function CGroup:_CGroup()
-	self.m_pGroupManager:RemoveFromList( self );
-end
-
-function CGroup:GetID()
-	return self.m_iID;
-end
-
-function CGroup:GetName()
-	return self.m_sName;
-end
-
-function CGroup:GetCaption()
-	return self.m_sCaption;
-end
-
-function CGroup:GetColor()
-	return self.m_aColor;
-end
-
-function CGroup:AddRight( sRight, eRightType, bValue )
-	self.m_Rights[ eRightType ][ sRight ] = bValue;
-end
-
-function CGroup:GetRight( sRight, eRightType )
-	return self.m_Rights[ eRightType ][ sRight ];
-end
-
-function CGroup:RemoveRight( sRight, eRightType )
-	self.m_Rights[ eRightType ][ sRight ] = NULL;
-end

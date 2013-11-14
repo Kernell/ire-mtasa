@@ -446,7 +446,7 @@ function Hex2Bin( str )
 	local result = "";
 	
 	for i in str:gfind( "." ) do
-		result = result + hex2bin[ i:lower() ];
+		result = result .. hex2bin[ i:lower() ];
 	end
 	
 	return result;
