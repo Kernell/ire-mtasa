@@ -103,7 +103,7 @@ function Draw( pPlayer, bPed )
 	end
 end
 
-addEventHandler( 'onClientPreRender', root, 
+addEventHandler( 'onClientRender', root, 
 	function()
 		g_fMaxDistance		= tonumber( CLIENT:GetData( 'Nametag->MaxDistance' ) ) or 8.0;
 		
