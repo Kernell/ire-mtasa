@@ -15,7 +15,7 @@ local OnVehicleCollision;
 
 function OnVehicleCollision( pHitElement, fForce )
 	if fForce > 300 then
-		if getVehicleType( source ) == 'Automobile' and not IgnoreModels[ getElementModel( source ) ] and CLIENT:GetVehicle() == source and not CLIENT:GetData( 'adminduty' ) then
+		if CLIENT:IsInVehicle() and getVehicleType( source ) == 'Automobile' and not IgnoreModels[ getElementModel( source ) ] and CLIENT:GetVehicle() == source and not CLIENT:GetData( 'adminduty' ) then
 			local fHealth = CLIENT:GetHealth();
 			
 			if fHealth > 0 then
