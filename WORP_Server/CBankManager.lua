@@ -168,7 +168,7 @@ function CBankManager:CreateAccount( sCurrencyID, sType, pOwner, sExpiryDate, iF
 	local pDate			= CDateTime();
 	local sTimestamp	= (string)(pDate.m_pTime.sse);
 	
-	local sBankAccountID	= ( "%04s %04s %04s %04s" ):format(
+	local sBankAccountID	= ( "%04d %04d %04s %04s" ):format(
 		iFactionID or pOwner and ( "%d%d" ):format( (byte)(pOwner.m_sName[ 1 ]), (byte)(pOwner.m_sSurname[ 1 ]) ) or 0,
 		iFactionID and 0 or pOwner and math.random( 9999 ),
 		sTimestamp:sub( 3, 6 ),
