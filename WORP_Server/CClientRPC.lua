@@ -717,14 +717,14 @@ function CClientRPC:Bank__LockAccount( sBankAccountID, sReason, bClose )
 		return AsyncQuery.UNAUTHORIZED;
 	end
 	
-	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner", "faction_id", "currency_id", "amount", "locked" } );
+	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "faction_id", "currency_id", "amount", "locked" } );
 	
 	if pAccountInfo then
 		if pAccountInfo.locked then
 			return "Операция не может быть выполнена: аккаунт уже заблокирован";
 		end
 		
-		if pAccountInfo.owner ~= pChar:GetID() then
+		if pAccountInfo.owner_id ~= pChar:GetID() then
 			return "Только владелец может " + ( bClose and "закрыть" or "заблокировать" ) + " счёт";
 		end
 		
