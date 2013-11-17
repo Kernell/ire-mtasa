@@ -56,6 +56,8 @@ class: CVehicle ( CElement )
 };
 
 function CVehicle:CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, DBField )
+	self:CElement();
+	
 	DBField = DBField or CVehicle.DefaultData;
 	
 	self.m_pVehicleManager = pVehicleManager;

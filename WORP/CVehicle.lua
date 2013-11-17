@@ -387,6 +387,8 @@ function CVehicle:GetSpeed()
 end
 
 function CVehicle:CVehicle( pVehicle )
+	self:CElement();
+	
 	self.__instance		= pVehicle;
 	
 	local Components = getVehicleComponents( pVehicle );
