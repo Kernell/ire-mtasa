@@ -108,6 +108,7 @@ INTERIORS_LIST =
 
 	hospital	= { BoundingBox = NULL; Position = Vector3( 2057.07, -1415.29, 1175.15 ), 	Rotation = 75.5,SpawnPosition = Vector3( 2048.424, -1383.403, 1175.164 ),	SpawnRotation = 90,	Interior = 1,	price = 0 },
 	san_news	= { BoundingBox = NULL; Position = Vector3( 401.544, 291.662, 1008.636 ), 	Rotation = 90,  SpawnPosition = Vector3( 386.527, 270.960, 1008.636 ),	SpawnRotation = 0,	Interior = 2,	price = 0 },
+	bank		= { BoundingBox = NULL; Position = Vector3( 1563.07, -1261.37, 31.11 ), 	Rotation = 0,  SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 0,	price = 0 },
 	
 	lspd 		= { BoundingBox = { 213, 60, 999, 60, 35, 10 }; 	Position = Vector3( 246.75, 62.32, 1003.64 ), 		Rotation = 0, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 6,	price = 0 },
 	sfpd 		= { BoundingBox = { 213, 105, 997, 66, 25, 20 }; 	Position = Vector3( 246.35, 107.30, 1003.22 ), 		Rotation = 0, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 10,	price = 0 },

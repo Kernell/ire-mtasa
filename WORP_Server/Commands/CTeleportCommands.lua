@@ -33,7 +33,7 @@ function CTeleportCommands:Delete( pPlayer, sCmd, sOption, sID )
 		local pTeleport = g_pGame:GetTeleportManager():Get( iID );
 		
 		if pTeleport then
-			if g_pDB:Query( "UPDATE " + DBPREFIX + "teleports SET deleted = 'Yes' WHERE id = %q", iID ) then
+			if g_pDB:Query( "UPDATE " + DBPREFIX + "teleports SET deleted = NOW() WHERE id = %q", iID ) then
 				delete ( pTeleport );
 				
 				return TEXT_TELEPORTS_REMOVE_SUCCESS:format( iID ), 0, 255, 0;
