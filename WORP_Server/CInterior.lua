@@ -246,7 +246,7 @@ function CInterior:OnHit( pClient, bMatching )
 			end
 		elseif bMatching and self.m_pTarget then
 			if self.m_pInterior:CanUse( pClient ) then
-				pClient:Hint( "Подсказка", self.m_pTarget == self.m_pInterior.m_pOutsideMarker and "Нажмите F чтобы войти" or "Нажмите F чтобы выйти", "info" );
+				pClient:Hint( "Подсказка", self.m_pTarget == self.m_pInterior.m_pInsideMarker and "Нажмите F чтобы войти" or "Нажмите F чтобы выйти", "info" );
 			end
 			
 			pClient.m_pTeleportMarker = self;

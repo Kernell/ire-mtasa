@@ -320,7 +320,7 @@ function CInteriorCommands:Set( pPlayer, sCmd, sOption, sID, sInteriorID )
 					pInterior:UpdateMarker();
 					
 					pPlayer:SetDimension( pInterior:GetID() );
-					pPlayer:SetInterior( InteriorData.interior );
+					pPlayer:SetInterior( InteriorData.Interior );
 					pPlayer:SetPosition( InteriorData.Position:Offset( 1.0, InteriorData.Rotation ) );
 					pPlayer:SetRotation( InteriorData.Rotation );
 					
