@@ -734,7 +734,7 @@ function CClientRPC:Bank__LockAccount( sBankAccountID, sReason, bClose )
 			return TEXT_DB_ERROR;
 		end
 		
-		self:AppendLog( sBankAccountID, NULL, ( bClose and "Закрытие счёта: " or "Блокировка счёта: " ) + sReason );
+		g_pGame:GetBankManager():AppendLog( sBankAccountID, NULL, ( bClose and "Закрытие счёта: " or "Блокировка счёта: " ) + sReason );
 		
 		return true;
 	end

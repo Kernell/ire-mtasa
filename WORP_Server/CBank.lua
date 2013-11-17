@@ -27,7 +27,7 @@ class: CBank
 		
 		vecPosition.Z	= vecPosition.Z - .81
 		
-		this.m_pMarker	= CMarker.Create( vecPosition, "cylinder", iModel and 0.5 or 1.0, 0, 255, 0, 128 );
+		this.m_pMarker	= CMarker.Create( vecPosition, "cylinder", 1.0, 0, 255, 0, 128 );
 		
 		this.m_pMarker:SetInterior	( iInterior );
 		this.m_pMarker:SetDimension	( iDimension );
