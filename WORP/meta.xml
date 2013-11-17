@@ -14,6 +14,7 @@
   <script src="Shared/base64.lua"     type="client"/>
   <script src="Shared/Easing.lua"     type="client"/>
   <script src="Shared/CVector.lua"    type="client"/>
+  <script src="Shared/IElementData.lua"   type="client"/>
   <script src="Shared/CElement.lua"   type="client"/>
     <script src="CElement.lua"          type="client"/>
   <script src="Shared/CPed.lua"       type="client"/>

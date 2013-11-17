@@ -92,13 +92,15 @@ debug.setmetatable( root,
 	}
 );
 
-class: CElement
+class: CElement ( IElementData )
 {
 	IsWithinColShape	= isElementWithinColShape;
 	GetColShape			= getElementColShape;
 };
 
 function CElement:CElement( hInstance )
+	this:IElementData();
+	
 	if hInstance and isElement( hInstance ) then
 		self.__instance = hInstance;
 	end

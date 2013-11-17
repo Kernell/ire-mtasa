@@ -31,6 +31,7 @@
   <script src="Shared/timezone.lua"/>
   <script src="Shared/CDateTime.lua"/>
   <script src="Shared/CVector.lua"/>
+  <script src="Shared/IElementData.lua"/>
   <script src="Shared/CElement.lua"/>
     <script src="CElement.lua"/>
   <script src="Shared/CPed.lua"/>
