@@ -380,7 +380,7 @@ function CInterior:UpdateMarker()
 			
 			self.m_pInsideMarker.Rotation		= InteriorData.Rotation;
 			self.m_pInsideMarker:SetInterior	( InteriorData.Interior );
-			self.m_pInsideMarker:SetDimension	( self:GetID() );
+			self.m_pInsideMarker:SetDimension	( InteriorData.Dimension or self:GetID() );
 			self.m_pInsideMarker.m_pTarget		= self.m_pOutsideMarker;
 			self.m_pInsideMarker.m_pInterior	= self;
 			self.m_pInsideMarker.OnHit			= CInterior.OnHit;
