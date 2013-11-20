@@ -78,9 +78,9 @@ debug.setmetatable( root,
 					
 					list[ self ] = result;
 				else
-					local d			= debug.getinfo( 2 );
-					local sModule 	= d.short_src:match( "\(%w+)\.lua" );
-					local sAddress1 = (string)(d.func) - ( type( d.func ) + ": " );
+					local pDebug	= debug.getinfo( 2 );
+					local sModule 	= pDebug.short_src:match( "\(%w+)\.lua" );
+					local sAddress1 = (string)(pDebug.func) - ( type( pDebug.func ) + ": " );
 					local sAddress2	= (string)(self) - ( type( self ) + ": " );
 					
 					error( "Access violation at address " + sAddress1 + " in module '" + sModule + "'. Read of address " + sAddress2 + " key '" + key + "'", 2 );
@@ -96,15 +96,15 @@ class: CElement ( IElementData )
 {
 	IsWithinColShape	= isElementWithinColShape;
 	GetColShape			= getElementColShape;
-};
-
-function CElement:CElement( hInstance )
-	this:IElementData();
 	
-	if hInstance and isElement( hInstance ) then
-		self.__instance = hInstance;
-	end
-end
+	CElement			= function( this, hInstance )
+		this:IElementData();
+		
+		if hInstance and isElement( hInstance ) then
+			this.__instance = hInstance;
+		end
+	end;
+};
 
 function CElement.Create( ... )
 	local Element = createElement( ... );
@@ -194,8 +194,8 @@ function CElement:GetChild( index )
 	return getElementChild( self.__instance, index );
 end
 
-function CElement:GetChilds()
-	return getElementChildren( self.__instance );
+function CElement:GetChilds( sType )
+	return getElementChildren( self.__instance, sType );
 end
 
 function CElement:GetChildrenCount()
