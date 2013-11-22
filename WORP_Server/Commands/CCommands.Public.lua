@@ -507,7 +507,7 @@ end
 local Services	=
 {
 	[555]	= function( pPlayer )
-		if not pPlayer:IsInGame() then return end
+		if not pPlayer:IsInGame() then return; end
 		
 		local TJobTaxi = CJob.GetByID( "taxi" );
 		

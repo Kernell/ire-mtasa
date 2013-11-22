@@ -25,7 +25,7 @@ class: CBank
 			vecPosition	= vecPosition:Offset( 1.2, vecRotation.Z );
 		end
 		
-		vecPosition.Z	= vecPosition.Z - .81
+		vecPosition.Z	= vecPosition.Z - 0.81;
 		
 		this.m_pMarker	= CMarker.Create( vecPosition, "cylinder", 1.0, 0, 255, 0, 128 );
 		

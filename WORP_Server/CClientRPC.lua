@@ -656,6 +656,37 @@ function CClientRPC:SearchCity( sQuery, iCountryID )
 	end
 end
 
+function CClientRPC:BuyItem( iShopID, sItem )
+	if self:IsInGame() then
+		local pShop = g_pGame:GetShopManager():Get( iShopID );
+		
+		if pShop then
+			pShop:BuyItem( self, sItem );
+		else
+			Debug( "Player " + self:GetName() + " requested invalid shop " + (string)(iShopID), 1 );
+		end
+	end
+end
+
+function CClientRPC:BuySkin( iShopID, sItem )
+	if self:IsInGame() then
+		local pShop = g_pGame:GetShopManager():Get( iShopID );
+		
+		if pShop then
+			pShop:BuySkin( self, sItem );
+		else
+			Debug( "Player " + self:GetName() + " requested invalid shop " + (string)(iShopID), 1 );
+		end
+	end
+end
+
+function CClientRPC:RestoreSkin()
+	if self:IsInGame() then
+		self:Client().setElementModel( self, self:GetChar().m_iSkin );
+		self:SetModel( self:GetChar().m_iSkin );
+	end
+end
+
 function CClientRPC:CreateFaction( sTitle, sAbbr, sAddress, iType )
 	local vResult, iR, iG, iB = CFactionCommands:New( self, NULL, NULL, "--name", sTitle, "--tag", sAbbr, "--address", sAddress, "--type", sType );
 	
@@ -710,31 +741,35 @@ function CClientRPC:Bank__OpenCard( sCardID, sPIN )
 	return "Банковская карточка не действительна";
 end
 
-function CClientRPC:Bank__LockAccount( sBankAccountID, sReason, bClose )
+function CClientRPC:Bank__LockAccount( sBankAccountID, sReason )
 	local pChar = self:GetChar();
 	
 	if not pChar then
 		return AsyncQuery.UNAUTHORIZED;
 	end
 	
-	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "faction_id", "currency_id", "amount", "locked" } );
+	if not sReason or sReason:len() == 0 then
+		return "Пожалуйста, укажите причину закрытия счёта";
+	end
+	
+	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "faction_id", "currency_id", "amount", "locked", "closed" } );
 	
 	if pAccountInfo then
-		if pAccountInfo.locked then
-			return "Операция не может быть выполнена: аккаунт уже заблокирован";
+		if pAccountInfo.locked or pAccountInfo.closed then
+			return "Операция не может быть выполнена: аккаунт заблокирован";
 		end
 		
 		if pAccountInfo.owner_id ~= pChar:GetID() then
-			return "Только владелец может " + ( bClose and "закрыть" or "заблокировать" ) + " счёт";
+			return "Только владелец может закрыть счёт";
 		end
 		
-		if not g_pDB:Query( "UPDATE " + DBPREFIX + "bank_accounts SET locked = NOW() " + ( bClose and ", closed = NOW()" or "" ) + " WHERE id = %q", sBankAccountID ) then
+		if not g_pDB:Query( "UPDATE " + DBPREFIX + "bank_accounts SET closed = NOW() WHERE id = %q", sBankAccountID ) then
 			Debug( g_pDB:Error(), 1 );
 			
 			return TEXT_DB_ERROR;
 		end
 		
-		g_pGame:GetBankManager():AppendLog( sBankAccountID, NULL, ( bClose and "Закрытие счёта: " or "Блокировка счёта: " ) + sReason );
+		g_pGame:GetBankManager():AppendLog( sBankAccountID, NULL, "Закрытие счёта: " + sReason );
 		
 		return true;
 	end
@@ -986,7 +1021,7 @@ function CClientRPC:Bank__CreateAccount( sType, sCurrencyID, iFactionID, sCard )
 			return "Неверная валюта";
 		end
 		
-		local sBankAccountID = g_pGame:GetBankManager():CreateAccount( pCurrency.Code, sType, pChar, NULL, pFaction and pFaction:GetID() );
+		local sBankAccountID = g_pGame:GetBankManager():CreateAccount( pCurrency.Code, sType, pChar, pFaction and pFaction:GetID() );
 		
 		if not sBankAccountID then
 			return TEXT_DB_ERROR;
@@ -1017,7 +1052,7 @@ function CClientRPC:Bank__CreateAccount( sType, sCurrencyID, iFactionID, sCard )
 		
 		pDate.m_pTime.sse		= pDate.m_pTime.sse + 15778463; -- 6 месяцев
 		
-		local sBankAccountID	= g_pGame:GetBankManager():CreateAccount( NULL, sCard, pChar, pDate:Format( "Y-m-d 00:00:00" ), NULL );
+		local sBankAccountID	= g_pGame:GetBankManager():CreateAccount( NULL, sCard, pChar, NULL );
 		local sPIN				= ( "%04d" ):format( math.random( 9999 ) );
 		
 		local pItemData		=
@@ -1778,8 +1813,8 @@ function CClientRPC:Faction__Create( sTitle, sAbbr, iInteriorID, iType )
 	{
 		name		= sTitle;
 		tag			= sAbbr;
-		property	= iInteriorID;
 		type		= iType;
+		property_id	= iInteriorID;
 	};
 	
 	local pResult	= g_pDB:Query( "SELECT SUM( name = %q ) AS name, SUM( tag = %q ) AS tag FROM " + DBPREFIX + "factions", Data[ "name" ], Data[ "tag" ] );
@@ -1873,4 +1908,104 @@ end
 
 function CClientRPC:CompleteTutorial( iType )
 	self:CompleteTutorial( iType );
+end
+
+function CClientRPC:FactionTaxi__Update( fDistance )
+	local pChar = self:GetChar();
+	
+	if not pChar then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pFaction = pChar:GetFaction();
+	
+	if not pFaction or classname( pFaction ) ~= "CFactionTaxi" then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pVehicle = self:GetVehicleSeat() == 0 and self:GetVehicle();
+	
+	if pVehicle and pVehicle:GetFaction() == pFaction then
+		for i, p in pairs( pVehicle:GetOccupants() ) do
+			if p:IsInGame() then
+				p:Client().TJobTaxi_SetMeter( fDistance, pVehicle );
+			end
+		end
+	end
+end
+
+function CClientRPC:FactionTaxi__AcceptCall( iPlayerID )
+	local pChar = self:GetChar();
+	
+	if not pChar then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pFaction = pChar:GetFaction();
+	
+	if not pFaction or classname( pFaction ) ~= "CFactionTaxi" then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pVehicle = self:GetVehicleSeat() == 0 and self:GetVehicle();
+	
+	if pVehicle and pVehicle:GetFaction() == pFaction then
+		local pCall = pFaction.m_Calls[ iPlayerID ];
+		
+		if pCall then
+			if pCall.pCaller ~= self then
+				pFaction:RemoveCall( iFactionID );
+				
+				return "Ошибка, игрок не в сети", 255, 0, 0;
+			end
+			
+			if not self.m_pJob then 
+				self.m_pJob = CMarker.Create( pCall.vecPosition, "checkpoint", 10.0, 255, 255, 0, 96, self.__instance );
+				
+				CBlip( self.m_pJob, 0, 2.0, 255, 0, 0, 255, 10, 9999.0, self.__instance ):SetParent( self.m_pJob );
+				
+				function self.m_pJob.OnHit( ... )
+					pFaction:OnTaxiMarkerHit( ... );
+				end
+				
+				pFaction:SendMessage( self:GetName() + " принял вызов от " + pCall.sName );
+				
+				return true;
+			end
+			
+			return "Вы уже приняли вызов", 255, 0, 0;
+		end
+		
+		return "Никаких вызовов не поступало", 255, 0, 0;
+	end
+	
+	return true;
+end
+
+function CClientRPC:FactionTaxi__ToggleTaxiLight()
+	local pChar = self:GetChar();
+	
+	if not pChar then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pFaction = pChar:GetFaction();
+	
+	if not pFaction or classname( pFaction ) ~= "CFactionTaxi" then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	local pVehicle = self:GetVehicleSeat() == 0 and self:GetVehicle();
+	
+	if pVehicle and pVehicle:GetFaction() == pFaction and pChar:GetFaction() == pFaction then
+		pVehicle:SetTaxiLightOn( not pVehicle:IsTaxiLightOn() );
+		
+		local vDistance = not pVehicle:IsTaxiLightOn() and 0;
+		
+		for i, pPlr in pairs( pVehicle:GetOccupants() ) do
+			if pPlr:IsInGame() then
+				pPlr:Client().TJobTaxi_SetMeter( vDistance, pVehicle );
+			end
+		end
+	end
 end

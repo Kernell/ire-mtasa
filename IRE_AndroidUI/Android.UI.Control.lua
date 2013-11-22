@@ -32,6 +32,7 @@ class "Android.UI.Control"
 	Name				= "";
 	Padding				= NULL;
 	Parent				= NULL;
+	PostGUI				= false;
 	Size				= NULL;
 	TabIndex			= 1;
 	TabStop				= true;

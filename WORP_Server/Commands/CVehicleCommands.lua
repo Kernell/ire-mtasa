@@ -802,39 +802,6 @@ function CVehicleCommands:SetFaction( pPlayer, sCmd, sOption, sID, sFactionID )
 	return false;
 end
 
-function CVehicleCommands:SetJob( pPlayer, sCmd, sOption, sID, sJobID ) -- TODO: CVehicle::SetJob
-	local iID		= tonumber( sID );
-	
-	if iID and sJobID then
-		local pVehicle = g_pGame:GetVehicleManager():Get( iID );
-		
-		if pVehicle then
-			local pJob = CJob.GetByID( sJobID ) or CJob.GetByCode( (int)(sJobID) );
-			
-			if pJob then
-				if g_pDB:Query( "UPDATE " + DBPREFIX + "vehicles SET character_id = " + ( -pJob:GetCode() ) + " WHERE id = " + pVehicle:GetID() ) then
-					pVehicle.m_iCharID = -pJob:GetCode();
-					pVehicle:SetData( 'character_id', pVehicle.m_iCharID );
-					
-					printf( "%s changed job vehicle %s (ID %d) for %s (ID: %d)", pPlayer:GetUserName(), pVehicle:GetName(), pVehicle:GetID(), pJob:GetName(), pJob:GetCode() );
-					
-					pPlayer:GetChat():Send( TEXT_VEHICLES_JOB_CHANGED:format( pVehicle:GetName(), pVehicle:GetID(), pJob:GetName() ), 0, 255, 128 );
-				else
-					pPlayer:GetChat():Send( TEXT_DB_ERROR, 255, 0, 0 );
-				end
-			else
-				pPlayer:GetChat():Error( TEXT_JOBS_INVALID_ID );
-			end
-		else
-			pPlayer:GetChat():Error( TEXT_VEHICLES_INVALID_ID );
-		end
-		
-		return true;
-	end
-	
-	return false;
-end
-
 function CVehicleCommands:Shop( pPlayer, sCmd, sOption, sOption2, ... )
 	if not pPlayer:IsInGame() then return (1) end
 	

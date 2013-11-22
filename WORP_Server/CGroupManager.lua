@@ -122,7 +122,6 @@ function CGroupManager:CGroupManager()
 			{ Field = "command.vehicle:setfaction",			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "command.vehicle:setrentable",		Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "command.vehicle:setrentprice",		Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
-			{ Field = "command.vehicle:setjob",				Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "command.vehicle:setcolor",			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "command.vehicle:setspawn",			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "command.vehicle:setmodel",			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };

@@ -22,7 +22,7 @@ class "Android.UI.Window.AlertDialog" ( Android.UI.Window )
 			if this.m_sIconName then
 				this.TitleBarIcon				= Android.UI.Image( this );
 				
-				this.TitleBarIcon.Image					= Android.UI.Image.FromFile( this:GetIconsPath() + this.m_sIconName + Android.UI.ICON_EXT, "argb", false );
+				this.TitleBarIcon:Load( this:GetIconsPath() + this.m_sIconName + Android.UI.ICON_EXT, "argb", false );
 				this.TitleBarIcon.Location				= Android.UI.Point( 10, 10 );
 				this.TitleBarIcon.Size					= Android.UI.Size( 24, 24 );
 				this.TitleBarIcon.Name					= "TitleBarIcon";

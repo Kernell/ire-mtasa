@@ -107,9 +107,15 @@ function CGame:_CGame()
 	delete ( self.m_pWeather );
 	delete ( self.m_pWorld );
 	
-	for i, pManager in ipairs( self.m_Managers ) do
-		delete ( pManager );
+	for i = table.getn( self.m_Managers ), 1, -1 do
+		local pManager = self.m_Managers[ i ];
+		
+		if pManager then
+			delete ( pManager );
+		end
 	end
+	
+	self.m_Managers = NULL;
 	
 	g_pDB:Commit( true );
 end

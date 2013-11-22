@@ -46,8 +46,6 @@ function CPlayerManager:CPlayerManager()
 			{ Field = "jailed",			Type = "enum('No','Police','FBI','Prison')",	Null = "NO", 	Key = "",			Default = "No",	};
 			{ Field = "jailed_time",		Type = "int(11)",							Null = "NO", 	Key = "",			Default = 0,	};
 			{ Field = "married",			Type = "varchar(255)",						Null = "YES", 	Key = "",			Default = NULL,	};
-			{ Field = "job",				Type = "varchar(128)",						Null = "YES", 	Key = "",			Default = NULL,	};
-			{ Field = "job_skill",			Type = "int(11)",							Null = "NO", 	Key = "",			Default = 0,	};
 			{ Field = "phone",				Type = "int(11)",							Null = "YES", 	Key = "UNI",		Default = NULL,	};
 			{ Field = "events",				Type = "text",								Null = "YES", 	Key = "",			Default = NULL,	};
 		}

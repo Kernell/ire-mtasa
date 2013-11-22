@@ -169,7 +169,7 @@ class: CClientShaderCarPaint ( CClientShader )
 		
 		m_GeneralTextures	=
 		{
-			"vehiclegeneric256", "hotdog92glass128", "CHARGER_RT_HEADLIGHT_GLASS", "CHARGER_RT_GLASS", "WINDOW_GLASS", "bos_lights"
+			"vehiclegeneric256", "hotdog92glass128", "CHARGER_RT_HEADLIGHT_GLASS", "CHARGER_RT_GLASS", "WINDOW_GLASS", "ENV_LIGHTS", "bos_lights"
 		};
 		
 		m_Variables =

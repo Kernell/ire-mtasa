@@ -116,6 +116,50 @@ function CInteriorManager:Create( sInteriorID, iCharacterID, sName, sType, iPric
 	return NULL;
 end
 
+function CInteriorManager:GenerateLocations()
+	local iTick = getTickCount();
+	local Zones = {};
+	
+	for iID, pProperty in pairs( self.m_List ) do
+		if pProperty.m_pOutsideMarker and pProperty.m_pOutsideMarker:GetDimension() == 0 then
+			local vecPosition = pProperty.m_pOutsideMarker:GetPosition();
+			
+			local sZoneName = GetZoneName( vecPosition, false );
+			
+			if not Zones[ sZoneName ] then
+				Zones[ sZoneName ] = {};
+			end
+			
+			table.insert( Zones[ sZoneName ], pProperty );
+		end
+	end
+	
+	local function SortFunction( pIntA, pIntB )
+		local vecA = pIntA.m_pOutsideMarker:GetPosition();
+		local vecB = pIntB.m_pOutsideMarker:GetPosition();
+		
+		vecA.X	= vecA.X - 3000;
+		vecA.Y	= vecA.Y - 3000;
+		vecA.Z	= 0;
+		
+		vecB.X	= vecB.X - 3000;
+		vecB.Y	= vecB.Y - 3000;
+		vecB.Z	= 0;
+		
+		return vecA:Length() < vecB:Length();
+	end
+	
+	for sZoneName, List in pairs( Zones ) do
+		table.sort( List, SortFunction );
+		
+		for i, pInt in ipairs( List ) do
+			pInt:SetName( sZoneName + ", " + i );
+		end
+	end
+	
+	Debug( ( "pInteriorManager->GenerateLocations() - %d ms." ):format( getTickCount() - iTick ) );
+end
+
 function CInteriorManager:GetColor( void )
 	if eInteriorType[ void ] then
 		return self.m_InteriorColors[ void ];

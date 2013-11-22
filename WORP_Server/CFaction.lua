@@ -20,6 +20,18 @@ class: CFaction
 	m_iType				= FACTION_TYPE_GOV;
 	m_aFlags			= NULL;
 	m_pElement			= NULL;
+	
+	OnVehicleEnter		= function( this, pVehicle, pPlayer, iSeat, pJacker )
+		-- nothing
+	end;
+	
+	OnVehicleExit		= function( this, pVehicle, pPlayer, iSeat, pJacker )
+		-- nothing
+	end;
+	
+	GetAlivePlayers		= function( this )
+		return this.m_pElement:GetChilds( "player" );
+	end;
 };
 
 function CFaction:CFaction( iID, sFlags )
@@ -229,6 +241,6 @@ end
 
 function CFaction:ShowMenu( pPlayer, bForce )
 	if pPlayer:IsInGame() then
-		-- no menu ..
+		pPlayer:Hint( "Warning", "Для этой организации нет персонального меню", "warning" );
 	end
 end

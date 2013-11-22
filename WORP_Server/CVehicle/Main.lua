@@ -36,12 +36,6 @@ function CVehicle:DoPulse( tReal )
 	else
 		self.m_iRespawnIdleTime = ( self.m_iRespawnIdleTime or 0 ) + 1;
 		
-		if self:GetID() > 0 and self:GetJob() and self.m_iRespawnIdleTime >= 1440 then
-			self.m_iRespawnIdleTime = 0;
-			
-			self:RespawnSafe();
-		end
-		
 		if not self:IsDamageProof() then
 			self:SetDamageProof( true );
 		end
@@ -158,12 +152,8 @@ function CVehicle:OnEnter( pPlayer, iSeat, pJacker )
 		self:SetData( 'last_driver', self.m_sLastDriver );
 		self:SetData( 'last_time', self.m_iLastTime );
 		
-		if self:GetJob() then
-			pPlayer:InitJob();
-		else
-			if self:HaveFuel() and pPlayer:HasKey( self ) then
-				pPlayer:Hint( "Управление", TEXT_HELP_CAR_BINDS, "info" );
-			end
+		if self:HaveFuel() and pPlayer:HasKey( self ) then
+			pPlayer:Hint( "Управление", TEXT_HELP_CAR_BINDS, "info" );
 		end
 		
 		if pPlayer.m_pFuel and pPlayer:IsWithinColShape( m_pFuel ) then
@@ -176,6 +166,12 @@ function CVehicle:OnEnter( pPlayer, iSeat, pJacker )
 	elseif iSeat > 0 and self:GetModel() == 497 then
 		pPlayer:Hint( "Info", "\nSpace - Спуститься по верёвке", "info" );
 		pPlayer:BindKey( "space", "up", "vehicle", "swatrope" );
+	end
+	
+	local pFaction	= self:GetFaction();
+	
+	if pFaction then
+		pFaction:OnVehicleEnter( self, pPlayer, iSeat, pJacker );
 	end
 	
 	return 1;
@@ -227,8 +223,6 @@ function CVehicle:OnExit( pPlayer, iSeat, pJacker )
 		self:SetData( 'last_time', self.m_iLastTime );
 		
 		self:Save();
-		
-		pPlayer:EndCurrentJob();
 	else
 		if pPlayer.swat_rope then
 			pPlayer:AttachToSWATRope( pPlayer.swat_rope );
@@ -240,16 +234,16 @@ function CVehicle:OnExit( pPlayer, iSeat, pJacker )
 	pPlayer:UnbindKey( "space", "up", "vehicle", "swatrope" );
 	pPlayer:SetControlState( 'enter_exit', false );
 	
+	local pFaction	= self:GetFaction();
+	
+	if pFaction then
+		pFaction:OnVehicleExit( self, pPlayer, iSeat, pJacker );
+	end
+	
 	return 1;
 end
 
 function CVehicle:OnRespawn()
-	local pPlayer = self:GetDriver();
-	
-	if pPlayer then
-		pPlayer:EndCurrentJob();
-	end
-	
 	self:SetInterior( self.default_interior );
 	self:SetDimension( self.default_dimension );
 	
@@ -257,24 +251,8 @@ function CVehicle:OnRespawn()
 end
 
 function CVehicle:OnExplode()
-	local pPlayer = self:GetDriver();
-	
-	if pPlayer then
-		pPlayer:EndCurrentJob();
-	end
-	
 	self.m_pSiren:SetState();
 	self:Horn( false );
-	
-	if self:GetOwner() == -105 then
-		if self.m_TJobCarrierCar and self.m_TJobCarrierCar.m_aVehicles then
-			for i, veh in ipairs( self.m_TJobCarrierCar.m_aVehicles ) do
-				veh:Destroy();
-			end
-			
-			self.m_TJobCarrierCar = NULL;
-		end
-	end
 	
 	setTimer(
 		function()

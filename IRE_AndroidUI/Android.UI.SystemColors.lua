@@ -8,6 +8,7 @@
 Android.UI.SystemColors	=
 {
 	ActiveCaptionText	= Android.UI.Color.FromArgb( 255, 51, 181, 229 );
+	ControlText			= Android.UI.Color.FromArgb( 255, 255, 255, 255 );
 	
 	BackColor		= Android.UI.Color.FromArgb( 255, 40, 40, 40 );
 	BackColor1		= Android.UI.Color.FromArgb( 200, 40, 40, 40 );

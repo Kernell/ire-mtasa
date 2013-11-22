@@ -57,7 +57,6 @@ function CChar:CChar( pClient, pDBField )
 	self.m_fPower			= pDBField.power;
 	self.m_iSpawnInterior	= pDBField.spawn_id;
 	
-	self:InitJobs			( pDBField.job, pDBField.job_skill );
 	self:InitLanguages		( pDBField.languages );
 	self:InitMarried		( pDBField.married );
 	self:InitPay			( pDBField.pay );

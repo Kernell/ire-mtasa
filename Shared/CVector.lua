@@ -50,7 +50,7 @@ function Vector3:LengthSquared()
 end
 
 function Vector3:DotProduct( vecParam )
-	return self.X * vecParamX + self.Y * vecParam.Y + self.Z * vecParam.Z;
+	return self.X * vecParam.X + self.Y * vecParam.Y + self.Z * vecParam.Z;
 end
 
 function Vector3:Cross( vecParam )

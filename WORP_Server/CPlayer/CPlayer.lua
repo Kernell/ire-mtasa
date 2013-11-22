@@ -287,10 +287,6 @@ function CPlayer:HasKey( pTarget )
 				elseif iOwnerID > 0 then
 					return iOwnerID == pChar:GetID();
 				elseif iOwnerID < 0 then
-					if iOwnerID <= -100 then
-						return pChar:GetJob() == pTarget:GetJob();				
-					end
-					
 					local pFaction = pChar:GetFaction();
 					
 					return pFaction and pFaction:GetID() == -iOwnerID;

@@ -90,16 +90,20 @@ function CPlayer:LocalMessage( message, r, g, b, fRange, r2, g2, b2 )
 	g2 = g2 or g;
 	b2 = b2 or b;
 	
-	local pos	= self:GetPosition();
-	local dim	= self:GetDimension();
+	local vecPosition	= self:GetPosition();
+	local iDimension	= self:GetDimension();
 	
-	for _, p in pairs( g_pGame:GetPlayerManager():GetAll() ) do
-		local distance = p:GetPosition():Distance( pos );
+	for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
+		local fDistance = pPlr:GetPosition():Distance( vecPosition );
 		
-		if distance < fRange and dim == p:GetDimension() then
-			local iRed, iGreen, iBlue = CalculateColors( r, g, b, r2, g2, b2, distance, fRange );
+		if fDistance < fRange and iDimension == pPlr:GetDimension() then
+			local fProgress	= fDistance / fRange;
 			
-			p:GetChat():Send( message, iRed, iGreen, iBlue, false );
+			local iRed		= Lerp( r, r2, fProgress );
+			local iGreen	= Lerp( g, g2, fProgress );
+			local iBlue		= Lerp( b, b2, fProgress );
+			
+			pPlr:GetChat():Send( message, iRed, iGreen, iBlue, false );
 		end
 	end
 end
@@ -124,10 +128,6 @@ function CPlayer:Me( sMessage, sPrefix, bSendChat, bShowBubble )
 			triggerClientEvent( root, 'OnPlayerChatMessage', self, sMessage, 1 );
 		end
 	end
-end
-
-function CalculateColors( r, g, b, r2, g2, b2, distance, range )
-	return r - math.floor( ( r - r2 ) * ( distance / range ) ), g - math.floor( ( g - g2 ) * ( distance / range ) ), b - math.floor( ( b - b2 ) * ( distance / range ) );
 end
 
 function SendAdminsMessage( message, prefix, r, g, b )

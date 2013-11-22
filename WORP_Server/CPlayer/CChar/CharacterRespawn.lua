@@ -140,8 +140,6 @@ function CPlayer:OnWasted( iTotalAmmo, pKiller, iKillerWeapon, iBodypart, bSteal
 		
 		self.m_bLowHPAnim = false;
 		
-		self:EndCurrentJob();
-		
 		self:Client().OnClientWasted( iTotalAmmo, pKiller, iKillerWeapon, iBodypart, bStealth );
 		
 		if self.m_pVehicle then

@@ -131,10 +131,10 @@ function CFactionManager:Load( pRow )
 			
 			return pFaction;
 		else
-			Debug( "Invalid faction type '" + (string)(pRow.type) + "' in faction id " + pRow.id, 2 );
+			Debug( "Invalid faction type '" + (string)(pRow.type) + "' on faction id " + pRow.id, 2 );
 		end
 	else
-		Debug( "Invalid faction class '" + (string)(pRow.class) + "' in faction id " + pRow.id, 2 );
+		Debug( "Invalid faction class '" + (string)(pRow.class) + "' on faction id " + pRow.id, 2 );
 	end
 	
 	return NULL;
@@ -215,6 +215,12 @@ function CFactionManager:Register( pFaction )
 	if pFaction.m_sRegistered == NULL then
 		if g_pDB:Query( "UPDATE " + DBPREFIX + "factions SET registered = NOW() WHERE id = " + pFaction:GetID() ) then
 			pFaction.m_sRegistered = CDateTime():Format( "d-m-Y" );
+			
+			if pFaction.m_iPropertyID ~= 0 then
+				if not g_pDB:Query( "UPDATE " + DBPREFIX + "interiors SET faction_id = " + pFaction:GetID() + " WHERE id = " + pFaction.m_iPropertyID ) then
+					Debug( g_pDB:Error(), 1 );
+				end
+			end
 			
 			return true;
 		end

@@ -146,6 +146,8 @@ function CInterior:SetName( sName )
 	if g_pDB:Query( "UPDATE " + DBPREFIX + "interiors SET name = '" + sName + "' WHERE id = " + self:GetID() ) then
 		self.m_sName = sName;
 		
+		self:Update3DText();
+		
 		return true;
 	end
 	
@@ -342,7 +344,21 @@ end
 function CInterior:Update3DText()
 	if self.m_p3DText then
 		local Color 	= g_pGame:GetInteriorManager():GetColor( self );
-		local sText		= self:GetName() + '\n' + ( self:GetOwner() == 0 and self:GetType() ~= 'interior' and self:GetPrice() > 0 and ( '$' + self:GetPrice() ) or '' );
+		local sText		= "";
+		
+		if self.m_iFactionID ~= 0 then
+			local pFaction = g_pGame:GetFactionManager():Get( self.m_iFactionID );
+			
+			if pFaction then
+				sText	= sText + pFaction:GetName() + '\n';
+			end
+		end
+		
+		sText = sText + self:GetName() + '\n';
+		
+		if self:GetPrice() > 0 and self:GetType() ~= INTERIOR_TYPE_NONE then
+			sText	= sText + "Продаётся за $" + self:GetPrice() + '\n';
+		end
 		
 		self.m_p3DText:SetColor( Color[ 1 ], Color[ 2 ], Color[ 3 ] );
 		self.m_p3DText:SetText( sText );

@@ -122,7 +122,7 @@ function CUIFaction:LoadInfoTab( Info )
 			{ Name = "Name", 			Caption = "Название" };
 			{ Name = "Abbr", 			Caption = "Аббревиатура" };
 			{ Name = "Type", 			Caption = "Тип организации" };
-			{ Name = "Address", 		Caption = "Адрес регистрации" };
+			{ Name = "Property", 		Caption = "Адрес регистрации" };
 			{ Name = "CreatedDate", 	Caption = "Дата создания" };
 			{ Name = "RegisterDate", 	Caption = "Дата регистрации" };
 			{ Name = "BankAccountID", 	Caption = "Номер счёта" };
@@ -250,7 +250,7 @@ function CUIFaction:LoadDeptsTab()
 			end;
 			
 			Click		= function()
-				local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название отдела" ) );
+				local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название отдела", 64 ) );
 				
 				function pInputDialog.OnAccept( _self, sValue )
 					if sValue then
@@ -269,14 +269,14 @@ function CUIFaction:LoadDeptsTab()
 			Enabled	= false;
 			
 			Complete	= function( Data )
-				self:SetItems( Data );
+				pTab:SetItems( Data );
 			end;
 			
 			Click		= function()
 				local iID = pTab.DeptList.GetSelectedItemID();
 				
 				if iID ~= 0 then
-					local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название отдела" ) );
+					local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название отдела", 64 ) );
 					
 					function pInputDialog.OnAccept( _self, sValue )
 						if sValue then
@@ -296,7 +296,7 @@ function CUIFaction:LoadDeptsTab()
 			Enabled	= false;
 			
 			Complete	= function( Data )
-				self:SetItems( Data );
+				pTab:SetItems( Data );
 			end;
 			
 			Click		= function()
@@ -348,7 +348,7 @@ function CUIFaction:LoadDeptsTab()
 				local iDeptID = pTab.DeptList.GetSelectedItemID();
 				
 				if iDeptID ~= 0 then
-					local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название должности" ) );
+					local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название должности", 64 ) );
 					
 					function pInputDialog.OnAccept( _self, sValue )
 						if sValue then
@@ -374,7 +374,7 @@ function CUIFaction:LoadDeptsTab()
 					local iRankID = pTab.RankList.GetSelectedItemID();
 					
 					if iRankID ~= 0 then
-						local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название должности" ) );
+						local pInputDialog		= self:ShowDialog( CUIInputDialog( "Введите название должности", 64 ) );
 						
 						function pInputDialog.OnAccept( _self, sValue )
 							if sValue then

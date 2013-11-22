@@ -8,9 +8,14 @@
   <script src="Android.lua"                         type="client"/>
   <script src="Android.EventHandler.lua"            type="client"/>
   <script src="Android.UI.lua"                      type="client"/>
+  <script src="Android.UI.Button.lua"               type="client"/>
   <script src="Android.UI.Color.lua"                type="client"/>
   <script src="Android.UI.Control.lua"              type="client"/>
   <script src="Android.UI.Font.lua"                 type="client"/>
+  <script src="Android.UI.Image.lua"                type="client"/>
+  <script src="Android.UI.ItemMenu.lua"             type="client"/>
+  <script src="Android.UI.Label.lua"                type="client"/>
+  <script src="Android.UI.Rectangle.lua"            type="client"/>
   <script src="Android.UI.SystemColors.lua"         type="client"/>
   <script src="Android.UI.Window.lua"               type="client"/>
   <script src="Android.UI.Window.AlertDialog.lua"   type="client"/>

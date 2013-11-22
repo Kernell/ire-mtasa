@@ -61,11 +61,11 @@
   <script src="CManager.lua"/>
   <script src="CServer.lua"/>
   
-  <script src="CGame/CGame.lua"/>
-  <script src="CGame/CGameBlips.lua"/>
-  <script src="CGame/CGameTime.lua"/>
-  <script src="CGame/CGameWeather.lua"/>
-  <script src="CGame/CGameWorld.lua"/>
+  <script src="CGame.lua"/>
+  <script src="CGameBlips.lua"/>
+  <script src="CGameTime.lua"/>
+  <script src="CGameWeather.lua"/>
+  <script src="CGameWorld.lua"/>
   
   <script src="CUser.lua"/>
   <script src="CGroup.lua"/>
@@ -154,7 +154,6 @@
   <script src="CPlayer/CChar/CharacterCuff.lua"/>
   <script src="CPlayer/CChar/CharacterJail.lua"/>
   <script src="CPlayer/CChar/CharacterPayday.lua"/>
-  <script src="CPlayer/CChar/CharacterJobs.lua"/>
   <script src="CPlayer/CChar/CharacterPhone.lua"/>
   <script src="CPlayer/CChar/CharacterStats.lua"/>
   
@@ -181,28 +180,16 @@
   
   <!-- CFaction -->
   
-  <script src="CFaction/CFaction.lua"/>
-  <script src="CFaction/CFactionDocks.lua"/>
-  <script src="CFaction/CFactionGov.lua"/>
-  <script src="CFaction/CFactionPolice.lua"/>
-  <script src="CFaction/CFactionNews.lua"/>
-  <script src="CFaction/CFactionMedical.lua"/>
-  <script src="CFaction/CFactionLicense.lua"/>
-  <script src="CFaction/CFactionManager.lua"/>
-  
-  <script src="CFaction/Main.lua"/>
-  
-  <!-- CJob -->
-  
-  <script src="CJob/CJob.lua"/>
-  <script src="CJob/Functions.lua"/>
-  <script src="CJob/Main.lua"/>
-  <script src="CJob/Job_Pilot.lua"/>
-  <script src="CJob/Job_Carrier.lua"/>
-  <script src="CJob/Job_Bus.lua"/>
-  <script src="CJob/Job_Taxi.lua"/>
-  <script src="CJob/Job_Rancher.lua"/>
-  
+  <script src="CFaction.lua"/>
+  <script src="CFactionDocks.lua"/>
+  <script src="CFactionGov.lua"/>
+  <script src="CFactionPolice.lua"/>
+  <script src="CFactionNews.lua"/>
+  <script src="CFactionMedical.lua"/>
+  <script src="CFactionLicense.lua"/>
+  <script src="CFactionTaxi.lua"/>
+  <script src="CFactionManager.lua"/>
+
   <!-- CInterior -->
   
   <script src="CInterior.lua"/>
@@ -233,9 +220,8 @@
   
   <!-- CShop -->
   
-  <script src="CShop/CShop.lua"/>
-  <script src="CShop/CShopManager.lua"/>
-  <script src="CShop/CClientRPC.lua"/>
+  <script src="CShop.lua"/>
+  <script src="CShopManager.lua"/>
   
   <!-- Chat -->
 

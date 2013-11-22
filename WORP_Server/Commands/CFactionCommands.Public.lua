@@ -134,7 +134,7 @@ function CFactionCommands:New( pClient, sCmd, sOption, ... )
 			end
 			
 			Value	= pInterior:GetID();
-			Param	= "property";
+			Param	= "property_id";
 		elseif Param == "type" then
 			Value = (int)(Value);
 			

@@ -21,11 +21,13 @@ class: CCharacterFaction
 			this.m_iFactionRights	= tonumber( pDBField.faction_rights, 16 ) or this.m_iFactionRights;
 		end
 		
+		pClient:SetParent	( this.m_pFaction and this.m_pFaction.m_pElement or g_pNoFaction.m_pElement );
+		
 		pClient:SetData( "CFaction::ID", (int)(pDBField.faction_id) );
 	end;
 	
 	_CCharacterFaction	= function( this )
-	
+		this.m_pClient:SetParent( g_pNoFaction.m_pElement );
 	end;
 	
 	GetFaction			= function( this )
@@ -60,9 +62,7 @@ class: CCharacterFaction
 			
 			this.m_pClient:SetData( "CFaction::ID", iFactionID );
 			
-			if pOldFaction ~= pFaction then
-				triggerEvent( "onCharacterFactionChanged", this.m_pClient, pOldFaction and pOldFaction:GetID() or 0, iFactionID );
-			end
+			source:SetParent( pFaction and pFaction.m_pElement or g_pNoFaction.m_pElement );
 			
 			return true;
 		end

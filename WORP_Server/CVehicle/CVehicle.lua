@@ -166,22 +166,6 @@ function CVehicle:CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotati
 end
 
 function CVehicle:_CVehicle()
-	local pPlayer = self:GetDriver();
-	
-	if pPlayer then
-		pPlayer:EndCurrentJob();
-	end
-	
-	if self:GetOwner() == -105 then
-		if self.m_TJobCarrierCar and self.m_TJobCarrierCar.m_aVehicles then
-			for i, veh in ipairs( self.m_TJobCarrierCar.m_aVehicles ) do
-				veh:Destroy();
-			end
-			
-			self.m_TJobCarrierCar = nil;
-		end
-	end
-	
 	delete ( self.m_pSiren );
 	
 	self.m_pSiren = NULL;
@@ -655,10 +639,6 @@ end
 
 function CVehicle:IsPolice()
 	return aPoliceVehicles[ self:GetModel() ];
-end
-
-function CVehicle:GetJob() -- TODO: m_pJob
-	return CJob.GetByCode( -( self:GetOwner() or 0 ) ); 
 end
 
 function CVehicle:GetFaction() -- TODO: m_pFaction

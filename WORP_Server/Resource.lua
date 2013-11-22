@@ -250,7 +250,6 @@ class: Resource
 		CCommand:AddOption( 'vehicle', 'setowner', 		CVehicleCommands.SetOwner,		true,	"<id> <player> —— Устанавливает нового владельца машины" );
 		CCommand:AddOption( 'vehicle', 'setrentable',	CVehicleCommands.SetRentable,	true,	"<id> [rentable = false] —— true/false (1/0)" );
 		CCommand:AddOption( 'vehicle', 'setrentprice', 	CVehicleCommands.SetRentPrice,	true,	"<id> <value> —— Устанавливает стоимость аренды машины" );
-		CCommand:AddOption( 'vehicle', 'setjob', 		CVehicleCommands.SetJob, 		true,	"<id> <job name> —— Устанавливает пренадлежность машины к работе" );
 		CCommand:AddOption( 'vehicle', 'setfaction', 	CVehicleCommands.SetFaction,	true,	"<id> <faction> —— Закрепляет машину за фракцией" );
 		CCommand:AddOption( 'vehicle', 'saveall', 		CVehicleCommands.SaveAll, 		true,	"Принудительное сохранение всех машин" );
 		CCommand:AddOption( 'vehicle', 'shop', 			CVehicleCommands.Shop,	 		true,	"<option> —— Options: reload" );

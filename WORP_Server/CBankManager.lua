@@ -40,7 +40,6 @@ function CBankManager:CBankManager()
 			{ Field = "type",			Type = "enum('none','faction','mastercard','visa','americanexpress')",	
 																		Null = "NO",	Key = "", 		Default = "none"	};
 			{ Field = "created",		Type = "timestamp",				Null = "NO",	Key = "", 		Default = CMySQL.CURRENT_TIMESTAMP	};
-			{ Field = "expiry",			Type = "timestamp",				Null = "YES",	Key = "", 		Default = NULL		};
 			{ Field = "locked",			Type = "timestamp",				Null = "YES",	Key = "", 		Default = NULL		};
 			{ Field = "closed",			Type = "timestamp",				Null = "YES",	Key = "", 		Default = NULL		};
 		}
@@ -164,7 +163,7 @@ function CBankManager:GetBank( iID )
 	return self.m_List[ iID ];
 end
 
-function CBankManager:CreateAccount( sCurrencyID, sType, pOwner, sExpiryDate, iFactionID )
+function CBankManager:CreateAccount( sCurrencyID, sType, pOwner, iFactionID )
 	local pDate			= CDateTime();
 	local sTimestamp	= (string)(pDate.m_pTime.sse);
 	
@@ -182,7 +181,6 @@ function CBankManager:CreateAccount( sCurrencyID, sType, pOwner, sExpiryDate, iF
 			faction_id	= iFactionID or NULL;
 			currency_id	= sCurrencyID or "USD";
 			type		= sType or "none";
-			expiry		= sExpiryDate;
 		}
 	);
 	
@@ -244,10 +242,6 @@ function CBankManager:GetInfo( void, Fields )
 	
 	if Fields[ "created" ] then
 		table.insert( aFields, "DATE_FORMAT( ba.created, '%d-%m-%Y' ) AS created" );
-	end
-	
-	if Fields[ "expiry" ] then
-		table.insert( aFields, "DATE_FORMAT( ba.expiry, '%d-%m-%Y' ) AS expiry" );
 	end
 	
 	if Fields[ "locked" ] then

@@ -14,6 +14,7 @@ bindKey		( "mouse3", "up",		CRadialMenu.Hide	);
 
 bindKey		( "F1", "up", "view_help" );
 bindKey		( "F2", "up", "stats" );
+bindKey		( "F5", "up", "faction", "menu" );
 bindKey		( "F7", "up", "anim" );
 
 bindKey		( "b", "up", "chatbox", "LocalOOC" );
