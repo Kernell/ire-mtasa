@@ -595,7 +595,7 @@ end
 function CPlayer:ShowLoginScreen()
 	self:InitLoginCamera();
 	
-	local pResult = g_pDB:Query( 'SELECT u.login, u.password FROM uac_user_autologin ua JOIN uac_users u USING( id, serial ) WHERE ua.serial = "' + self:GetSerial() + '"' );
+	local pResult = g_pDB:Query( "SELECT `login`, `password` FROM `uac_users` WHERE `autologin` = %q LIMIT 1", self:GetSerial() );
 	
 	if pResult then
 		local pRow = pResult:FetchRow();
@@ -621,15 +621,26 @@ function CPlayer:Login( iID )
 		delete ( pResult );
 		
 		if pRow then
+			local sSerial = self:GetSerial();
+			
 			self.m_LoginHistory = pRow.login_history and pRow.login_history:split( '\n' ) or {};
 			
-			table.insert( self.m_LoginHistory, getRealTime().timestamp + "|" + self:GetIP() + "|" + self:GetSerial() );
+			table.insert( self.m_LoginHistory, getRealTime().timestamp + "|" + self:GetIP() + "|" + sSerial );
 			
 			while( table.getn( self.m_LoginHistory ) > 32 ) do
 				table.remove( self.m_LoginHistory, 1 );
 			end
 			
-			if not g_pDB:Query( "UPDATE `uac_users` SET `login_history` = '" + table.concat( self.m_LoginHistory, '\n' ) + "',  `serial` = '" + self:GetSerial() + "', `ip` = '" + self:GetIP() + "', `last_login` = NOW(), `activation_code` = NULL, `password` = '" + ( self.m_sPasswordEnc or pRow.password ) + "' WHERE `id` = " + iID ) then
+			local sUpdateQuery = "UPDATE `uac_users` SET \
+				`login_history` = '" + table.concat( self.m_LoginHistory, '\n' ) + "',\
+				`serial` = '" + sSerial + "', `ip` = '" + self:GetIP() + "',\
+				`last_login` = NOW(),\
+				`activation_code` = NULL,\
+				`password` = '" + ( self.m_sPasswordEnc or pRow.password ) + "',\
+				`autologin` = " + ( self.m_bAutoLogin and ( "'" + sSerial + "'" ) or "NULL" ) + "\
+			WHERE `id` = " + iID;
+			
+			if not g_pDB:Query( sUpdateQuery ) then
 				Debug( g_pDB:Error(), 1 );
 			end
 			
@@ -664,7 +675,7 @@ function CPlayer:Login( iID )
 			
 			self:LoadCharacters( self:GetUserID() );
 			
-			g_pServer:Print( "%s (ID: %d) logged in (Serial: %s)", self:GetUserName(), self:GetUserID(), self:GetSerial() );
+			g_pServer:Print( "%s (ID: %d) logged in (Serial: %s)", self:GetUserName(), self:GetUserID(), sSerial );
 			
 			return true;
 		end

@@ -80,8 +80,6 @@
   
   <script src="Players/GUI/Help.lua" type="client"/>
   <script src="Players/GUI/Stats.lua" type="client"/>
-  <script src="Players/GUI/Login.lua" type="client"/>
-  <script src="Players/GUI/Registration.lua" type="client"/>
   <script src="Players/GUI/Animations.lua" type="client"/>
   <script src="Players/GUI/CGUISpawnChanger.lua" type="client"/>
   <script src="Players/GUI/CGUIPassport.lua" type="client"/>
@@ -99,13 +97,13 @@
   <script src="CVehicleHUDRaceLaps.lua"                 type="client"/>
   <script src="CVehicleHUDRaceTime.lua"                 type="client"/>
   <script src="CVehicleHUDRacePosition.lua"             type="client"/>
-  <script src="CVehicle.lua"                   type="client"/>
-  <script src="CVehicleIndicator.lua"          type="client"/>
-  <script src="CVehicleIndicators.lua"         type="client"/>
-  <script src="CVehicleIndicatorsManager.lua"  type="client"/>
-  <script src="CVehicleTuning.lua"             type="client"/>
-  <script src="CVehicleWhelen.lua"             type="client"/>
-  <script src="CVehicleWhelenManager.lua"      type="client"/>
+  <script src="CVehicle.lua"                            type="client"/>
+  <script src="CVehicleIndicator.lua"                   type="client"/>
+  <script src="CVehicleIndicators.lua"                  type="client"/>
+  <script src="CVehicleIndicatorsManager.lua"           type="client"/>
+  <script src="CVehicleTuning.lua"                      type="client"/>
+  <script src="CVehicleWhelen.lua"                      type="client"/>
+  <script src="CVehicleWhelenManager.lua"               type="client"/>
   <script src="Vehicles/DrawLabels.lua"                 type="client"/>
   <script src="Vehicles/DamageManager.lua"              type="client"/>
   <script src="Vehicles/RemapBody.lua"                  type="client"/>
@@ -121,9 +119,12 @@
   <script src="CUI/CUIShop.lua"             type="client"/>
   <script src="CUI/CUISkinShop.lua"         type="client"/>
   <script src="CUI/CUIInventory.lua"        type="client"/>
+  <script src="CUI/CUILoginScreen.lua"      type="client"/>
   <script src="CUI/CUIFaction.lua"          type="client"/>
   <script src="CUI/CUIFactionCreate.lua"    type="client"/>
+  <script src="CUI/CUIFactionStaffCard.lua" type="client"/>
   <script src="CUI/CUIGovFactionList.lua"   type="client"/>
+  <script src="CUI/CUIRegistration.lua"     type="client"/>
   
   <script src="CClientCharacter.lua"      type="client" />
   <script src="ClientWeapon.lua"          type="client" />

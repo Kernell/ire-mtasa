@@ -3,7 +3,8 @@
 
 local FontRemap =
 {
-	[ "Segoe UI" ] = "segoeui";
+	[ "Segoe UI" ]	= "segoeui";
+	[ "Consolas" ]	= "consola";
 };
 
 local FontCache	= {};

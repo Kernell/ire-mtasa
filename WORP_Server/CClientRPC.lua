@@ -7,27 +7,27 @@
 
 local eErrorData = 
 {
-	UNK_ERROR			= { "Попробуйте позже", NULL };
-	DB_ERROR			= { "Ошибка при работе с базой данных", NULL };
-	REG_DISABLED		= { "Регистрация временно отключена", NULL };
-	MULTIACCOUNT		= { "Вы уже зарегистрированы", NULL };
-	EMAIL_IN_USE		= { "Данный e-mail уже используется", "LoginBox" };
-	EMAIL_IS_BLANK		= { "Введите Ваш e-mail", "LoginBox" };
-	EMAIL_IS_SHORT		= { "E-mail может быть не менее 3-х символов", "LoginBox" };
-	EMAIL_IS_LONG		= { "E-mail может быть не более 64-х символов", "LoginBox" };
-	EMAIL_IS_INVALID	= { "Неправильный формат e-mail", "LoginBox" };
-	PASSWORD_IS_BLANK	= { "Введите пароль", "PasswordBox" };
-	PASSWORD_IS_SHORT	= { "Пароль может быть не менее 4-х символов", "PasswordBox" };
-	PASSWORD_IS_LONG	= { "Пароль может быть не более 64-х символов", "PasswordBox" };
-	NICKNAME_IN_USE		= { "Этот никнейм уже используется", "Nick" };
-	NICKNAME_IS_BLANK	= { "Введите Ваш никнейм", "Nick" };
-	NICKNAME_IS_SHORT	= { "Никнейм может быть не менее 3-х символов", "Nick" };
-	NICKNAME_IS_LONG	= { "Никнейм может быть не более 64-х символов", "Nick" };
-	NICKNAME_IS_INVALID	= { "Никнейм содержит запрещённые символы", "Nick" };
-	NICKNAME_IS_NUMBER	= { "Никнейм не может состоять только из чисел", "Nick" };
-	REFER_NOT_FOUND		= { "Пользователь с таким именем не найден", "ReferBox" };
-	REFER_IS_INVALID	= { "Имя пользователя содержит запрещённые символы", "ReferBox" };
-	IPB_ERROR			= { "Ошибка при создании учётной записи Invision Power Board.\nПожалуйста, сообщите об ошибке системному администратору" };
+	UNK_ERROR			= "Попробуйте позже";
+	DB_ERROR			= "Ошибка при работе с базой данных";
+	REG_DISABLED		= "Регистрация временно отключена";
+	MULTIACCOUNT		= "Вы уже регистрировались на этом сервере";
+	EMAIL_IN_USE		= "Данный e-mail уже используется";
+	EMAIL_IS_BLANK		= "Введите Ваш e-mail";
+	EMAIL_IS_SHORT		= "E-mail может быть не менее 3-х символов";
+	EMAIL_IS_LONG		= "E-mail может быть не более 64-х символов";
+	EMAIL_IS_INVALID	= "Неправильный формат e-mail";
+	PASSWORD_IS_BLANK	= "Введите пароль";
+	PASSWORD_IS_SHORT	= "Пароль может быть не менее 4-х символов";
+	PASSWORD_IS_LONG	= "Пароль может быть не более 64-х символов";
+	NICKNAME_IN_USE		= "Этот никнейм уже используется";
+	NICKNAME_IS_BLANK	= "Введите Ваш никнейм";
+	NICKNAME_IS_SHORT	= "Никнейм может быть не менее 3-х символов";
+	NICKNAME_IS_LONG	= "Никнейм может быть не более 64-х символов";
+	NICKNAME_IS_INVALID	= "Никнейм содержит запрещённые символы";
+	NICKNAME_IS_NUMBER	= "Никнейм не может состоять только из чисел";
+	REFER_NOT_FOUND		= "Пользователь с таким именем не найден";
+	REFER_IS_INVALID	= "Имя пользователя содержит запрещённые символы";
+	IPB_ERROR			= "Ошибка при создании учётной записи Invision Power Board.\nПожалуйста, сообщите об ошибке системному администратору";
 };
 
 class: AsyncQuery
@@ -119,7 +119,7 @@ function CClientRPC:Exec( sCmd )
 	CCommand:Exec( self, Command[ 1 ], unpack( Command, 2 ) );
 end
 
-function CClientRPC:TryLogin( sLogin, sPassword, bRemember, sActivationCode )
+function CClientRPC:TryLogin( sLogin, sPassword, bRemember )
 	local sQuery = "SELECT u.id, u.activation_code, u.ban, u.ban_reason, uu.name AS ban_user_name, DATE_FORMAT( u.ban_date, '%d/%m/%Y %h:%i:%s' ) AS ban_date FROM uac_users u LEFT JOIN uac_users uu ON uu.id = u.ban_user_id WHERE u.login = '" + g_pDB:EscapeString( sLogin ) + "' AND u.deleted = 'No'";
 	
 	if sLogin ~= "root" and IPSMember.DB:Ping() then
@@ -128,9 +128,7 @@ function CClientRPC:TryLogin( sLogin, sPassword, bRemember, sActivationCode )
 		if not pIPBResult then
 			Debug( IPSMember.DB:Error(), 1 );
 			
-			self:Client().LoginResults( 4 ); -- MySQL Error
-		
-			return;
+			return TEXT_DB_ERROR;
 		end
 		
 		local pRow = pIPBResult:FetchRow();
@@ -146,9 +144,7 @@ function CClientRPC:TryLogin( sLogin, sPassword, bRemember, sActivationCode )
 				return;
 			end
 			
-			self:Client().LoginResults( 1 ); -- Invalid login or password
-			
-			return;
+			return "Неверный логин или пароль";
 		end
 		
 		self.m_iLoginAttempt = NULL;
@@ -158,69 +154,61 @@ function CClientRPC:TryLogin( sLogin, sPassword, bRemember, sActivationCode )
 	
 	local pResult = g_pDB:Query( sQuery );
 	
-	if pResult then
-		local pRow = pResult:FetchRow();
-		
-		delete ( pResult );
-		
-		if pRow and pRow.id then
-			self.m_iLoginAttempt = NULL;
-			
-			if pRow.activation_code and pRow.activation_code ~= sActivationCode then
-				self:Client().LoginResults( 3 ); -- Activation required
-				
-				return;
-			end
-			
-			if pRow.ban == 'Yes' then
-				self:Client().LoginResults( 2, pRow.ban_reason, pRow.ban_user_name, pRow.ban_date ); -- Banned
-				
-				return;
-			end
-			
-			for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
-				if pPlr:GetUserID() == pRow.id then
-					self:Client().LoginResults( 5 ); -- Another player with that account found
-					
-					return;
-				end
-			end
-			
-			self:Client().ShowLoginScreen( false );
-			
-			self.m_sPasswordEnc = g_pBlowfish:Encrypt( sPassword );
-			
-			if self:Login( pRow.id ) then
-				if not g_pDB:Query( "DELETE FROM uac_user_autologin WHERE id = %q OR serial = %q", pRow.id, self:GetSerial() ) then
-					Debug( g_pDB:Error(), 1 );
-				end
-				
-				if bRemember then
-					g_pDB:Query( 'INSERT INTO uac_user_autologin (id, serial) VALUES (' + pRow.id + ', "' + self:GetSerial() + '")' );
-				end
-			else
-				self:Client().LoginResults( 1 ); -- Unk error
-			end
-		else
-			self.m_iLoginAttempt = ( self.m_iLoginAttempt or 0 ) + 1;
-			
-			if self.m_iLoginAttempt > 5 then
-				self:Ban( "Попытка взлома (подбор пароля)", 1440 );
-				
-				return;
-			end
-			
-			self:Client().LoginResults( 1 ); -- Invalid login or password
-		end
-	else
-		self:Client().LoginResults( 4 ); -- MySQL Error
-		
+	if not pResult then
 		Debug( g_pDB:Error(), 1 );
+		
+		return TEXT_DB_ERROR;
 	end
+	
+	local pRow = pResult:FetchRow();
+	
+	delete ( pResult );
+	
+	if not pRow or not pRow.id then
+		self.m_iLoginAttempt = ( self.m_iLoginAttempt or 0 ) + 1;
+		
+		if self.m_iLoginAttempt > 5 then
+			self:Ban( "Попытка взлома (подбор пароля)", 1440 );
+			
+			return;
+		end
+		
+		return "Неверный логин или пароль";
+	end
+	
+	self.m_iLoginAttempt = NULL;
+	
+	if pRow.activation_code then
+		return "Ваш аккаунт не активирован";
+	end
+	
+	if pRow.ban == "Yes" then
+		local sReason	= Args[ 1 ] and " (" + pRow.ban_reason + ")" or "";
+		local sAdmin	= Args[ 2 ] and "администратором " + pRow.ban_user_name or "";
+		
+		return "Ваш аккаунт заблокирован " + sAdmin + sReason;
+	end
+	
+	for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
+		if pPlr:GetUserID() == pRow.id then
+			return "Другой игрок в настоящее время находится под этим аккаунтом";
+		end
+	end
+	
+	self.m_sPasswordEnc = g_pBlowfish:Encrypt( sPassword );
+	self.m_bAutoLogin	= bRemember;
+	
+	setTimer( self.Login, 1000, 1, self, pRow.id );
+
+	return true;
 end
 
 function CClientRPC:RegDialog()
-	self:Client().Registration( TEXT_REG_RULES );
+	if not g_pGame.m_bRegistration then
+		return TEXT_REG_UNAVAILABLE;
+	end
+	
+	return true;
 end
 
 function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
@@ -229,18 +217,18 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 	sNickname	= (string)(sNickname);
 	sReferUser	= (string)(sReferUser);
 	
-	if sEmail:len() == 0				then	return self:Client().RegistrationError( eErrorData.EMAIL_IS_BLANK );		end
-	if sEmail:len() < 3					then	return self:Client().RegistrationError( eErrorData.EMAIL_IS_SHORT );		end
-	if sEmail:len() > 64				then	return self:Client().RegistrationError( eErrorData.EMAIL_IS_LONG );			end
-	if not CUser:IsMailValid( sEmail )	then	return self:Client().RegistrationError( eErrorData.EMAIL_IS_INVALID );		end
+	if sEmail:len() == 0				then	return eErrorData.EMAIL_IS_BLANK;	end
+	if sEmail:len() < 3					then	return eErrorData.EMAIL_IS_SHORT;	end
+	if sEmail:len() > 64				then	return eErrorData.EMAIL_IS_LONG;	end
+	if not CUser:IsMailValid( sEmail )	then	return eErrorData.EMAIL_IS_INVALID;	end
 	
-	if sPassword:len() == 0		then	return self:Client().RegistrationError( eErrorData.PASSWORD_IS_BLANK );		end
-	if sPassword:len() < 4		then	return self:Client().RegistrationError( eErrorData.PASSWORD_IS_SHORT );		end
-	if sPassword:len() > 64		then	return self:Client().RegistrationError( eErrorData.PASSWORD_IS_LONG );		end
-	if sNickname:len() == 0		then	return self:Client().RegistrationError( eErrorData.NICKNAME_IS_BLANK );		end
-	if sNickname:len() < 3		then	return self:Client().RegistrationError( eErrorData.NICKNAME_IS_SHORT );		end
-	if sNickname:len() > 64		then	return self:Client().RegistrationError( eErrorData.NICKNAME_IS_LONG );		end
-	if tonumber( sNickname ) 	then	return self:Client().RegistrationError( eErrorData.NICKNAME_IS_NUMBER );	end
+	if sPassword:len() == 0		then	return eErrorData.PASSWORD_IS_BLANK;	end
+	if sPassword:len() < 4		then	return eErrorData.PASSWORD_IS_SHORT;	end
+	if sPassword:len() > 64		then	return eErrorData.PASSWORD_IS_LONG;		end
+	if sNickname:len() == 0		then	return eErrorData.NICKNAME_IS_BLANK;	end
+	if sNickname:len() < 3		then	return eErrorData.NICKNAME_IS_SHORT;	end
+	if sNickname:len() > 64		then	return eErrorData.NICKNAME_IS_LONG;		end
+	if tonumber( sNickname ) 	then	return eErrorData.NICKNAME_IS_NUMBER;	end
 	
 	if not sNickname:find( "[^A-Za-z0-9]" ) then
 		local iReferID = 0;
@@ -254,9 +242,9 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 				local pResult = g_pDB:Query( "SELECT id FROM uac_users WHERE LOWER( name ) = LOWER( %q )", sReferUser );
 				
 				if not pResult then
-					self:Client().RegistrationError( eErrorData.DB_ERROR );
+					Debug( g_pDB:Error(), 1 );
 					
-					return not Debug( g_pDB:Error(), 1 );
+					return eErrorData.DB_ERROR;
 				end
 				
 				local iNumRows	= pResult:NumRows();
@@ -265,12 +253,12 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 				delete ( pResult );
 				
 				if iNumRows ~= 1 then
-					return self:Client().RegistrationError( eErrorData.REFER_NOT_FOUND );
+					return eErrorData.REFER_NOT_FOUND;
 				end
 				
 				iReferID = pRow and (int)(pRow.id) or 0;
 			else
-				return self:Client().RegistrationError( eErrorData.REFER_IS_INVALID );
+				return eErrorData.REFER_IS_INVALID;
 			end
 		end
 		
@@ -279,20 +267,20 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 		local pResult = g_pDB:Query( "SELECT SUM( login = %q ) AS mail, SUM( name = %q ) AS name, SUM( serial = %q OR serial_reg = %q ) AS serial FROM uac_users", sEmail, sNickname, sSerial, sSerial );
 		
 		if not pResult then
-			self:Client().RegistrationError( eErrorData.DB_ERROR );
+			Debug( g_pDB:Error(), 1 );
 			
-			return not Debug( g_pDB:Error(), 1 );
+			return eErrorData.DB_ERROR;
 		end
 		
 		local pRow = pResult:FetchRow();
 		
 		delete ( pResult );
 		
-		if pRow.mail > 0 	then	return self:Client().RegistrationError( eErrorData.EMAIL_IN_USE );		end
-		if pRow.name > 0 	then	return self:Client().RegistrationError( eErrorData.NICKNAME_IN_USE );	end
+		if pRow.mail > 0 	then	return eErrorData.EMAIL_IN_USE;		end
+		if pRow.name > 0 	then	return eErrorData.NICKNAME_IN_USE;	end
 		
 		if not g_pGame.m_bAllowMultiaccount then
-			if pRow.serial > 0 then	return self:Client().RegistrationError( eErrorData.MULTIACCOUNT );	end
+			if pRow.serial > 0 then	return eErrorData.MULTIACCOUNT;	end
 		end
 		
 		-- local sActivationCode = md5( md5( math.random( 0, 999999999 ) ) + md5( getRealTime().timestamp ) );
@@ -311,7 +299,7 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 				},
 				true
 			) then
-				return self:Client().RegistrationError( eErrorData.IPB_ERROR );
+				return eErrorData.IPB_ERROR;
 			end
 		else
 			Debug( "IPSMember::Create - Connection with IPS database is not established", 2 );
@@ -332,15 +320,15 @@ function CClientRPC:Register( sEmail, sPassword, sNickname, sReferUser )
 		if iID then
 			g_pServer:Print( "Registered new account %q (%q) (ID: %d, Serial: %s, IP: %s)", sNickname, sEmail, iID, sSerial, self:GetIP() );
 			
-			return self:Client().RegistrationError( NULL );
+			return true;
 		end
 		
 		Debug( g_pDB:Error(), 1 );
 		
-		return self:Client().RegistrationError( eErrorData.DB_ERROR );
+		return eErrorData.DB_ERROR;
 	end
 	
-	self:Client().RegistrationError( eErrorData.NICKNAME_IS_INVALID );
+	return eErrorData.NICKNAME_IS_INVALID;
 end
 
 function CClientRPC:Character__Create( sName, sSurname, iSkin, iYear, iMonth, iDay, iCityID, bTest )

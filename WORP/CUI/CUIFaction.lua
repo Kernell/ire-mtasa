@@ -157,14 +157,64 @@ function CUIFaction:LoadStaffTab()
 	
 	local bStaff = pTab:TestRight( eFactionRight.STAFF_LIST );
 	
-	pTab.List = pTab:CreateGridList{ 0, 0, pTab.Parent.Width, pTab.Parent.Height }
+	pTab.List = pTab:CreateGridList{ 0, 0, pTab.Parent.Width, pTab.Parent.Height - 80 }
 	{
-		{ "Имя", 		.14 };
-		{ "Фамилия",	.14 };
+		{ "Имя", 		.13 };
+		{ "Фамилия",	.13 };
 		{ "Отдел", 		.2	};
 		{ "Должность", 	.2	};
-		{ "Телефон", 	.17 };
-		{ "Статус", 	.17	};
+		{ "Телефон", 	.15 };
+		{ "Статус", 	.15	};
+	};
+	
+	function pTab.List.GetSelectedItemID()
+		local iItem = pTab.List:GetSelectedItem();
+		
+		if not iItem or iItem == -1 then
+			return 0;
+		end
+		
+		return (int)(pTab.List:GetItemData( iItem, pTab.List[ "Имя" ] ) );
+	end
+	
+	pTab.ButtonAdd		= pTab:CreateButton( "Добавить" )
+	{
+		X		= 10;
+		Y		= pTab.Parent.Height - 70;
+		Width	= 90;
+		Height	= 30;
+		
+		Click	= function()
+			local pDialog		= self:ShowDialog( CUIFactionStaffCard( -1 ) );
+		end;
+	};
+	
+	pTab.ButtonEdit		= pTab:CreateButton( "Изменить" )
+	{
+		X		= 100;
+		Y		= pTab.Parent.Height - 70;
+		Width	= 80;
+		Height	= 30;
+		
+		Click	= function()
+			local iMemberID		= pTab.List.GetSelectedItemID();
+			
+			if iMemberID ~= 0 then
+				local pDialog	= self:ShowDialog( CUIFactionStaffCard( iMemberID ) );
+			end
+		end;
+	};
+	
+	pTab.ButtonRemove	= pTab:CreateButton( "Уволить" )
+	{
+		X		= 180;
+		Y		= pTab.Parent.Height - 70;
+		Width	= 90;
+		Height	= 30;
+		
+		Click	= function()
+		-- //	local pDialog		= self:ShowDialog( CUIFactionStaffCard( NULL ) );
+		end;
 	};
 	
 	pTab:SetEnabled( bStaff );
@@ -180,6 +230,8 @@ function CUIFaction:LoadStaffTab()
 			local iRow = pTab.List:AddRow();
 			
 			if iRow then
+				pTab.List:SetItemData( iRow, pTab.List[ "Имя" ],		pRow.name );
+				
 				pTab.List:SetItemText( iRow, pTab.List[ "Имя" ],		pRow.name,		false, false );
 				pTab.List:SetItemText( iRow, pTab.List[ "Фамилия" ],	pRow.surname,	false, false );
 				pTab.List:SetItemText( iRow, pTab.List[ "Отдел" ],		pRow.dept	,	false, false );
@@ -228,13 +280,7 @@ function CUIFaction:LoadDeptsTab()
 				return 0;
 			end
 			
-			local iID = (int)(pTab.DeptList:GetItemText( iItem, pTab.DeptList[ "#" ] ) );
-			
-			if iID == 0 then
-				return 0;
-			end
-			
-			return iID;
+			return (int)(pTab.DeptList:GetItemText( iItem, pTab.DeptList[ "#" ] ) );
 		end
 		
 		pTab.DeptAdd	= pTab:CreateButton( "Добавить" )

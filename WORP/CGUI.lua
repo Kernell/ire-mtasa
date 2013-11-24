@@ -747,7 +747,62 @@ function CGUI:CreateStaticImage( img_sPath )
 	end
 end
 
-CGUI.CreateImage	= CGUI.CreateStaticImage;
+function CGUI:CreateImage( sPath )
+	local function Function( pObject )
+		pObject.m_sPath = sPath;
+		
+		local bRelative	= ( type( pObject.X ) == 'number' and pObject.X <= 1 or true ) and ( type( pObject.Y ) == 'number' and pObject.Y <= 1 or true ) and 
+							pObject.Width <= 1 and pObject.Height <= 1;
+		
+		if pObject.X == "center" then
+			pObject.X	= ( bRelative and ( 1.0 - pObject.Width ) or ( g_iScreenX - pObject.Width ) ) * .5;
+		end
+		
+		if pObject.Y == "center" then
+			pObject.Y	= ( bRelative and ( 1.0 - pObject.Width ) or ( g_iScreenY - pObject.Height ) ) * .5;
+		end
+		
+		if self.__instance then
+			pObject.m_pParent = self;
+		end
+		
+		function pObject.OnRender()
+			local fX, fY, fWidth, fHeight = pObject.X, pObject.Y, pObject.Width, pObject.Height;
+			
+			if pObject.m_pParent then
+				if pObject.m_pParent.__instance == NULL then
+					pObject:Destroy();
+					
+					return;
+				end
+				
+				fX 		= fX + pObject.m_pParent.X;
+				fY 		= fY + pObject.m_pParent.Y;
+				fWidth	= fWidth + pObject.m_pParent.Width;
+				fHeight	= fHeight + pObject.m_pParent.Height;
+			end
+			
+			dxDrawImage( fX, fY, fWidth, fHeight, pObject.m_sPath );
+		end
+		
+		function pObject:Destroy()
+			removeEventHandler( "onClientHUDRender", root, pObject.OnRender );
+		end
+		
+		function pObject:LoadImage( sPath )
+			self.m_sPath = sPath;
+		end
+		
+		addEventHandler( "onClientHUDRender", root, pObject.OnRender );
+		
+		setmetatable	( pObject, self );
+		self.__index 	= self;
+		
+		return pObject;
+	end
+	
+	return Function
+end
 
 -- Tab panels
 function CGUI:CreateTabPanel( tab_tData )
@@ -855,9 +910,27 @@ function CGUI:CreateLabel( lbl_sCaptopn )
 			instance:SetVerticalAlign( lbl_tData.VerticalAlign );
 		end
 		
-		addEventHandler( 'onClientGUIClick', instance.__instance, function( ... ) if instance.Click then instance.Click( ... ) end end, false );
-		addEventHandler( 'onClientMouseEnter', instance.__instance, function( ... ) if instance.MouseEnter then instance.MouseEnter( ... ) end end, false );
-		addEventHandler( 'onClientMouseLeave', instance.__instance, function( ... ) if instance.MouseLeave then instance.MouseLeave( ... ) end end, false );
+		function instance.Click( ... )
+			if instance.OnClick then
+				instance:OnClick( ... );
+			end
+		end
+		
+		function instance.MouseEnter( ... )
+			if instance.OnMouseEnter then
+				instance:OnMouseEnter( ... );
+			end
+		end
+		
+		function instance.MouseLeave( ... )
+			if instance.OnMouseLeave then
+				instance:OnMouseLeave( ... );
+			end
+		end
+		
+		addEventHandler( "onClientGUIClick",	instance.__instance,	instance.Click,			false );
+		addEventHandler( "onClientMouseEnter", 	instance.__instance,	instance.MouseEnter,	false );
+		addEventHandler( "onClientMouseLeave", 	instance.__instance,	instance.MouseLeave,	false );
 		
 		return instance;
 	end

@@ -161,6 +161,7 @@ function CGroupManager:CGroupManager()
 			{ Field = "ip", 				Type = "varchar(16)", 		Null = "NO", 	Key = "", 		Default = "0.0.0.0" };
 			{ Field = "serial_reg", 		Type = "varchar(255)", 		Null = "YES", 	Key = "", 		Default = NULL };
 			{ Field = "ip_reg", 			Type = "varchar(16)", 		Null = "YES", 	Key = "", 		Default = NULL };
+			{ Field = "autologin", 			Type = "varchar(255)", 		Null = "YES", 	Key = "", 		Default = NULL };
 			{ Field = "last_login", 		Type = "datetime", 			Null = "NO", 	Key = "", 		Default = "0000-00-00 00:00:00" };
 			{ Field = "last_logout", 		Type = "datetime", 			Null = "NO", 	Key = "", 		Default = "0000-00-00 00:00:00" };
 			{ Field = "login_history", 		Type = "text",				Null = "YES",	Key = "",		Default = NULL };
@@ -173,13 +174,6 @@ function CGroupManager:CGroupManager()
 			{ Field = "adminduty", 			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "report_locked", 		Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
 			{ Field = "deleted", 			Type = "enum('Yes','No')", 	Null = "NO", 	Key = "", 		Default = "No" };
-		}
-	);
-	
-	g_pDB:CreateTable( "uac_user_autologin",
-		{
-			{ Field = "id",			Type = "int(11) unsigned", 	Null = "NO", Default = false };
-			{ Field = "serial", 	Type = "varchar(255)", 		Null = "NO", Default = false };
 		}
 	);
 end
