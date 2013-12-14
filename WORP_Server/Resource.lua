@@ -97,7 +97,7 @@ class: Resource
 		
 		CCommand:RegisterCommand( 'offer',				CCommands.Offer			);
 
-		CCommand:RegisterCommand( "test1",					CCommands.Test1,				true );
+		CCommand:RegisterCommand( "ignorecarkey",			CCommands.IgnoreCarKey,			true );
 		CCommand:RegisterCommand( "ipsadduser",				CCommands.IPSAddUser,			true );
 		CCommand:RegisterCommand( "noclip",					CCommands.NoClip, 				false );
 		CCommand:RegisterCommand( "exe",					CCommands.Exec, 				false );

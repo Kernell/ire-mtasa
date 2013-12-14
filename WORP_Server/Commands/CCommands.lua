@@ -5,23 +5,14 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CCommands"
-
-function CCommands:Test1( pPlayer, sCmd, iCount )
-	iCount = iCount or 1;
-	
-	local iTick	= getTickCount();
-	
-	for i = 1, iCount do
-		local vResult = CClientRPC.Character__Create( pPlayer, "Delete", "Mee", 123, 1990, 1, 1, 1, true );
+class: CCommands
+{
+	IgnoreCarKey	= function( this, pPlayer, sCommand )
+		pPlayer.m_bIgnoreCarKey = not pPlayer.m_bIgnoreCarKey;
 		
-		if vResult and vResult ~= true then
-			return vResult;
-		end
-	end
-	
-	return ( "CClientRPC::Character__Create - %d leaps | %d ms" ):format( iCount, getTickCount() - iTick ), 255, 255, 255;
-end
+		return "IgnoreCarKey is " + ( pPlayer.m_bIgnoreCarKey and "enabled" or "disabled" ), 0, 200, 0;
+	end;
+};
 
 function CCommands:IPSAddUser( pPlayer, sCmd, sNickname, sPassword, sEmail, sIP )
 	if sNickname and sPassword and sEmail and sIP then

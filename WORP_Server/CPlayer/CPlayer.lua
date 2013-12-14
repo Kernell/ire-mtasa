@@ -280,6 +280,10 @@ function CPlayer:HasKey( pTarget )
 		
 		if pChar then
 			if classof( pTarget ) == CVehicle then
+				if self.m_bIgnoreCarKey then
+					return true;
+				end
+				
 				local iOwnerID = pTarget:GetOwner();
 				
 				if iOwnerID == 0 then
