@@ -349,7 +349,7 @@ function CInterior:Update3DText()
 		if self.m_iFactionID ~= 0 then
 			local pFaction = g_pGame:GetFactionManager():Get( self.m_iFactionID );
 			
-			if pFaction then
+			if pFaction and pFaction:GetName() ~= self:GetName() then
 				sText	= sText + pFaction:GetName() + '\n';
 			end
 		end
