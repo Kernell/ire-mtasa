@@ -214,6 +214,7 @@ class: Resource
 		
 		CCommand:RegisterCommand( 'vehicle', NULL, false );
 
+		CCommand:AddOption( 'vehicle', 'setcruise', 	CVehicleCommands.SetCruise,			false, 	"[speed = 0.0] —— Круиз контроль" );
 		CCommand:AddOption( 'vehicle', 'loop_wiper', 	CVehicleCommands.LoopWhiperState,	false, 	"Переключает состояние дворников автомобиля" );
 		CCommand:AddOption( 'vehicle', 'loop_whelen', 	CVehicleCommands.LoopWhelenState,	false, 	"Переключает следующее состояние проблесковых маячков" );
 		CCommand:AddOption( 'vehicle', 'loop_siren', 	CVehicleCommands.LoopSirenState,	false, 	"Переключает следующее состояние сирены" );

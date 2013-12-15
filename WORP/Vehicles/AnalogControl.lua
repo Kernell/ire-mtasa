@@ -10,15 +10,15 @@ AnalogControl =
 	fMouseX 	= 0;
 	fMouseY 	= 0;
 	
+	iBrakeTick	= 0;
+	
 	AnalogControl	= function()
-		
-		
 		addEventHandler( "onClientCursorMove", root, AnalogControl.UpdateMouse );
 		addEventHandler( "onClientRender", root, AnalogControl.UpdateControl );
 	end;
 	
 	UpdateMouse		= function( fX, fY, fAbsoluteX, fAbsoluteY )
-		if Settings.AnalogControl.Enabled == false then return; end
+		if Settings.Controls.MouseSteering.Enabled == false then return; end
 		if isCursorShowing() 			then return; end
 		if isMainMenuActive() 			then return; end
 		if isConsoleActive() 			then return; end
@@ -31,8 +31,8 @@ AnalogControl =
 			fX		= ( fX - .5 ) * 2;
 			fY		= ( fY - .5 ) * 2;
 			
-			AnalogControl.fMouseX		= AnalogControl.fMouseX + ( fX * Settings.AnalogControl.Sensitivity );
-			AnalogControl.fMouseY		= AnalogControl.fMouseX + ( fX * Settings.AnalogControl.Sensitivity );
+			AnalogControl.fMouseX		= AnalogControl.fMouseX + ( fX * Settings.Controls.MouseSteering.Sensitivity );
+			AnalogControl.fMouseY		= AnalogControl.fMouseX + ( fX * Settings.Controls.MouseSteering.Sensitivity );
 		else
 			AnalogControl.fMouseX		= 0.0;
 			AnalogControl.fMouseY		= 0.0;
@@ -43,19 +43,89 @@ AnalogControl =
 	end;
 	
 	UpdateControl	= function()
-		if Settings.AnalogControl.Enabled == false then
-			return false;
+		local iTick = getTickCount();
+		
+		if Settings.Controls.Cruise > 0.0 then
+			if not isCursorShowing() and not isMainMenuActive() and not isConsoleActive() and not isChatBoxInputActive() then			
+				local pVehicle = CLIENT:GetVehicle();
+				
+				if pVehicle and pVehicle:GetDriver() == CLIENT then
+					local fSpeed		= pVehicle:GetSpeed();
+					local bAccelerate	= getKeyState( AnalogControl.sKeyAccelerate );
+					local bBrakeReverse	= getKeyState( AnalogControl.sKeyBrakeReverse );
+					
+					local fAccelerate	= 0.0;
+					local fBrakeReverse	= 0.0;
+					
+					if bAccelerate then
+						local fForce = ( Settings.Controls.Cruise - fSpeed ) / Settings.Controls.Cruise;
+						
+						if fForce >= 0.0 then
+							fAccelerate = fForce;
+						elseif fForce < 0.0 and not bBrakeReverse then
+							fBrakeReverse = -fForce * 1.5;
+						end
+					end
+					
+					if bBrakeReverse then
+						if AnalogControl.iBrakeTick == 0 then
+							AnalogControl.iBrakeTick = iTick + 1000;
+						end
+						
+						local fForce = Clamp( 0.25, 1.0 - ( AnalogControl.iBrakeTick - iTick ) / 1000, 1.0 );
+						
+						fBrakeReverse = fForce;
+					else
+						if AnalogControl.iBrakeTick ~= 0 then
+							AnalogControl.iBrakeTick = 0;
+						end
+					end
+					
+					setAnalogControlState( "accelerate", fAccelerate );
+					setAnalogControlState( "brake_reverse", fBrakeReverse );
+					
+					if _DEBUG then
+						dxDrawText( ( "fAccelerate = %.2f" ):format( fAccelerate ), 50, 300 );
+						dxDrawText( ( "fBrakeReverse = %.2f" ):format( fBrakeReverse ), 50, 320 );
+					end
+				end
+			end
 		end
 		
-		if AnalogControl.fMouseX > 0.0 then
-			setAnalogControlState( "vehicle_right", Easing[ Settings.AnalogControl.EasingOut ]( Easing, AnalogControl.fMouseX ) );
-		elseif AnalogControl.fMouseX < 0.0 then
-			setAnalogControlState( "vehicle_left", Easing[ Settings.AnalogControl.EasingOut ]( Easing, -AnalogControl.fMouseX ) );
-		else
-			setAnalogControlState( "vehicle_right", 0.0 );
-			setAnalogControlState( "vehicle_left", 0.0 );
+		if Settings.Controls.MouseSteering.Enabled then
+			if AnalogControl.fMouseX > 0.0 then
+				setAnalogControlState( "vehicle_right", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, AnalogControl.fMouseX ) );
+			elseif AnalogControl.fMouseX < 0.0 then
+				setAnalogControlState( "vehicle_left", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, -AnalogControl.fMouseX ) );
+			else
+				setAnalogControlState( "vehicle_right", 0.0 );
+				setAnalogControlState( "vehicle_left", 0.0 );
+			end
 		end
 	end;
 };
+
+function SetCruise( fSpeed )
+	Settings.Controls.Cruise = fSpeed;
+	
+	if fSpeed > 0.0 then
+		for sKey, sState in pairs( getBoundKeys( "accelerate" ) ) do
+			AnalogControl.sKeyAccelerate	= sKey;
+			
+			break;
+		end
+		
+		for sKey, sState in pairs( getBoundKeys( "brake_reverse" ) ) do
+			AnalogControl.sKeyBrakeReverse	= sKey;
+			
+			break;
+		end
+	end
+	
+	toggleControl( "accelerate", fSpeed <= 0.0 );
+	toggleControl( "brake_reverse", fSpeed <= 0.0 );
+	
+	outputChatBox( "Круиз контроль " + ( fSpeed <= 0 and "выключен" or ( "установлен на %.1f км/ч" ):format( fSpeed ) ), 0, 255, 0 );
+end
 
 addEventHandler( "onClientResourceStart", resourceRoot, AnalogControl.AnalogControl );

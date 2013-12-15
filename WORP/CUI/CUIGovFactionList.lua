@@ -19,76 +19,98 @@ class: CUIGovFactionList ( CGUI )
 		[ 2 ] = "Corp.";
 		[ 3 ] = "Sole";
 	};
+	
+	CUIGovFactionList	= function( this, Factions )
+		this.Window = this:CreateWindow( "Список организаций" )
+		{
+			X		= this.X;
+			Y		= this.Y;
+			Width	= this.Width;
+			Height	= this.Height;
+			Sizable	= false;
+		};
+		
+		this.List	= this.Window:CreateGridList{ 0, 25, this.Width, 300 }
+		{
+			{ "ID", 				0.07 };
+			{ "Тип", 				0.06 };
+			{ "Название",			0.40 };
+			{ "Владелец",			0.15 };
+			{ "Дата создания", 		0.15 };
+			{ "Дата регистрации", 	0.15 };
+		};
+		
+		this:FillList( Factions );
+		
+		this.ButtonClose	= this.Window:CreateButton( "Закрыть" )
+		{
+			X		= this.Width - 90;
+			Y		= this.Height - 35;
+			Width	= 80;
+			Height	= 25;
+			
+			Click	= function()
+				CLIENT.m_pCharacter:HideUI( this );
+			end;
+		};
+		
+		function this.List.DoubleClick( sButton )
+			if sButton == "left" then
+				local iRow 	= this.List:GetSelectedItem();
+				
+				if not iRow or iRow == -1 then
+					return;
+				end
+				
+				local iID	= (int)(this.List:GetItemData( iRow, this.List[ "ID" ] ));
+				
+				if iID == 0 then
+					return;
+				end
+				
+				local pDialog = this:ShowDialog( CUIGovFactionEdit( iID ) );
+			end
+		end
+		
+		this.Window:SetVisible( true );
+		this.Window:BringToFront();
+		
+		this:ShowCursor();
+		
+		Ajax:HideLoader();
+	end;
+
+	_CUIGovFactionList	= function( this )
+		this.Window:Delete();
+		this.Window = NULL;
+		
+		this:HideCursor();
+		
+		Ajax:HideLoader();
+	end;
+
+	FillList	= function( this, Factions )
+		this.List:Clear();
+		
+		if not Factions then return; end
+		
+		for i, pRow in ipairs( Factions ) do
+			this.List:AddItem( pRow );
+		end
+	end;
+
+	AddItem		= function( this, pRow )
+		if not pRow then return; end
+		
+		local iRow = this:AddRow();
+		
+		this:SetItemText( iRow,	this[ "ID" ],				pRow.id,						false, true );
+		this:SetItemText( iRow,	this[ "Тип" ],				this.Types[ pRow.type ],		false, false );
+		this:SetItemText( iRow,	this[ "Организация" ],		(string)(pRow.name),			false, false );
+		this:SetItemText( iRow,	this[ "Владелец" ],			(string)(pRow.owner),			false, false );
+		this:SetItemText( iRow,	this[ "Дата создания" ],	(string)(pRow.created),			false, false );
+		this:SetItemText( iRow,	this[ "Дата регистрации" ],	(string)(pRow.registered),		false, false );
+		
+		this:SetItemData( iRow,	this[ "ID" ], pRow.id );
+	end;
 };
-
-function CUIGovFactionList:CUIGovFactionList( Factions )
-	self.Window = self:CreateWindow( "Список организаций" )
-	{
-		X		= self.X;
-		Y		= self.Y;
-		Width	= self.Width;
-		Height	= self.Height;
-		Sizable	= false;
-	};
-	
-	self.List	= self.Window:CreateGridList{ 0, 25, self.Width, 300 }
-	{
-		{ "ID", 				.07	};
-		{ "Тип", 				.07	};
-		{ "Организация",		.35	};
-		{ "Владелец",			.15 };
-		{ "Дата создания", 		.15	};
-		{ "Дата регистрации", 	.15	};
-	};
-	
-	self:FillList( Factions );
-	
-	self.ButtonClose	= self.Window:CreateButton( "Закрыть" )
-	{
-		X		= self.Width - 90;
-		Y		= self.Height - 35;
-		Width	= 80;
-		Height	= 25;
-	};
-	
-	self.Window:SetVisible( true );
-	self.Window:BringToFront();
-	
-	self:ShowCursor();
-	
-	Ajax:HideLoader();
-end
-
-function CUIGovFactionList:_CUIGovFactionList()
-	self.Window:Delete();
-	self.Window = NULL;
-	
-	self:HideCursor();
-	
-	Ajax:HideLoader();
-end
-
-function CUIGovFactionList:FillList( Factions )
-	self.List:Clear();
-	
-	if not Factions then return; end
-	
-	for i, pRow in ipairs( Factions ) do
-		self.List:AddItem( pRow );
-	end
-end
-
-function CUIGovFactionList:AddItem( pRow )
-	if not pRow then return end
-	
-	local Row = self:AddRow();
-	
-	if not Row then return; end
-	
-	self:SetItemText( Row,	self[ "ID" ],				pRow.id,								false, true );
-	self:SetItemText( Row,	self[ "Тип" ],				CUIGovFactionList.Types[ pRow.type ],	false, false );
-	self:SetItemText( Row,	self[ "Организация" ],		(string)(pRow.name),					false, false );
-	self:SetItemText( Row,	self[ "Владелец" ],			(string)(pRow.owner),					false, false );
-	self:SetItemText( Row,	self[ "Дата создания" ],	(string)(pRow.created),					false, false );
-	self:SetItemText( Row,	self[ "Дата регистрации" ],	(string)(pRow.registered),				false, false );
-end

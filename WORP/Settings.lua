@@ -25,13 +25,18 @@ Settings	=
 		Clouds		= false;		
 		Birds		= false;		
 	};
-	AnalogControl	=
+	Controls	=
 	{
-		Enabled			= false;
-		Sensitivity		= 0.1;
-		Angle			= 90.0;
-		EasingIn		= "InCirc";
-		EasingOut		= "OutCirc";
+		Cruise	= 0.0;
+		
+		MouseSteering	=
+		{
+			Enabled			= false;
+			Sensitivity		= 0.1;
+			Angle			= 90.0;
+			EasingIn		= "InCirc";
+			EasingOut		= "OutCirc";
+		};
 	};
 };
 

@@ -5,6 +5,18 @@
 -- License		Proprietary Software
 -- Version		1.0
 
+function CVehicleCommands:SetCruise( pClient, sCommand, sOption, sSpeed )
+	local pVehicle = pClient:GetVehicle();
+	
+	if pVehicle and pVehicle == pClient.m_pVehicle and pClient:GetVehicleSeat() == 0 then
+		local fSpeed = Clamp( 0.0, (float)(sSpeed), 120.0 );
+		
+		pClient:Client().SetCruise( fSpeed );
+	end
+	
+	return true;
+end
+
 function CVehicleCommands:LoopWhiperState( pClient )
 	local pVehicle = pClient:GetVehicle();
 	

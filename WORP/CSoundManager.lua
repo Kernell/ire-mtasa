@@ -121,10 +121,3 @@ class: CSoundManager
 		end
 	end;
 };
-
-addEventHandler( "onClientResourceStart", resourceRoot,
-	function()
-		CSoundManager();
-	end,
-	false
-);

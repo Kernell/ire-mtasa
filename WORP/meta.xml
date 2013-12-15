@@ -124,6 +124,7 @@
   <script src="CUI/CUIFactionCreate.lua"    type="client"/>
   <script src="CUI/CUIFactionStaffCard.lua" type="client"/>
   <script src="CUI/CUIGovFactionList.lua"   type="client"/>
+  <script src="CUI/CUIGovFactionEdit.lua"   type="client"/>
   <script src="CUI/CUIRegistration.lua"     type="client"/>
   
   <script src="CClientCharacter.lua"      type="client" />

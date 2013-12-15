@@ -149,7 +149,7 @@ end
 
 function CCommands:Admins( pPlayer )
 	if pPlayer:HaveAccess( "command.adminchat" ) then
-		pPlayer:GetChat():Send( "Список администраторов в сети", 255, 255, 0 );
+		pPlayer:GetChat():Send( "Список администраторов", 255, 128, 0 );
 		
 		for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
 			local Groups = pPlr:GetGroups();

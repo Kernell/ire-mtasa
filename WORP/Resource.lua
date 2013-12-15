@@ -11,20 +11,24 @@ class: Resource
 		this.GetNetManager				= function( this ) return this.m_pNetManager; 			end;
 		this.GetClientManager			= function( this ) return this.m_pClientManager; 		end;
 		this.GetClientShaderManager		= function( this ) return this.m_pClientShaderManager; 	end;
+		this.GetClientSoundManager		= function( this ) return this.m_pClientSoundManager; 	end;
 		
 		this.m_pNetManager				= CNetManager();
 		this.m_pClientManager			= CClientManager();
 		this.m_pClientShaderManager		= CClientShaderManager();
+		this.m_pClientSoundManager		= CSoundManager();
 		
 		this.m_pVehicleHUD	= CVehicleHUD();
 	end;
 	
 	OnStop		= function()
+		delete ( this.m_pClientSoundManager );
 		delete ( this.m_pClientManager );
 		delete ( this.m_pClientShaderManager );
 		delete ( this.m_pVehicleHUD );
 		delete ( this.m_pNetManager );
 		
+		this.m_pClientSoundManager		= NULL;
 		this.m_pNetManager				= NULL;
 		this.m_pClientManager			= NULL;
 		this.m_pClientShaderManager		= NULL;
