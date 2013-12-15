@@ -347,6 +347,17 @@ function CElement:IsWithinMarker( pMarker )
 	return isElementWithinMarker( self.__instance, pMarker );
 end
 
+function CElement:GetVelocityAngle()
+	local vecVelocity	= self:GetVelocity();
+	local vecRotation	= self:GetRotation();
+	
+	local fSinZ, fCosZ = -math.sin( math.rad( vecRotation.Z ) ), math.cos( math.rad( vecRotation.Z ) );
+	
+	local fCosX = ( fSinZ * vecVelocity.X + fCosZ * vecVelocity.Y ) / vecVelocity:Length();
+	
+	return math.deg( math.acos( fCosX == math.huge and 0.0 or fCosX ) );
+end
+
 -- Client Only
 if isElementOnScreen then
 	function CElement:IsOnScreen()

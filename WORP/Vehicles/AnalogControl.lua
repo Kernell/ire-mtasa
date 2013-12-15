@@ -50,7 +50,12 @@ AnalogControl =
 			
 			if pVehicle and pVehicle:GetDriver() == CLIENT then
 				local bUIShowing	= isCursorShowing() or isMainMenuActive() or isConsoleActive() or isChatBoxInputActive();
+				local fVelAngle		= pVehicle:GetVelocityAngle();
 				local fSpeed		= pVehicle:GetSpeed();
+				
+				if fVelAngle >= 120.0 then
+					fSpeed = -fSpeed;
+				end
 				
 				local bAccelerate	= not bUIShowing and getKeyState( AnalogControl.sKeyAccelerate );
 				local bBrakeReverse	= not bUIShowing and getKeyState( AnalogControl.sKeyBrakeReverse );
@@ -78,12 +83,16 @@ AnalogControl =
 					end
 				end
 				
+				fAccelerate		= math.abs( fAccelerate ) + ( bAccelerate and 0.05 or 0.0 );
+				fBrakeReverse	= math.abs( fBrakeReverse );
+				
 				setAnalogControlState( "accelerate", fAccelerate );
 				setAnalogControlState( "brake_reverse", fBrakeReverse );
 				
 				if _DEBUG then
 					dxDrawText( ( "fAccelerate = %.2f" ):format( fAccelerate ), 50, 300 );
 					dxDrawText( ( "fBrakeReverse = %.2f" ):format( fBrakeReverse ), 50, 320 );
+					dxDrawText( ( "fVelAngle = %.2f" ):format( fVelAngle ), 50, 340 );
 				end
 			end
 		end
