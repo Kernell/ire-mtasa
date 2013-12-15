@@ -40,7 +40,7 @@ function CClientRPC:DetachFromSWATRope( is_ground )
 	self:SetGravity( 0.008 );
 end
 
-function CClientRPC:SWATRopeResult( position )
+function CClientRPC:SWATRopeResult( fGroundZ )
 	local vehicle = self:GetVehicle();
 		
 	if vehicle and vehicle:GetModel() == 497 then
@@ -53,28 +53,31 @@ function CClientRPC:SWATRopeResult( position )
 				if self.swat_rope and self.swat_rope.time - getTickCount() > 0 then
 					return;
 				else
-					local pos = vehicle:GetPosition();
+					local vecPosition = vehicle:GetPosition();
 					
-					local distance = Vector3( pos.X, pos.Y, position ):Distance( pos );
+					local fDistance = Vector3( vecPosition.X, vecPosition.Y, fGroundZ ):Distance( vecPosition );
 					
-					if distance < 10 then
+					if fDistance < 10 then
 						self:Hint( "Ошибка", "Слишком низко", "error" );
 						
 						return;
 					end
 					
-					local vel = vehicle:GetVelocity();
+					if fDistance > 20 then
+						self:Hint( "Ошибка", "Слишком высоко", "error" );
+						
+						return;
+					end
 					
-					if vel.X > .1 or vel.Y > .1 then
+					local fSpeed = vehicle:GetSpeed();
+					
+					if fSpeed > 5 then
 						self:Hint( "Ошибка", "Слишком большая скорость", "error" );
 						
 						return;
 					end
 					
-					local time = math.min( math.floor( distance * 250 ), 9000 );
-					
-					-- Debug( "distance: " .. distance .. " time: " .. time );
-					
+					local time = math.min( math.floor( fDistance * 250 ), 9000 );
 					local seat = self:GetVehicleSeat();
 					
 					vehicle:SetFrozen( true );

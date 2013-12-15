@@ -8,11 +8,12 @@
 addEvent( 'CreateSWATRope', true );
 
 local function rope_wait( player )
-	local x, y, z	= getElementPosition( localPlayer );
-	local is_ground	= getDistanceBetweenPoints3D( x, y, z, x, y, getGroundPosition( x, y, z ) ) < 3;
+	local x, y, z	= getElementPosition( CLIENT );
+	local fDistance	= getDistanceBetweenPoints3D( x, y, z, x, y, getGroundPosition( x, y, z ) );
+	local bGround	= isPedOnGround( CLIENT ) or fDistance < 2;
 	
-	if isPedOnGround( localPlayer ) or is_ground or isElementInWater( localPlayer ) or getElementHealth( localPlayer ) <= 0 then
-		SERVER.DetachFromSWATRope( isPedOnGround( localPlayer ) or is_ground );
+	if bGround or getPedContactElement( CLIENT ) or isElementInWater( CLIENT ) or getElementHealth( CLIENT ) <= 0 then
+		SERVER.DetachFromSWATRope( bGround );
 		
 		return;
 	end
@@ -21,7 +22,7 @@ local function rope_wait( player )
 end
 
 local function CreateSWATRope( x, y, z, time )
-	if source == localPlayer then
+	if source == CLIENT then
 		CTimer( rope_wait, 500, 1 );
 	end
 	
