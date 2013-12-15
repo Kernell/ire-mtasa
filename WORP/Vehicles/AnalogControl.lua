@@ -124,7 +124,7 @@ function SetCruise( fSpeed )
 	toggleControl( "accelerate", fSpeed <= 0.0 );
 	toggleControl( "brake_reverse", fSpeed <= 0.0 );
 	
-	Hint( "Info" "Круиз контроль " + ( fSpeed <= 0 and "выключен" or ( "установлен на %.1f км/ч" ):format( fSpeed ) ), "ok" );
+	Hint( "Info", "Круиз контроль " + ( fSpeed <= 0 and "выключен" or ( "установлен на %.1f км/ч" ):format( fSpeed ) ), "ok" );
 end
 
 addEventHandler( "onClientResourceStart", resourceRoot, AnalogControl.AnalogControl );
