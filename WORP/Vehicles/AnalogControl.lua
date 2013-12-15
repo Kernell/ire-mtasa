@@ -46,48 +46,44 @@ AnalogControl =
 		local iTick = getTickCount();
 		
 		if Settings.Controls.Cruise > 0.0 then
-			if not isCursorShowing() and not isMainMenuActive() and not isConsoleActive() and not isChatBoxInputActive() then			
-				local pVehicle = CLIENT:GetVehicle();
+			local pVehicle = CLIENT:GetVehicle();
+			
+			if pVehicle and pVehicle:GetDriver() == CLIENT then
+				local bUIShowing	= isCursorShowing() or isMainMenuActive() or isConsoleActive() or isChatBoxInputActive();
+				local fSpeed		= pVehicle:GetSpeed();
 				
-				if pVehicle and pVehicle:GetDriver() == CLIENT then
-					local fSpeed		= pVehicle:GetSpeed();
-					local bAccelerate	= getKeyState( AnalogControl.sKeyAccelerate );
-					local bBrakeReverse	= getKeyState( AnalogControl.sKeyBrakeReverse );
-					
-					local fAccelerate	= 0.0;
-					local fBrakeReverse	= 0.0;
-					
-					if bAccelerate then
-						local fForce = ( Settings.Controls.Cruise - fSpeed ) / Settings.Controls.Cruise;
-						
-						if fForce >= 0.0 then
-							fAccelerate = fForce;
-						elseif fForce < 0.0 and not bBrakeReverse then
-							fBrakeReverse = -fForce * 1.5;
-						end
+				local bAccelerate	= not bUIShowing and getKeyState( AnalogControl.sKeyAccelerate );
+				local bBrakeReverse	= not bUIShowing and getKeyState( AnalogControl.sKeyBrakeReverse );
+				
+				local fAccelerate	= 0.0;
+				local fBrakeReverse	= 0.0;
+				
+				local fForce = ( Settings.Controls.Cruise - fSpeed ) / Settings.Controls.Cruise;
+				
+				if fForce >= 0.0 and bAccelerate then
+					fAccelerate = getEasingValue( fForce, "OutQuad" );
+				elseif fForce < 0.0 and not bBrakeReverse then
+					fBrakeReverse = -fForce * 1.5;
+				end
+				
+				if bBrakeReverse then
+					if AnalogControl.iBrakeTick == 0 then
+						AnalogControl.iBrakeTick = iTick + 2000;
 					end
 					
-					if bBrakeReverse then
-						if AnalogControl.iBrakeTick == 0 then
-							AnalogControl.iBrakeTick = iTick + 1000;
-						end
-						
-						local fForce = Clamp( 0.25, 1.0 - ( AnalogControl.iBrakeTick - iTick ) / 1000, 1.0 );
-						
-						fBrakeReverse = fForce;
-					else
-						if AnalogControl.iBrakeTick ~= 0 then
-							AnalogControl.iBrakeTick = 0;
-						end
+					fBrakeReverse = Clamp( 0.25, 1.0 - ( AnalogControl.iBrakeTick - iTick ) / 2000, 1.0 );
+				else
+					if AnalogControl.iBrakeTick ~= 0 then
+						AnalogControl.iBrakeTick = 0;
 					end
-					
-					setAnalogControlState( "accelerate", fAccelerate );
-					setAnalogControlState( "brake_reverse", fBrakeReverse );
-					
-					if _DEBUG then
-						dxDrawText( ( "fAccelerate = %.2f" ):format( fAccelerate ), 50, 300 );
-						dxDrawText( ( "fBrakeReverse = %.2f" ):format( fBrakeReverse ), 50, 320 );
-					end
+				end
+				
+				setAnalogControlState( "accelerate", fAccelerate );
+				setAnalogControlState( "brake_reverse", fBrakeReverse );
+				
+				if _DEBUG then
+					dxDrawText( ( "fAccelerate = %.2f" ):format( fAccelerate ), 50, 300 );
+					dxDrawText( ( "fBrakeReverse = %.2f" ):format( fBrakeReverse ), 50, 320 );
 				end
 			end
 		end
@@ -122,10 +118,13 @@ function SetCruise( fSpeed )
 		end
 	end
 	
+	setAnalogControlState( "accelerate", 0.0 );
+	setAnalogControlState( "brake_reverse", 0.0 );
+	
 	toggleControl( "accelerate", fSpeed <= 0.0 );
 	toggleControl( "brake_reverse", fSpeed <= 0.0 );
 	
-	outputChatBox( "Круиз контроль " + ( fSpeed <= 0 and "выключен" or ( "установлен на %.1f км/ч" ):format( fSpeed ) ), 0, 255, 0 );
+	Hint( "Info" "Круиз контроль " + ( fSpeed <= 0 and "выключен" or ( "установлен на %.1f км/ч" ):format( fSpeed ) ), "ok" );
 end
 
 addEventHandler( "onClientResourceStart", resourceRoot, AnalogControl.AnalogControl );
