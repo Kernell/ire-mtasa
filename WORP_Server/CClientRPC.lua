@@ -2009,7 +2009,7 @@ function CClientRPC:Radio__Play( iChannel, fVolume )
 		
 		pVehicle.m_pRadio.m_sPath 		= VEHICLE_RADIO[ iChannel ][ 2 ];
 		
-		CClientRPC.Radio__SetVolume( fVolume );
+		CClientRPC.Radio__SetVolume( self, fVolume );
 		
 		pVehicle.m_pRadio:Play();
 		
@@ -2022,7 +2022,7 @@ end
 function CClientRPC:Radio__SetVolume( fVolume )
 	fVolume = Clamp( 0.0, (float)(fVolume), 1.0 );
 	
-	local pVehicle 	= CClientRPC.GetVehicle();
+	local pVehicle 	= CClientRPC.GetVehicle( self );
 	
 	if pVehicle then
 		pVehicle.m_pData.m_fRadioVolume		= fVolume;
