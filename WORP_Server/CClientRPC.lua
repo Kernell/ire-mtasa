@@ -2022,7 +2022,7 @@ end
 function CClientRPC:Radio__SetVolume( fVolume )
 	fVolume = Clamp( 0.0, (float)(fVolume), 1.0 );
 	
-	local pVehicle 	= self:GetVehicle();
+	local pVehicle 	= CClientRPC.GetVehicle();
 	
 	if pVehicle then
 		pVehicle.m_pData.m_fRadioVolume		= fVolume;
