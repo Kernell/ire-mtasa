@@ -28,7 +28,8 @@ class: CVehicle ( CElement )
 {
 	__instance		= createElement( 'CVehicle', 'CVehicle' );
 	m_pSiren		= NULL;
-	m_bRadio		= true;
+	m_pRadio		= NULL;
+	--m_bRadio		= true;
 	
 	static
 	{
@@ -51,6 +52,8 @@ class: CVehicle ( CElement )
 			element_data	= NULL;
 			siren			= 0;
 			whelen			= 0;
+			radio_id		= 0;
+			radio_volume	= 1.0;
 		};
 	};
 };
@@ -63,9 +66,23 @@ function CVehicle:CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotati
 	self.m_pVehicleManager = pVehicleManager;
 	
 	if iModel and self:Create( iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 ) then
-		self.m_pComponents	= CVehicleComponents( self );
-		self.m_pUpgrades	= CVehicleUpgrades( self );
-		self.m_pSiren		= CVehicleSiren( self, DBField.siren, DBField.whelen );
+		self.m_pComponents			= CVehicleComponents( self );
+		self.m_pUpgrades			= CVehicleUpgrades( self );
+		self.m_pSiren				= CVehicleSiren( self, DBField.siren, DBField.whelen );
+		
+		self.m_pRadio				= new. CSound;
+		self.m_pRadio.vecPosition	= vecPosition;
+		self.m_pRadio.m_pAttachedTo = self;
+			
+		if DBField.radio_id and DBField.radio_id ~= 0 and VEHICLE_RADIO[ DBField.radio_id ] then
+			self.m_pRadio.m_sPath		= VEHICLE_RADIO[ DBField.radio_id ][ 2 ];
+			self.m_pRadio.m_fVolume 	= DBField.radio_volume;
+			
+			self.m_pRadio:Play();
+		end
+		
+		self.m_pData.m_iRadioID 	= DBField.radio_id;
+		self.m_pData.m_fRadioVolume	= DBField.radio_volume;
 		
 		local Upgrades		= fromJSON( DBField.upgrades );
 		
@@ -169,6 +186,10 @@ function CVehicle:_CVehicle()
 	delete ( self.m_pSiren );
 	
 	self.m_pSiren = NULL;
+	
+	delete ( self.m_pRadio );
+	
+	self.m_pRadio = NULL;
 	
 	self.m_pVehicleManager:RemoveFromList( self );
 	self:Destroy();
@@ -732,7 +753,10 @@ function CVehicle:Save()
 			sUpgrades = "NULL";
 		end
 		
-		local query = ( "UPDATE " + DBPREFIX + "vehicles SET x = %f, y = %f, z = %f, rx = %f, ry = %f, rz = %f, interior = %d, dimension = %d, health = %d, last_time = %d, last_driver = %s, locked = %q, engine = %q, lights = %q, wheels_states = %q, panel_states = %q, door_state = %q, fuel = %d, rent_time = %d, upgrades = %s WHERE id = " + self:GetID() ):format( pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, int, dim, health, last_time, last_driver, locked, engine, lights, wheels_states, panel_states, door_state, self:GetFuel(), iRentTime, sUpgrades );
+		local radio_id		= self.m_pData.m_iRadioID;
+		local radio_volume	= self.m_pData.m_fRadioVolume;
+		
+		local query = ( "UPDATE " + DBPREFIX + "vehicles SET x = %f, y = %f, z = %f, rx = %f, ry = %f, rz = %f, interior = %d, dimension = %d, health = %d, last_time = %d, last_driver = %s, locked = %q, engine = %q, lights = %q, wheels_states = %q, panel_states = %q, door_state = %q, fuel = %d, rent_time = %d, upgrades = %s, radio_id = %d, radio_volume = %f WHERE id = " + self:GetID() ):format( pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, int, dim, health, last_time, last_driver, locked, engine, lights, wheels_states, panel_states, door_state, self:GetFuel(), iRentTime, sUpgrades, radio_id, radio_volume );
 		
 		if not g_pDB:Query( query ) then
 			Debug( g_pDB:Error(), 1 );

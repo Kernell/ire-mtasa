@@ -1997,3 +1997,55 @@ function CClientRPC:FactionTaxi__ToggleTaxiLight()
 		end
 	end
 end
+
+function CClientRPC:Radio__Play( iChannel, fVolume )
+	iChannel 	= (int)(iChannel); 
+	fVolume 	= (float)(fVolume);
+	
+	local pVehicle = self:GetVehicle();
+	if pVehicle and VEHICLE_RADIO[ iChannel ] then
+		pVehicle.m_pData.m_iRadioID 	= iChannel;
+		
+		pVehicle.m_pRadio.m_sPath 		= VEHICLE_RADIO[ iChannel ][ 2 ];
+		
+		self:Radio__SetVolume( fVolume )
+		
+		pVehicle.m_pRadio:Play();
+		
+		return true;
+	end
+	
+	return false;
+end
+
+function CClientRPC:Radio__SetVolume( fVolume )
+	fVolume = Clamp( 0.0, (float)(fVolume), 1.0 );
+	
+	local pVehicle 	= self:GetVehicle();
+	if pVehicle then
+		pVehicle.m_pData.m_fRadioVolume		= fVolume;
+		
+		pVehicle.m_pRadio.m_fVolume 		= fVolume;
+		pVehicle.m_pRadio.m_fMaxDistance 	= fVolume * 100.0;
+		
+		return true;
+	end
+	
+	return false;
+end
+
+function CClientRPC:Radio__Stop()
+	local pVehicle 	= self:GetVehicle();
+	if pVehicle then
+		pVehicle.m_pData.m_iRadioID 		= 0;
+		
+		self:Radio__SetVolume( 0 );
+		
+		pVehicle.m_pRadio:Play();
+		
+		return true;
+	end
+	
+	return false;
+end
+

@@ -313,3 +313,21 @@ enum "eVehicle"
 	YOSEMITE	= 554;
 	ZR350		= 477;
 };
+
+VEHICLE_RADIO =
+{
+	{ "Channel N5", 		"http://radio.promodj.com:8000/channel5-192" 	};
+	{ "Nu Channel", 		"http://radio.promodj.com:8000/nu-192" 			};
+	{ "Full Moon Channel", 	"http://radio.promodj.com:8000/fullmoon-192" 	};
+	{ "Deep Channel", 		"http://radio.promodj.com:8000/deep-192" 		};
+	{ "300km/h Channel", 	"http://radio.promodj.com:8000/300kmh-192" 		};
+	{ "Mini Channel", 		"http://radio.promodj.com:8000/mini-192" 		};
+	{ "Old-School Channel", "http://radio.promodj.com:8000/oldschool-192" 	};
+	{ "Vata Channel", 		"http://radio.promodj.com:8000/vata-192" 		};
+	{ "Brainfck Channel", 	"http://radio.promodj.com:8000/brainfck-192"	};
+	{ "Strange Channel", 	"http://radio.promodj.com:8000/strange-192" 	};	
+	{ "16Bit.fm", 			"http://radio.promodj.com:8000/16bit-192" 		};
+	{ "GarageFM", 			"http://radio.promodj.com:8000/garagefm-192"	};
+	{ "Station 2.0", 		"http://radio.promodj.com:8000/station20-192" 	};
+	{ "RNB Channel", 		"http://radio.promodj.com:8000/rnb-192" 		};	
+};

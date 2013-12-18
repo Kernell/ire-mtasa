@@ -273,6 +273,8 @@ function CVehicleManager:CVehicleManager()
 			{ Field = "rentable",			Type = "enum('Yes','No')",					Null = "NO",	Key = "",			Default = "No",	};
 			{ Field = "element_data",		Type = "text",								Null = "YES",	Key = "",			Default = NULL,	};
 			{ Field = "deleted",			Type = "timestamp",							Null = "YES",	Key = "",			Default = NULL,	};
+			{ Field = "radio_id",			Type = "int(11) unsigned",					Null = "NO",	Key = "",			Default = 0,	}; 
+			{ Field = "radio_volume",		Type = "float",								Null = "NO",	Key = "",			Default = 0.0,	}; 
 		}
 	);
 end
