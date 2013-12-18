@@ -1941,8 +1941,8 @@ function CClientRPC:FactionTaxi__AcceptCall( iPlayerID )
 		local pCall = pFaction.m_Calls[ iPlayerID ];
 		
 		if pCall then
-			if pCall.pCaller ~= self then
-				pFaction:RemoveCall( iFactionID );
+			if pCall.pCaller:GetID() ~= pCall.iPlayerID then
+				pFaction:RemoveCall( pCall.iPlayerID );
 				
 				return "Ошибка, игрок не в сети", 255, 0, 0;
 			end
@@ -1957,6 +1957,8 @@ function CClientRPC:FactionTaxi__AcceptCall( iPlayerID )
 				end
 				
 				pFaction:SendMessage( self:GetName() + " принял вызов от " + pCall.sName );
+				pFaction:RemoveCall( pCall.iPlayerID );
+				pFaction:ShowMenu( self );
 				
 				return true;
 			end
@@ -1999,9 +2001,6 @@ function CClientRPC:FactionTaxi__ToggleTaxiLight()
 end
 
 function CClientRPC:Radio__Play( iChannel, fVolume )
-	iChannel 	= (int)(iChannel); 
-	fVolume 	= (float)(fVolume);
-	
 	local pVehicle = self:GetVehicle();
 	
 	if pVehicle and VEHICLE_RADIO[ iChannel ] then
@@ -2022,7 +2021,7 @@ end
 function CClientRPC:Radio__SetVolume( fVolume )
 	fVolume = Clamp( 0.0, (float)(fVolume), 1.0 );
 	
-	local pVehicle 	= CClientRPC.GetVehicle( self );
+	local pVehicle 	= self:GetVehicle();
 	
 	if pVehicle then
 		pVehicle.m_pData.m_fRadioVolume		= fVolume;
@@ -2040,9 +2039,7 @@ function CClientRPC:Radio__Stop()
 	local pVehicle 	= self:GetVehicle();
 	
 	if pVehicle then
-		pVehicle.m_pData.m_iRadioID 		= 0;
-		
-		CClientRPC.Radio__SetVolume( 0 );
+		pVehicle.m_pData.m_iRadioID = 0;
 		
 		pVehicle.m_pRadio:Play();
 		
