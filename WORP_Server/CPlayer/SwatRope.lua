@@ -41,11 +41,11 @@ function CClientRPC:DetachFromSWATRope( is_ground )
 end
 
 function CClientRPC:SWATRopeResult( fGroundZ )
-	local vehicle = self:GetVehicle();
+	local pVehicle = self:GetVehicle();
 		
-	if vehicle and vehicle:GetModel() == 497 then
+	if pVehicle and pVehicle:GetModel() == 497 then
 		if self:GetVehicleSeat() > 0 then
-			if vehicle:IsLocked() then
+			if pVehicle:IsLocked() then
 				self:Hint( "Ошибка", "Двери заблокированы", "error" );
 			elseif self:IsCuffed() then
 				self:Hint( "Ошибка", "Вы в наручниках", "error" );
@@ -53,7 +53,7 @@ function CClientRPC:SWATRopeResult( fGroundZ )
 				if self.swat_rope and self.swat_rope.time - getTickCount() > 0 then
 					return;
 				else
-					local vecPosition = vehicle:GetPosition();
+					local vecPosition = pVehicle:GetPosition();
 					
 					local fDistance = Vector3( vecPosition.X, vecPosition.Y, fGroundZ ):Distance( vecPosition );
 					
@@ -63,13 +63,13 @@ function CClientRPC:SWATRopeResult( fGroundZ )
 						return;
 					end
 					
-					if fDistance > 20 then
+					if fDistance > 30 then
 						self:Hint( "Ошибка", "Слишком высоко", "error" );
 						
 						return;
 					end
 					
-					local fSpeed = vehicle:GetSpeed();
+					local fSpeed = pVehicle:GetSpeed();
 					
 					if fSpeed > 5 then
 						self:Hint( "Ошибка", "Слишком большая скорость", "error" );
@@ -77,21 +77,21 @@ function CClientRPC:SWATRopeResult( fGroundZ )
 						return;
 					end
 					
-					local time = math.min( math.floor( fDistance * 250 ), 9000 );
-					local seat = self:GetVehicleSeat();
+					local iTime = math.min( math.floor( fDistance * 250 ), 9000 );
+					local iSeat = self:GetVehicleSeat();
 					
-					vehicle:SetFrozen( true );
+					pVehicle:SetFrozen( true );
 					
-					local pos = vehicle:GetPosition();
-					local rot = vehicle:GetRotation();
+					local pos = pVehicle:GetPosition();
+					local rot = pVehicle:GetRotation();
 					
-					local rope = pos:Offset( seat == 1 and 1.45 or .3, rot.Z + ( seat == 1 and 0 or -180 ) ):Offset( 1.3, rot.Z + ( seat == 2 and 90 or -90 ) );
+					local vecRope = pos:Offset( iSeat == 1 and 1.45 or .3, rot.Z + ( iSeat == 1 and 0 or -180 ) ):Offset( 1.3, rot.Z + ( iSeat == 2 and 90 or -90 ) );
 					
-					table.insert( swat_ropes, rope );
+					table.insert( swat_ropes, vecRope );
 					
-					rope.time	= getTickCount() + time;
+					vecRope.time	= getTickCount() + iTime;
 					
-					self.swat_rope	= rope;
+					self.swat_rope	= vecRope;
 					
 					triggerClientEvent( root, "CreateSWATRope", self.__instance, self.swat_rope.X, self.swat_rope.Y, self.swat_rope.Z, time );
 					
@@ -103,20 +103,20 @@ function CClientRPC:SWATRopeResult( fGroundZ )
 						end, 500, 1
 					);
 					
-					if not vehicle.swat_ropes then
-						vehicle.swat_ropes = {};
+					if not pVehicle.swat_ropes then
+						pVehicle.swat_ropes = {};
 					end
 					
-					vehicle.swat_ropes[ rope ] = true;
+					pVehicle.swat_ropes[ vecRope ] = true;
 					
 					setTimer( 
 						function() 
-							vehicle.swat_ropes[ rope ] = nil;
+							pVehicle.swat_ropes[ vecRope ] = NULL;
 							
-							if sizeof( vehicle.swat_ropes ) == 0 then							
-								vehicle:SetFrozen( false );
+							if sizeof( pVehicle.swat_ropes ) == 0 then							
+								pVehicle:SetFrozen( false );
 							end
-						end, time, 1 
+						end, iTime, 1 
 					);
 				end
 			end

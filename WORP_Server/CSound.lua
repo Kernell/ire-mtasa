@@ -28,6 +28,7 @@ class: CSound
 	m_bLoop				= true;
 	m_pElement			= NULL;
 	m_EnabledEffects	= NULL;
+	m_sMemberID			= NULL;
 	
 	CSound		= function( this, sPath )
 		this.m_sPath	= sPath;
@@ -42,6 +43,10 @@ class: CSound
 	end;
 	
 	Play		= function( this )
+		if this.m_pAttachedTo and type( this.m_pAttachedTo ) ~= "userdata" then
+			Error( 2, 2342, "this.m_pAttachedTo", "userdata", type( this.m_pAttachedTo ) );
+		end
+		
 		this:Stop();
 		
 		local Sound	=
@@ -52,6 +57,8 @@ class: CSound
 			m_fMaxDistance		= this.m_fMaxDistance;
 			m_bLoop				= this.m_bLoop;
 			m_EnabledEffects	= this.m_EnabledEffects;
+			m_pAttachedTo		= this.m_pAttachedTo;
+			m_sMemberID			= this.m_sMemberID;
 		};
 		
 		this.m_pElement = createColSphere( 0.0, 0.0, 0.0, this.m_fMaxDistance + 40.0 );
@@ -79,7 +86,10 @@ class: CSound
 	
 	Stop		= function( this )
 		if this.m_pElement then
-			return this.m_pElement:Destroy();
+			this.m_pElement:Destroy();
+			this.m_pElement = NULL;
+			
+			return true;
 		end
 		
 		return false;

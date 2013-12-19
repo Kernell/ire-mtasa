@@ -16,7 +16,7 @@ enum "eSoundState"
 class: CSound
 {
 	CSound		= function( this, sPath, vecPosition, bLoop )
-		if sPath and vecPosition and bLoop then
+		if sPath and vecPosition then
 			this.m_pSound = playSound3D( sPath, vecPosition.X, vecPosition.Y, vecPosition.Z, bLoop );
 			
 			CElement.AddToList( this, this.m_pSound );

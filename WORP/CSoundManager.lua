@@ -70,6 +70,12 @@ class: CSoundManager
 			end
 		end
 		
+		if Sound.m_pAttachedTo and Sound.m_sMemberID then
+			Sound.m_pAttachedTo[ Sound.m_sMemberID ] = pServerSound;
+		end
+		
+		pServerSound.m_pSound = pSound;
+		
 		pSound:AttachTo( pServerSound );
 		
 		return pSound;
@@ -107,6 +113,8 @@ class: CSoundManager
 		if pSound then
 			delete ( pSound );
 			
+			pServerSound.m_pSound = NULL;
+			
 			this.m_List[ pServerSound ] = NULL;
 		end
 	end;
@@ -116,6 +124,8 @@ class: CSoundManager
 		
 		if pSound then
 			delete ( pSound );
+			
+			pServerSound.m_pSound = NULL;
 			
 			this.m_List[ pServerSound ] = NULL;
 		end

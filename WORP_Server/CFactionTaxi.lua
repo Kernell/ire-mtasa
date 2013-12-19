@@ -65,6 +65,7 @@ class: CFactionTaxi ( CFaction )
 			local pCall	=
 			{
 				vecPosition 	= pPlayer:GetPosition();
+				iPlayerID		= pPlayer:GetID();
 				sName			= pPlayer:GetName();
 				pCaller			= pPlayer;
 				iTimestamp		= getRealTime().timestamp;
@@ -82,5 +83,19 @@ class: CFactionTaxi ( CFaction )
 	
 	RemoveCall			= function( this, iPlayerID )
 		this.m_Calls[ iPlayerID ] = NULL;
+	end;
+	
+	ShowMenu		= function( this, pPlayer )
+		local pChar = pPlayer:GetChar();
+	
+		if pChar then
+			if pChar:GetFaction() == this then
+				pChar:ShowUI( "CUIFactionTaxi", this.m_Calls, getRealTime().timestamp );
+				
+				return true;
+			end
+		end
+		
+		return false;
 	end;
 };

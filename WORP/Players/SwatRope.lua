@@ -5,28 +5,29 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-addEvent( 'CreateSWATRope', true );
+addEvent( "CreateSWATRope", true );
 
-local function rope_wait( player )
-	local x, y, z	= getElementPosition( CLIENT );
-	local fDistance	= getDistanceBetweenPoints3D( x, y, z, x, y, getGroundPosition( x, y, z ) );
-	local bGround	= isPedOnGround( CLIENT ) or fDistance < 2;
+local function SWATRopeWait( player )
+	local vecVelocity	= CLIENT:GetVelocity();
+	local vecPosition	= CLIENT:GetPosition();
+	local fDistance		= vecPosition:Distance( Vector3( getGroundPosition( vecPosition.X, vecPosition.Y, vecPosition.Z ) ) );
+	local bGround		= CLIENT:IsOnGround() or fDistance < 2 or vecVelocity.Z < .1;
 	
-	if bGround or getPedContactElement( CLIENT ) or isElementInWater( CLIENT ) or getElementHealth( CLIENT ) <= 0 then
+	if bGround or CLIENT:GetContactElement() or CLIENT:IsInWater() or CLIENT:GetHealth() <= 0 then
 		SERVER.DetachFromSWATRope( bGround );
 		
 		return;
 	end
 	
-	CTimer( rope_wait, 100, 1 );
+	CTimer( SWATRopeWait, 100, 1 );
 end
 
-local function CreateSWATRope( x, y, z, time )
+local function CreateSWATRope( fX, fY, fZ, iTime )
 	if source == CLIENT then
-		CTimer( rope_wait, 500, 1 );
+		CTimer( SWATRopeWait, 500, 1 );
 	end
 	
-	createSWATRope( x, y, z, time );
+	createSWATRope( fX, fY, fZ, iTime );
 end
 
-addEventHandler( 'CreateSWATRope', root, CreateSWATRope );
+addEventHandler( "CreateSWATRope", root, CreateSWATRope );

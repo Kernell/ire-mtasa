@@ -100,7 +100,7 @@ function CClientRPC:Ready()
 	self:ShowLoginScreen();
 	
 	self:ToggleControls( true, true, false );
-	self:DisableControls( 'next_weapon', 'previous_weapon', 'action', 'walk', 'fire', 'horn' );
+	self:DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous" );
 	
 	self:BindKey( "horn", "both", CPlayer.VehicleHorn );
 	self:BindKey( "j", "up", CPlayer.VehicleToggleEngine );
@@ -2000,17 +2000,23 @@ function CClientRPC:FactionTaxi__ToggleTaxiLight()
 	end
 end
 
-function CClientRPC:Radio__Play( iChannel, fVolume )
+function CClientRPC:Radio__SelectChannel( iChannel )
 	local pVehicle = self:GetVehicle();
 	
-	if pVehicle and VEHICLE_RADIO[ iChannel ] then
-		pVehicle.m_pData.m_iRadioID 	= iChannel;
-		
-		pVehicle.m_pRadio.m_sPath 		= VEHICLE_RADIO[ iChannel ][ 2 ];
-		
-		CClientRPC.Radio__SetVolume( self, fVolume );
-		
-		pVehicle.m_pRadio:Play();
+	if pVehicle then
+		if VEHICLE_RADIO[ iChannel ] and pVehicle:GetType() == "Automobile" then
+			pVehicle.m_pData.m_iRadioID 	= iChannel;
+			
+			pVehicle.m_pRadio.m_sPath 		= VEHICLE_RADIO[ iChannel ][ 2 ];
+			
+			CClientRPC.Radio__SetVolume( self, 0.5 );
+			
+			pVehicle.m_pRadio:Play();
+		else
+			pVehicle.m_pData.m_iRadioID		= 0;
+			
+			pVehicle.m_pRadio:Stop();
+		end
 		
 		return true;
 	end
@@ -2034,18 +2040,3 @@ function CClientRPC:Radio__SetVolume( fVolume )
 	
 	return false;
 end
-
-function CClientRPC:Radio__Stop()
-	local pVehicle 	= self:GetVehicle();
-	
-	if pVehicle then
-		pVehicle.m_pData.m_iRadioID = 0;
-		
-		pVehicle.m_pRadio:Play();
-		
-		return true;
-	end
-	
-	return false;
-end
-

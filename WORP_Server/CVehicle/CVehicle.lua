@@ -72,11 +72,13 @@ function CVehicle:CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotati
 		
 		self.m_pRadio				= new. CSound;
 		self.m_pRadio.vecPosition	= vecPosition;
-		self.m_pRadio.m_pAttachedTo = self;
+		self.m_pRadio.m_pAttachedTo = self.__instance;
+		self.m_pRadio.m_sMemberID	= "m_pRadio";
 			
-		if DBField.radio_id and DBField.radio_id ~= 0 and VEHICLE_RADIO[ DBField.radio_id ] then
+		if VEHICLE_RADIO[ DBField.radio_id ] then
 			self.m_pRadio.m_sPath		= VEHICLE_RADIO[ DBField.radio_id ][ 2 ];
-			self.m_pRadio.m_fVolume 	= DBField.radio_volume;
+			self.m_pRadio.m_fVolume 		= DBField.radio_volume;
+			self.m_pRadio.m_fMaxDistance 	= self.m_pRadio.m_fVolume * 100.0;
 			
 			self.m_pRadio:Play();
 		end
