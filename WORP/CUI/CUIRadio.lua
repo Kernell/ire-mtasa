@@ -11,8 +11,7 @@ class: CUIRadio
 	
 	Color		= { R = 0; G = 255; B = 255; A = 100 };
 	
-	m_iTextTick			= 0;
-	m_iTextChangeTick	= 0;
+	m_iChangeTick	= 0;
 	
 	CUIRadio	= function( this )
 		this.m_fWidth	= 300;
@@ -23,10 +22,7 @@ class: CUIRadio
 		
 		this.m_iColor = tocolor( this.Color.R, this.Color.G, this.Color.B, this.Color.A );
 		
-		this.m_iTextChangeTick	= getTickCount() + 4000;
-		
-		this.m_iTextAlpha1	= 0;
-		this.m_iTextAlpha2	= this.Color.A;
+		this:Reset();
 		
 		function this.__Draw()
 			this:Draw();
@@ -43,13 +39,21 @@ class: CUIRadio
 		function this.__Next()
 			setRadioChannel( 0 );
 			
-			this:Next();
+			if getTickCount() - this.m_iChangeTick > 500 then
+				this.m_iChangeTick = getTickCount();
+				
+				this:Next();
+			end
 		end
 		
 		function this.__Prev()
 			setRadioChannel( 0 );
 			
-			this:Prev();
+			if getTickCount() - this.m_iChangeTick > 500 then
+				this.m_iChangeTick = getTickCount();
+				
+				this:Prev();
+			end
 		end
 		
 		addEventHandler( "onClientRender", root, this.__Draw );
@@ -79,6 +83,8 @@ class: CUIRadio
 		if pPlayer == CLIENT then
 			setRadioChannel( 0 );
 			
+			this:Reset();
+			
 			this.m_pVehicle = pVehicle;
 		end
 	end;
@@ -87,6 +93,14 @@ class: CUIRadio
 		if pPlayer == CLIENT then
 			this.m_pVehicle = NULL;
 		end
+	end;
+	
+	Reset		= function( this )
+		this.m_iTextAlpha1		= 0;
+		this.m_iTextAlpha2		= this.Color.A;
+		this.m_bColorFade		= false;
+		this.m_iTextTick		= 0;
+		this.m_iTextChangeTick	= getTickCount() + 4000;
 	end;
 	
 	Draw		= function( this )
@@ -215,11 +229,7 @@ class: CUIRadio
 			
 			playSoundFrontEnd( iChannelID == 0 and 38 or 37 );
 			
-			this.m_iTextAlpha1		= 0;
-			this.m_iTextAlpha2		= this.Color.A;
-			this.m_bColorFade		= false;
-			this.m_iTextTick		= 0;
-			this.m_iTextChangeTick	= getTickCount() + 4000;
+			this:Reset();
 		end
 	end;
 };

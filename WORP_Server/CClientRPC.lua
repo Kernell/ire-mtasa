@@ -2001,7 +2001,7 @@ function CClientRPC:FactionTaxi__ToggleTaxiLight()
 end
 
 function CClientRPC:Radio__SelectChannel( iChannel )
-	local pVehicle = self:GetVehicle();
+	local pVehicle = self:GetVehicleSeat() <= 1 and self:GetVehicle();
 	
 	if pVehicle then
 		if VEHICLE_RADIO[ iChannel ] and pVehicle:GetType() == "Automobile" then
