@@ -387,12 +387,11 @@ function CInterior:UpdateMarker()
 		if InteriorData.Position == NULL or ( self:GetOwner() == 0 and self:GetType() ~= INTERIOR_TYPE_NONE and self:GetPrice() > 0 ) then
 			self.m_pOutsideMarker	= CPickup.Create( self.m_vecOutsidePosition, 3, self:GetType() == INTERIOR_TYPE_COMMERCIAL and 1272 or 1273 );
 		else
-			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), 'arrow', 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), self.m_sInteriorID == "dummy" and "checkpoint" or "arrow", 1, unpack( Color ) );
 		end
 		
 		if InteriorData.Position then
-			self.m_pInsideMarker		= CMarker.Create( InteriorData.Position + Vector3( 0, 0, .54 ), 'arrow', 1, unpack( Color ) );
-			
+			self.m_pInsideMarker		= CMarker.Create( InteriorData.Position + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
 			
 			self.m_pInsideMarker.Rotation		= InteriorData.Rotation;
 			self.m_pInsideMarker:SetInterior	( InteriorData.Interior );
@@ -417,7 +416,7 @@ function CInterior:UpdateBlip()
 	local InteriorData		= g_pGame:GetInteriorManager():GetInterior( self.m_sInteriorID );
 	
 	if InteriorData then
-		if InteriorData.Blip and ( self:GetPrice() == 0 or self:GetOwner() ~= 0 or self:GetType() == 'interior' ) then
+		if InteriorData.Blip and ( self:GetPrice() == 0 or self:GetOwner() ~= 0 or self:GetType() == 'interior' or self.m_sInteriorID == "dummy" ) then
 			if self.m_pBlip then
 				delete ( self.m_pBlip );
 				self.m_pBlip = NULL;

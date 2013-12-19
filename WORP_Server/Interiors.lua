@@ -7,6 +7,8 @@
 
 INTERIORS_LIST =
 {
+	dummy		= { Position = Vector3(); SpawnRotation = 0,		Interior = 3,	price = 0; Blip = 0; };
+	
 	house1  	= { BoundingBox = { 219, 1185, 1079; 30, 30, 10}; 	Position = Vector3( 235.25,  1186.68, 1080.26 ), 	Rotation = 0, 	SpawnPosition = Vector3( 233.886, 1190.203, 1084.416 ),		SpawnRotation = 0,		Interior = 3,	price = 900000 }, -- two floors
 	house2  	= { BoundingBox = { 216, 1237, 1080; 19, 18, 5 }; 	Position = Vector3( 226.79,  1240.02, 1082.14 ), 	Rotation = 90, 	SpawnPosition = Vector3( 219.400, 1249.555, 1082.141 ),		SpawnRotation = 180,	Interior = 2,	price = 250000 },
 	house3  	= { BoundingBox = { 215, 1285, 1080; 20, 10, 5 }; 	Position = Vector3( 223.07,  1287.09, 1082.14 ), 	Rotation = 0, 	SpawnPosition = Vector3( 223.151, 1290.646, 1082.141 ),		SpawnRotation = 180,	Interior = 1,	price = 100000 },
