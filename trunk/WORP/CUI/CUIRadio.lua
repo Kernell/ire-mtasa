@@ -12,6 +12,7 @@ class: CUIRadio
 	Color		= { R = 0; G = 255; B = 255; A = 100 };
 	
 	m_iChangeTick	= 0;
+	m_iPrevTick		= 0;
 	
 	CUIRadio	= function( this )
 		this.m_fWidth	= 300;
@@ -21,6 +22,12 @@ class: CUIRadio
 		this.m_fY	= g_iScreenY - this.m_fHeight - 50;
 		
 		this.m_iColor = tocolor( this.Color.R, this.Color.G, this.Color.B, this.Color.A );
+		
+		this.m_FFT = {};
+		
+		for i = 1, this.BANDS do
+			this.m_FFT[ i ] = 0;
+		end
 		
 		this:Reset();
 		
@@ -62,6 +69,10 @@ class: CUIRadio
 		
 		bindKey( "radio_next", 		"down", this.__Next );
 		bindKey( "radio_previous", 	"down", this.__Prev );
+		
+		if CLIENT:IsInVehicle() then
+			this.m_pVehicle = CLIENT:GetVehicle();
+		end
 	end;
 	
 	_CUIRadio	= function( this )
@@ -125,19 +136,54 @@ class: CUIRadio
 			local pFFTData 	= pSound:GetFFTData( 4096, this.BANDS );
 			pMeta			= pSound:GetMetaTags();
 			
-			if pFFTData then
-				for fX, iPeak in ipairs( pFFTData ) do
-					local fY = math.sqrt( iPeak ) * 3 * ( this.m_fHeight - 4 );
+			for iBand = 1, this.BANDS do
+				local fX = ( iBand * ( this.m_fWidth / this.BANDS ) ) + this.m_fX;
+				local fY = this.m_fY + this.m_fHeight;
+				
+				if pFFTData then
+					local iPeak = pFFTData[ iBand ];
 					
-					if fY > 200 + this.m_fHeight then
-						fY = this.m_fHeight + 200;
+					if iPeak then
+						if this.m_FFT[ iBand ] == NULL then
+							this.m_FFT[ iBand ] = 0;
+						end
+						
+						if pFFTData[ iBand ] >= this.m_FFT[ iBand ] then
+							this.m_FFT[ iBand ] = pFFTData[ iBand ];
+						end
+						
+						local fHeight = math.sqrt( iPeak ) * 3 * ( this.m_fHeight - 4 );
+						
+						if fHeight > 200 + this.m_fHeight then
+							fHeight = this.m_fHeight + 200;
+						end
+						
+						fHeight = fHeight - 1;
+						
+						if fHeight >= -1 then
+							dxDrawRectangle( fX, fY, 5, -math.max( ( fHeight + 1 ) / 4, 1 ), this.m_iColor );
+						end
+					else
+						this.m_FFT[ iBand ] = NULL;
+					end
+				end
+				
+				local iPeak = this.m_FFT[ iBand ];
+				
+				if iPeak then
+					local fHeight = math.sqrt( iPeak ) * 3 * ( this.m_fHeight - 4 );
+						
+					if fHeight > 200 + this.m_fHeight then
+						fHeight = this.m_fHeight + 200;
 					end
 					
-					fY = fY - 1;
+					fHeight = fHeight + 12;
 					
-					if fY >= -1 then
-						dxDrawRectangle( ( fX * ( this.m_fWidth / this.BANDS ) ) + this.m_fX, this.m_fY + this.m_fHeight, 5, -math.max( ( fY + 1 ) / 4, 1 ), this.m_iColor );
+					if fHeight >= -1 then
+						dxDrawRectangle( fX, fY - math.max( fHeight / 4, 1 ), 5, 3, tocolor( this.Color.R, this.Color.G, this.Color.B, 200 ) );
 					end
+					
+					this.m_FFT[ iBand ] = math.max( 0, this.m_FFT[ iBand ] - ( ( iTick - this.m_iPrevTick ) * 0.0001 ) );
 				end
 			end
 		end
@@ -201,6 +247,8 @@ class: CUIRadio
 			
 			dxDrawText( sTitle:trim(),	fX, fY, fX, fY, iColor, 0.5, DXFont( "Segoe UI", 32 ) );
 		end
+		
+		this.m_iPrevTick = iTick;
 	end;
 	
 	Next		= function( this )

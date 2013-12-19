@@ -5,13 +5,11 @@
   
   <include resource="shader_radial_blur" />
   <include resource="shader_glow" />
-  
-  <sync_map_element_data>false</sync_map_element_data>
+  <include resource="shader_water" />
   
   <script src="Shared/utils.lua"      type="client"/>
   <script src="Shared/Debug.lua"      type="client"/>
   <script src="Shared/class.lua"      type="client"/>
-  <script src="Shared/base64.lua"     type="client"/>
   <script src="Shared/Easing.lua"     type="client"/>
   <script src="Shared/CVector.lua"    type="client"/>
   <script src="Shared/IElementData.lua"   type="client"/>
@@ -83,13 +81,6 @@
   <script src="Players/GUI/Animations.lua" type="client"/>
   <script src="Players/GUI/CGUISpawnChanger.lua" type="client"/>
   <script src="Players/GUI/CGUIPassport.lua" type="client"/>
-  
-  <!-- Jobs -->
-
-  <script src="Jobs/Main.lua" type="client"/>
-  <script src="Jobs/Job_Taxi.lua" type="client"/>
-  
-  <!-- Vehicles -->
 
   <script src="CVehicleHUD.lua"                         type="client"/>
   <script src="CVehicleHUDSpeed.lua"                    type="client"/>
@@ -108,7 +99,6 @@
   <script src="Vehicles/DamageManager.lua"              type="client"/>
   <script src="Vehicles/RemapBody.lua"                  type="client"/>
   <script src="Vehicles/AnalogControl.lua"              type="client"/>
-  
   
   <script src="CUI/CUIAsyncQuery.lua"       type="client"/>
   <script src="CUI/CUIInputDialog.lua"      type="client"/>
