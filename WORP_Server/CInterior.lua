@@ -242,6 +242,12 @@ end
 
 function CInterior:OnHit( pClient, bMatching )
 	if classof( pClient ) == CPlayer and pClient.m_pTeleportMarker == NULL then
+		if self.m_pInterior.m_sInteriorID == "dummy" and pClient:HaveAccess( "command.interior:edit" ) then
+			self.m_pInterior:OpenMenu( pClient, true );
+			
+			return false;
+		end
+		
 		if classof( self ) == CPickup then
 			if self.m_pInterior:GetOwner() == 0 and self.m_pInterior:GetPrice() > 0 and not pClient:IsInVehicle() then
 				self.m_pInterior:OpenMenu( pClient, true );
@@ -272,6 +278,10 @@ function CInterior:CanUse( pClient, sMessageType )
 	end
 	
 	local sError = NULL;
+	
+	if self.m_sInteriorID == "dummy" then
+		sError = "В это здание нельзя войти.\nОбратитесь к системному администратору";
+	end
 	
 	if pClient.m_bLowHPAnim then
 		sError = "Вы не в состоянии передвигаться";
@@ -384,10 +394,12 @@ function CInterior:UpdateMarker()
 			self.m_pInsideMarker = NULL;
 		end
 		
-		if InteriorData.Position == NULL or ( self:GetOwner() == 0 and self:GetType() ~= INTERIOR_TYPE_NONE and self:GetPrice() > 0 ) then
+		if self.m_sInteriorID == "dummy" then
+			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "checkpoint", 1, unpack( Color ) );
+		elseif InteriorData.Position == NULL or ( self:GetOwner() == 0 and self:GetType() ~= INTERIOR_TYPE_NONE and self:GetPrice() > 0 ) then
 			self.m_pOutsideMarker	= CPickup.Create( self.m_vecOutsidePosition, 3, self:GetType() == INTERIOR_TYPE_COMMERCIAL and 1272 or 1273 );
 		else
-			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), self.m_sInteriorID == "dummy" and "checkpoint" or "arrow", 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
 		end
 		
 		if InteriorData.Position then
