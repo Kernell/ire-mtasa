@@ -330,4 +330,5 @@ VEHICLE_RADIO =
 	{ "GarageFM", 			"http://radio.promodj.com:8000/garagefm-192"	};
 	{ "Station 2.0", 		"http://radio.promodj.com:8000/station20-192" 	};
 	{ "RNB Channel", 		"http://radio.promodj.com:8000/rnb-192" 		};	
+	{ "post-hardcore.ru", 	"http://radio.post-hardcore.ru/radio.m3u"		};
 };
