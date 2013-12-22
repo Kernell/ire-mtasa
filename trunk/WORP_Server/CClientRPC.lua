@@ -66,7 +66,7 @@ function CClientRPC:CClientRPC()
 			
 			local vResult = CClientRPC[ Data.Function ]( client, ... );
 			
-			if Data.ID then
+			if Data.ID and isElement( client ) then
 				if AsyncQuery[ vResult ] then
 					client:Client( true ).CClientRPC__Handler( AsyncQuery[ vResult ], Data.ID );
 				else

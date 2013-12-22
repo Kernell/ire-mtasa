@@ -14,7 +14,6 @@
   <script src="Shared/CVector.lua"    type="client"/>
   <script src="Shared/IElementData.lua"   type="client"/>
   <script src="Shared/CElement.lua"   type="client"/>
-    <script src="CElement.lua"          type="client"/>
   <script src="Shared/CPed.lua"       type="client"/>
     <script src="CPed.lua"              type="client"/>
   <script src="Shared/CPlayer.lua"    type="client"/>
