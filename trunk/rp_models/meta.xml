@@ -88,4 +88,7 @@
   
   <file src="vehicles/mustang.dff"/>
   <file src="vehicles/mustang.txd"/>
+  
+  <file src="vehicles/gtr.dff"/>
+  <file src="vehicles/gtr.txd"/>
 </meta>

@@ -340,6 +340,11 @@ class: CVehicle ( CElement )
 				off	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 				on	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 			};
+			[ HOTRINB ]		=
+			{
+				off	= dxCreateTexture( "Resources/Textures/gtr_lights.png" );
+				on	= dxCreateTexture( "Resources/Textures/gtr_lights.png" );
+			};
 		};
 	};
 	

@@ -175,6 +175,8 @@
   
   <file src="Resources/Textures/mustang_lights.png"/>
   <file src="Resources/Textures/wrx_05_lights.png"/>
+  <file src="Resources/Textures/gtr_lights.png"/>
+  <file src="Resources/Textures/gtr_lights_on.png"/>
   
   <file src="Resources/Images/close_icon.png"/>
   <file src="Resources/Images/Aero.png"/>

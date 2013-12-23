@@ -58,6 +58,7 @@ local Models	=
 --		[599]	= { TXD = 'copcarru';		DFF = 'copcarru'		};
 		[490]	= { TXD = 'copcarru';		DFF = 'copcarru'		};
 		[426]	= { TXD = 'charger_rt';		DFF = 'charger_rt'		};
+		[503]	= { TXD = 'gtr';			DFF = 'gtr'				};
 		[507]	= { TXD = 'is300';			DFF = 'is300'			};
 		[540]	= { TXD = 'wrx_05';			DFF = 'wrx_05'			};
 		[560]	= { TXD = 'evo';			DFF = 'evo'				};

@@ -283,6 +283,38 @@ local handling	=
 		modelFlags						= 0x800;
 		handlingFlags					= 0x5084402;
 	};
+	[ HOTRINB ] =
+	{
+		mass							= 1560;
+		turnMass						= 6000.0;
+		dragCoeff						= 2.0;
+		centerOfMass					= { 0.0, 0.1, -0.2 };
+		percentSubmerged				= 75;
+		tractionMultiplier				= 0.8;
+		tractionLoss 					= 0.8;
+		tractionBias					= 0.525;
+		numberOfGears					= 5;
+		maxVelocity						= 255.0;
+		engineAcceleration				= 9.0;
+		engineInertia					= 50.0;
+		driveType						= "awd";
+		engineType						= "petrol";
+		brakeDeceleration 				= 5.0;
+		brakeBias						= 0.55;
+		ABS								= true;
+		steeringLock					= 45.0;
+		suspensionForceLevel			= 1.2;
+		suspensionDamping				= 0.15;
+		suspensionHighSpeedDamping		= 0.0;
+		suspensionUpperLimit			= 0.29;
+		suspensionLowerLimit			= -0.05;
+		suspensionFrontRearBias			= 0.5;
+		suspensionAntiDiveMultiplier	= 0.4;
+		seatOffsetDistance				= 0.26;
+		collisionDamageMultiplier		= 0.6;
+		modelFlags						= 0x40000204;
+		handlingFlags					= 0x1C00000;
+	};
 };
 
 for model, data in pairs( handling ) do
