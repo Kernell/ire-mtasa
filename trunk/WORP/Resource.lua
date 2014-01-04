@@ -21,6 +21,7 @@ class: Resource
 		this.m_pVehicleHUD	= CVehicleHUD();
 		
 		this.m_pRadioUI		= CUIRadio();
+		this.m_pSideBarUI	= CUISideBar();
 	end;
 	
 	OnStop		= function()
@@ -28,6 +29,7 @@ class: Resource
 		delete ( this.m_pClientManager );
 		delete ( this.m_pClientShaderManager );
 		delete ( this.m_pRadioUI );
+		delete ( this.m_pSideBarUI );
 		delete ( this.m_pVehicleHUD );
 		delete ( this.m_pNetManager );
 		
@@ -37,6 +39,7 @@ class: Resource
 		this.m_pClientShaderManager		= NULL;
 		this.m_pVehicleHUD				= NULL;
 		this.m_pRadioUI					= NULL;
+		this.m_pSideBarUI				= NULL;
 	end;
 };
 
