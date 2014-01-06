@@ -1,7 +1,7 @@
 -- Innovation Roleplay Engine
 --
 -- Author		Kernell
--- Copyright	© 2011 - 2013
+-- Copyright	© 2011 - 2014
 -- License		Proprietary Software
 
 class "Android.UI.Image" ( Android.UI.Control )

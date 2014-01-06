@@ -1,7 +1,7 @@
 -- Innovation Roleplay Engine
 --
 -- Author		Kernell, Alberto "ryden" Alonso
--- Copyright	© 2011 - 2013
+-- Copyright	© 2011 - 2014
 -- License		Proprietary Software
 -- Version		1.0
 

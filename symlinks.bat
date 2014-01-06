@@ -25,7 +25,7 @@ if '%errorlevel%' NEQ '0' (
     CD /D "%~dp0"
 :--------------------------------------
 
-cd /D %~dp0
+cd /D "%~dp0"
 
 set folders[0]="IRE_AndroidUI"
 set folders[1]="IRE_Scoreboard"
