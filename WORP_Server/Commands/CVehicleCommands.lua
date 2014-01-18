@@ -372,6 +372,10 @@ function CVehicleCommands:Spawn( pPlayer, sCmd, sOption, ... )
 	
 	local sModel = table.concat( { ... }, ' ' );
 	
+	if sModel:len() == 0 then
+		return false;
+	end
+	
 	local iModel = tonumber( sModel ) or g_pGame:GetVehicleManager():GetModelByName( sModel );
 	
 	if iModel then
