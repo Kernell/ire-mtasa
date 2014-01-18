@@ -625,8 +625,8 @@ class: CUIBank ( CGUI )
 	{
 		Icons	=
 		{
-			none				= "Resources/Images/Popup/Money.png";
-			faction				= "Resources/Images/Popup/Money.png";
+			none				= "Resources/Images/Money.png";
+			faction				= "Resources/Images/Money.png";
 			mastercard			= "Resources/Images/Items/bank_card_mastercard.png";
 			visa				= "Resources/Images/Items/bank_card_visa.png";
 			americanexpress		= "Resources/Images/Items/bank_card_americanexpress.png";
