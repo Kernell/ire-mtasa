@@ -93,7 +93,6 @@ function CFactionNews:AddAdvert( pChar, sText, iPrice )
 	
 	for i, pPlr in pairs( self.m_pElement:GetChilds() ) do
 		if classof( pPlr ) == CPlayer then
-			pPlr:Popup( "info", "Новое объявление", sMessage );
 			pPlr:Client().FMenuSN( self.m_aAdverts, false, true );
 		end
 	end

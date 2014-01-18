@@ -35,7 +35,6 @@
   <script src="CFlowingText.lua"      type="client"/>
   <script src="CGUI.lua"              type="client"/>
   <script src="CContextMenu.lua"      type="client"/>
-  <script src="ElementGhostMode.lua"  type="client"/>
   <script src="ElementStream.lua"     type="client"/>
   <script src="MessageBox.lua"        type="client"/>
   <script src="Race.lua"              type="client"/>
@@ -55,31 +54,30 @@
 
   <!-- Players -->
 
-  <script src="Players/Skins.lua" type="client"/>
-  <script src="Players/Languages.lua" type="client"/>
-  <script src="Players/Stats.lua" type="client"/>
-  <script src="Players/Animations.lua" type="client"/>
+  <script src="Players/Skins.lua"       type="client"/>
+  <script src="Players/Languages.lua"   type="client"/>
+  <script src="Players/Stats.lua"       type="client"/>
+  <script src="Players/Animations.lua"  type="client"/>
   
-  <script src="Players/Debug.lua" type="client"/>
-  <script src="Players/Main.lua" type="client"/>
-  <script src="Players/Spectate.lua" type="client"/>
-  <script src="Players/Hint.lua" type="client"/>
-  <script src="Players/Popup.lua" type="client"/>
-  <script src="Players/Idle.lua" type="client"/>
-  <script src="Players/SwatRope.lua" type="client"/>
-  <script src="Players/Offer.lua" type="client"/>
-  <script src="Players/DamageManager.lua" type="client"/>
+  <script src="Players/Debug.lua"             type="client"/>
+  <script src="Players/Main.lua"              type="client"/>
+  <script src="Players/Spectate.lua"          type="client"/>
+  <script src="Players/Hint.lua"              type="client"/>
+  <script src="Players/Idle.lua"              type="client"/>
+  <script src="Players/SwatRope.lua"          type="client"/>
+  <script src="Players/Offer.lua"             type="client"/>
+  <script src="Players/DamageManager.lua"     type="client"/>
   <script src="Players/CharacterTutorial.lua" type="client"/>
-  <script src="Players/CharacterJail.lua" type="client"/>
-  <script src="Players/Camera.lua" type="client"/>
-  <script src="Players/Shaders.lua" type="client"/>
-  <script src="Players/Wasted.lua" type="client"/>
+  <script src="Players/CharacterJail.lua"     type="client"/>
+  <script src="Players/Camera.lua"            type="client"/>
+  <script src="Players/Shaders.lua"           type="client"/>
+  <script src="Players/Wasted.lua"            type="client"/>
   
-  <script src="Players/GUI/Help.lua" type="client"/>
-  <script src="Players/GUI/Stats.lua" type="client"/>
-  <script src="Players/GUI/Animations.lua" type="client"/>
-  <script src="Players/GUI/CGUISpawnChanger.lua" type="client"/>
-  <script src="Players/GUI/CGUIPassport.lua" type="client"/>
+  <script src="Players/GUI/Help.lua"              type="client"/>
+  <script src="Players/GUI/Stats.lua"             type="client"/>
+  <script src="Players/GUI/Animations.lua"        type="client"/>
+  <script src="Players/GUI/CGUISpawnChanger.lua"  type="client"/>
+  <script src="Players/GUI/CGUIPassport.lua"      type="client"/>
 
   <script src="CVehicleHUD.lua"                         type="client"/>
   <script src="CVehicleHUDSpeed.lua"                    type="client"/>
@@ -118,20 +116,20 @@
   <script src="CUI/CUIRegistration.lua"     type="client"/>
   <script src="CUI/CUISideBar.lua"          type="client"/>
   
-  <script src="CClientCharacter.lua"      type="client" />
-  <script src="ClientWeapon.lua"          type="client" />
-  <script src="CClientHUD.lua"            type="client" />
-  <script src="CClientInventory.lua"      type="client" />
-  <script src="CRadialMenu.lua"           type="client" />
+  <script src="CClientCharacter.lua"        type="client" />
+  <script src="ClientWeapon.lua"            type="client" />
+  <script src="CClientHUD.lua"              type="client" />
+  <script src="CClientInventory.lua"        type="client" />
+  <script src="CRadialMenu.lua"             type="client" />
   
-  <script src="CClientShader.lua"         type="client" />
-  <script src="CClientShaderManager.lua"  type="client" />
+  <script src="CClientShader.lua"           type="client" />
+  <script src="CClientShaderManager.lua"    type="client" />
   
-  <script src="IClientCharacter.lua"    type="client" />
+  <script src="IClientCharacter.lua"        type="client" />
   
-  <script src="Players/Binds.lua" type="client"/>
+  <script src="Players/Binds.lua"           type="client"/>
   
-  <script src="Resource.lua" type="client"/>
+  <script src="Resource.lua"                type="client"/>
   
   <!-- Resources -->
   
@@ -165,6 +163,10 @@
   <file src="Resources/Images/Ajax/loading[4].png"/>
   <file src="Resources/Images/Ajax/loading[5].png"/>
   
+  <file src="Resources/Textures/Glass.dds" />
+  
+  <file src="Resources/Textures/smallnoise3d.dds" />
+  
   <file src="Resources/Textures/UI-Inventory/Background.jpg"/>
   <file src="Resources/Textures/UI-Inventory/Background-2.jpg"/>
   <file src="Resources/Textures/Vehicle-426-SAPD.png"/>
@@ -180,9 +182,6 @@
   <file src="Resources/Textures/gtr_lights_on.png"/>
   
   <file src="Resources/Images/close_icon.png"/>
-  <file src="Resources/Images/Aero.png"/>
-  <file src="Resources/Images/Button.png"/>
-  <file src="Resources/Images/ButtonHover.png"/>
   <file src="Resources/Images/Error.png"/>
   <file src="Resources/Images/Information.png"/>
   <file src="Resources/Images/Okay.png"/>
@@ -191,16 +190,7 @@
   <file src="Resources/Images/ui_frame.png"/>
   <file src="Resources/Images/blank.png"/>
   <file src="Resources/Images/BrokenImage.png"/>
-  <file src="Resources/Images/arrow_r_blue.png"/>
-  <file src="Resources/Images/arrow_r_gray.png"/>
-  <file src="Resources/Images/arrow_l_blue.png"/>
-  <file src="Resources/Images/arrow_l_gray.png"/>
-  <file src="Resources/Images/select_green.png"/>
-  <file src="Resources/Images/select_gray.png"/>
-  
-  <file src="Resources/Images/Popup/Info.png"/>
-  <file src="Resources/Images/Popup/Money.png"/>
-  <file src="Resources/Images/Popup/Mail.png"/>
+  <file src="Resources/Images/Money.png"/>
   
   <file src="Resources/Images/Items/bank_card.png"/>
   <file src="Resources/Images/Items/bank_card_visa.png"/>
@@ -233,9 +223,6 @@
   <file src="Resources/Images/Items/ammo_5_45x39.png"/>
   <file src="Resources/Images/Items/ammo_5_56x45.png"/>
   
-  <file src="Resources/Sounds/pkm_btr_shoot.mp3"/>
-  <file src="Resources/Sounds/weapon_switch.wav"/>
-  <file src="Resources/Sounds/popup.wav"/>
   <file src="Resources/Sounds/narcuffs.wav"/>
   
   <file src="Resources/Sounds/EngineAmbient/engine_end.wav"/>
@@ -247,18 +234,8 @@
   <file src="Resources/Sounds/HornAmbient/police_siren_3.wav"/>
   <file src="Resources/Sounds/HornAmbient/police_siren_4.wav"/>
   
-  <file src="Resources/Shaders/mta-helper.fx" />
-  <file src="Resources/Shaders/tex_matrix.fx" />
-  <file src="Resources/Shaders/glow.fx" />
-  <file src="Resources/Shaders/motionblur.fx" />
-  <file src="Resources/Shaders/ReplaceTexture.fx" />
-  <file src="Resources/Shaders/tex_color.fx" />
-  <file src="Resources/Shaders/grayscale.fx" />
-  <file src="Resources/Shaders/car_refgrun.fx" />
-	<file src="Resources/Shaders/car_refgene.fx" />
-    
   <file src="Resources/Sounds/Weapons/generic_empty.ogg" />
-
+  
   <file src="Resources/Sounds/Weapons/ak47_fire.wav" />
   <file src="Resources/Sounds/Weapons/m4a1_sil.wav" />
   <file src="Resources/Sounds/Weapons/m4a1-un.wav" />
@@ -269,104 +246,14 @@
   <file src="Resources/Sounds/Weapons/dagnv_fire.wav" />
   <file src="Resources/Sounds/Weapons/m1014_fire.wav" />
   <file src="Resources/Sounds/Weapons/m3-1.wav" />
-
-	<file src="Resources/Textures/smallnoise3d.dds" />
   
-  <file src="Resources/Textures/HUD/Background.png" />
-  <file src="Resources/Textures/HUD/Background2.png" />
-  
-  <file src="Resources/Textures/HUD/ArmourIcon.png" />
-  <file src="Resources/Textures/HUD/EnergyIcon.png" />
-  <file src="Resources/Textures/HUD/HealthIcon.png" />
-  <file src="Resources/Textures/HUD/MoneyIcon.png" />
-    
-  <file src="Resources/Textures/HUD/Percent-Italic.png" />
-  <file src="Resources/Textures/HUD/Percent-ItalicBackground.png" />
-  
-  <file src="Resources/Textures/HUD/0.png" />
-  <file src="Resources/Textures/HUD/1.png" />
-  <file src="Resources/Textures/HUD/2.png" />
-  <file src="Resources/Textures/HUD/3.png" />
-  <file src="Resources/Textures/HUD/4.png" />
-  <file src="Resources/Textures/HUD/5.png" />
-  <file src="Resources/Textures/HUD/6.png" />
-  <file src="Resources/Textures/HUD/7.png" />
-  <file src="Resources/Textures/HUD/8.png" />
-  <file src="Resources/Textures/HUD/9.png" />
-  
-  <file src="Resources/Textures/HUD/0-Background.png" />
-  <file src="Resources/Textures/HUD/1-Background.png" />
-  <file src="Resources/Textures/HUD/2-Background.png" />
-  <file src="Resources/Textures/HUD/3-Background.png" />
-  <file src="Resources/Textures/HUD/4-Background.png" />
-  <file src="Resources/Textures/HUD/5-Background.png" />
-  <file src="Resources/Textures/HUD/6-Background.png" />
-  <file src="Resources/Textures/HUD/7-Background.png" />
-  <file src="Resources/Textures/HUD/8-Background.png" />
-  <file src="Resources/Textures/HUD/9-Background.png" />
-
-  <file src="Resources/Textures/HUD/0-Italic.png" />
-  <file src="Resources/Textures/HUD/1-Italic.png" />
-  <file src="Resources/Textures/HUD/2-Italic.png" />
-  <file src="Resources/Textures/HUD/3-Italic.png" />
-  <file src="Resources/Textures/HUD/4-Italic.png" />
-  <file src="Resources/Textures/HUD/5-Italic.png" />
-  <file src="Resources/Textures/HUD/6-Italic.png" />
-  <file src="Resources/Textures/HUD/7-Italic.png" />
-  <file src="Resources/Textures/HUD/8-Italic.png" />
-  <file src="Resources/Textures/HUD/9-Italic.png" />
-  
-  <file src="Resources/Textures/HUD/0-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/1-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/2-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/3-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/4-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/5-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/6-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/7-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/8-ItalicBackground.png" />
-  <file src="Resources/Textures/HUD/9-ItalicBackground.png" />
-  
-  <file src="Resources/Textures/HUD/LevelBackground.png" />
-  <file src="Resources/Textures/HUD/LevelExpOff.png" />
-  <file src="Resources/Textures/HUD/LevelExpOn.png" />
-  
-  <file src="Resources/Textures/HUD/MoneyBackground.png" />
-
-  <file src="Resources/Textures/HUD/WeaponBackground.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-1.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-2.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-3.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-4.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-5.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-6.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-7.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-8.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-9.png" />
-  <file src="Resources/Textures/HUD/WeaponClip-10.png" />
-  <file src="Resources/Textures/HUD/Weapon-none.png" />
-  
-  <file src="Resources/Textures/HUD/Weapon-wpn_ak107m.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_aug.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_baseball_bat.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_camera.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_desert_eagle.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_grenade.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_grenade_flash.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_grenade_gas.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_katana.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_knife.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_long_purple_dildo.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_m4a1.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_mp5.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_nightstick.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_rpg.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_scout.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_short_tan_dildo.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_shotgun.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_spas12.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_spraycan.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_usp45.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_usp45_sil.png" />
-  <file src="Resources/Textures/HUD/Weapon-wpn_vibrator.png" />
+  <file src="Resources/Shaders/mta-helper.fx" />
+  <file src="Resources/Shaders/tex_matrix.fx" />
+  <file src="Resources/Shaders/glow.fx" />
+  <file src="Resources/Shaders/motionblur.fx" />
+  <file src="Resources/Shaders/ReplaceTexture.fx" />
+  <file src="Resources/Shaders/tex_color.fx" />
+  <file src="Resources/Shaders/grayscale.fx" />
+  <file src="Resources/Shaders/car_refgrun.fx" />
+	<file src="Resources/Shaders/car_refgene.fx" />
 </meta>

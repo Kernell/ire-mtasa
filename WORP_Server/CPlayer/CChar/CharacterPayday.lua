@@ -14,7 +14,7 @@ function CPlayer:PayDay()
 		if pChar:GetLevelPoints() > pChar:GetLevel() * 250 then
 			pChar:SetLevel( pChar:GetLevel() + 1, true );
 			
-			self:Popup( "info", "Поздравляем!", "Ваш уровень повышен до " + pChar:GetLevel() );
+			self:GetChat():Send( "Поздравляем! Ваш уровень повышен до " + pChar:GetLevel() );
 		end
 	end
 end

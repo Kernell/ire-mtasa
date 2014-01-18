@@ -131,10 +131,10 @@
   <script src="CPlayer/CPlayerManager.lua"/>
   <script src="CPlayer/CPlayerCamera.lua"/>
   <script src="CPlayer/CPlayerChat.lua"/>
-  <script src="CPlayer/CPlayerHUD.lua" />
   <script src="CPlayer/CPlayerNametag.lua"/>
   <script src="CPlayer/CPlayerBones.lua"/>
   
+  <script src="CClientHUD.lua"/>
   <script src="CClientTest.lua"/>
   
   <script src="CPlayer/Skins.lua"/>
@@ -224,8 +224,7 @@
   <script src="CShopManager.lua"/>
   
   <!-- Chat -->
-
-  <script src="Chat/Main.lua"/>
+  
   <script src="Chat/Functions.lua"/>
   
   <!-- CMap -->

@@ -41,13 +41,13 @@ function Draw()
 			
 --			dxDrawRectangle( fX - 5, fY - 5, iWidth + 10, iHeight + 10, iColor, true );
 			
-			dxDrawImage( fX, fY, iWidth + 25, iHeight, "Resources/Images/Aero.png", 0, 0, 0, iColor, true );
+			dxDrawImage( fX, fY, iWidth + 25, iHeight, "Resources/Textures/Glass.png", 0, 0, 0, iColor, true );
 			dxDrawImage( fX + 32, fY + ( iHeight - 64 ) / 2, 64, 64, gl_pHint.m_sIcon, 0, 0, 0, iColorWhite, true );
 				
 			dxDrawText( gl_pHint.m_sTitle, fX + 86, fY + 20, fX + iWidth, fY + iHeight, iColorWhite, 1, DXFont( 'consola', 12, true ), "left", "top", true, false, true );
 			dxDrawText( gl_pHint.m_sText,  fX + 100, fY + ( iHeight - 48 ) / 2, fX + iWidth, fY + iHeight, iColorWhite, 1, DXFont( 'consola', 8 ), "left", "top", true, true, true );
 
-			dxDrawImage( fX, fY, iWidth + 25, iHeight, "Resources/Images/Aero.png", 0, 0, 0, iColor, true );
+			dxDrawImage( fX, fY, iWidth + 25, iHeight, "Resources/Textures/Glass.png", 0, 0, 0, iColor, true );
 			
 			return true;
 		end

@@ -18,28 +18,21 @@ class: Resource
 		this.m_pClientShaderManager		= CClientShaderManager();
 		this.m_pClientSoundManager		= CSoundManager();
 		
-		this.m_pVehicleHUD	= CVehicleHUD();
-		
-		this.m_pRadioUI		= CUIRadio();
-		this.m_pSideBarUI	= CUISideBar();
+		this.m_pHUD		= CClientHUD();
 	end;
 	
 	OnStop		= function()
+		delete ( this.m_pHUD );
 		delete ( this.m_pClientSoundManager );
 		delete ( this.m_pClientManager );
 		delete ( this.m_pClientShaderManager );
-		delete ( this.m_pRadioUI );
-		delete ( this.m_pSideBarUI );
-		delete ( this.m_pVehicleHUD );
 		delete ( this.m_pNetManager );
 		
+		this.m_pHUD						= NULL;
 		this.m_pClientSoundManager		= NULL;
 		this.m_pNetManager				= NULL;
 		this.m_pClientManager			= NULL;
 		this.m_pClientShaderManager		= NULL;
-		this.m_pVehicleHUD				= NULL;
-		this.m_pRadioUI					= NULL;
-		this.m_pSideBarUI				= NULL;
 	end;
 };
 

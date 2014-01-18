@@ -30,22 +30,22 @@ class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 	end;
 };
 
-function CPlayer:CPlayer( pPlayerManager, pPlayerEntity )
-	self.__instance			= pPlayerEntity;
+function CPlayer:CPlayer( pPlayerManager, pClient )
+	self.__instance			= pClient;
 	
-	self:CElement			( pPlayerEntity );
-	self:CPed				( pPlayerEntity );
+	self:CElement			( pClient );
+	self:CPed				( pClient );
 	
-	self:CPlayerTutorial	( pPlayerEntity );
-	self:CPlayerAnimation	( pPlayerEntity );
+	self:CPlayerTutorial	( pClient );
+	self:CPlayerAnimation	( pClient );
 	
 	self.m_pPlayerManager	= pPlayerManager;
 	
-	self.m_pCamera 			= CPlayerCamera		( self.__instance );
-	self.m_pHUD 			= CPlayerHUD		( self.__instance );
-	self.m_pChat 			= CPlayerChat		( self.__instance );
-	self.m_pNametag 		= CPlayerNametag	( self.__instance );
-	self.m_pBones			= CPlayerBones		( self.__instance );
+	self.m_pCamera 			= CPlayerCamera		( pClient );
+	self.m_pHUD 			= CClientHUD		( pClient );
+	self.m_pChat 			= CPlayerChat		( pClient );
+	self.m_pNametag 		= CPlayerNametag	( pClient );
+	self.m_pBones			= CPlayerBones		( pClient );
 	
 	self.m_pCharacter 		= NULL;
 	self.m_Binds			= {};
@@ -494,10 +494,6 @@ end
 
 function CPlayer:Hint( ... )
 	return self:Client().Hint( ... );
-end
-
-function CPlayer:Popup( ... )
-	return self:Client().Popup( ... );
 end
 
 function CPlayer:Gender( male, female, unknown )

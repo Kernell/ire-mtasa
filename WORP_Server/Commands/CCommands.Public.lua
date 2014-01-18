@@ -755,7 +755,7 @@ function CCommands:PhoneSMS( pPlayer, sCmd, iNumber, ... )
 					pPlayer:Me( "достаёт телефон" );
 					pPlayer:GetChat():Send( "Сообщение на номер " + iNumber + " успешно отправлено: " + sMessage, 255, 255, 0 );
 					
-					pPlr:Popup( "mail", "SMS: №" + pChar:GetPhoneNumber(), sMessage );
+					pPlr:GetChat():Send( "SMS от №" + pChar:GetPhoneNumber() + ": " + sMessage );
 					
 					g_pServer:Print( "SMS: From %s (%s) [%d] to %s (%s) [%d]: %s", pPlayer:GetName(), pPlayer:GetUserName(), pChar:GetPhoneNumber(), pPlr:GetName(), pPlr:GetUserName(), iNumber, sMessage );
 					
