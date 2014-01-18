@@ -11,6 +11,11 @@ local gl_Components	=
 --	caliper_lf		= { m_bVisible = true; };
 --	caliper_rb		= { m_bVisible = true; };
 --	caliper_lb		= { m_bVisible = true; };
+
+	strut_rf		= { m_bVisible = true; };
+	strut_lf		= { m_bVisible = true; };
+	strut_rb		= { m_bVisible = true; };
+	strut_lb		= { m_bVisible = true; };
 	
 	WIPER_R			= { m_bVisible = true; m_fMaxAngle = 87.5; };
 	WIPER_L			= { m_bVisible = true; m_fMaxAngle = 85.0; };
@@ -265,6 +270,22 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 	setVehicleComponentRotation( pVehicle, self, 0.0, Settings.Controls.MouseSteering.Angle * pVehicle.m_pStWheel.fAngle, 0.0 );
 end
 
+function gl_Components.strut_rf:Update( pVehicle )
+	pVehicle:SetComponentPosition( self, pVehicle:GetComponentPosition( "wheel_rf_dummy" ) );
+end
+
+function gl_Components.strut_lf:Update( pVehicle )
+	pVehicle:SetComponentPosition( self, pVehicle:GetComponentPosition( "wheel_lf_dummy" ) );
+end
+
+function gl_Components.strut_rb:Update( pVehicle )
+	pVehicle:SetComponentPosition( self, pVehicle:GetComponentPosition( "wheel_rb_dummy" ) );
+end
+
+function gl_Components.strut_lb:Update( pVehicle )
+	pVehicle:SetComponentPosition( self, pVehicle:GetComponentPosition( "wheel_lb_dummy" ) );
+end
+
 --[[ function gl_Components.caliper_rf:Update( pVehicle )
 	pVehicle:SetComponentPosition( self, pVehicle:GetComponentPosition( "wheel_rf_dummy" ) );
 	
@@ -330,6 +351,11 @@ class: CVehicle ( CElement )
 		
 		LightTextures		=
 		{
+			[ ALPHA ]		=
+			{
+				off	= dxCreateTexture( "Resources/Textures/gtr_lights.png" );
+				on	= dxCreateTexture( "Resources/Textures/gtr_lights_on.png" );
+			};
 			[ BUFFALO ]		=
 			{
 				off	= dxCreateTexture( "Resources/Textures/mustang_lights.png" );
@@ -339,11 +365,6 @@ class: CVehicle ( CElement )
 			{
 				off	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 				on	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
-			};
-			[ HOTRINB ]		=
-			{
-				off	= dxCreateTexture( "Resources/Textures/gtr_lights.png" );
-				on	= dxCreateTexture( "Resources/Textures/gtr_lights.png" );
 			};
 		};
 	};
@@ -429,7 +450,7 @@ function CVehicle:CVehicle( pVehicle )
 	};
 end
 
-function CVehicle.SetComponentPosition( sVehicleComponent, vecPosition )
+function CVehicle:SetComponentPosition( sVehicleComponent, vecPosition )
 	return setVehicleComponentPosition( self, sVehicleComponent, vecPosition.X, vecPosition.Y, vecPosition.Z );
 end
 

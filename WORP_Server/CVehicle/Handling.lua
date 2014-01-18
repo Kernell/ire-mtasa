@@ -283,7 +283,7 @@ local handling	=
 		modelFlags						= 0x800;
 		handlingFlags					= 0x5084402;
 	};
-	[ HOTRINB ] =
+	[ ALPHA ] =
 	{
 		mass							= 1560;
 		turnMass						= 6000.0;
@@ -295,8 +295,8 @@ local handling	=
 		tractionBias					= 0.525;
 		numberOfGears					= 5;
 		maxVelocity						= 255.0;
-		engineAcceleration				= 9.0;
-		engineInertia					= 50.0;
+		engineAcceleration				= 10.0;
+		engineInertia					= 10.0;
 		driveType						= "awd";
 		engineType						= "petrol";
 		brakeDeceleration 				= 5.0;
@@ -312,8 +312,8 @@ local handling	=
 		suspensionAntiDiveMultiplier	= 0.4;
 		seatOffsetDistance				= 0.26;
 		collisionDamageMultiplier		= 0.6;
-		modelFlags						= 0x40000204;
-		handlingFlags					= 0x1C00000;
+		modelFlags						= 0x40000004;
+		handlingFlags					= 0x1C04400;
 	};
 };
 

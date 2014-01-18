@@ -121,7 +121,7 @@ local DefaultComponents	=
 		BumperFront		= "bump_front_dummy";
 		BumperRear		= "bump_rear_dummy";
 	};
-	[ HOTRINB ]	=
+	[ ALPHA ]	=
 	{
 		Spoiler			= "SPOILER_0";
 		SideSkirt		= "SSKIRT_0";
