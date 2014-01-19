@@ -1,0 +1,37 @@
+<def name="Innovation Roleplay Engine">
+  <setting name="type"    friendlyname="Тип"  type="selection:interior,commercial,house" description="Определяет тип недвижимости" default="interior" required="true" />
+  <setting name="price"   friendlyname="Цена" type="number" description="Стоимость недвижимости в долларах. Если 0 - то её нельзя будет купить" default="0" required="false" />
+  
+  <element name="event" friendlyname="Событие">
+		<data name="function" friendlyname="Имя функции" required="true" type="string" default="" />
+	</element>
+  
+	<element name="trigger" friendlyname="Триггер" icon="Resources/EDF/Trigger.png" instructions="Маркер вызывающий какое либо событие">
+		<parent name="event" type="event" default=""/>
+    
+		<data name="position" type="coord3d" default="0,0,0" />
+    
+    <marker type="cylinder" size="2" color="#FF0000FF"/>
+	</element>
+  
+  <element name="spawn" friendlyname="Spawn" icon="Resources/EDF/Spawn.png">
+		<data name="position" type="coord3d" default="0,0,0" />
+		<data name="rotation" type="coord3d" default="0,0,0" />
+    
+		<ped model="0" rotation="!rotation!" interior="!interior!" />
+	</element>
+  
+  <element name="teleport" friendlyname="Телепорт" icon="Resources/EDF/Teleport.png">
+    <parent name="target" friendlyname="Цель" type="teleport" default=""/>
+    
+    <data name="position"   type="coord3d"  default="0,0,0" />
+		<data name="rotation"   type="coord3d"  default="0,0,0" />
+		<data name="interior"   type="integer"  default="0" />
+		<data name="dimension"  type="integer"  default="0" />
+		<data name="blip"       type="blipID"   default="0" />
+		<data name="blip_color" type="color"    default="#FF0000" />
+    
+    <blip icon="!blip!" color="!blip_color!" interior="!interior!" dimension="!dimension!" size="2" />
+    <marker interior="!interior!" dimension="!dimension!" size="2" type="arrow" color="#E1FF00C8" posZ="0.8" />
+  </element>
+</def>

@@ -94,7 +94,7 @@ INTERIORS_LIST =
 	hallway 	= { BoundingBox = { 2259, 1614, 1083, 15, 65, 10 }; Position = Vector3( 2266.15, 1647.42, 1084.29 ), 	Rotation = 270,	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 1,	price = 0 },
 	betting 	= { BoundingBox = { 818, -2, 1003, 20, 15, 5 }; 	Position = Vector3( 834.78, 7.42, 1003.97 ), 		Rotation = 90, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 3,	price = 0 },
 	betting2 	= { BoundingBox = { -2172, 634, 1051, 15, 15, 10 }; Position = Vector3( -2158.58, 643.15, 1052.33 ), 	Rotation = 180,	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 1,	price = 0 },
-	motel 		= { BoundingBox = { 2178, -1202, 1022, 80, 65, 15 }; Position = Vector3( 2214.42, -1150.51, 1025.41 ), 	Rotation = 270,	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 15,	price = 0 },
+	motel 		= { BoundingBox = { 2178, -1202, 1022, 80, 65, 15 }; Position = Vector3( 2214.42, -1150.51, 1025.8 ), 	Rotation = 270,	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 15,	price = 0 },
 	gym 		= { BoundingBox = { 756, -80, 999, 21, 23, 6 }; 	Position = Vector3( 773.57, -78.12, 1000.88 ), 		Rotation = 0, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 7,	price = 0 },
 	gym2 		= { BoundingBox = { 755, -6, 999, 21, 23, 5 }; 		Position = Vector3( 772.11, -5, 1000.7 ), 			Rotation = 0, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 5,	price = 0 },
 	gym3 		= { BoundingBox = { 752, -51, 999, 27, 35, 10 }; 	Position = Vector3( 774.18, -50.42, 1000.60 ), 		Rotation = 0, 	SpawnPosition = NULL,	SpawnRotation = 0,	Interior = 6,	price = 0 },
