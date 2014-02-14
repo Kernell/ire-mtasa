@@ -8,7 +8,7 @@ class: CUILoginScreen ( CGUI, CUIAsyncQuery )
 	TEXT_INTRO			= "Для игры на сервере Вам необходимо пройти авторизацию\n";
 	TEXT_REG_SUCCESS	= "Поздравляем!\nРегистрация успешно завершена!\nТеперь вы можете ввести Ваши e-mail и пароль";
 	
-	CUILoginScreen	= function( self, sLogin, sPasswd )
+	CUILoginScreen	= function( self, sLogin )
 		local Consolas10			= CEGUIFont( "Consolas", 10 );
 		local Consolas12			= CEGUIFont( "Consolas", 12 );
 		local ConsolasBold32		= CEGUIFont( "Consolas", 32, true );
@@ -79,7 +79,7 @@ class: CUILoginScreen ( CGUI, CUIAsyncQuery )
 			MaxLength	= 64;
 		};
 		
-		self.PasswordBox= self.Window:CreateEdit( sPasswd or "" )
+		self.PasswordBox= self.Window:CreateEdit( "" )
 		{
 			X			= 30;
 			Y			= 260;
@@ -176,13 +176,13 @@ class: CUILoginScreen ( CGUI, CUIAsyncQuery )
 
 
 
-function ShowLoginScreen( bVisible, bRegistered, sLogin, sPasswd )
+function ShowLoginScreen( bVisible, bRegistered, sLogin )
 	if pDialog then
 		delete( pDialog );
 	end
 
 	if bVisible then
-		pDialog = CUILoginScreen( sLogin, sPasswd );
+		pDialog = CUILoginScreen( sLogin );
 		
 		if bRegistered then
 			pDialog.IntroLabel:SetText( CUILoginScreen.TEXT_REG_SUCCESS );
