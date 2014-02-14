@@ -165,6 +165,32 @@ function CPlayer:GetOldVehicle()
 	return self.m_pOldVehicle;
 end
 
+function CPlayer:GetGP()
+	return self.m_iGP;
+end
+
+function CPlayer:SetGP( iAmount )
+	iAmount = math.max( 0, iAmount );
+	
+	if not g_pDB:Query( "UPDATE uac_users SET goldpoints = %d WHERE id = %d", self:GetID(), iAmount ) then
+		Debug( g_pDB:Error(), 1 );
+		
+		return false;
+	end
+	
+	self.m_iGP = iAmount;
+	
+	return true;
+end
+
+function CPlayer:GiveGP( iAmount )
+	return self:SetGP( self:GetGP() + iAmount );
+end
+
+function CPlayer:TakeGP( iAmount )
+	return self:SetGP( self:GetGP() - iAmount );
+end
+
 function CPlayer:DoPulse( tReal )
 	if self:IsInGame() then
 		self.m_iInGameCount	= self.m_iInGameCount + 1;
@@ -603,7 +629,7 @@ function CPlayer:ShowLoginScreen()
 		delete ( pResult );
 		
 		if pRow then
-			self:Client().ShowLoginScreen( true, false, pRow.login, g_pBlowfish:Decrypt( (string)(pRow.password) ) );
+			self:Client().ShowLoginScreen( true, false, pRow.login );
 			
 			return;
 		end
@@ -613,7 +639,7 @@ function CPlayer:ShowLoginScreen()
 end
 
 function CPlayer:Login( iID )
-	local pResult = g_pDB:Query( "SELECT `groups`, name, password, ip, DATE_FORMAT( last_logout, '%d %M %Y г. %H:%i' ) as last_login_f, DATEDIFF( CURDATE(), last_logout ) AS last_login_d, settings, adminduty, muted_time, login_history FROM uac_users WHERE id = " + iID + " LIMIT 1" );
+	local pResult = g_pDB:Query( "SELECT `groups`, name, password, ip, DATE_FORMAT( last_logout, '%d %M %Y г. %H:%i' ) as last_login_f, DATEDIFF( CURDATE(), last_logout ) AS last_login_d, settings, adminduty, muted_time, login_history, goldpoints FROM uac_users WHERE id = " + iID + " LIMIT 1" );
 	
 	if pResult then
 		local pRow = pResult:FetchRow();
@@ -647,17 +673,17 @@ function CPlayer:Login( iID )
 			self.m_iUserID		= iID;
 			self.m_sUserName	= pRow.name;
 			
-			self.m_bAdmin		= pRow.adminduty == 'Yes';
+			self.m_bAdmin		= pRow.adminduty == "Yes";
 			
 			self:InitGroups( (string)(pRow.groups) );
 			
 			self.muted_time				= pRow.muted_time;
 			self.m_Settings				= fromJSON( pRow.settings ) or {};
-			self.m_ReportData.m_bLocked	= pRow.report_locked == 'Yes';
+			self.m_ReportData.m_bLocked	= pRow.report_locked == "Yes";
 			
 			local sLastLogin = false;
 
-			if pRow.last_login_f ~= '00 00 0000 г. 00:00' then
+			if pRow.last_login_f ~= "00 00 0000 г. 00:00" then
 				if pRow.last_login_d == 0 then
 					sLastLogin = "Сегодня в " + pRow.last_login_f:split( ' ' )[ 5 ];
 				elseif pRow.last_login_d == 1 then
@@ -670,6 +696,10 @@ function CPlayer:Login( iID )
 			if sLastLogin then
 				self:GetChat():Send( ( "Приветствуем Вас %s, последний раз Вы были тут %s (%s)" ):format( self:GetUserName(), sLastLogin, pRow.ip ), 0, 255, 0 );
 			end
+			
+			self.m_iGP = pRow.goldpoints;
+			
+			self:Client().Settings.Load( self.m_Settings );
 			
 			-- Load characters
 			
