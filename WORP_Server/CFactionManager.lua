@@ -231,3 +231,219 @@ function CFactionManager:Register( pFaction )
 	return false;
 end
 
+function CFactionManager:ClientHandle( pClient, sCommand, ... )
+	local pChar = pClient:GetChar();
+	
+	if not pChar then
+		return AsyncQuery.UNAUTHORIZED;
+	end
+	
+	if sCommand == "GetPublicFactions" then
+		local sQuery = "SELECT \
+				f.id, f.owner_id, f.name, f.tag, f.type, \
+				DATE_FORMAT( f.registered, '%d-%m-%Y' ) AS registered, \
+				CONCAT( c.name, ' ', c.surname ) AS owner \
+			FROM " + DBPREFIX + "factions f \
+			LEFT JOIN " + DBPREFIX + "characters c ON f.owner_id = c.id \
+			WHERE f.registered IS NOT NULL AND f.deleted IS NULL \
+			ORDER BY f.registered";
+		
+		local pResult = g_pDB:Query( sQuery );
+		
+		if not pResult then
+			Debug( g_pDB:Error(), 1 );
+			
+			return TEXT_DB_ERROR;
+		end
+		
+		local aResult = pResult:GetArray();
+		
+		delete ( pResult );
+		
+		return aResult;
+	elseif sCommand == "CreationUIData" then
+		local aInteriors	= {};
+		
+		for i, pInt in pairs( g_pGame:GetInteriorManager():GetAll() ) do
+			if pInt.m_sType == INTERIOR_TYPE_COMMERCIAL and pInt.m_iCharacterID == pChar:GetID() then
+				table.insert( aInteriors, { ID = pInt:GetID(); Name = pInt:GetName(); } );
+			end
+		end
+		
+		return aInteriors;
+	elseif sCommand == "Create" then
+		local sTitle, sAbbr, iInteriorID, iType = unpack( { ... } );
+		
+		if eFactionTypePrice[ iType ] > 0 and pChar:GetMoney() < eFactionTypePrice[ iType ] then
+			return "Недостаточно денег для создания организации";
+		end
+		
+		if eFactionTypePriceGP[ iType ] > 0 and pClient:GetGP() < eFactionTypePriceGP[ iType ] then
+			return "Недостаточно GP для создания организации";
+		end
+		
+		if not not sTitle:find( "[\\'\"\;]" ) then
+			return "Имя организации содержит запрещённые символы";
+		end
+		
+		if sTitle:len() < 8 then
+			return "Имя организации слишком короткое";
+		end
+		
+		if sTitle:len() > 64 then
+			return "Имя организации слишком длинное";
+		end
+		
+		if not not sAbbr:find( "[\\'\"\;]" ) then
+			return "Аббревиатура организации содержит запрещённые символы";
+		end
+		
+		if sAbbr:len() < 3 then
+			return "Аббревиатура организации слишком короткая";
+		end
+		
+		if sAbbr:len() > 8 then
+			return "Аббревиатура организации слишком длинная";
+		end
+		
+		local pProperty = g_pGame:GetInteriorManager():Get( iInteriorID );
+		
+		if not pProperty then
+			return "Не верный адрес регистрации (не существует)";
+		end
+		
+		if pProperty.m_sType ~= INTERIOR_TYPE_COMMERCIAL then
+			return "Только коммерческую недвижимость можно оформить на предприятие";
+		end
+		
+		if pProperty.m_iCharacterID ~= pChar:GetID() then
+			return "Эта недвижимость не принадлежит вам";
+		end
+		
+		if pProperty.m_iFactionID ~= 0 then
+			return "Эта недвижимость уже оформлена на другую организацию";
+		end
+		
+		if not eFactionType[ iType ] then
+			return "Не правильный тип организации";
+		end
+		
+		local Data	=
+		{
+			name		= sTitle;
+			tag			= sAbbr;
+			type		= iType;
+			property_id	= iInteriorID;
+		};
+		
+		local pResult	= g_pDB:Query( "SELECT SUM( name = %q ) AS name, SUM( tag = %q ) AS tag FROM " + DBPREFIX + "factions", Data[ "name" ], Data[ "tag" ] );
+		
+		if pResult then
+			local pRow = pResult:FetchRow();
+			
+			delete ( pResult );
+			
+			if pRow then
+				if pRow.name and pRow.name ~= 0 then
+					return "Организация с таким именем уже существует";
+				end
+				
+				if pRow.tag and pRow.tag ~= 0 then
+					return "Организация с такой аббревиатурой уже существует";
+				end
+			end
+		else
+			Debug( g_pDB:Error(), 1 );
+			
+			return TEXT_DB_ERROR;
+		end
+		
+		pChar:TakeMoney( eFactionTypePrice[ iType ] );
+		
+		pClient:TakeGP( eFactionTypePriceGP[ iType ] );
+		
+		Data[ "owner_id" ] = pChar:GetID();
+		
+		local pFaction = self:Create( CFaction, Data[ "name" ], Data[ "tag" ], Data );
+		
+		if pFaction then
+			self:Register( pFaction );
+			
+			return true;
+		end
+		
+		return TEXT_DB_ERROR;
+	elseif sCommand == "GetData" then
+		local sDataName, iFactionID = unpack( { ... } );
+		
+		local pFaction = self:Get( iFactionID );
+		
+		if not pFaction then
+			return "Invalid faction id"; 
+		end
+		
+		if sDataName == "Info" then
+			local Info;
+			
+			local pResult	= g_pDB:Query( "SELECT CONCAT( name, ' ', surname ) AS owner FROM " + DBPREFIX + "characters WHERE id = " + pFaction.m_iOwnerID + " LIMIT 1" );
+			
+			local pRow		= pResult:FetchRow();
+			
+			delete ( pResult );
+			
+			local pProperty = g_pGame:GetInteriorManager():Get( pFaction.m_iPropertyID );
+			
+			Info		=
+			{
+				ID				= pFaction:GetID();
+				Owner			= pRow and pRow.owner or "Неизвестно";
+				Property		= pProperty and pProperty:GetName() or "Неизвестно";
+				PropertyID		= pFaction.m_iPropertyID;
+				Name			= pFaction:GetName();
+				Abbr			= pFaction:GetTag();
+				Type			= eFactionTypeNames[ pFaction.m_iType ];
+				CreatedDate		= pFaction.m_sCreated;
+				RegisterDate	= pFaction.m_sRegistered;
+				BankAccountID	= pFaction.m_sBankAccountID;
+			};
+			
+			return Info;
+		elseif sDataName == "Depts" then
+			return pFaction.m_Depts;
+		elseif sDataName == "Staff" then
+			local Staff = {};
+			
+			if pFaction:TestRight( pChar, eFactionRight.STAFF_LIST ) then
+				local pResult = g_pDB:Query( "SELECT c.id, c.name, c.surname, c.faction_dept_id, c.faction_rank_id, DATEDIFF( NOW(), c.last_login ) AS online, c.status, c.phone FROM " + DBPREFIX + "characters c WHERE c.faction_id = " + pFaction:GetID() + " AND c.status != 'Скрыт' ORDER BY online ASC" );
+				
+				if pResult then
+					for i, row in ipairs( pResult:GetArray() ) do
+						local Dept	= pFaction.m_Depts[ row.faction_dept_id ];
+						
+						Staff[ i ]	=
+						{
+							name			= row.name;
+							surname			= row.surname;
+							dept			= Dept and Dept.Name or "N/A";
+							rank			= Dept and Dept.Ranks[ row.faction_rank_id ] and Dept.Ranks[ row.faction_rank_id ].Name;
+							phone			= row.phone;
+							online_status	= g_pGame:GetPlayerManager():Get( ( row.name + '_' + row.surname ):gsub( ' ', '_' ) ) and -1 or row.online;
+							status			= row.status;
+						};
+					end
+					
+					delete ( pResult );
+				else
+					Debug( g_pDB:Error(), 1 );
+				end
+			end
+			
+			return Staff;
+		end
+		
+		return AsyncQuery.FORBIDDEN;
+	end
+	
+	return AsyncQuery.BAD_REQUEST;
+end
+

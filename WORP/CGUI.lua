@@ -146,56 +146,60 @@ function CGUI:CreateComboBox( cmb_sCaption )
 	return function( cmb_tData )
 		local relative = cmb_tData.X <= 1 and cmb_tData.Y <= 1 and cmb_tData.Width <= 1 and cmb_tData.Height <= 1;
 		
-		local instance 		= cmb_tData;
+		local this 		= cmb_tData;
 
 		if self.__instance then
-			instance.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative, self.__instance ); -- element
+			this.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative, self.__instance ); -- element
 			
-			instance.Parent 		= self;
+			this.Parent 		= self;
 		else
-			instance.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative ); 
+			this.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative ); 
 		end
 		
-		function instance:AddItem( value )
+		function this:AddItem( value )
 			return guiComboBoxAddItem( self.__instance, value ); -- int
 		end
 
-		function instance:Clear()
+		function this:Clear()
 			return guiComboBoxClear( self.__instance ); -- bool
 		end
 
-		function instance:GetItemText( itemId )
+		function this:GetItemText( itemId )
 			return guiComboBoxGetItemText( self.__instance, itemId ); -- string
 		end
 
-		function instance:SetItemText( itemId, text )
+		function this:SetItemText( itemId, text )
 			return guiComboBoxSetItemText( self.__instance, itemId, text ); -- bool
 		end
 
-		function instance:RemoveItem( itemId )
+		function this:RemoveItem( itemId )
 			return guiComboBoxRemoveItem( self.__instance, itemId ); -- bool
 		end
 
-		function instance:GetSelected()
+		function this:GetSelected()
 			return guiComboBoxGetSelected( self.__instance ); -- int
 		end
 		
-		function instance:SetSelected( itemIndex )
+		function this:SetSelected( itemIndex )
 			return guiComboBoxSetSelected( self.__instance, itemIndex ); -- bool
 		end
 		
-		if cmb_tData.Items then
-			for i, value in ipairs( cmb_tData.Items ) do
-				instance:AddItem( value );
+		function this:SetItems( Items )
+			for i, value in ipairs( Items ) do
+				this:AddItem( value );
 			end
 		end
 		
-		addEventHandler( 'onClientGUIComboBoxAccepted', instance.__instance, function( ... ) if instance.Accept then instance:Accept( ... ) end end, false );
+		if cmb_tData.Items then
+			this:SetItems( cmb_tData.Items );
+		end
+		
+		addEventHandler( 'onClientGUIComboBoxAccepted', this.__instance, function( ... ) if this.Accept then this:Accept( ... ) end end, false );
 
-		setmetatable	( instance, self );
+		setmetatable	( this, self );
 		self.__index 	= self;
 
-		return instance;
+		return this;
 	end
 end
 
@@ -613,33 +617,35 @@ function CGUI:CreateProgressBar( x, y, width, height, bRelative )
 end
 
 -- Radio buttons
-function CGUI:CreateRadioButton( btn_sCaption )
-	return function( btn_tData )
-		local relative = btn_tData.X <= 1 and btn_tData.Y <= 1 and btn_tData.Width <= 1 and btn_tData.Height <= 1;
-		
-		local instance 		= btn_tData;
+function CGUI:CreateRadioButton( sCaption )
+	return function( this )
+		local bRelative = this.X <= 1.0 and this.Y <= 1.0 and this.Width <= 1.0 and this.Height <= 1.0;
 
 		if self.__instance then
-			instance.__instance  	= guiCreateRadioButton( btn_tData.X, btn_tData.Y, btn_tData.Width, btn_tData.Height, btn_sCaption, relative, self.__instance ); -- element 
+			this.__instance  	= guiCreateRadioButton( this.X, this.Y, this.Width, this.Height, sCaption, bRelative, self.__instance );
 		else
-			instance.__instance  	= guiCreateRadioButton( btn_tData.X, btn_tData.Y, btn_tData.Width, btn_tData.Height, btn_sCaption, relative ); -- element 
+			this.__instance  	= guiCreateRadioButton( this.X, this.Y, this.Width, this.Height, sCaption, bRelative );
 		end
 		
-		function instance:GetSelected()
-			return guiRadioButtonGetSelected( self.__instance ); -- bool 
+		function this:GetSelected()
+			return guiRadioButtonGetSelected( self.__instance );
 		end
 		
-		function instance:SetSelected( bSelected )
-			return guiRadioButtonSetSelected( self.__instance, bSelected ); -- bool 
+		function this:SetSelected( bSelected )
+			return guiRadioButtonSetSelected( self.__instance, bSelected );
 		end
 		
-		addEventHandler( 'onClientGUIClick', instance.__instance, function( ... ) if instance.Click then instance.Click( ... ) end end, false );
-		addEventHandler( 'onClientGUIDoubleClick', instance.__instance, function( ... ) if instance.DoubleClick then instance.DoubleClick( ... ) end end, false );
+		addEventHandler( "onClientGUIClick", 		this.__instance, function( ... ) if this.Click 			then this.Click			( ... ); end end, false );
+		addEventHandler( "onClientGUIDoubleClick",	this.__instance, function( ... ) if this.DoubleClick 	then this.DoubleClick	( ... ); end end, false );
 		
-		setmetatable		( instance, self );
+		setmetatable		( this, self );
 		self.__index 		= self;
+		
+		if this.Font then
+			this:SetFont( this.Font );
+		end
 
-		return instance;
+		return this;
 	end
 end
 
@@ -859,80 +865,88 @@ function CGUI:CreateTab( text, bEnabled )
 end
 
 -- Text labels
-function CGUI:CreateLabel( lbl_sCaptopn )
-	return function( lbl_tData )
-		local relative = lbl_tData.X <= 1 and lbl_tData.Y <= 1 and lbl_tData.Width <= 1 and lbl_tData.Height <= 1;
+function CGUI:CreateLabel( sCaptopn )
+	return function( this )
+		local bRelative		= false;
 		
-		local instance 		= lbl_tData;
-
-		if self.__instance then
-			instance.__instance  	= guiCreateLabel( lbl_tData.X, lbl_tData.Y, lbl_tData.Width, lbl_tData.Height, lbl_sCaptopn, relative, self.__instance ); -- element
-		else
-			instance.__instance  	= guiCreateLabel( lbl_tData.X, lbl_tData.Y, lbl_tData.Width, lbl_tData.Height, lbl_sCaptopn, relative ); -- element
+		if this.Width ~= "auto" then
+			bRelative = this.X <= 1.0 and this.Y <= 1.0 and this.Width <= 1.0 and this.Height <= 1.0;
 		end
 		
-		function instance:GetFontHeight()
+		if self.__instance then
+			this.__instance  	= guiCreateLabel( this.X, this.Y, (int)(this.Width), this.Height, sCaptopn, bRelative, self.__instance );
+		else
+			this.__instance  	= guiCreateLabel( this.X, this.Y, (int)(this.Width), this.Height, sCaptopn, bRelative );
+		end
+		
+		function this:GetFontHeight()
 			return guiLabelGetFontHeight( self.__instance );
 		end
-
-		function instance:GetTextExtent()
+		
+		function this:GetTextExtent()
 			return guiLabelGetTextExtent( self.__instance );
 		end 
-
-		function instance:SetColor( red, green, blue )
+		
+		function this:SetColor( red, green, blue )
 			return guiLabelSetColor( self.__instance, red, green, blue );
 		end
-
-		function instance:SetHorizontalAlign( align, wordwrap )
+		
+		function this:SetHorizontalAlign( align, wordwrap )
 			return guiLabelSetHorizontalAlign( self.__instance, align, wordwrap or false );
 		end
-
-		function instance:SetVerticalAlign( align )
+		
+		function this:SetVerticalAlign( align )
 			return guiLabelSetVerticalAlign( self.__instance, align );
 		end
 		
-		setmetatable		( instance, self );
+		setmetatable		( this, self );
 		self.__index 		= self;
 		
-		if lbl_tData.Color then
-			instance:SetColor( unpack( lbl_tData.Color ) );
+		if this.Color then
+			this:SetColor( unpack( this.Color ) );
 		end
 		
-		if lbl_tData.Font then
-			instance:SetFont( lbl_tData.Font );
+		if this.Font then
+			this:SetFont( this.Font );
 		end
 		
-		if lbl_tData.HorizontalAlign then
-			instance:SetHorizontalAlign( unpack( lbl_tData.HorizontalAlign ) );
+		if this.HorizontalAlign then
+			this:SetHorizontalAlign( unpack( this.HorizontalAlign ) );
 		end
 		
-		if lbl_tData.VerticalAlign then
-			instance:SetVerticalAlign( lbl_tData.VerticalAlign );
+		if this.VerticalAlign then
+			this:SetVerticalAlign( this.VerticalAlign );
 		end
 		
-		function instance.Click( ... )
-			if instance.OnClick then
-				instance:OnClick( ... );
+		if this.Width == "auto" then
+			this.Width	= this:GetTextExtent();
+			
+			this:SetSize( this.Width, this.Height, false );
+		end
+		
+		function this.Click( ... )
+			if this.OnClick then
+				this:OnClick( ... );
 			end
 		end
 		
-		function instance.MouseEnter( ... )
-			if instance.OnMouseEnter then
-				instance:OnMouseEnter( ... );
+		function this.MouseEnter( ... )
+			if this.OnMouseEnter then
+				this:OnMouseEnter( ... );
 			end
 		end
 		
-		function instance.MouseLeave( ... )
-			if instance.OnMouseLeave then
-				instance:OnMouseLeave( ... );
+		function this.MouseLeave( ... )
+			if this.OnMouseLeave then
+				this:OnMouseLeave( ... );
 			end
 		end
 		
-		addEventHandler( "onClientGUIClick",	instance.__instance,	instance.Click,			false );
-		addEventHandler( "onClientMouseEnter", 	instance.__instance,	instance.MouseEnter,	false );
-		addEventHandler( "onClientMouseLeave", 	instance.__instance,	instance.MouseLeave,	false );
+		addEventHandler( "onClientGUIClick",	this.__instance,	this.Click,			false );
+		addEventHandler( "onClientMouseEnter", 	this.__instance,	this.MouseEnter,	false );
+		addEventHandler( "onClientMouseLeave", 	this.__instance,	this.MouseLeave,	false );
 		
-		return instance;
+		return this;
 	end
 end
 

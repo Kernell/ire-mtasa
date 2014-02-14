@@ -109,7 +109,7 @@ function CUIFaction:LoadData( sDataName )
 		self.Tab[ sDataName ]:SetItems( Data );
 	end
 	
-	self:AsyncQuery( Complete, "Faction_GetData", sDataName, self.ID );
+	self:AsyncQuery( Complete, "CFactionManager", "GetData", sDataName, self.ID );
 end
 
 function CUIFaction:LoadInfoTab( Info )
@@ -239,7 +239,7 @@ function CUIFaction:LoadStaffTab()
 				pTab.List:SetItemText( iRow, pTab.List[ "Телефон" ],	pRow.phone,		false, false );
 				pTab.List:SetItemText( iRow, pTab.List[ "Статус" ],		pRow.online_status == -1 and "Online" or 
 																		pRow.online_status == 0 and "Сегодня" or 
-																		( pRow.online_status + math.decl( aItem.online_status, " день", " дня", " дней" ) + " назад" ),
+																		( pRow.online_status + math.decl( pRow.online_status, " день", " дня", " дней" ) + " назад" ),
 					false, false 
 				);
 				

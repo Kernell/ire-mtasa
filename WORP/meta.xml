@@ -108,13 +108,14 @@
   <script src="CUI/CUIInventory.lua"        type="client"/>
   <script src="CUI/CUILoginScreen.lua"      type="client"/>
   <script src="CUI/CUIFaction.lua"          type="client"/>
-  <script src="CUI/CUIFactionCreate.lua"    type="client"/>
+  <script src="CUI/CUIFactions.lua"         type="client"/>
   <script src="CUI/CUIFactionStaffCard.lua" type="client"/>
   <script src="CUI/CUIGovFactionList.lua"   type="client"/>
   <script src="CUI/CUIRadio.lua"   			    type="client"/>
   <script src="CUI/CUIGovFactionEdit.lua"   type="client"/>
   <script src="CUI/CUIRegistration.lua"     type="client"/>
   <script src="CUI/CUISideBar.lua"          type="client"/>
+  <script src="CUI/CUISettings.lua"         type="client"/>
   
   <script src="CClientCharacter.lua"        type="client" />
   <script src="ClientWeapon.lua"            type="client" />
@@ -176,6 +177,7 @@
   <file src="Resources/Textures/Vehicle-560-Ethan-2.png"/>
   <file src="Resources/Textures/Vehicle-560-Ethan-3.png"/>
   
+  <file src="Resources/Textures/a4_lights.png"/>
   <file src="Resources/Textures/mustang_lights.png"/>
   <file src="Resources/Textures/wrx_05_lights.png"/>
   <file src="Resources/Textures/gtr_lights.png"/>

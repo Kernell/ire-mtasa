@@ -62,27 +62,9 @@ class: CEventMarker
 	end;
 };
 
-function CEventMarker:CreateFaction( pClient, bMatching )
+function CEventMarker:ShowPublicFactions( pClient, bMatching )
 	if bMatching and classof( pClient ) == CPlayer and pClient:IsInGame() then
-		local pChar = pClient:GetChar();
-		
-		local FactionTypes = 
-		{
-		--	[ 0 ] = "Государственная организация";
-			[ 1 ] = "Limited liability company (LLC)";
-			[ 2 ] = "Corporation";
-			[ 3 ] = "Sole proprietorship";
-		};
-		
-		local aInteriors	= {};
-		
-		for i, pInt in pairs( g_pGame:GetInteriorManager():GetAll() ) do
-			if pInt.m_sType == INTERIOR_TYPE_COMMERCIAL and pInt.m_iCharacterID == pChar:GetID() then
-				table.insert( aInteriors, { ID = pInt:GetID(); Name = pInt:GetName(); } );
-			end
-		end		
-		
-		pClient:GetChar():ShowUI( "CUIFactionCreate", pClient:GetChar().m_sName, pClient:GetChar().m_sSurname, FactionTypes, aInteriors );
+		pClient:GetChar():ShowUI( "CUIFactions", pClient:GetChar().m_sName, pClient:GetChar().m_sSurname );
 	end
 	
 	return false;

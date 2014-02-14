@@ -231,7 +231,7 @@ function CFaction:Show( pClient )
 			end
 		
 			if iAccess ~= eFactionRight.NONE then
-				Info = CClientRPC.Faction_GetData( pClient, sDataName, iFactionID );
+				Info = g_pGame:GetFactionManager():ClientHandler( pClient, "GetData", "Info", iFactionID );
 			end
 		end
 		
