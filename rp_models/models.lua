@@ -60,6 +60,7 @@ local Models	=
 		[426]	= { TXD = 'charger_rt';		DFF = 'charger_rt'		};
 		[507]	= { TXD = 'is300';			DFF = 'is300'			};
 		[540]	= { TXD = 'wrx_05';			DFF = 'wrx_05'			};
+		[547]	= { TXD = 'a4';				DFF = 'a4'				};
 		[560]	= { TXD = 'evo';			DFF = 'evo'				};
 --		[579]	= { TXD = 'huntley';		DFF = 'huntley'		 	};
 		[585]	= { TXD = 'falcon';			DFF = 'falcon'			};

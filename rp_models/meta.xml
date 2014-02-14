@@ -68,6 +68,9 @@
   
   <!-- vehicles -->
   
+  <file src="vehicles/a4.dff"/>
+  <file src="vehicles/a4.txd"/>
+  
   <file src="vehicles/copcarru.dff"/>
   <file src="vehicles/copcarru.txd"/>
   

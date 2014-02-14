@@ -366,6 +366,11 @@ class: CVehicle ( CElement )
 				off	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 				on	= dxCreateTexture( "Resources/Textures/wrx_05_lights.png" );
 			};
+			[ PRIMO ]		=
+			{
+				off	= dxCreateTexture( "Resources/Textures/a4_lights.png" );
+				on	= dxCreateTexture( "Resources/Textures/a4_lights.png" );
+			};
 		};
 	};
 	

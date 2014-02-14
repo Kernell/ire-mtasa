@@ -315,6 +315,38 @@ local handling	=
 		modelFlags						= 0x40000004;
 		handlingFlags					= 0x1C04400;
 	};
+	[ PRIMO ] =
+	{
+		mass							= 5640;
+		turnMass						= 12000.0;
+		dragCoeff						= 2.0;
+		centerOfMass					= { 0.0, 0.0, -0.2 };
+		percentSubmerged				= 75;
+		tractionMultiplier				= 0.8;
+		tractionLoss 					= 0.8;
+		tractionBias					= 0.5;
+		numberOfGears					= 5;
+		maxVelocity						= 250.0;
+		engineAcceleration				= 8.0;
+		engineInertia					= 10.0;
+		driveType						= "fwd";
+		engineType						= "petrol";
+		brakeDeceleration 				= 5.0;
+		brakeBias						= 0.65;
+		ABS								= true;
+		steeringLock					= 45.0;
+		suspensionForceLevel			= 1.0;
+		suspensionDamping				= 0.15;
+		suspensionHighSpeedDamping		= 0.0;
+		suspensionUpperLimit			= 0.3;
+		suspensionLowerLimit			= -0.09;
+		suspensionFrontRearBias			= 0.5;
+		suspensionAntiDiveMultiplier	= 0.0;
+		seatOffsetDistance				= 0.0;
+		collisionDamageMultiplier		= 0.5;
+		modelFlags						= 0x40000004;
+		handlingFlags					= 0x1C00000;
+	};
 };
 
 for model, data in pairs( handling ) do
