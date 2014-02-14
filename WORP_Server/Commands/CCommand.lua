@@ -217,15 +217,26 @@ function CCommand:ReadParams( ... )
 	local i		= 0;
 	local t		= table.getn( Args );
 	
+	local Patterns	=
+	{
+		[[-([%w%d_--]+)]];
+		[[-([%w%d_--]+) "([%a%w%d%s%p][^"]+)"]];
+		[[-([%w%d_--]+) ([%w%d_--]+)]];
+		[[--([%w%d_--]+)="([%a%w%d%s%p][^"]+)"]];
+		[[--([%w%d_--]+)=([%w%d_--]+)]];
+	};
+	
 	function iter()
 		i = i + 1;
 		
 		if i <= t then
 			if type( Args[ i ] ) == "string" then
-				local Param, Value = Args[ i ]:match( "--(%w+)=(.*)" );
-				
-				if Param and Value then
-					return Param, Value;
+				for i, sPattern in ipairs( Patterns ) do	
+					local Param, Value = Args[ i ]:match( sPattern );
+					
+					if Param then
+						return Param, Value;
+					end
 				end
 			end
 			

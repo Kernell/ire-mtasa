@@ -9,6 +9,10 @@ Settings	=
 {
 	Graphics	=
 	{
+		Blur		= 0;
+		Clouds		= false;
+		Birds		= false;
+		
 		Shaders	=
 		{
 			DepthOfField	= false;
@@ -21,10 +25,8 @@ Settings	=
 			CarReflect		= false;
 			Water			= false;
 		};
-		Blur		= 0;
-		Clouds		= false;		
-		Birds		= false;		
 	};
+	
 	Controls	=
 	{
 		Cruise	= 0.0;
@@ -38,12 +40,24 @@ Settings	=
 			EasingOut		= "OutCirc";
 		};
 	};
+	
+	Load	= function( pSettings, pSetting )
+		for key, value in pairs( pSettings ) do
+			if type( value ) == "table" then
+				return Settings.Load( value, pSetting[ key ] );
+			elseif value == "true" or value == "false" then
+				pSetting[ key ] = (bool)(value);
+			else
+				pSetting[ key ] = tonumber( value ) or value;
+			end
+		end;
+		
+		Settings.Apply();
+	end;
+	
+	Apply	= function()
+		setBlurLevel		( Settings.Graphics.Blur );
+		setCloudsEnabled	( Settings.Graphics.Clouds );
+		setBirdsEnabled		( Settings.Graphics.Birds );
+	end;
 };
-
-function ApplySettings()
-	setBlurLevel		( Settings.Graphics.Blur );
-	setCloudsEnabled	( Settings.Graphics.Clouds );
-	setBirdsEnabled		( Settings.Graphics.Birds );
-end
-
-addEventHandler( "onClientResourceStart", resourceRoot, ApplySettings );

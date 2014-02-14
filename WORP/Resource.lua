@@ -13,7 +13,7 @@ class: Resource
 		this.GetClientShaderManager		= function( this ) return this.m_pClientShaderManager; 	end;
 		this.GetClientSoundManager		= function( this ) return this.m_pClientSoundManager; 	end;
 		
-		this.m_pNetManager				= CNetManager();
+		this.m_pNetManager				= new. CNetManager;
 		this.m_pClientManager			= CClientManager();
 		this.m_pClientShaderManager		= CClientShaderManager();
 		this.m_pClientSoundManager		= CSoundManager();

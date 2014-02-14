@@ -9,14 +9,6 @@ class: CNetManager
 {
 	m_bConnected	= false;
 	
-	CNetManager 	= function( this )
-		
-	end;
-	
-	_CNetManager 	= function( this )
-		
-	end;
-	
 	IsConnected		= function( this )
 		return this.m_bConnected;
 	end;

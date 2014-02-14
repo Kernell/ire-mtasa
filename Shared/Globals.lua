@@ -28,16 +28,48 @@ enum "eFactionType"
 {
 	FACTION_TYPE_GOV	= 0;
 	FACTION_TYPE_LLC	= 1;
-	FACTION_TYPE_CORP	= 2;
-	FACTION_TYPE_SOLE	= 3;
+	FACTION_TYPE_LLP	= 2;
+	FACTION_TYPE_CORP	= 3;
 };
 
 eFactionTypeNames		=
 {
 	[ FACTION_TYPE_GOV ]	= "Государственная организация";
-	[ FACTION_TYPE_LLC ]	= "Limited liability company (LLC)";
+	[ FACTION_TYPE_LLC ]	= "Limited Liability Company";
+	[ FACTION_TYPE_LLP ]	= "Limited Liability Partnership";
 	[ FACTION_TYPE_CORP ]	= "Corporation";
-	[ FACTION_TYPE_SOLE ]	= "Sole proprietorship";
+};
+
+eFactionMaxMembers		=
+{
+	[ FACTION_TYPE_GOV ]	= 0xFF;
+	[ FACTION_TYPE_LLC ]	= 0x0A;
+	[ FACTION_TYPE_LLP ]	= 0x32;
+	[ FACTION_TYPE_CORP ]	= 0x64;
+};
+
+eFactionTypePrice		=
+{
+	[ FACTION_TYPE_GOV ]	= 0;
+	[ FACTION_TYPE_LLC ]	= 100000;
+	[ FACTION_TYPE_LLP ]	= 100000;
+	[ FACTION_TYPE_CORP ]	= 100000;
+};
+
+eFactionTypePriceGP		=
+{
+	[ FACTION_TYPE_GOV ]	= 0;
+	[ FACTION_TYPE_LLC ]	= 0;
+	[ FACTION_TYPE_LLP ]	= 250;
+	[ FACTION_TYPE_CORP ]	= 500;
+};
+
+eFactionTax					=
+{
+	[ FACTION_TYPE_GOV ]	= 0.00;
+	[ FACTION_TYPE_LLC ]	= 0.30;
+	[ FACTION_TYPE_LLP ]	= 0.35;
+	[ FACTION_TYPE_CORP ]	= 0.40;
 };
 
 eFactionRight		=
@@ -90,12 +122,6 @@ eInteriorTypeNames =
 	[ INTERIOR_TYPE_NONE ]			= "Государственная недвижимость";
 	[ INTERIOR_TYPE_COMMERCIAL ]	= "Коммерческая недвижимость";
 	[ INTERIOR_TYPE_HOUSE ]			= "Дом/квартира";
-};
-
-ePropertyUpgrade	=
-{
-	FACTION_MARKER	= { Price = 1000; Type = INTERIOR_TYPE_COMMERCIAL; Name = "Маркер управления организацией"; };
-	BLIP			= { Price = 3000; Type = INTERIOR_TYPE_COMMERCIAL; Name = "Иконка на карте"; };
 };
 
 enum "eVehicle"

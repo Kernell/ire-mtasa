@@ -34,6 +34,7 @@
   <script src="Shared/bit32.lua"/>
   <script src="Shared/blowfish.lua"/>
   <script src="Shared/base64.lua"/>
+  <script src="Shared/Array.lua"/>
   <script src="Shared/timezone.lua"/>
   <script src="Shared/CDateTime.lua"/>
   <script src="Shared/CVector.lua"/>
