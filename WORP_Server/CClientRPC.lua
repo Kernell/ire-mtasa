@@ -76,24 +76,39 @@ function CClientRPC:CClientRPC()
 		end
 	);
 
-	function CPlayer.Client( this, bLatent )
-		return setmetatable(
-			{},
-			{
-				__index = function( _, sFunction )
-					local pElement = this.__instance and getElementType( this.__instance ) == 'player' and this.__instance or root;
-					
-					return function( ... )
-						if bLatent then
-							triggerLatentClientEvent( pElement, self.m_sServerClient, 50000, false, pElement, sFunction, ... );
+	function CPlayer.Client( this, iBandwidth, bPersist )
+		local aSpace	= {};
+		
+		local pInstance = 
+		{	
+			__index = function( t, sIndex )
+				table.insert( aSpace, sIndex );
+				
+				local pElement = this.__instance and getElementType( this.__instance ) == "player" and this.__instance or root;
+				
+				local pObject = 
+				{
+					__call	= function( tt, ... )
+						if iBandwidth then
+							triggerLatentClientEvent( pElement, self.m_sServerClient, tonumber( iBandwidth ) or 56000, (bool)(bPersist), pElement, aSpace, ... );
 						else
-							triggerClientEvent( pElement, self.m_sServerClient, pElement, sFunction, ... );
+							triggerClientEvent( pElement, self.m_sServerClient, pElement, aSpace, ... );
 						end
-					end
-				end
-			}
-		);
+					end;
+					
+					__index	= t.__index;
+				};
+				
+				return setmetatable( pObject, pObject );
+			end;
+		};
+		
+		return setmetatable( pInstance, pInstance );
 	end
+end
+
+function CClientRPC:CFactionManager( ... )
+	return g_pGame:GetFactionManager():ClientHandle( self, ... );
 end
 
 function CClientRPC:Ready()
@@ -122,7 +137,7 @@ end
 function CClientRPC:TryLogin( sLogin, sPassword, bRemember )
 	local sQuery = "SELECT u.id, u.activation_code, u.ban, u.ban_reason, uu.name AS ban_user_name, DATE_FORMAT( u.ban_date, '%d/%m/%Y %h:%i:%s' ) AS ban_date FROM uac_users u LEFT JOIN uac_users uu ON uu.id = u.ban_user_id WHERE u.login = '" + g_pDB:EscapeString( sLogin ) + "' AND u.deleted = 'No'";
 	
-	if sLogin ~= "root" and IPSMember.DB:Ping() then
+	if sLogin ~= "root" and IPSMember.DB.m_pHandler then
 		local pIPBResult = IPSMember.DB:Query( "SELECT `member_id` FROM `" + IPSMember.PREFIX + "members` WHERE `email` = %q AND `members_pass_hash` = MD5( CONCAT( MD5( `members_pass_salt` ), MD5( %q ) ) ) LIMIT 1", sLogin, sPassword );
 		
 		if not pIPBResult then
@@ -1100,7 +1115,7 @@ function CClientRPC:Bank__GetFactions( aFields )
 					for i, key in ipairs( aFields ) do
 						aFaction[ key ] = pFaction[ key ];
 					end
-
+					
 					table.insert( Factions, aFaction );
 				else
 					table.insert( Factions, pFaction );
@@ -1360,81 +1375,6 @@ function CClientRPC:Faction_EditDept( sDeptName, iDeptID, iFactionID )
 	return pFaction.m_Depts;
 end
 
-function CClientRPC:Faction_GetData( sDataName, iFactionID )
-	local pChar = self:GetChar();
-	
-	if pChar then
-		local pFaction = g_pGame:GetFactionManager():Get( iFactionID );
-		
-		if pFaction then
-			if sDataName == "Info" then
-				local Info;
-				
-				local pResult	= g_pDB:Query( "SELECT CONCAT( name, ' ', surname ) AS owner FROM " + DBPREFIX + "characters WHERE id = " + pFaction.m_iOwnerID + " LIMIT 1" );
-				
-				local pRow		= pResult:FetchRow();
-				
-				delete ( pResult );
-				
-				local pProperty = g_pGame:GetInteriorManager():Get( pFaction.m_iPropertyID );
-				
-				Info		=
-				{
-					ID				= pFaction:GetID();
-					Owner			= pRow and pRow.owner or "Неизвестно";
-					Property		= pProperty and pProperty:GetName() or "Неизвестно";
-					PropertyID		= pFaction.m_iPropertyID;
-					Name			= pFaction:GetName();
-					Abbr			= pFaction:GetTag();
-					Type			= eFactionTypeNames[ pFaction.m_iType ];
-					CreatedDate		= pFaction.m_sCreated;
-					RegisterDate	= pFaction.m_sRegistered;
-					BankAccountID	= pFaction.m_sBankAccountID;
-				};
-				
-				return Info;
-			elseif sDataName == "Depts" then
-				return pFaction.m_Depts;
-			elseif sDataName == "Staff" then
-				local Staff = {};
-				
-				if pFaction:TestRight( pChar, eFactionRight.STAFF_LIST ) then
-					local pResult = g_pDB:Query( "SELECT c.id, c.name, c.surname, c.faction_dept_id, c.faction_rank_id, DATEDIFF( NOW(), c.last_login ) AS online, c.status, c.phone FROM " + DBPREFIX + "characters c WHERE c.faction_id = " + pFaction:GetID() + " AND c.status != 'Скрыт' ORDER BY online ASC" );
-					
-					if pResult then
-						for i, row in ipairs( pResult:GetArray() ) do
-							local Dept	= pFaction.m_Depts[ row.faction_dept_id ];
-							
-							Staff[ i ]	=
-							{
-								name			= row.name;
-								surname			= row.surname;
-								dept			= Dept and Dept.Name or "N/A";
-								rank			= Dept and Dept.Ranks[ row.faction_rank_id ] and Dept.Ranks[ row.faction_rank_id ].Name;
-								phone			= row.phone;
-								online_status	= g_pGame:GetPlayerManager():Get( ( row.name + '_' + row.surname ):gsub( ' ', '_' ) ) and -1 or row.online;
-								status			= row.status;
-							};
-						end
-						
-						delete ( pResult );
-					else
-						Debug( g_pDB:Error(), 1 );
-					end
-				end
-				
-				return Staff;
-			end
-			
-			return AsyncQuery.FORBIDDEN;
-		end
-		
-		return "Invalid faction id";
-	end
-	
-	return AsyncQuery.UNAUTHORIZED;
-end
-
 function CClientRPC:SetInteriorData( iID, sDataName, ... )
 	local pInterior = g_pGame:GetInteriorManager():Get( iID );
 	
@@ -1489,66 +1429,6 @@ function CClientRPC:SetInteriorData( iID, sDataName, ... )
 	else
 		self:Client().InteriorMenu( false );
 	end
-end
-
-function CClientRPC:Property__AddUpgrade( iPropertyID, sUpgradeID )
-	local pChar = self:GetChar();
-	
-	if not pChar then return AsyncQuery.UNAUTHORIZED; end
-	
-	local pProperty = g_pGame:GetInteriorManager():Get( iPropertyID );
-	
-	if not pProperty then return AsyncQuery.BAD_REQUEST; end
-	
-	local pUpgrade = ePropertyUpgrade[ sUpgradeID ];
-	
-	if not pUpgrade then return AsyncQuery.BAD_REQUEST; end
-	
-	if pProperty.m_iCharacterID ~= pChar:GetID() then return "Только владелец может устанавливать апгрейды"; end
-	
-	if pProperty.m_pUpgrades.m_Upgrades[ sUpgradeID ] then return "Этот апгрейд уже установлен"; end
-	
-	if pUpgrade.Type ~= NULL and pUpgrade.Type ~= pProperty.m_sType then return "Этот апгрейд не совместим с данным интерьером"; end
-	
-	if not pChar:TakeMoney( pUpgrade.Price ) then return "У Вас недостаточно денег"; end
-	
-	local Data = NULL;
-	
-	if sUpgradeID == "FACTION_MARKER" then
-		local vecPosition	= pChar:GetPosition();
-		local iInterior		= pChar:GetInterior();
-		local iDimension	= pChar:GetDimension();
-		
-		Data	= { vecPosition.X, vecPosition.Y, vecPosition.Z - 0.81, iInterior, iDimension };
-	elseif sUpgradeID == "BLIP" then
-		local pInt	= pProperty:GetInt();
-		
-		if not pInt then
-			return "Не действительный интерьер";
-		end
-		
-		local iBlip	= pInt.Blip;
-		
-		if not iBlip then
-			return "Этот интерьер не поддерживает данный апгрейд";
-		end
-		
-		Data	= { iBlip };
-	end
-	
-	if not pProperty:AddUpgrade( sUpgradeID, Data ) then
-		pChar:GiveMoney( pUpgrade.Price );
-		
-		return "Внутренняя ошибка сервера. Обратитесь к системному администратору";
-	end
-	
-	local Upgrades	= {};
-	
-	for sUpgrade in pairs( pProperty.m_pUpgrades.m_Upgrades ) do
-		Upgrades[ sUpgrade ] = true;
-	end
-	
-	return Upgrades;
 end
 
 function CClientRPC:Property__RemoveUpgrade( iPropertyID, sUpgradeID )
@@ -1722,120 +1602,6 @@ function CClientRPC:ReturnOffer( bAccepted, sOfferID )
 			self.m_Offers[ sOfferID ] = NULL;
 		end
 	end
-end
-
-function CClientRPC:Faction__Create( sTitle, sAbbr, iInteriorID, iType )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED; 
-	end
-	
-	local pResult = g_pDB:Query( "SELECT id, registered FROM " + DBPREFIX + "factions WHERE owner_id = " + pChar:GetID() + " LIMIT 1" );
-	
-	if pResult then
-		local pRow = pResult:FetchRow();
-		
-		delete ( pResult );
-		
-		if pRow and pRow.id then
-			if pRow.registered then
-				return "У Вас уже есть организация!", 255, 0, 0;
-			end
-			
-			return "Вы уже подавали заявку на создание организации", 255, 0, 0;
-		end
-	else
-		Debug( g_pDB:Error(), 1 );
-		
-		return TEXT_DB_ERROR, 255, 0, 0;
-	end
-	
-	if not not sTitle:find( "[\\'\"\;]" ) then
-		return "Имя организации содержит запрещённые символы", 255, 0, 0;
-	end
-	
-	if sTitle:len() < 8 then
-		return "Имя организации слишком короткое", 255, 0, 0;
-	end
-	
-	if sTitle:len() > 64 then
-		return "Имя организации слишком длинное", 255, 0, 0;
-	end
-	
-	if not not sAbbr:find( "[\\'\"\;]" ) then
-		return "Аббревиатура организации содержит запрещённые символы", 255, 0, 0;
-	end
-	
-	if sAbbr:len() < 3 then
-		return "Аббревиатура организации слишком короткая", 255, 0, 0;
-	end
-	
-	if sAbbr:len() > 8 then
-		return "Аббревиатура организации слишком длинная", 255, 0, 0;
-	end
-	
-	local pProperty = g_pGame:GetInteriorManager():Get( iInteriorID );
-	
-	if not pProperty then
-		return "Не верный адрес регистрации (не существует)";
-	end
-	
-	if pProperty.m_sType ~= INTERIOR_TYPE_COMMERCIAL then
-		return "Только коммерческую недвижимость можно оформить на предприятие";
-	end
-	
-	if pProperty.m_iCharacterID ~= pChar:GetID() then
-		return "Эта недвижимость не принадлежит вам";
-	end
-	
-	if pProperty.m_iFactionID ~= 0 then
-		return "Эта недвижимость уже оформлена на другую организацию";
-	end
-	
-	if not eFactionType[ iType ] then
-		return "Не правильный тип организации";
-	end
-	
-	local Data	=
-	{
-		name		= sTitle;
-		tag			= sAbbr;
-		type		= iType;
-		property_id	= iInteriorID;
-	};
-	
-	local pResult	= g_pDB:Query( "SELECT SUM( name = %q ) AS name, SUM( tag = %q ) AS tag FROM " + DBPREFIX + "factions", Data[ "name" ], Data[ "tag" ] );
-	
-	if pResult then
-		local pRow = pResult:FetchRow();
-		
-		delete ( pResult );
-		
-		if pRow then
-			if pRow.name and pRow.name ~= 0 then
-				return "Организация с таким именем уже существует";
-			end
-			
-			if pRow.tag and pRow.tag ~= 0 then
-				return "Организация с такой аббревиатурой уже существует";
-			end
-		end
-	else
-		Debug( g_pDB:Error(), 1 );
-		
-		return TEXT_DB_ERROR;
-	end
-	
-	Data[ "owner_id" ] = pChar:GetID();
-	
-	local iFactionID = g_pGame:GetFactionManager():Create( CFaction, Data[ "name" ], Data[ "tag" ], Data );
-	
-	if iFactionID then
-		return true;
-	end
-	
-	return TEXT_DB_ERROR;
 end
 
 function CClientRPC:Faction__Register( iFactionID )

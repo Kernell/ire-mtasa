@@ -158,13 +158,19 @@ function CClientRPC:CClientRPC()
 	end
 
 	addEvent( self.m_sServerClient, true );
-
-	local function ClientCall( sFunction, ... )
-		if _G[ sFunction ] then
-			_G[ sFunction ]( ... );
-		else
-			Debug( "'" + (string)(sFunction) + "' - undeclared character", 1 );
+	
+	local function ClientCall( aSpace, ... )
+		local pCurrent	= _G;
+		
+		for i, sName in ipairs( aSpace ) do
+			if pCurrent[ sName ] then
+				pCurrent	= pCurrent[ sName ];
+			else
+				error( "attempt to index '" + sName + "'" );
+			end
 		end
+		
+		pCurrent( ... );
 	end
 
 	addEventHandler( self.m_sServerClient, root, ClientCall );
