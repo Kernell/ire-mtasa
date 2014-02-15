@@ -41,7 +41,10 @@ Settings	=
 			EasingOut		= "OutCirc";
 		};
 	};
-	
+};
+
+SettingsMeta	=
+{
 	Load	= function( pSettings, pSetting )
 		for key, value in pairs( pSettings ) do
 			if type( value ) == "table" then
@@ -60,5 +63,12 @@ Settings	=
 		setBlurLevel		( Settings.Graphics.Blur );
 		setCloudsEnabled	( Settings.Graphics.Clouds );
 		setBirdsEnabled		( Settings.Graphics.Birds );
+		
+		resourceRoot.m_pClientShaderManager:Stop();
+		resourceRoot.m_pClientShaderManager:Start();
 	end;
 };
+
+SettingsMeta.__index = SettingsMeta;
+
+setmetatable( Settings, SettingsMeta );

@@ -111,6 +111,22 @@ function CClientRPC:CFactionManager( ... )
 	return g_pGame:GetFactionManager():ClientHandle( self, ... );
 end
 
+function CClientRPC:SaveSettings( pSettings )
+	if self:IsLoggedIn() then
+		local sSettings = toJSON( pSettings );
+		
+		if not sSettings then
+			sSettings = "NULL";
+		else
+			sSettings = "'" + sSettings + "'";
+		end
+		
+		if not g_pDB:Update( "UPDATE uac_users SET settings = " + sSettings + " WHERE id = " + self:GetID() ) then
+			Debug( g_pDB:Error(), 1 );
+		end
+	end
+end
+
 function CClientRPC:Ready()
 	self:ShowLoginScreen();
 	
