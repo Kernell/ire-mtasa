@@ -3,8 +3,12 @@
   
   <min_mta_version server="1.3.4-9.05800" client="1.3.4-9.05800" />
   
+  <include resource="shader_hdr" />
+  <include resource="shader_dof" />
+  <include resource="shader_bloom" />
   <include resource="shader_radial_blur" />
   <include resource="shader_glow" />
+  <include resource="shader_roadshine3" />
   <include resource="shader_water" />
   
   <script src="Shared/utils.lua"      type="client"/>

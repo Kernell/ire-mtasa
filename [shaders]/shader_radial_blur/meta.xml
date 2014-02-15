@@ -12,4 +12,6 @@
 	<file src="fx/radial_blur.fx" type="client" />
 	<file src="fx/mta-helper.fx" type="client" />
 	<file src="images/radial_mask.tga" type="client" />
+  
+  <export function="SetEnabled" type="client" />
 </meta>

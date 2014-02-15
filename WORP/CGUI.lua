@@ -114,30 +114,60 @@ function CGUI:CreateButton( btn_sCaption )
 end
 
 -- Checkboxes
-function CGUI:CreateCheckBox( cbx_sCaption )
-	return function( cbx_tData )
-		local relative 	= cbx_tData.X <= 1 and cbx_tData.Y <= 1 and cbx_tData.Width <= 1 and cbx_tData.Height <= 1;
+function CGUI:CreateCheckBox( sCaption )
+	return function( this )
+		local bRelative 	= this.X <= 1 and this.Y <= 1 and this.Width <= 1 and this.Height <= 1;
 		
-		local instance 	= {};
-
 		if self.__instance then
-			instance.__instance  	= guiCreateCheckBox( cbx_tData.X, cbx_tData.Y, cbx_tData.Width, cbx_tData.Height, cbx_sCaption, cbx_tData.Selected, relative, self.__instance ); -- element
+			this.__instance  	= guiCreateCheckBox( this.X, this.Y, this.Width, this.Height, sCaption, this.Selected, bRelative, self.__instance );
 		else
-			instance.__instance  	= guiCreateCheckBox( cbx_tData.X, cbx_tData.Y, cbx_tData.Width, cbx_tData.Height, cbx_sCaption, cbx_tData.Selected, relative ); -- element
+			this.__instance  	= guiCreateCheckBox( this.X, this.Y, this.Width, this.Height, sCaption, this.Selected, bRelative );
 		end
 		
-		function instance:GetSelected()
+		function this:GetSelected()
 			return guiCheckBoxGetSelected( self.__instance );
 		end
 
-		function instance:SetSelected( state )
-			return guiCheckBoxSetSelected( self.__instance, state ); -- bool
+		function this:SetSelected( state )
+			return guiCheckBoxSetSelected( self.__instance, state );
 		end
 
-		setmetatable		( instance, self );
+		setmetatable		( this, self );
 		self.__index 		= self;
+		
+		if this.Selected then
+			this:SetSelected( this.Selected );
+		end
+		
+		if this.Font then
+			this:SetFont( this.Font );
+		end
+		
+		this:SetEnabled( this.Enabled == NULL or this.Enabled == true );
+		
+		function this.Click( ... )
+			if this.OnClick then
+				this:OnClick( ... );
+			end
+		end
+		
+		function this.MouseEnter( ... )
+			if this.OnMouseEnter then
+				this:OnMouseEnter( ... );
+			end
+		end
+		
+		function this.MouseLeave( ... )
+			if this.OnMouseLeave then
+				this:OnMouseLeave( ... );
+			end
+		end
+		
+		addEventHandler( "onClientGUIClick",	this.__instance,	this.Click,			false );
+		addEventHandler( "onClientMouseEnter", 	this.__instance,	this.MouseEnter,	false );
+		addEventHandler( "onClientMouseLeave", 	this.__instance,	this.MouseLeave,	false );
 
-		return instance;
+		return this;
 	end
 end
 

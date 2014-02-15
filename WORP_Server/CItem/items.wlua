@@ -21,6 +21,16 @@ class: item_base
 	m_iType				= ITEM_TYPE_NONE;
 };
 
+class: item_radio ( item_base )
+{
+	m_sName			= "Рация";
+	m_sName2		= "рацию";
+	m_sDescription	= "";
+	m_iCost			= 500;
+	m_iModel		= -1;
+	m_fWeight		= 0.1;
+};
+
 class: bank_card ( item_base )
 {
 	m_sName			= "Банковская карточка";

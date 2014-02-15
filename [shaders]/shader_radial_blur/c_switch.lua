@@ -21,26 +21,14 @@
 --------------------------------
 addEventHandler( "onClientResourceStart", resourceRoot,
 	function()
-		triggerEvent( "switchRadialBlur", resourceRoot, true )
+		SetEnabled( getElementData( localPlayer, "Settings.Graphics.Shaders.RadialBlur" ) or false );
 	end
-)
-
---------------------------------
--- Command handler
---		Toggle via command
---------------------------------
-addCommandHandler( "radialblur",
-	function()
-		triggerEvent( "switchRadialBlur", resourceRoot, not bEffectEnabled )
-	end
-)
-
+);
 
 --------------------------------
 -- Switch effect on or off
 --------------------------------
-function switchRadialBlur( bOn )
-	outputDebugString( "switchRadialBlur: " .. tostring(bOn) )
+function SetEnabled( bOn )
 	if bOn then
 		enableRadialBlur()
 	else
@@ -49,4 +37,4 @@ function switchRadialBlur( bOn )
 end
 
 addEvent( "switchRadialBlur", true )
-addEventHandler( "switchRadialBlur", resourceRoot, switchRadialBlur )
+addEventHandler( "switchRadialBlur", resourceRoot, SetEnabled )
