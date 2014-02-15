@@ -13,9 +13,11 @@ function Init()
 end
 
 function Update()
-	local r, g, b, a = getWaterColor();
-	
-	dxSetShaderValue( g_pShader, "sWaterColor", r / 255, g / 255, b / 255, a / 255 );
+	if g_pShader then	
+		local r, g, b, a = getWaterColor();
+		
+		dxSetShaderValue( g_pShader, "sWaterColor", r / 255, g / 255, b / 255, a / 255 );
+	end
 end
 
 function SetEnabled( bEnabled )

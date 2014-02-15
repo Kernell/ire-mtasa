@@ -121,7 +121,7 @@ function CClientRPC:SaveSettings( pSettings )
 			sSettings = "'" + sSettings + "'";
 		end
 		
-		if not g_pDB:Update( "UPDATE uac_users SET settings = " + sSettings + " WHERE id = " + self:GetID() ) then
+		if not g_pDB:Query( "UPDATE uac_users SET settings = " + sSettings + " WHERE id = " + self:GetID() ) then
 			Debug( g_pDB:Error(), 1 );
 		end
 	end

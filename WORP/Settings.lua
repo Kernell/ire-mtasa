@@ -45,14 +45,16 @@ Settings	=
 
 SettingsMeta	=
 {
-	Load	= function( pSettings, pSetting )
+	Load	= function( pSettings, pLevel )
+		pLevel	= pLevel or Settings;
+		
 		for key, value in pairs( pSettings ) do
 			if type( value ) == "table" then
-				return Settings.Load( value, pSetting[ key ] );
+				Settings.Load( value, pLevel[ key ] );
 			elseif value == "true" or value == "false" then
-				pSetting[ key ] = (bool)(value);
+				pLevel[ key ] = (bool)(value);
 			else
-				pSetting[ key ] = tonumber( value ) or value;
+				pLevel[ key ] = tonumber( value ) or value;
 			end
 		end;
 		
