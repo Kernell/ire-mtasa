@@ -7,7 +7,7 @@
 
 FLOAT_EPSILON = 0.0001
 
-class "Vector3"
+class "Vector3";
 
 function Vector3:Vector3( fX, fY, fZ )
 	if type( fX ) == 'string' and fX[ 1 ] == '(' and fX[ fX:len() ] == ')' then
@@ -188,6 +188,15 @@ end
 function Vector3:Concat( void )
 	return (string)(self) + (string)(void);
 end
+
+Vector3.Back	= Vector3( 0.0, -1.0, 0.0 );
+Vector3.Down	= Vector3( 0.0, 0.0, -1.0 );
+Vector3.Forward	= Vector3( 0.0, 1.0, 0.0 );
+Vector3.Left	= Vector3( -1.0, 0.0, 0.0 );
+Vector3.One		= Vector3( 1.0, 1.0, 1.0 );
+Vector3.Right	= Vector3( 1.0, 0.0, 0.0 );
+Vector3.Up		= Vector3( 0.0, 0.0, 1.0 );
+Vector3.Zero	= Vector3( 0.0, 0.0, 0.0 );
 
 Vector3.DistanceTo	= Vector3.Distance;
 Vector3.__add		= Vector3.Add;

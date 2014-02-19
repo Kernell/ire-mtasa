@@ -234,38 +234,30 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 	local pDriver = pVehicle:GetDriver();
 	
 	if pDriver then
-		if pDriver == CLIENT and Settings.Controls.MouseSteering.Enabled and AnalogControl then
-			pVehicle.m_pStWheel.fAngle = -AnalogControl.fMouseX;
+		if pDriver == CLIENT and AnalogControl then
+			if Settings.Controls.MouseSteering.Enabled then
+				pVehicle.m_pStWheel.fAngle = -AnalogControl.fMouseX;
+			else
+				pVehicle.m_pStWheel.fAngle = -AnalogControl.fSteer;
+			end
 		else
 			local fAngle	= 0.0;
 			local fLeft		= getPedAnalogControlState( pDriver, "vehicle_left" ) or 0.0;
 			local fRight	= getPedAnalogControlState( pDriver, "vehicle_right" ) or 0.0;
 			
 			if fLeft > 0.0 then
-				fAngle = Easing[ Settings.Controls.MouseSteering.EasingIn ]( Easing, fLeft );
+				fAngle = fAngle + fLeft;
 			end
 			
 			if fRight > 0.0 then
-				fAngle = -Easing[ Settings.Controls.MouseSteering.EasingIn ]( Easing, fRight );
+				fAngle = fAngle - fRight;
 			end
 			
-			if fLeft > 0.0 and fRight > 0.0 then
-				fAngle = 0.0;
-			end
-			
-			local iTick = getTickCount();
-			
-			if pVehicle.m_pStWheel.fTargetAngle ~= fAngle then
-				pVehicle.m_pStWheel.iTime			= ( 250 * math.abs( fAngle - pVehicle.m_pStWheel.fAngle ) ) + 50;
-				pVehicle.m_pStWheel.iTickEnd		= iTick + pVehicle.m_pStWheel.iTime;
-				pVehicle.m_pStWheel.fTargetAngle	= fAngle;
-			end
-			
-			local fProgress = 1.0 - ( pVehicle.m_pStWheel.iTickEnd - iTick ) / pVehicle.m_pStWheel.iTime;
-			
-			pVehicle.m_pStWheel.fAngle	= Lerp( pVehicle.m_pStWheel.fAngle, fAngle, fProgress );
+			pVehicle.m_pStWheel.fAngle	= fAngle;
 		end
 	end
+	
+	pVehicle.m_pStWheel.fAngle = pVehicle.m_pStWheel.fAngle * ( 1.0 - Clamp( 0.0, pVehicle:GetVelocity():Length(), 1.0 ) );
 	
 	setVehicleComponentRotation( pVehicle, self, 0.0, Settings.Controls.MouseSteering.Angle * pVehicle.m_pStWheel.fAngle, 0.0 );
 end
@@ -537,7 +529,6 @@ addEventHandler( "onClientPreRender", root,
 		end
 	end
 );
-
 
 addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot,
 	function()

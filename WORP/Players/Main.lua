@@ -77,6 +77,12 @@ local function ProcessStaffAlpha( iTimeSlice )
 			end
 		end
 	end
+	
+	if CCamera.m_iCameraMode == 6 then
+		CLIENT:SetAlpha( 0 );
+	elseif CLIENT:GetAlpha() ~= 255 then
+		CLIENT:SetAlpha( 255 );
+	end
 end
 
 function SetAirbrakeEnabled( bEnabled )

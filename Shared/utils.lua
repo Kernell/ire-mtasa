@@ -145,6 +145,9 @@ function print_r( Array, vFunction, iPadding )
 	return vFunction == true and sResult or not ( vFunction or print )( sResult );
 end
 
+math.Rad2Deg	= 360.0 / ( math.pi * 2.0 );
+math.Deg2Rad	= ( math.pi * 2.0 ) / 360.0;
+
 function math.decl( number, declin1, declin2, declin3 )
 	local bValid, sError = is_type( number, 'number', 'number' );		if not bValid then error( sError, 2 ) end
 	local bValid, sError = is_type( declin1, 'string', 'declin1' );		if not bValid then error( sError, 2 ) end

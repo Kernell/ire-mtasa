@@ -131,7 +131,7 @@ function CClientRPC:Ready()
 	self:ShowLoginScreen();
 	
 	self:ToggleControls( true, true, false );
-	self:DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous" );
+	self:DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous", "vehicle_left", "vehicle_right" );
 	
 	self:BindKey( "horn", "both", CPlayer.VehicleHorn );
 	self:BindKey( "j", "up", CPlayer.VehicleToggleEngine );

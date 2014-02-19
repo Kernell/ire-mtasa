@@ -36,7 +36,7 @@ Settings	=
 		{
 			Enabled			= false;
 			Sensitivity		= 0.1;
-			Angle			= 90.0;
+			Angle			= 270.0;
 			EasingIn		= "InCirc";
 			EasingOut		= "OutCirc";
 		};
