@@ -78,7 +78,7 @@ local function ProcessStaffAlpha( iTimeSlice )
 		end
 	end
 	
-	if CCamera.m_iCameraMode == 6 then
+	if CCamera.m_iCameraMode == 6 and CLIENT:IsInVehicle() then
 		CLIENT:SetAlpha( 0 );
 	elseif CLIENT:GetAlpha() ~= 255 then
 		CLIENT:SetAlpha( 255 );
@@ -241,39 +241,3 @@ local function UpdatePower()
 end
 
 setTimer( UpdatePower, 500, 0 );
-
-function RenderTask()
-	if not _TASK_DEBUG then
-		return;
-	end
-	
-    local fX, fY = 100, 300;
-	
-    for k = 0, 4 do
-        local a, b, c, d = CLIENT:GetTask( "primary", k );
-        
-		dxDrawText( "Primary task #" + k + " is " + tostring( a ) + " -> " + tostring( b ) + " -> " + tostring( c ) + " -> " + tostring( d ) + " -> ", fX, fY );
-        
-		fY = fY + 15;
-    end
-	
-    fY = fY + 15;
-    
-	for k = 0, 5 do
-        local a, b, c, d = CLIENT:GetTask( "secondary", k );
-        
-		dxDrawText( "Secondary task #" + k + " is " + tostring( a ) + " -> " + tostring( b ) + " -> " + tostring( c ) + " -> " + tostring( d ) + " -> ", fX, fY );    
-        
-		fY = fY + 15;
-    end
-
-    fY = fY + 15;
-	
-	dxDrawText( "Simplest task is " + CLIENT:GetSimplestTask(), fX, fY );    
-	
-    fY = fY + 30;
-	
-	dxDrawText( "Move state is " + tostring( CLIENT:GetMoveState() ), fX, fY );    
-end
-
-addEventHandler( "onClientRender", root, RenderTask )
