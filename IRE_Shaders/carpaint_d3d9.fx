@@ -210,28 +210,27 @@ float4 PixelShaderFunction( PSInput PS ) : COLOR0
 	
 	float fFresnel1Sq 	= fFresnel1 * fFresnel1;
 	
-	float4 paintColor 	= fFresnel1 * paintColor0 + fFresnel1Sq * paintColorMid + fFresnel1Sq * fFresnel1Sq * paintColor2 + pow( fFresnel2, 32 ) * flakeLayerColor;
+	float4 fPaintColor 	= fFresnel1 * paintColor0 + fFresnel1Sq * paintColorMid + fFresnel1Sq * fFresnel1Sq * paintColor2 + pow( fFresnel2, 32 ) * flakeLayerColor;
 	
 	float fEnvContribution 	= 1.0 - 0.5 * fNdotV;
 	
-	float4 finalColor	= paintColor;
+    fPaintColor	+= envMap * fEnvContribution;
 	
-    finalColor	+= ( ( envMap ) * ( fEnvContribution ) );
-	
-    finalColor.a = 1.0;
+    fPaintColor.a = 1.0;
     
-	float4 Color	= finalColor / 1 + PS.Diffuse * 0.5;
+	float4 fColor = 0.0;
 	
-    Color 	+= finalColor * PS.Diffuse * 1.5;
-	
+	fColor += ( fPaintColor / 1.0 + PS.Diffuse * 0.5 );
+	fColor += ( fPaintColor * PS.Diffuse * 1.5 );
+
 	if( bColorTextureLoaded )
-		Color 	*= tex2D( ColorSampler, PS.TexCoord_dust.xy );
+		fColor 	*= tex2D( ColorSampler, PS.TexCoord_dust.xy );
 	else
-		Color 	*= tex2D( Sampler0, PS.TexCoord_dust.xy );
+		fColor 	*= tex2D( Sampler0, PS.TexCoord_dust.xy );
 	
-    Color.a	= PS.Diffuse.a;
+    fColor.a	= PS.Diffuse.a;
     
-	return Color;
+	return fColor;
 }
 
 technique carpaint_d3d9

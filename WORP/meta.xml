@@ -99,7 +99,6 @@
   <script src="CVehicleWhelenManager.lua"               type="client"/>
   <script src="Vehicles/DrawLabels.lua"                 type="client"/>
   <script src="Vehicles/DamageManager.lua"              type="client"/>
-  <script src="Vehicles/RemapBody.lua"                  type="client"/>
   <script src="Vehicles/AnalogControl.lua"              type="client"/>
   
   <script src="CUI/CUIAsyncQuery.lua"       type="client"/>

@@ -165,9 +165,6 @@ class: CClientShaderCarPaint ( CClientShader )
 			"polmavbody128a" , "sparrow92body128" , "hunterbody8bit256a" , "seasparrow92floats64" , 
 			"dodo92body8bit256" , "cropdustbody256", "beagle256", "hydrabody256", "rustler92body256", 
 			"shamalbody256", "skimmer92body128", "stunt256", "maverick92body128", "leviathnbody8bit256";
-			
-			"WHEEL",
-			"WHEEL_CHARGER_RT",
 		};
 		
 		m_GeneralTextures	=

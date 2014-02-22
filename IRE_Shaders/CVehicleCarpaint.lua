@@ -70,10 +70,18 @@ class: CVehicleCarpaint ( LuaBehaviour )
 		local sName 	= this.m_pVehicle:GetData( "RemapBody" );
 		
 		if sName then
-			local sTexturePath = ":WORP/Resources/Textures/Vehicle-" + this.m_pVehicle:GetModel() + "-" + sName + ".png";
+			local sTexture		= "Vehicle-" + this.m_pVehicle:GetModel() + "-" + sName;
 			
-			if fileExists( sTexturePath ) then
-				this.m_pColorTexture		= dxCreateTexture( sTexturePath );
+			if resourceRoot.m_pShaderManager.m_Textures[ sTexture ] then
+				this.m_pColorTexture	= resourceRoot.m_pShaderManager.m_Textures[ sTexture ];
+			else			
+				local sTexturePath	= ":WORP/Resources/Textures/" + sTexture + ".png";
+				
+				if fileExists( sTexturePath ) then
+					this.m_pColorTexture		= dxCreateTexture( sTexturePath );
+					
+					resourceRoot.m_pShaderManager.m_Textures[ sTexture ]	= this.m_pColorTexture;
+				end
 			end
 		else
 			this.m_pVehicle.m_pCarpaint:_LuaBehaviour();
