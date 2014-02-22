@@ -1,4 +1,6 @@
 <meta>
+  <min_mta_version server="1.3.4-9.05800" client="1.3.4-9.05800" />
+  
 	<script src="Shared/utils.lua"            type="client" />
 	<script src="Shared/Debug.lua"            type="client" />
 	<script src="Shared/class.lua"            type="client" />
