@@ -118,6 +118,10 @@ end
 
 function CElement:AddToList( pElement )
 	list[ pElement or self.__instance ] = self;
+	
+	if self.__instance == NULL then
+		self.__instance = pElement;
+	end
 end
 
 function CElement:RemoveFromList()

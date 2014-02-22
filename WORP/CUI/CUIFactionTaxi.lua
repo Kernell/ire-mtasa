@@ -53,7 +53,7 @@ class: CUIFactionTaxi ( CGUI, CUIAsyncQuery )
 				local iPlayerID	= this.List:GetItemData( iRow, this.List[ "Заказчик" ] );
 				
 				if iPlayerID then
-					this:AsyncQuery( NULL, "FactionTaxi__AcceptCall", iPlayerID );
+					this:AsyncQuery( NULL, NULL, "AcceptCall", iPlayerID );
 				end
 			end;
 		};

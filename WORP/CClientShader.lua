@@ -164,7 +164,10 @@ class: CClientShaderCarPaint ( CClientShader )
 			"raindance92body128", "cargobob92body256", "andromeda92body", "at400_92_256", "nevada92body256",
 			"polmavbody128a" , "sparrow92body128" , "hunterbody8bit256a" , "seasparrow92floats64" , 
 			"dodo92body8bit256" , "cropdustbody256", "beagle256", "hydrabody256", "rustler92body256", 
-			"shamalbody256", "skimmer92body128", "stunt256", "maverick92body128", "leviathnbody8bit256" 
+			"shamalbody256", "skimmer92body128", "stunt256", "maverick92body128", "leviathnbody8bit256";
+			
+			"WHEEL",
+			"WHEEL_CHARGER_RT",
 		};
 		
 		m_GeneralTextures	=
@@ -174,7 +177,7 @@ class: CClientShaderCarPaint ( CClientShader )
 		
 		m_Variables =
 		{
-			renderDistance				= 100;		-- shader will be applied to textures nearer than this
+			renderDistance				= 0;		-- shader will be applied to textures nearer than this
 			
 			sNorFac						= 1.5;		-- the higher , the less normalised 0-2
 			sAdd 						= 0.5;		-- before bright pass
@@ -214,7 +217,9 @@ class: CClientShaderCarPaint ( CClientShader )
 	CClientShaderCarPaint	= function( this )
 		this:CClientShader();
 		
-		this.m_pGrunShader		= CShader( "Resources/Shaders/car_refgrun.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, false, "vehicle" );
+		this.m_Texture	= {};
+		
+		this.m_pGrunShader		= CShader( "Resources/Shaders/car_refgrun.fx", 0, CClientShaderCarPaint.m_Variables.renderDistance, false, "vehicle" );
 		this.m_pGeneralShader	= CShader( "Resources/Shaders/car_refgene.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, true, "vehicle" );
 		this.m_pShatShader		= CShader( "Resources/Shaders/car_refgene.fx", 1, CClientShaderCarPaint.m_Variables.renderDistance, true, "vehicle" );
 		

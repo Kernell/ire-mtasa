@@ -35,6 +35,8 @@ class: CClientShaderManager
 		exports.shader_radial_blur:SetEnabled	( Settings.Graphics.Shaders.RadialBlur );
 		exports.shader_roadshine3:SetEnabled	( Settings.Graphics.Shaders.RoadShine3 );
 		exports.shader_water:SetEnabled			( Settings.Graphics.Shaders.Water );
+		
+		exports.IRE_Shaders:LoadSettings( Settings.Graphics.Shaders );
 	end;
 	
 	Stop	= function( this )

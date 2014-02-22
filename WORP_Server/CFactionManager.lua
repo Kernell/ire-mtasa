@@ -238,6 +238,14 @@ function CFactionManager:ClientHandle( pClient, sCommand, ... )
 		return AsyncQuery.UNAUTHORIZED;
 	end
 	
+	if sCommand == NULL then
+		local pFaction = pChar:GetFaction();
+		
+		if pFaction then
+			return pFaction:ClientHandle( pClient, ... );
+		end
+	end
+	
 	if sCommand == "GetPublicFactions" then
 		local sQuery = "SELECT \
 				f.id, f.owner_id, f.name, f.tag, f.type, \
@@ -446,4 +454,3 @@ function CFactionManager:ClientHandle( pClient, sCommand, ... )
 	
 	return AsyncQuery.BAD_REQUEST;
 end
-

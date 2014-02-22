@@ -36,7 +36,7 @@ function InstallPaintjob( pVehicle )
 			end
 			
 			if not Shader[ iModel ][ sName ] then
-				Shader[ iModel ][ sName ] = dxCreateShader( "Resources/Shaders/ReplaceTexture.fx" );
+				Shader[ iModel ][ sName ] = dxCreateShader( "Resources/Shaders/ReplaceTexture.fx", 0, 0, true );
 				
 				dxSetShaderValue( Shader[ iModel ][ sName ], "Tex0", Texture[ iModel ][ sName ] );
 			end
@@ -79,5 +79,5 @@ local function OnVehicleDataChange( sData, vOldValue )
 	end
 end
 
-addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot, OnVehicleStreamIn );
-addEventHandler( "onClientElementDataChange", CVehicle.m_pRoot, OnVehicleDataChange );
+-- addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot, OnVehicleStreamIn );
+-- addEventHandler( "onClientElementDataChange", CVehicle.m_pRoot, OnVehicleDataChange );

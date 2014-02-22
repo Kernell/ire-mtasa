@@ -290,7 +290,7 @@ float4 PixelShaderFunction(PSInput PS) : COLOR0
     float4 Color = 1;
     Color = (finalColor / 1 + PS.Diffuse * 0.5);
     Color += finalColor * PS.Diffuse * 1.5;
-	if (dirtTex==1) {Color *= maptex; }
+	Color *= maptex;
     Color.a = PS.Diffuse.a;
     return Color;
 

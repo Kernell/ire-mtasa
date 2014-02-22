@@ -1704,56 +1704,6 @@ function CClientRPC:FactionTaxi__Update( fDistance )
 	end
 end
 
-function CClientRPC:FactionTaxi__AcceptCall( iPlayerID )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local pFaction = pChar:GetFaction();
-	
-	if not pFaction or classname( pFaction ) ~= "CFactionTaxi" then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local pVehicle = self:GetVehicleSeat() == 0 and self:GetVehicle();
-	
-	if pVehicle and pVehicle:GetFaction() == pFaction then
-		local pCall = pFaction.m_Calls[ iPlayerID ];
-		
-		if pCall then
-			if pCall.pCaller:GetID() ~= pCall.iPlayerID then
-				pFaction:RemoveCall( pCall.iPlayerID );
-				
-				return "Ошибка, игрок не в сети", 255, 0, 0;
-			end
-			
-			if not self.m_pJob then 
-				self.m_pJob = CMarker.Create( pCall.vecPosition, "checkpoint", 10.0, 255, 255, 0, 96, self.__instance );
-				
-				CBlip( self.m_pJob, 0, 2.0, 255, 0, 0, 255, 10, 9999.0, self.__instance ):SetParent( self.m_pJob );
-				
-				function self.m_pJob.OnHit( ... )
-					pFaction:OnTaxiMarkerHit( ... );
-				end
-				
-				pFaction:SendMessage( self:GetName() + " принял вызов от " + pCall.sName );
-				pFaction:RemoveCall( pCall.iPlayerID );
-				pFaction:ShowMenu( self );
-				
-				return true;
-			end
-			
-			return "Вы уже приняли вызов", 255, 0, 0;
-		end
-		
-		return "Никаких вызовов не поступало", 255, 0, 0;
-	end
-	
-	return true;
-end
-
 function CClientRPC:FactionTaxi__ToggleTaxiLight()
 	local pChar = self:GetChar();
 	

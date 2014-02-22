@@ -32,6 +32,10 @@ class: CFaction
 	GetAlivePlayers		= function( this )
 		return this.m_pElement:GetChilds( "player" );
 	end;
+	
+	ClientHandle		= function( this )
+		return NULL;
+	end;
 };
 
 function CFaction:CFaction( iID, sFlags )

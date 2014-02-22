@@ -1,0 +1,29 @@
+<meta>
+	<script src="Shared/utils.lua"            type="client" />
+	<script src="Shared/Debug.lua"            type="client" />
+	<script src="Shared/class.lua"            type="client" />
+	<script src="Shared/IElementData.lua"     type="client" />
+	<script src="Shared/CElement.lua"         type="client" />
+  
+	<script src="CShader.lua"                 type="client" />
+
+	<script src="LuaBehaviour.lua"            type="client" />
+  
+	<script src="Resource.lua"                type="client" />
+  
+	<script src="CShaderManager.lua"          type="client" />
+  
+	<script src="CVehicle.lua"                type="client" />
+	<script src="CVehicleManager.lua"         type="client" />
+	<script src="CVehicleCarpaint.lua"        type="client" />
+  
+	<script src="API.lua"                     type="client" />
+  
+	<file src="mta-helper.fxh"                type="client" />
+  
+	<file src="carpaint_d3d9.fx"              cache="false" />
+  
+	<file src="Textures/smallnoise3d.dds" />
+  
+  <export function="LoadSettings"           type="client" />
+</meta>
