@@ -17,6 +17,8 @@ class: CClientManager
 	end;
 	
 	_CClientManager	= function( this )
+		delete ( CLIENT:GetCamera() );
+		
 		resourceRoot:GetNetManager():Disconnect();
 	end;
 };

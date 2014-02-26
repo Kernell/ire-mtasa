@@ -16,6 +16,7 @@ local function new_Element( this )
 	
 	local Classes	=
 	{
+		camera		= CClientCamera;
 		console		= CConsole;
 		player		= CPlayer;
 		ped			= CPed;
@@ -35,7 +36,7 @@ local function new_Element( this )
 --		faction		= CFaction;
 	};
 	
-	if  Classes[ sType ] then
+	if Classes[ sType ] then
 		return Classes[ sType ]( this );
 	else
 		return CElement( this );

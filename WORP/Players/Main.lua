@@ -48,6 +48,8 @@ addEvent( 'CPlayer:PlaySound3D', true );
 addEventHandler( 'CPlayer:PlaySound3D', root, PlaySound3D );
 
 local function ProcessStaffAlpha( iTimeSlice )
+	local fDeltaTime	= iTimeSlice / 1000;
+	
 	for i, pPlr in ipairs( getElementsByType( 'player', root, true ) ) do
 		if pPlr:IsCollisionsEnabled() then
 			if not pPlr.m_iAdminAlpha then pPlr.m_iAdminAlpha = 255 end
@@ -63,13 +65,13 @@ local function ProcessStaffAlpha( iTimeSlice )
 					pPlr.m_bAdminAlphaFadeIn = false;
 				end
 				
-				pPlr.m_iAdminAlpha = pPlr.m_bAdminAlphaFadeIn and pPlr.m_iAdminAlpha + ( iTimeSlice * .1 ) or pPlr.m_iAdminAlpha - ( iTimeSlice * .1 );
+				pPlr.m_iAdminAlpha = pPlr.m_bAdminAlphaFadeIn and pPlr.m_iAdminAlpha + fDeltaTime or pPlr.m_iAdminAlpha - fDeltaTime;
 				
 				pPlr.m_iAdminAlpha = math.min( 254, math.max( 128, pPlr.m_iAdminAlpha ) );
 			
 				pPlr:SetAlpha( pPlr.m_iAdminAlpha );
 			elseif pPlr.m_iAdminAlpha < 255 then
-				pPlr.m_iAdminAlpha = pPlr.m_iAdminAlpha + ( iTimeSlice * .1 );
+				pPlr.m_iAdminAlpha = pPlr.m_iAdminAlpha + fDeltaTime;
 				
 				pPlr.m_iAdminAlpha = math.min( 255, pPlr.m_iAdminAlpha );
 				
@@ -80,7 +82,7 @@ local function ProcessStaffAlpha( iTimeSlice )
 	
 	if CCamera.m_iCameraMode == 6 and CLIENT:IsInVehicle() then
 		CLIENT:SetAlpha( 0 );
-	elseif CLIENT:GetAlpha() ~= 255 then
+	elseif CLIENT.m_iAdminAlpha == 255 and CLIENT:GetAlpha() ~= 255 then
 		CLIENT:SetAlpha( 255 );
 	end
 end
