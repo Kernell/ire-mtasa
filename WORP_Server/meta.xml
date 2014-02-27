@@ -7,7 +7,7 @@
   <file src="Resources/EDF/Trigger.png"/>
   <file src="Resources/EDF/Spawn.png"/>
   
-  <min_mta_version server="1.3.4-9.05800" client="1.3.4-9.05800" />
+  <min_mta_version server="1.3.5-9.06159" client="1.3.5-9.06159" />
   
   <sync_map_element_data>true</sync_map_element_data>
   

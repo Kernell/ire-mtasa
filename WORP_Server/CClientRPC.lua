@@ -44,7 +44,12 @@ class: AsyncQuery
 	};
 };
 
-class "CClientRPC";
+class: CClientRPC
+{
+	CBankManager			= function( ... )	return g_pGame:GetBankManager():ClientHandle( ... );	end;
+	CFactionManager			= function( ... )	return g_pGame:GetFactionManager():ClientHandle( ... );	end;
+	CPlayerManager			= function( ... )	return g_pGame:GetPlayerManager():ClientHandle( ... );	end;
+};
 
 function CClientRPC:CClientRPC()
 	self.m_sServerClient	= "CClientRPC:ServerClient";
@@ -105,10 +110,6 @@ function CClientRPC:CClientRPC()
 		
 		return setmetatable( pInstance, pInstance );
 	end
-end
-
-function CClientRPC:CFactionManager( ... )
-	return g_pGame:GetFactionManager():ClientHandle( self, ... );
 end
 
 function CClientRPC:SaveSettings( pSettings )
@@ -722,566 +723,6 @@ function CClientRPC:CreateFaction( sTitle, sAbbr, sAddress, iType )
 	end
 end
 
-function CClientRPC:Bank__OpenCard( sCardID, sPIN )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	if sCardID then
-		local bTest = sPIN == "74657374 ";
-		
-		if ( tonumber( sPIN ) and sPIN:len() == 4 ) or bTest then
-			local pCardItem = NULL;
-			
-			if not bTest then
-				for i, pItm in pairs( pChar:GetItems()[ ITEM_SLOT_NONE ] ) do
-					if pItm.m_bBankCard and pItm.m_Data.m_sID and pItm.m_Data.m_sID == sCardID then
-						pCardItem = pItm;
-						
-						break;
-					end
-				end
-			end
-			
-			if pCardItem == NULL and not bTest then
-				return "Банковская карточка не действительна";
-			end
-			
-			if bTest or md5( sPIN ) == pCardItem.m_Data.m_sPIN then
-				return g_pGame:GetBankManager():GetInfo( sCardID, { "id", "owner", "owner_id", "currency_id", "currency", "amount", "created", "expiry", "locked" } );
-			end
-		end
-		
-		return "Не верный PIN-код";
-	end
-	
-	return "Банковская карточка не действительна";
-end
-
-function CClientRPC:Bank__LockAccount( sBankAccountID, sReason )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	if not sReason or sReason:len() == 0 then
-		return "Пожалуйста, укажите причину закрытия счёта";
-	end
-	
-	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "faction_id", "currency_id", "amount", "locked", "closed" } );
-	
-	if pAccountInfo then
-		if pAccountInfo.locked or pAccountInfo.closed then
-			return "Операция не может быть выполнена: аккаунт заблокирован";
-		end
-		
-		if pAccountInfo.owner_id ~= pChar:GetID() then
-			return "Только владелец может закрыть счёт";
-		end
-		
-		if not g_pDB:Query( "UPDATE " + DBPREFIX + "bank_accounts SET closed = NOW() WHERE id = %q", sBankAccountID ) then
-			Debug( g_pDB:Error(), 1 );
-			
-			return TEXT_DB_ERROR;
-		end
-		
-		g_pGame:GetBankManager():AppendLog( sBankAccountID, NULL, "Закрытие счёта: " + sReason );
-		
-		return true;
-	end
-	
-	return "Не удалось получить информацию о счёте";
-end
-
-function CClientRPC:Bank__Transfer( sAmount, sBankAccountID, sTargetBankAccountID, sReason )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local iAmount = sAmount:ToNumber();
-	
-	if iAmount and iAmount > 0 then
-		if type( sTargetBankAccountID ) ~= "string" then
-			return "Не верно указан номер счёта";
-		end
-		
-		local aAcc = sTargetBankAccountID:split( " " );
-		
-		if not aAcc then
-			return "Не верно указан номер счёта";
-		end
-		
-		for i = 1, 4 do
-			if aAcc[ i ] == NULL or aAcc[ i ]:len() ~= 4 or not aAcc[ i ]:ToNumber() then
-				return "Не верно указан номер счёта";
-			end
-		end
-		
-		if sTargetBankAccountID == sBankAccountID then
-			return "Нельзя переводить средства на счёт с которого производится операция";
-		end
-		
-		local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "faction_id", "currency_id", "currency", "amount", "locked" } );
-		
-		if pAccountInfo then
-			if pAccountInfo.locked then
-				return "Операция не может быть выполнена: аккаунт заблокирован";
-			end
-			
-			if pAccountInfo.faction_id then
-				local pFaction	= g_pGame:GetFactionManager():Get( pAccountInfo.faction_id );
-				
-				if not pFaction then
-					return "Не удалось получить данные о организации";
-				end
-				
-				if not pFaction:TestRight( pChar, eFactionRight.BANK_TRANSFER ) then
-					return "У Вас нет прав на перевод средств с этого счёта";
-				end
-				
-				if sReason:len() == 0 then
-					return "Необходимо указать причину перевода средств";
-				end
-			else
-				if pAccountInfo.owner_id ~= pChar:GetID() then
-					return "У Вас нет прав на перевод средств с этого счёта";
-				end
-			end
-			
-			if pAccountInfo.amount < iAmount then
-				return "На Вашем счету недостаточно средств";
-			end
-			
-			local pTargetAccountInfo = g_pGame:GetBankManager():GetInfo( sTargetBankAccountID, { "currency_id", "currency" } );
-			
-			if pTargetAccountInfo == NULL then
-				return "Указанный счёт не существует";
-			end
-			
-			if pTargetAccountInfo.currency_id ~= pAccountInfo.currency_id then
-				return "Конечный счёт должен быть той же валюты";
-				
-				-- if pTargetAccountInfo.currency_id ~= "USD" then
-					-- iAmount = iAmount / ( pTargetAccountInfo.currency_rate );
-				-- end
-				
-				-- if pAccountInfo.currency_id ~= "USD" then
-					-- iAmount = iAmount * ( pTargetAccountInfo.currency_rate );
-				-- end
-			end
-			
-			if not g_pGame:GetBankManager():GiveMoney( sTargetBankAccountID, iAmount, "Перевод со счёта " + sBankAccountID + ": " + sReason ) then
-				return TEXT_DB_ERROR;
-			end
-			
-			if not g_pGame:GetBankManager():TakeMoney( sBankAccountID, iAmount, "Перевод на счёт " + sTargetBankAccountID + ": " + sReason ) then
-				return TEXT_DB_ERROR;
-			end
-			
-			pAccountInfo.amount = pAccountInfo.amount - iAmount;
-			
-			return pAccountInfo;
-		end
-		
-		return "Не удалось получить информацию о Вашем счёте";
-	end
-	
-	return "Неверные данные";
-end
-
-function CClientRPC:Bank__Deposit( sAmount, sBankAccountID )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local iAmount = sAmount:ToNumber();
-	
-	if iAmount and iAmount > 0 then
-		local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "currency_id", "currency", "amount" } );
-		
-		if not pAccountInfo then
-			return "Не удалось получить информацию о счёте";
-		end
-		
-		if pChar:TakeMoney( iAmount ) then
-			if not g_pGame:GetBankManager():GiveMoney( sBankAccountID, ( iAmount * pAccountInfo.currency_rate ), "Пополнение средств счёта" ) then
-				pChar:GiveMoney( iAmount );
-				
-				return TEXT_DB_ERROR;
-			end
-			
-			pAccountInfo.amount = pAccountInfo.amount + ( iAmount * pAccountInfo.currency_rate );
-			
-			return pAccountInfo;
-		end
-		
-		return "У Вас нет столько денег";
-	end
-	
-	return "Неверные данные";
-end
-
-function CClientRPC:Bank__Withdraw( sAmount, sBankAccountID, sReason )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local iAmount = sAmount:ToNumber();
-	
-	if iAmount and iAmount > 0 then
-		local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "currency_id", "currency", "amount", "locked" } );
-		
-		if pAccountInfo then
-			if pAccountInfo.locked == NULL then
-				if pAccountInfo.owner_id == pChar:GetID() then
-					if pAccountInfo.amount < iAmount then
-						return "На Вашем счету недостаточно средств";
-					end
-					
-					if not sReason then
-						sReason = "ATM " + GetZoneName( self:GetPosition() );
-					else
-						sReason = "Списание средств со счёта: " + sReason;
-					end
-					
-					if not g_pGame:GetBankManager():TakeMoney( sBankAccountID, iAmount, sReason ) then
-						return TEXT_DB_ERROR;
-					end
-					
-					local fRate = pAccountInfo.currency_rate + (int)(pAccountInfo.currency_id ~= "USD");
-					
-					if fRate ~= 0.0 then
-						pChar:GiveMoney( iAmount / fRate );
-					end
-					
-					pAccountInfo.amount = pAccountInfo.amount - iAmount;
-					
-					return pAccountInfo;
-				end
-				
-				return "У Вас нет прав на снятие средств с этого счёта";
-			end
-			
-			return "Операция не может быть выполнена: аккаунт заблокирован";
-		end
-		
-		return "Не удалось получить информацию о счёте";
-	end
-	
-	return "Неверные данные";
-end
-
-function CClientRPC:Bank__GetLog( sBankAccountID )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "owner_id", "currency_id", "amount", "locked" } );
-	
-	if not pAccountInfo then
-		return "Не удалось получить информацию о счёте";
-	end
-	
-	if pAccountInfo.faction_id then
-		local pFaction	= g_pGame:GetFactionManager():Get( pAccountInfo.faction_id );
-		
-		if not pFaction then
-			return "Не удалось получить данные о организации";
-		end
-		
-		if not pFaction:TestRight( pChar, eFactionRight.BANK_LOG ) then
-			return "У Вас нет прав на просмотр истории этого счёта";
-		end
-	else
-		if pAccountInfo.owner_id ~= pChar:GetID() then
-			return "У Вас нет прав на просмотр истории этого счёта";
-		end
-	end
-	
-	return g_pGame:GetBankManager():GetLog( sBankAccountID, 30 );
-end
-
-function CClientRPC:Bank__CreateAccount( sType, sCurrencyID, iFactionID, sCard )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	if sType == "none" or sType == "faction" then
-		local pFaction = NULL;
-		
-		if sType == "faction" then
-			pFaction = g_pGame:GetFactionManager():Get( iFactionID );
-			
-			if pFaction == NULL then
-				return "Организации с таким именем не существует";
-			end
-			
-			if pFaction.m_sBankAccountID == "0" then
-				return "Для этой организации уже создан счёт";
-			end
-		end
-		
-		local pCurrency = g_pGame:GetBankManager().m_Currencies[ sCurrencyID ];
-		
-		if pCurrency == NULL then
-			return "Неверная валюта";
-		end
-		
-		local sBankAccountID = g_pGame:GetBankManager():CreateAccount( pCurrency.Code, sType, pChar, pFaction and pFaction:GetID() );
-		
-		if not sBankAccountID then
-			return TEXT_DB_ERROR;
-		end
-		
-		if pFaction then
-			if not g_pDB:Query( "UPDATE " + DBPREFIX + "factions SET bank_acc_id = %q WHERE id = %d", sBankAccountID, pFaction:GetID() ) then
-				Debug( g_pDB:Error(), 1 );
-				
-				return TEXT_DB_ERROR;
-			end
-			
-			pFaction.m_sBankAccountID	= sBankAccountID;
-		end
-	elseif sType == "card" then
-		local CardTypes	=
-		{
-			visa			= true;
-			mastercard		= true;
-			americanexpress	= true;
-		};
-		
-		if not CardTypes[ sCard ] then
-			return "Неизвестный тип карты";
-		end
-		
-		local pDate				= CDateTime();
-		
-		pDate.m_pTime.sse		= pDate.m_pTime.sse + 15778463; -- 6 месяцев
-		
-		local sBankAccountID	= g_pGame:GetBankManager():CreateAccount( NULL, sCard, pChar, NULL );
-		local sPIN				= ( "%04d" ):format( math.random( 9999 ) );
-		
-		local pItemData		=
-		{
-			m_sID			= sBankAccountID;
-			m_sPIN			= md5( sPIN );
-			m_sExpiryDate	= pDate:Format( "d f Y" );
-		};
-		
-		pChar:GiveItem( "bank_card_" + sCard, 0, 100.0, pItemData );
-		
-		pChar.m_pClient:MessageBox( NULL, "Банковская карточка создана\n\nPIN-код Вашей карточки: " + sPIN, "Операция выполнена успешно", MessageBoxButtons.OK, MessageBoxIcon.Information );
-	else
-		return "Не верный тип счёта";
-	end
-	
-	return g_pGame:GetBankManager():GetInfo( pChar, CBank.m_sImportFields );
-end
-
-function CClientRPC:Bank__GetAccounts()
-	local pChar = self:GetChar();
-	
-	if pChar then
-		local Accounts = g_pGame:GetBankManager():GetInfo( pChar, CBank.m_sImportFields );
-		
-		return Accounts;
-	end
-	
-	return AsyncQuery.UNAUTHORIZED;
-end
-
-function CClientRPC:Bank__GetCurrencies()
-	if self:IsInGame() then
-		local pResult = g_pDB:Query( "SELECT id, name, rate FROM " + DBPREFIX + "currencies ORDER BY id ASC" );
-		
-		if pResult then
-			local Array = pResult:GetArray();
-			
-			delete ( pResult );
-			
-			return Array;
-		end
-	end
-end
-
-function CClientRPC:Bank__GetFactions( aFields )
-	local pChar = self:GetChar();
-	
-	if pChar then
-		local Factions = {};
-		
-		for i, pFaction in pairs( g_pGame:GetFactionManager():GetAll() ) do
-			if pFaction.m_iOwnerID == pChar:GetID() then
-				if aFields then
-					local aFaction = {};
-					
-					for i, key in ipairs( aFields ) do
-						aFaction[ key ] = pFaction[ key ];
-					end
-					
-					table.insert( Factions, aFaction );
-				else
-					table.insert( Factions, pFaction );
-				end
-			end
-		end
-		
-		return Factions;
-	end
-end
-
-function CClientRPC:Bank__Buy( sItemType, iItemID, sBankAccountID, sPIN )
-	local pChar = self:GetChar();
-	
-	if not pChar then
-		return AsyncQuery.UNAUTHORIZED;
-	end
-	
-	local pAccountInfo = NULL;
-	
-	if sBankAccountID == "Оплата наличными" then
-		pAccountInfo = { id = 0; owner_id = pChar:GetID(); amount = pChar:GetMoney(); locked = NULL };
-	else
-		if sPIN then
-			pAccountInfo = CClientRPC.Bank__OpenCard( self, sBankAccountID, sPIN );
-			
-			if type( pAccountInfo ) ~= "table" then
-				return pAccountInfo;
-			end
-		else
-			pAccountInfo = g_pGame:GetBankManager():GetInfo( sBankAccountID, { "id", "type", "faction_id", "owner_id", "amount", "locked" } );
-		end
-	end
-	
-	if not pAccountInfo then
-		return "Не удалось получить информацию о счёте";
-	end
-	
-	if pAccountInfo.locked then
-		return "Этот счёт заблокирован";
-	end
-	
-	if sItemType == "Property" then
-		local pProperty = g_pGame:GetInteriorManager():Get( iItemID );
-		
-		if pProperty then
-			if not pProperty:GetInt() then
-				return TEXT_INTERIORS_CORRUPT;
-			end
-			
-			if pProperty then
-				if pProperty:IsElementInside( self ) or pProperty.m_pOutsideMarker:GetPosition():Distance( pChar:GetPosition() ) < 5.0 then
-					if pProperty:GetType() == INTERIOR_TYPE_NONE then
-						return "Данная собственность недоступна для покупки";
-					end
-					
-					local iPrice = pProperty:GetPrice();
-					
-					if iPrice <= 0 then
-						return "Данная собственность не продаётся";
-					end
-					
-					if pAccountInfo.amount < iPrice then
-						return TEXT_NOT_ENOUGH_MONEY;
-					end
-					
-					if pAccountInfo.id == 0 then
-						if not pChar:TakeMoney( iPrice, "Покупка собственности #" + pProperty:GetID() ) then
-							return TEXT_NOT_ENOUGH_MONEY;
-						end
-					else
-						if not g_pGame:GetBankManager():TakeMoney( sBankAccountID, iPrice, "Покупка собственности #" + pProperty:GetID() ) then					
-							return TEXT_DB_ERROR;
-						end
-					end
-					
-					if pProperty.m_iFactionID ~= 0 then
-						local pFaction = g_pGame:GetFactionManager():Get( pProperty.m_iFactionID );
-						
-						if pFaction then
-							g_pGame:GetBankManager():GiveMoney( pFaction.m_sBankAccountID, iPrice, "Продана собственность #" + pProperty:GetID() + ", покупатель: " + sBankAccountID );
-						end
-					elseif pProperty.m_iCharacterID ~= 0 then
-						local pChar = NULL;
-						
-						-- TODO: while!
-						for i, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
-							local pChr = pPlr:GetChar();
-							
-							if pChr and pChr:GetID() == pProperty.m_iCharacterID then
-								pChar = pChr;
-								
-								break;
-							end
-						end
-						
-						if pChar then
-							pChar:GiveMoney( iPrice, "Продана собственность #" + pProperty:GetID() + ", покупатель: " + sBankAccountID );
-							
-							pChar.m_pClient:Hint( "Собственность продана", "Выставленная на продажу собственность #" + pProperty:GetID() + " куплена за " + iPrice, "info" );
-						else
-							if g_pDB:Query( "UPDATE " + DBPREFIX + "characters SET money = money + " + iPrice + " WHERE id = " + pProperty.m_iCharacterID ) then
-								g_pMoneyLog:Write( "[" + pProperty.m_iCharacterID + "]" + iPrice + " (Продана собственность #" + pProperty:GetID() + ", покупатель: " + sBankAccountID + ")" );
-							else
-								Debug( g_pDB:Error(), 1 );
-							end
-						end
-					end
-					
-					local iFactionID = 0;
-					
-					if pAccountInfo.type == "faction" then
-						local pFaction = g_pGame:GetFactionManager():Get( pAccountInfo.faction_id );
-						
-						if pFaction then
-							iFactionID = pFaction:GetID();
-						end
-					end
-					
-					if not g_pDB:Query( "UPDATE " + DBPREFIX + "interiors SET character_id = %d, faction_id = %d, price = 0 WHERE id = %d", pChar:GetID(), iFactionID, pProperty:GetID() ) then
-						Debug( g_pDB:Error() );
-						
-						return TEXT_DB_ERROR;
-					end
-					
-					pProperty.m_iCharacterID	= pChar:GetID();
-					pProperty.m_iFactionID		= iFactionID;
-					pProperty.m_iPrice			= 0;
-					
-					pProperty:UpdateMarker();
-					pProperty:Update3DText();
-					pProperty:UpdateBlip();
-					
-					g_pServer:Print( "PROPERTY: %s (%d) bought property %q (%d) for $%d", pChar:GetName(), pChar:GetID(), pProperty:GetName(), pProperty:GetID(), iPrice );
-					
-					return true;
-				end
-				
-				return "Собственность слишком далеко";
-			end
-		end
-		
-		return "Собственности которую вы пытаетесь купить - не существует";
-	elseif sItemType == "Vehicle" then
-		return true;
-	end
-	
-	return AsyncQuery.BAD_REQUEST;
-end
-
 function CClientRPC:Faction_AddDept( sDeptName, iFactionID )
 	local pChar = self:GetChar();
 	
@@ -1295,7 +736,7 @@ function CClientRPC:Faction_AddDept( sDeptName, iFactionID )
 		return "Invalid faction id";
 	end
 	
-	if sDeptName:utfLen() < 5 then
+	if sDeptName:utfLen() < 4 then
 		return "Слишком короткое название отдела";
 	end
 	
@@ -1305,10 +746,14 @@ function CClientRPC:Faction_AddDept( sDeptName, iFactionID )
 		end
 	else	
 		for i = 1, sDeptName:utfLen() do
-			local iChar = sDeptName:utfSub( i, i ):utfCode();
+			local sChar = sDeptName:utfSub( i, i );
 			
-			if not ( ( iChar >= 65 and iChar <= 90 ) or ( iChar >= 97 and iChar <= 122 ) or ( iChar >= 1040 and iChar <= 1103 ) or iChar == 32 or iChar == 44 or iChar == 46 ) then
-				return "Название отдела содержит запрещённые символы";
+			if not tonumber( sChar ) then
+				local iChar = sChar:utfCode();
+				
+				if not ( ( iChar >= 65 and iChar <= 90 ) or ( iChar >= 97 and iChar <= 122 ) or ( iChar >= 1040 and iChar <= 1103 ) or iChar == 32 or iChar == 44 or iChar == 46 ) then
+					return "Название отдела содержит запрещённые символы";
+				end
 			end
 		end
 	end
@@ -1372,10 +817,14 @@ function CClientRPC:Faction_EditDept( sDeptName, iDeptID, iFactionID )
 		end
 	else	
 		for i = 1, sDeptName:utfLen() do
-			local iChar = sDeptName:utfSub( i, i ):utfCode();
+			local sChar = sDeptName:utfSub( i, i );
 			
-			if not ( ( iChar >= 65 and iChar <= 90 ) or ( iChar >= 97 and iChar <= 122 ) or ( iChar >= 1040 and iChar <= 1103 ) or iChar == 32 or iChar == 44 or iChar == 46 ) then
-				return "Название отдела содержит запрещённые символы";
+			if not tonumber( sChar ) then
+				local iChar = sChar:utfCode();
+				
+				if not ( ( iChar >= 65 and iChar <= 90 ) or ( iChar >= 97 and iChar <= 122 ) or ( iChar >= 1040 and iChar <= 1103 ) or iChar == 32 or iChar == 44 or iChar == 46 ) then
+					return "Название отдела содержит запрещённые символы";
+				end
 			end
 		end
 	end

@@ -95,11 +95,6 @@ class: CUIBankPayment ( CGUI )
 		this.Window:Delete();
 		this.Window = NULL;
 		
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this:HideCursor();
 	end;
 	
@@ -142,7 +137,7 @@ class: CUIBankPayment ( CGUI )
 	end;
 };
 
-class: CUIBankPIN ( CGUI )
+class: CUIBankPIN ( CGUI, CUIAsyncQuery )
 {
 	CUIBankPIN		= function( this, sAccountID )
 		this.Window		= this:CreateWindow( "Введите PIN-код" )
@@ -210,27 +205,15 @@ class: CUIBankPIN ( CGUI )
 			Height	= this.Window.ButtonCancel.Height;
 		
 			Click	= function()
-				if this.pAsyncQuery == NULL then
-					this.Window:SetEnabled( false );
-					
-					this.pAsyncQuery = AsyncQuery( "Bank__OpenCard", sAccountID, this.Window.PIN:GetText() );
-					
-					function this.pAsyncQuery:Complete( iStatusCode, Data )
-						if iStatusCode == AsyncQuery.OK then
-							if type( Data ) == "string" then
-								MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-							else
-								if this.OnAccept then
-									this:OnAccept( Data );
-								end
-							end
-						elseif type( Data ) == "string" then
-							MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-						
-						this.Window.ButtonCancel.Click();
+				local function Complete( Data )
+					if this.OnAccept then
+						this:OnAccept( Data );
 					end
+					
+					this.Window.ButtonCancel.Click();
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "OpenCard", sAccountID, this.Window.PIN:GetText() );
 			end;
 		};
 		
@@ -246,16 +229,13 @@ class: CUIBankPIN ( CGUI )
 		this.Window:Delete();
 		this.Window = NULL;
 		
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankATM ( CGUI )
+class: CUIBankATM ( CGUI, CUIAsyncQuery )
 {
 	static
 	{
@@ -446,27 +426,7 @@ class: CUIBankATM ( CGUI )
 			local sID = this.Window.CardList:GetItemText( iItem, this.Window.CardList[ "ID" ] );
 			
 			if sID then
-				if this.pAsyncQuery == NULL then
-					this.PinDialog:SetEnabled( false );
-					
-					this.pAsyncQuery = AsyncQuery( "Bank__OpenCard", sID, this.PinDialog.Password:GetText() );
-					
-					function this.pAsyncQuery:Complete( iStatusCode, Data )
-						this.pAsyncQuery = NULL;
-						
-						this.PinDialog.ButtonCancel.Click();
-						
-						if iStatusCode == AsyncQuery.OK then
-							if type( Data ) == "string" then
-								MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-							else
-								this.Window.CardInfo.SetData( Data );
-							end
-						elseif type( Data ) == "string" then
-							MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-					end
-				end
+				this:AsyncQuery( this.Window.CardInfo.SetData, "CBankManager", "OpenCard", sID, this.PinDialog.Password:GetText() );
 			end
 		end
 		
@@ -484,15 +444,12 @@ class: CUIBankATM ( CGUI )
 		this.Window:Delete();
 		this.Window = NULL;
 		
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.PinDialog:Delete();
 		this.PinDialog	= NULL;
 		
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 
 	FillList	= function( this, Cards )
@@ -527,7 +484,7 @@ class: CUIBankATM ( CGUI )
 	end;
 };
 
-class: CUIBankATMWithdraw( CGUI )
+class: CUIBankATMWithdraw( CGUI, CUIAsyncQuery )
 {
 	CUIBankATMWithdraw		= function( this, pAccount )
 		this.Window		= this:CreateWindow( "Снятие средств со счёта" )
@@ -555,35 +512,15 @@ class: CUIBankATMWithdraw( CGUI )
 			Height	= 30;
 			
 			Click	= function()
-				if this.pAsyncQuery then return; end
-				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
-				this.pAsyncQuery = AsyncQuery( "Bank__Withdraw", this.Window.EditValue:GetText(), pAccount.id, NULL );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if type( Data ) == "string" then
-							MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						else
-							if this.Parent then
-								this.Parent.Window.CardInfo.SetData( Data );
-							end
-						end
-					elseif type( Data ) == "string" then
-						MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				local function Complete( Data )
+					if this.Parent then
+						this.Parent.Window.CardInfo.SetData( Data );
 					end
 					
 					delete ( this );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "Withdraw", this.Window.EditValue:GetText(), pAccount.id, NULL );
 			end;
 		};
 		
@@ -605,14 +542,11 @@ class: CUIBankATMWithdraw( CGUI )
 	end;
 	
 	_CUIBankATMWithdraw		= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
@@ -942,7 +876,7 @@ class: CUIBank ( CGUI )
 	end;
 };
 
-class: CUIBankCreateAccount ( CGUI )
+class: CUIBankCreateAccount ( CGUI, CUIAsyncQuery )
 {
 	CUIBankCreateAccount	= function( this )
 		this.Window		= this:CreateWindow( "Создание счёта" )
@@ -1057,22 +991,22 @@ class: CUIBankCreateAccount ( CGUI )
 				this:AddItem( "Загрузка ..." );
 				this.m_Factions = {};
 				
-				AsyncQuery( "Bank__GetFactions" ).Complete = function( _self, iStatusCode, Data )
+				local function Complete( Data )
 					this:Clear();
 					
-					if iStatusCode == AsyncQuery.OK and Data then
-						local iHeight = 25;
+					local iHeight = 25;
+					
+					for i, pFaction in ipairs( Data ) do
+						this:AddItem( pFaction.m_sName );
+						this.m_Factions[ i ] = pFaction;
 						
-						for i, pFaction in ipairs( Data ) do
-							this:AddItem( pFaction.m_sName );
-							this.m_Factions[ i ] = pFaction;
-							
-							iHeight = iHeight + 25;
-						end
-						
-						this:SetSize( 300, iHeight, false );
+						iHeight = iHeight + 25;
 					end
+					
+					this:SetSize( 300, iHeight, false );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "GetFactions" );
 			end;
 		};
 		
@@ -1102,20 +1036,16 @@ class: CUIBankCreateAccount ( CGUI )
 		this.Window.Faction:Lock();
 		this.Window.Card:Lock();
 		
-		this.pAsyncQuery = AsyncQuery( "Bank__GetCurrencies" );
-		
-		this.pAsyncQuery.Complete = function( _self, iStatusCode, Data )
-			if iStatusCode == AsyncQuery.OK and Data then
-				this.Window.Currency.m_Currencies = {};
-				
-				for i, pRow in ipairs( Data ) do
-					this.Window.Currency:AddItem( pRow.id + " (" + pRow.name + ")" );
-					this.Window.Currency.m_Currencies[ i ] = pRow;
-				end
-			end
+		local function Complete( Data )
+			this.Window.Currency.m_Currencies = {};
 			
-			this.pAsyncQuery = NULL;
+			for i, pRow in ipairs( Data ) do
+				this.Window.Currency:AddItem( pRow.id + " (" + pRow.name + ")" );
+				this.Window.Currency.m_Currencies[ i ] = pRow;
+			end
 		end
+		
+		this:AsyncQuery( Complete, "CBankManager", "GetCurrencies" );
 		
 		this.Window.ButtonOk		= this.Window:CreateButton( "Создать" )
 		{
@@ -1125,8 +1055,6 @@ class: CUIBankCreateAccount ( CGUI )
 			Height	= 30;
 			
 			Click	= function()
-				if this.pAsyncQuery then return; end
-				
 				local sType, sCurrencyID, iFactionID, sCard = "none", "USD", 0, NULL;
 				
 				local iItemType			= this.Window.Type:GetSelected() + 1;
@@ -1178,31 +1106,11 @@ class: CUIBankCreateAccount ( CGUI )
 					return;
 				end
 				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
-				this.pAsyncQuery = AsyncQuery( "Bank__CreateAccount", sType, sCurrencyID, iFactionID, sCard );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if type( Data ) == "table" then
-							this.Parent:FillList( Data );
-							
-							delete ( this );
-						elseif type( Data ) == "string" then
-							MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-					else
-						MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
-					end
+				local function Complete( Data )
+					this.Parent:FillList( Data );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "CreateAccount", sType, sCurrencyID, iFactionID, sCard );
 			end;
 		};
 		
@@ -1224,18 +1132,15 @@ class: CUIBankCreateAccount ( CGUI )
 	end;
 	
 	_CUIBankCreateAccount	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankDeposit ( CGUI )
+class: CUIBankDeposit ( CGUI, CUIAsyncQuery )
 {
 	CUIBankDeposit	= function( this, pAccount )
 		this.Window		= this:CreateWindow( "Пополнение средств счёта" )
@@ -1263,35 +1168,15 @@ class: CUIBankDeposit ( CGUI )
 			Height	= 30;
 			
 			Click	= function()
-				if this.pAsyncQuery then return; end
-				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
-				this.pAsyncQuery = AsyncQuery( "Bank__Deposit", this.Window.EditValue:GetText(), pAccount.id );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if type( Data ) == "table" then
-							if this.Parent and this.Parent.m_Items[ Data.id ] then
-								this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
-							end
-						elseif type( Data ) == "string" then
-							return MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-					else
-						return MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				local function Complete( Data )
+					if this.Parent and this.Parent.m_Items[ Data.id ] then
+						this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
 					end
 					
 					delete ( this );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "Deposit", this.Window.EditValue:GetText(), pAccount.id );
 			end;
 		};
 		
@@ -1313,18 +1198,15 @@ class: CUIBankDeposit ( CGUI )
 	end;
 	
 	_CUIBankDeposit	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankWithdraw ( CGUI )
+class: CUIBankWithdraw ( CGUI, CUIAsyncQuery )
 {
 	CUIBankWithdraw 	= function( this, pAccount )
 		this.Window		= this:CreateWindow( "Снятие средств со счёта" )
@@ -1369,35 +1251,15 @@ class: CUIBankWithdraw ( CGUI )
 			Height	= 30;
 			
 			Click	= function()
-				if this.pAsyncQuery then return; end
-				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
-				this.pAsyncQuery = AsyncQuery( "Bank__Withdraw", this.Window.EditValue:GetText(), pAccount.id, this.Window.MemoReason:GetText() );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if type( Data ) == "table" then
-							if this.Parent and this.Parent.m_Items[ Data.id ] then
-								this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
-							end
-						elseif type( Data ) == "string" then
-							return MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-					else
-						return MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				function Complete( Data )
+					if this.Parent and this.Parent.m_Items[ Data.id ] then
+						this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
 					end
 					
 					delete ( this );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "Withdraw", this.Window.EditValue:GetText(), pAccount.id, this.Window.MemoReason:GetText() );
 			end;
 		};
 		
@@ -1419,18 +1281,15 @@ class: CUIBankWithdraw ( CGUI )
 	end;
 	
 	_CUIBankWithdraw	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankTransfer ( CGUI )
+class: CUIBankTransfer ( CGUI, CUIAsyncQuery )
 {
 	CUIBankTransfer		= function( this, pAccount )
 		this.Window		= this:CreateWindow( "Перевод средств на другой счёт" )
@@ -1508,41 +1367,21 @@ class: CUIBankTransfer ( CGUI )
 			Height	= 30;
 			
 			Click	= function()
-				if this.pAsyncQuery then return; end
-				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
 				local aTargetAcc = {};
 				
 				for i = 1, 4 do
 					table.insert( aTargetAcc, this.Window.EditID[ i ]:GetText() );
 				end
 				
-				this.pAsyncQuery = AsyncQuery( "Bank__Transfer", this.Window.EditValue:GetText(), pAccount.id, table.concat( aTargetAcc, " " ), this.Window.MemoReason:GetText() );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if type( Data ) == "table" then
-							if this.Parent and this.Parent.m_Items[ Data.id ] then
-								this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
-							end
-						elseif type( Data ) == "string" then
-							return MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
-						end
-					else
-						return MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				function Complete( Data )
+					if this.Parent and this.Parent.m_Items[ Data.id ] then
+						this.Parent.m_Items[ Data.id ].LabelAmount:SetValue( Data.amount, Data.currency_id );
 					end
 					
 					delete ( this );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "Transfer", this.Window.EditValue:GetText(), pAccount.id, table.concat( aTargetAcc, " " ), this.Window.MemoReason:GetText() );
 			end;
 		};
 		
@@ -1564,18 +1403,15 @@ class: CUIBankTransfer ( CGUI )
 	end;
 	
 	_CUIBankTransfer	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankLock ( CGUI )
+class: CUIBankLock ( CGUI, CUIAsyncQuery )
 {
 	CUIBankLock		= function( this, pAccount, bClose )
 		this.Window		= this:CreateWindow( ( bClose and "Закрытие" or "Блокировка" ) + " счёта" )
@@ -1622,39 +1458,19 @@ class: CUIBankLock ( CGUI )
 			Height		= 30;
 			
 			Click		= function()
-				if this.pAsyncQuery then return; end
-				
-				this.Window:SetEnabled( false );
-				
-				Ajax:ShowLoader( 2 );
-				
-				this.pAsyncQuery = AsyncQuery( "Bank__LockAccount", pAccount.id, this.Window.Reason:GetText(), bClose );
-				
-				function this.pAsyncQuery:Complete( iStatusCode, Data )
-					Ajax:HideLoader();
-					
-					this.Window:SetEnabled( true );
-					
-					this.pAsyncQuery = NULL;
-					
-					if iStatusCode == AsyncQuery.OK then
-						if Data == true then
-							if this.Parent and this.Parent.m_Items[ Data.id ] then
-								if bClose then
-									this.Parent.m_Items[ Data.id ]:SetEnabled( false );
-								else
-									this.Parent.m_Items[ Data.id ]:SetLocked( true );
-								end
-							end
-						elseif type( Data ) == "string" then
-							return MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				local function Complete( Data )
+					if this.Parent and this.Parent.m_Items[ Data.id ] then
+						if bClose then
+							this.Parent.m_Items[ Data.id ]:SetEnabled( false );
+						else
+							this.Parent.m_Items[ Data.id ]:SetLocked( true );
 						end
-					else
-						return MessageBox:Show( Data, "Failed", MessageBoxButtons.OK, MessageBoxIcon.Error );
 					end
 					
 					delete ( this );
 				end
+				
+				this:AsyncQuery( Complete, "CBankManager", "LockAccount", pAccount.id, this.Window.Reason:GetText(), bClose );
 			end;
 		};
 		
@@ -1676,18 +1492,15 @@ class: CUIBankLock ( CGUI )
 	end;
 	
 	_CUIBankLock	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankCurrencies ( CGUI )
+class: CUIBankCurrencies ( CGUI, CUIAsyncQuery )
 {
 	CUIBankCurrencies	= function( this )
 		this.Window		= this:CreateWindow( "Курсы валют" )
@@ -1728,22 +1541,20 @@ class: CUIBankCurrencies ( CGUI )
 			end;
 		};
 		
-		this.pAsyncQuery = AsyncQuery( "Bank__GetCurrencies" );
-		
-		this.pAsyncQuery.Complete = function( _self, iStatusCode, Data )
-			if iStatusCode == AsyncQuery.OK and Data then
-				for i, pRow in ipairs( Data ) do
-					local iRow = this.Window.List:AddRow();
-			
-					if iRow then
-						this.Window.List:SetItemText( iRow, this.Window.List[ "Код" ],		pRow.id,		false, false );
-						this.Window.List:SetItemText( iRow, this.Window.List[ "Название" ],	pRow.name,		false, false );
-						this.Window.List:SetItemText( iRow, this.Window.List[ "Покупка" ],	( "%.3f" ):format( pRow.rate ),			false, false );
-						this.Window.List:SetItemText( iRow, this.Window.List[ "Продажа" ],	( "%.3f" ):format( pRow.rate + 1.0 ),	false, false );
-					end
+		local function Complete( Data )
+			for i, pRow in ipairs( Data ) do
+				local iRow = this.Window.List:AddRow();
+				
+				if iRow then
+					this.Window.List:SetItemText( iRow, this.Window.List[ "Код" ],		pRow.id,		false, false );
+					this.Window.List:SetItemText( iRow, this.Window.List[ "Название" ],	pRow.name,		false, false );
+					this.Window.List:SetItemText( iRow, this.Window.List[ "Покупка" ],	( "%.3f" ):format( pRow.rate ),			false, false );
+					this.Window.List:SetItemText( iRow, this.Window.List[ "Продажа" ],	( "%.3f" ):format( pRow.rate + 1.0 ),	false, false );
 				end
 			end
 		end
+		
+		this:AsyncQuery( Complete, "CBankManager", "GetCurrencies" );
 		
 		this.Window:SetVisible( true );
 		this.Window:BringToFront();
@@ -1751,18 +1562,15 @@ class: CUIBankCurrencies ( CGUI )
 	end;
 	
 	_CUIBankCurrencies	= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
 
-class: CUIBankLog ( CGUI )
+class: CUIBankLog ( CGUI, CUIAsyncQuery )
 {
 	CUIBankLog	 	= function( this, pAccount	)
 		this.Window		= this:CreateWindow( "История операций" )
@@ -1803,37 +1611,29 @@ class: CUIBankLog ( CGUI )
 			end;
 		};
 		
-		this.pAsyncQuery = AsyncQuery( "Bank__GetLog", pAccount.id );
-		
-		this.pAsyncQuery.Complete = function( _self, iStatusCode, Data )
-			if iStatusCode == AsyncQuery.OK then
-				if type( Data ) == "table" then
-					for i, pRow in ipairs( Data ) do
-						local iRow = this.Window.List:AddRow();
-						
-						if iRow then
-							this.Window.List:SetItemText( iRow, this.Window.List[ "Номер" ],			(int)(pRow.id),			false, false );
-							this.Window.List:SetItemText( iRow, this.Window.List[ "Тип операции" ],		(string)(pRow.text),	false, false );
-							this.Window.List:SetItemText( iRow, this.Window.List[ "Дата" ],				pRow.date,				false, false );
-							
-							if pRow.amount then
-								this.Window.List:SetItemText( iRow, this.Window.List[ "Сумма" ], ( "%.3f" ):format( pRow.amount ),	false, false );
-								
-								if pRow.amount < 0.0 then
-									this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	200, 0, 0 );
-								elseif pRow.amount > 0.0 then
-									this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	0, 200, 0 );
-								else
-									this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	200, 200, 200 );
-								end
-							end
-						end
+		local function Complete( Data )
+			for i, pRow in ipairs( Data ) do
+				local iRow = this.Window.List:AddRow();
+				
+				this.Window.List:SetItemText( iRow, this.Window.List[ "Номер" ],			(int)(pRow.id),			false, false );
+				this.Window.List:SetItemText( iRow, this.Window.List[ "Тип операции" ],		(string)(pRow.text),	false, false );
+				this.Window.List:SetItemText( iRow, this.Window.List[ "Дата" ],				pRow.date,				false, false );
+				
+				if pRow.amount then
+					this.Window.List:SetItemText( iRow, this.Window.List[ "Сумма" ], ( "%.3f" ):format( pRow.amount ),	false, false );
+					
+					if pRow.amount < 0.0 then
+						this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	200, 0, 0 );
+					elseif pRow.amount > 0.0 then
+						this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	0, 200, 0 );
+					else
+						this.Window.List:SetItemColor( iRow, this.Window.List[ "Сумма" ],	200, 200, 200 );
 					end
-				elseif type( Data ) == "string" then
-					return MessageBox:Show( Data, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error );
 				end
 			end
 		end
+		
+		this:AsyncQuery( Complete, "CBankManager", "GetLog", pAccount.id );
 		
 		this.Window:SetVisible( true );
 		this.Window:BringToFront();
@@ -1841,13 +1641,10 @@ class: CUIBankLog ( CGUI )
 	end;
 	
 	_CUIBankLog		= function( this )
-		if this.pAsyncQuery then
-			delete ( this.pAsyncQuery );
-			this.pAsyncQuery = NULL;
-		end
-		
 		this.Window:Delete();
 		this.Window = NULL;
 		this:HideCursor();
+		
+		this:_CUIAsyncQuery();
 	end;
 };
