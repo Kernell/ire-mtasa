@@ -150,7 +150,11 @@
   
   <file src="Resources/Fonts/micross.ttf"/>
   
-  <file src="Resources/Images/Arrow.png" />
+  <file src="Resources/Cursors/Arrow.png" />
+  <file src="Resources/Cursors/Move.png" />
+  <file src="Resources/Cursors/Link.png" />
+  <file src="Resources/Cursors/Text.png" />
+  <file src="Resources/Cursors/Unavailable.png" />
   
   <file src="Resources/Images/radial_menu.png" />
   

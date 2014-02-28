@@ -80,36 +80,36 @@ end
 
 -- Buttons
 function CGUI:CreateButton( btn_sCaption )
-	return function( btn_tData )
-		local instance 		= btn_tData;
+	return function( this )
+		this.Width		= this.Width or 80;
+		this.Height		= this.Height or 30;
 		
-		btn_tData.Width		= btn_tData.Width or 80;
-		btn_tData.Height	= btn_tData.Height or 30;
-		
-		local bRelative = btn_tData.X <= 1 and btn_tData.Y <= 1 and btn_tData.Width <= 1 and btn_tData.Height <= 1;
+		local bRelative = this.X <= 1 and this.Y <= 1 and this.Width <= 1 and this.Height <= 1;
 		
 		if self.__instance then
-			instance.__instance  	= guiCreateButton( btn_tData.X, btn_tData.Y, btn_tData.Width, btn_tData.Height, btn_sCaption, bRelative, self.__instance );
+			this.__instance  	= guiCreateButton( this.X, this.Y, this.Width, this.Height, btn_sCaption, bRelative, self.__instance );
 			
-			instance.Parent			= self;
+			this.Parent			= self;
 		else
-			instance.__instance  	= guiCreateButton( btn_tData.X, btn_tData.Y, btn_tData.Width, btn_tData.Height, btn_sCaption, bRelative );
+			this.__instance  	= guiCreateButton( this.X, this.Y, this.Width, this.Height, btn_sCaption, bRelative );
 		end
+		
+		CElement.AddToList( this );
 
-		addEventHandler( 'onClientGUIClick', instance.__instance, function( ... ) if instance.Click then instance.Click( ... ) end end, false );
-		addEventHandler( 'onClientMouseEnter', instance.__instance, function( ... ) if instance.MouseEnter then instance.MouseEnter( ... ) end end, false );
-		addEventHandler( 'onClientMouseLeave', instance.__instance, function( ... ) if instance.MouseLeave then instance.MouseLeave( ... ) end end, false );
+		addEventHandler( 'onClientGUIClick', 	this.__instance, function( ... ) if this.Click then this.Click( ... ) end end, false );
+		addEventHandler( 'onClientMouseEnter', 	this.__instance, function( ... ) if this.MouseEnter then this.MouseEnter( ... ) end end, false );
+		addEventHandler( 'onClientMouseLeave', 	this.__instance, function( ... ) if this.MouseLeave then this.MouseLeave( ... ) end end, false );
 
-		setmetatable	( instance, self );
+		setmetatable	( this, self );
 		self.__index 	= self;
 		
-		if btn_tData.Font then
-			instance:SetFont( btn_tData.Font );
+		if this.Font then
+			this:SetFont( this.Font );
 		end
 		
-		instance:SetEnabled( btn_tData.Enabled == NULL or btn_tData.Enabled == true );
+		this:SetEnabled( this.Enabled == NULL or this.Enabled == true );
 		
-		return instance;
+		return this;
 	end
 end
 
@@ -123,6 +123,8 @@ function CGUI:CreateCheckBox( sCaption )
 		else
 			this.__instance  	= guiCreateCheckBox( this.X, this.Y, this.Width, this.Height, sCaption, this.Selected, bRelative );
 		end
+		
+		CElement.AddToList( this );
 		
 		function this:GetSelected()
 			return guiCheckBoxGetSelected( self.__instance );
@@ -186,6 +188,8 @@ function CGUI:CreateComboBox( cmb_sCaption )
 			this.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative ); 
 		end
 		
+		CElement.AddToList( this );
+		
 		function this:AddItem( value )
 			return guiComboBoxAddItem( self.__instance, value ); -- int
 		end
@@ -236,6 +240,8 @@ end
 -- Edit fields
 function CGUI:CreateEdit( sCaption )
 	return function( this )
+		this.Cursor	= this.Cursor or "Text";
+		
 		local bRelative = this.X <= 1 and this.Y <= 1 and this.Width <= 1 and this.Height <= 1;
 
 		if self.__instance then
@@ -245,6 +251,8 @@ function CGUI:CreateEdit( sCaption )
 		else
 			this.__instance  	= guiCreateEdit( this.X, this.Y, this.Width, this.Height, sCaption, bRelative or false ); 
 		end
+		
+		CElement.AddToList( this );
 		
 		function this:SetMasked( status )
 			return guiEditSetMasked( self.__instance, status );
@@ -453,7 +461,7 @@ function CGUI:CreateGridList( grd_tData )
 	return function( grd_tColumns )
 		local relative = grd_tData[ 1 ] <= 1 and grd_tData[ 2 ] <= 1 and grd_tData[ 3 ]<= 1 and grd_tData[ 4 ]<= 1;
 		
-		local instance 		=
+		local this 		=
 		{
 			X		= grd_tData[ 1 ];
 			Y		= grd_tData[ 2 ];
@@ -463,150 +471,154 @@ function CGUI:CreateGridList( grd_tData )
 		};
 		
 		if self.__instance then
-			instance.__instance  	= guiCreateGridList( grd_tData[ 1 ], grd_tData[ 2 ], grd_tData[ 3 ], grd_tData[ 4 ], relative, self.__instance );
+			this.__instance  	= guiCreateGridList( grd_tData[ 1 ], grd_tData[ 2 ], grd_tData[ 3 ], grd_tData[ 4 ], relative, self.__instance );
 		else
-			instance.__instance  	= guiCreateGridList( grd_tData[ 1 ], grd_tData[ 2 ], grd_tData[ 3 ], grd_tData[ 4 ], relative );
+			this.__instance  	= guiCreateGridList( grd_tData[ 1 ], grd_tData[ 2 ], grd_tData[ 3 ], grd_tData[ 4 ], relative );
 		end
 		
-		function instance:AddColumn( title, width )
+		CElement.AddToList( this );
+		
+		function this:AddColumn( title, width )
 			self[ title ] = guiGridListAddColumn( self.__instance, title, width );
 			
 			return self[ title ];
 		end
 
-		function instance:AddRow()
+		function this:AddRow()
 			return guiGridListAddRow( self.__instance );
 		end
 
-		function instance:AutoSizeColumn( columnIndex )
+		function this:AutoSizeColumn( columnIndex )
 			return self, guiGridListAutoSizeColumn( self.__instance, columnIndex );
 		end
 
-		function instance:Clear()
+		function this:Clear()
 			return self, guiGridListClear( self.__instance );
 		end
 
-		function instance:GetItemData( rowIndex,  columnIndex )
+		function this:GetItemData( rowIndex,  columnIndex )
 			return guiGridListGetItemData( self.__instance, rowIndex,  columnIndex ); -- string
 		end
 
-		function instance:GetItemText( rowIndex, columnIndex )
+		function this:GetItemText( rowIndex, columnIndex )
 			return guiGridListGetItemText( self.__instance, rowIndex, columnIndex ); -- string
 		end
 
-		function instance:GetRowCount()
+		function this:GetRowCount()
 			return guiGridListGetRowCount( self.__instance ); -- int
 		end
 
-		function instance:GetSelectedItem()
+		function this:GetSelectedItem()
 			return guiGridListGetSelectedItem( self.__instance );
 		end
 
-		function instance:InsertRowAfter( rowIndex )
+		function this:InsertRowAfter( rowIndex )
 			return guiGridListInsertRowAfter( self.__instance, rowIndex ); -- int
 		end
 
-		function instance:RemoveColumn( columnIndex )
+		function this:RemoveColumn( columnIndex )
 			return self, guiGridListRemoveColumn( self.__instance, columnIndex ); -- bool
 		end
 
-		function instance:RemoveRow( rowIndex )
+		function this:RemoveRow( rowIndex )
 			return self, guiGridListRemoveRow( self.__instance, rowIndex ); -- bool
 		end
 
-		function instance:SetItemData( rowIndex, columnIndex, data )
+		function this:SetItemData( rowIndex, columnIndex, data )
 			return self, guiGridListSetItemData( self.__instance, rowIndex, columnIndex, data ); -- bool
 		end
 
-		function instance:SetItemText( rowIndex, columnIndex, text, section, number )
+		function this:SetItemText( rowIndex, columnIndex, text, section, number )
 			return self, guiGridListSetItemText( self.__instance, rowIndex, columnIndex, text, section or false, number or false );
 		end
 
-		function instance:SetScrollBars( horizontalBar, verticalBar )
+		function this:SetScrollBars( horizontalBar, verticalBar )
 			return self, guiGridListSetScrollBars( self.__instance, horizontalBar, verticalBar ); -- bool 
 		end
 
-		function instance:SetSelectedItem( rowIndex, columnIndex )
+		function this:SetSelectedItem( rowIndex, columnIndex )
 			return self, guiGridListSetSelectedItem( self.__instance, rowIndex, columnIndex );
 		end
 
-		function instance:SetSelectionMode( mode )
+		function this:SetSelectionMode( mode )
 			return self, guiGridListSetSelectionMode( self.__instance, mode );
 		end
 
-		function instance:SetSortingEnabled( mode )
+		function this:SetSortingEnabled( mode )
 			return self, guiGridListSetSortingEnabled( self.__instance, mode );
 		end
 
-		function instance:GetSelectedCount()
+		function this:GetSelectedCount()
 			return guiGridListGetSelectedCount( self.__instance ); -- int
 		end
 
-		function instance:GetSelectedItems()
+		function this:GetSelectedItems()
 			return guiGridListGetSelectedItems( self.__instance ); -- table
 		end
 
-		function instance:SetColumnWidth( columnIndex, width, relative)
+		function this:SetColumnWidth( columnIndex, width, relative)
 			return self, guiGridListSetColumnWidth( self.__instance, columnIndex, width, relative or true ); -- bool
 		end
 
-		function instance:GetItemColor()
+		function this:GetItemColor()
 			return guiGridListGetItemColor( self.__instance, rowIndex, columnIndex ); -- int int int int 
 		end
 
-		function instance:SetItemColor( rowIndex, columnIndex, red, green, blue, alpha )
+		function this:SetItemColor( rowIndex, columnIndex, red, green, blue, alpha )
 			return self, guiGridListSetItemColor ( self.__instance, rowIndex, columnIndex, red, green, blue, alpha or 255 ); -- bool 
 		end
 		
 		if grd_tColumns then
 			for _, value in ipairs( grd_tColumns ) do
-				instance:AddColumn( value[ 1 ], value[ 2 ] );
+				this:AddColumn( value[ 1 ], value[ 2 ] );
 			end
 		end
 		
-		addEventHandler( 'onClientGUIClick', instance.__instance, function( ... ) if instance.Click then instance.Click( ... ) end end, false );
-		addEventHandler( 'onClientGUIDoubleClick', instance.__instance, function( ... ) if instance.DoubleClick then instance.DoubleClick( ... ) end end, false );
+		addEventHandler( 'onClientGUIClick', 		this.__instance, function( ... ) if this.Click 			then this.Click( ... ) 			end end, false );
+		addEventHandler( 'onClientGUIDoubleClick', 	this.__instance, function( ... ) if this.DoubleClick 	then this.DoubleClick( ... ) 	end end, false );
 		
-		setmetatable		( instance, self );
+		setmetatable		( this, self );
 		self.__index 		= self;
 
-		return instance;
+		return this;
 	end
 end
 
 -- Memos
-function CGUI:CreateMemo( mem_sText )
-	return function( mem_tData )
-		local relative = mem_tData.X <= 1 and mem_tData.Y <= 1 and mem_tData.Width <= 1 and mem_tData.Height <= 1;
+function CGUI:CreateMemo( sText )
+	return function( this )
+		this.Cursor	= this.Cursor or "Text";
 		
-		local instance 		= mem_tData;
-
+		local bRelative = this.X <= 1 and this.Y <= 1 and this.Width <= 1 and this.Height <= 1;
+		
 		if self.__instance then
-			instance.__instance  	= guiCreateMemo( mem_tData.X, mem_tData.Y, mem_tData.Width, mem_tData.Height, mem_sText, relative, self.__instance ); -- gui-memo
+			this.__instance  	= guiCreateMemo( this.X, this.Y, this.Width, this.Height, sText, bRelative, self.__instance );
 		else
-			instance.__instance  	= guiCreateMemo( mem_tData.X, mem_tData.Y, mem_tData.Width, mem_tData.Height, mem_sText, relative ); -- gui-memo
+			this.__instance  	= guiCreateMemo( this.X, this.Y, this.Width, this.Height, sText, bRelative );
 		end
 		
-		function instance.SetReadOnly( this, status )
-			return guiMemoSetReadOnly( this.__instance, status ); -- bool 
+		CElement.AddToList( this );
+		
+		function this.SetReadOnly( this, status )
+			return guiMemoSetReadOnly( this.__instance, status );
 		end
 		
-		function instance.SetCaretIndex( this, index )
-			return guiMemoSetCaretIndex( this.__instance, index ); -- bool 
+		function this.SetCaretIndex( this, index )
+			return guiMemoSetCaretIndex( this.__instance, index );
 		end
 		
-		if mem_tData.ReadOnly then
-			instance:SetReadOnly( mem_tData.ReadOnly );
+		if this.ReadOnly then
+			this:SetReadOnly( this.ReadOnly );
 		end
 		
-		if mem_tData.CaretIndex then
-			instance:SetCaretIndex( mem_tData.CaretIndex );
+		if this.CaretIndex then
+			this:SetCaretIndex( this.CaretIndex );
 		end
 		
-		setmetatable		( instance, self );
+		setmetatable		( this, self );
 		self.__index 		= self;
 
-		return instance;
+		return this;
 	end
 end
 
@@ -614,7 +626,7 @@ end
 function CGUI:CreateProgressBar( x, y, width, height, bRelative )
 	bRelative	= tobool( bRelative );
 	
-	local instance 		= {};
+	local this 		= {};
 	
 	local fScreenX, fScreenY = guiGetScreenSize();
 		
@@ -627,23 +639,25 @@ function CGUI:CreateProgressBar( x, y, width, height, bRelative )
 	end
 
 	if self.__instance then
-		instance.__instance  	= guiCreateProgressBar( x, y, width, height, bRelative, self.__instance ); -- element
+		this.__instance  	= guiCreateProgressBar( x, y, width, height, bRelative, self.__instance ); -- element
 	else
-		instance.__instance  	= guiCreateProgressBar( x, y, width, height, bRelative ); -- element
+		this.__instance  	= guiCreateProgressBar( x, y, width, height, bRelative ); -- element
 	end
 	
-	function instance:GetProgress()
+	CElement.AddToList( this );
+	
+	function this:GetProgress()
 		return guiProgressBarGetProgress( self.__instance ); -- float
 	end
 	
-	function instance:SetProgress( fProgress )
+	function this:SetProgress( fProgress )
 		return guiProgressBarSetProgress( self.__instance, fProgress ); -- bool
 	end
 	
-	setmetatable		( instance, self );
+	setmetatable		( this, self );
 	self.__index 		= self;
 
-	return instance;
+	return this;
 end
 
 -- Radio buttons
@@ -656,6 +670,8 @@ function CGUI:CreateRadioButton( sCaption )
 		else
 			this.__instance  	= guiCreateRadioButton( this.X, this.Y, this.Width, this.Height, sCaption, bRelative );
 		end
+		
+		CElement.AddToList( this );
 		
 		function this:GetSelected()
 			return guiRadioButtonGetSelected( self.__instance );
@@ -681,64 +697,68 @@ end
 
 -- Scrollbars
 function CGUI:CreateScrollBar( x, y, width, height, horizontal, relative )
-	local instance 		= {};
+	local this 		= {};
 
 	if self.__instance then
-		instance.__instance  	= guiCreateScrollBar( x, y, width, height, horizontal, relative, self.__instance ); -- gui-scrollbar 
+		this.__instance  	= guiCreateScrollBar( x, y, width, height, horizontal, relative, self.__instance ); -- gui-scrollbar 
 	else
-		instance.__instance  	= guiCreateScrollBar( x, y, width, height, horizontal, relative ); -- gui-scrollbar 
+		this.__instance  	= guiCreateScrollBar( x, y, width, height, horizontal, relative ); -- gui-scrollbar 
 	end
 	
-	function instance:GetScrollPosition()
+	CElement.AddToList( this );
+	
+	function this:GetScrollPosition()
 		return guiScrollBarGetScrollPosition( self.__instance ); -- float 
 	end
 	
-	function instance:SetScrollPosition( amount )
+	function this:SetScrollPosition( amount )
 		return self, guiScrollBarSetScrollPosition( self.__instance, amount ); -- bool 
 	end
 	
-	setmetatable		( instance, self );
+	setmetatable		( this, self );
 	self.__index 		= self;
 
-	return instance;
+	return this;
 end
 
 -- Scroll panes
 function CGUI:CreateScrollPane( fX, fY, fWidth, fHeight, bRelative )
-	local instance 		= {};
+	local this 		= {};
 
 	if self.__instance then
-		instance.__instance  	= guiCreateScrollPane( fX, fY, fWidth, fHeight, (bool)(bRelative), self.__instance ); -- element
+		this.__instance  	= guiCreateScrollPane( fX, fY, fWidth, fHeight, (bool)(bRelative), self.__instance ); -- element
 	else
-		instance.__instance  	= guiCreateScrollPane( fX, fY, fWidth, fHeight, (bool)(bRelative) ); -- element
+		this.__instance  	= guiCreateScrollPane( fX, fY, fWidth, fHeight, (bool)(bRelative) ); -- element
 	end
 	
-	function instance:GetHorizontalScrollPosition( ... )
+	CElement.AddToList( this );
+	
+	function this:GetHorizontalScrollPosition( ... )
 		return guiScrollPaneGetHorizontalScrollPosition( self.__instance, ... ); -- ?
 	end
 	
-	function instance:GetVerticalScrollPosition( ... )
+	function this:GetVerticalScrollPosition( ... )
 		return  guiScrollPaneGetVerticalScrollPosition( self.__instance, ... ); -- ?
 	end
 	
-	function instance:SetHorizontalScrollPosition( ... )
+	function this:SetHorizontalScrollPosition( ... )
 		return self, guiScrollPaneSetHorizontalScrollPosition( self.__instance, ... ); -- ?
 	end
 
-	function instance:SetScrollBars( horizontal, vertical )
+	function this:SetScrollBars( horizontal, vertical )
 		return self, guiScrollPaneSetScrollBars( self.__instance, horizontal, vertical ); -- bool 
 	end
 	
-	function instance:SetVerticalScrollPosition( ... )
+	function this:SetVerticalScrollPosition( ... )
 		return self, guiScrollPaneSetVerticalScrollPosition( self.__instance, ... ); -- ?
 	end
 	
-	addEventHandler( 'onClientGUIScroll', instance.__instance, function( ... ) if instance.Scroll then instance.Scroll( ... ) end end, false );
+	addEventHandler( 'onClientGUIScroll', this.__instance, function( ... ) if this.Scroll then this.Scroll( ... ) end end, false );
 	
-	setmetatable		( instance, self );
+	setmetatable		( this, self );
 	self.__index 		= self;
 
-	return instance;
+	return this;
 end
 
 -- Static images
@@ -766,6 +786,8 @@ function CGUI:CreateStaticImage( img_sPath )
 		else
 			instance.__instance  	= guiCreateStaticImage( aData.X, aData.Y, aData.Width, aData.Height, img_sPath, bRelative ); -- element
 		end
+		
+		CElement.AddToList( instance );
 		
 		function instance:LoadImage( filename )
 			return self, guiStaticImageLoadImage( self.__instance, filename ); -- bool 
@@ -854,6 +876,8 @@ function CGUI:CreateTabPanel( tab_tData )
 		instance.__instance  	= guiCreateTabPanel( tab_tData.X, tab_tData.Y, tab_tData.Width, tab_tData.Height, relative ); -- element 
 	end
 	
+	CElement.AddToList( instance );
+	
 	function instance:GetSelected()
 		return guiGetSelectedTab( self.__instance ); -- element
 	end
@@ -879,6 +903,8 @@ function CGUI:CreateTab( text, bEnabled )
 	else
 		instance.__instance  	= guiCreateTab( text ); -- element 
 	end
+	
+	CElement.AddToList( instance );
 	
 	function instance:Delete( pTab )
 		return guiDeleteTab( self.__instance, pTab );
@@ -908,6 +934,8 @@ function CGUI:CreateLabel( sCaptopn )
 		else
 			this.__instance  	= guiCreateLabel( this.X, this.Y, (int)(this.Width), this.Height, sCaptopn, bRelative );
 		end
+		
+		CElement.AddToList( this );
 		
 		function this:GetFontHeight()
 			return guiLabelGetFontHeight( self.__instance );
@@ -999,6 +1027,8 @@ function CGUI:CreateWindow( sTitle )
 		end
 		
 		aData.__instance  = guiCreateWindow( aData.X, aData.Y, aData.Width, aData.Height, sTitle, bRelative );
+		
+		CElement.AddToList( aData );
 		
 		function aData.SetSizable( this, bSizable )
 			return guiWindowSetSizable( this.__instance, bSizable );
@@ -1092,11 +1122,9 @@ function CGUI:GetProperty( property )
 end
 
 function CGUI:Delete()
-	local bool = destroyElement( self.__instance );
-	if bool then
-		self = nil;
-	end
-	return bool;
+	destroyElement( self.__instance );
+	
+	return true;
 end
 
 function CGUI:ShowDialog( pDialog )

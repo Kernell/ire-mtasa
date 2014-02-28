@@ -96,6 +96,7 @@ class: CUILoginScreen ( CGUI, CUIAsyncQuery )
 			Width			= 204; 
 			Height			= 22;
 			Color			= { 0, 64, 255 };
+			Cursor			= "Link";
 			Font			= Consolas10;
 			HorizontalAlign	= { "right", false };
 			
@@ -127,6 +128,7 @@ class: CUILoginScreen ( CGUI, CUIAsyncQuery )
 			Width		= 206; 
 			Height		= 27;
 			Selected	= sLogin ~= NULL;
+			Font		= CEGUIFont( "Segoe UI", 9, true );
 		};
 		
 		self.Login		= self.Window:CreateButton( "Войти" )
