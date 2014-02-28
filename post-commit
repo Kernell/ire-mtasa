@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export LANG="ru_RU.UTF-8"
+
+REV=`git log | grep commit | wc -l`
+
+git clean
+git checkout
+
+echo "VERSION\t= \"1.0.$REV\"" > WORP_Server/Version.lua
+
+php post-commit-compile.php

@@ -37,5 +37,3 @@ set folders[6]="WORP_VehicleEngine"
 set folders[7]="IRE_Shaders"
 
 for /F "tokens=2 delims==" %%s in ('set folders[') do mklink /D "./%%s/Shared" "..\Shared"
-
-pause

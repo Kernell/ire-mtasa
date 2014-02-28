@@ -1,0 +1,17 @@
+#!/bin/bash
+
+folders=(
+	"IRE_AndroidUI"
+	"IRE_Scoreboard"
+	"IRE_Shaders"
+	"rp_models"
+	"rp_nametags"
+	"WORP"
+	"WORP_Server"
+	"WORP_VehicleEngine"
+)
+
+for i in "${folders[@]}"
+do
+	ln -fs  Shared $i/Shared
+done
