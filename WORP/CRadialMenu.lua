@@ -213,7 +213,6 @@ class: CRadialMenu
 			end
 			
 			showCursor( true, false );
-			setCursorAlpha( 0 );
 			setCursorPosition( this.m_iX2, this.m_iY + this.m_iSize );
 			
 			this.m_bVisible	= true;
@@ -222,8 +221,6 @@ class: CRadialMenu
 		
 		Hide		= function()
 			CGUI:HideCursor( false );
-			
-			setCursorAlpha( 255 );
 			
 			if CLIENT.m_pRadialMenu then
 				if CLIENT.m_pRadialMenu.m_bVisible then

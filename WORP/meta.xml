@@ -122,6 +122,7 @@
   <script src="CUI/CUIRegistration.lua"     type="client"/>
   <script src="CUI/CUISideBar.lua"          type="client"/>
   <script src="CUI/CUISettings.lua"         type="client"/>
+  <script src="CUI/CUICursor.lua"           type="client"/>
   
   <script src="CClientCamera.lua"           type="client" />
   <script src="CClientCharacter.lua"        type="client" />
@@ -148,6 +149,8 @@
   <file src="Resources/Fonts/segoeuib.ttf"/>
   
   <file src="Resources/Fonts/micross.ttf"/>
+  
+  <file src="Resources/Images/Arrow.png" />
   
   <file src="Resources/Images/radial_menu.png" />
   
