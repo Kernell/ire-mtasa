@@ -25,22 +25,52 @@ class: CClientCamera ( CElement )
 		this.m_vecPositionBehind	= Vector3( 0.4, 0.0, 0.7 );
 		this.m_vecRotationBehind	= Vector3( 0.0, 0.0, 180.0 );
 		
-		function this.__DoPulse( iTimeSlice )
-			this:DoPulse( iTimeSlice / 1000 );
-		end
-		
-		addEventHandler( "onClientPreRender", root, this.__DoPulse );
+		root:AddEvent( "onClientPreRender", 		this.DoPulse, 				this );
+		root:AddEvent( "onClientVehicleEnter", 		this.OnVehicleEnter, 		this );
+		root:AddEvent( "onClientVehicleExit", 		this.OnVehicleExit, 		this );
+		root:AddEvent( "onClientVehicleStartEnter", this.OnVehicleStartEnter, 	this );
+		root:AddEvent( "onClientVehicleStartExit", 	this.OnVehicleStartExit, 	this );
 	end;
 	
 	_CClientCamera	= function( this )
-		removeEventHandler( "onClientPreRender", root, this.__DoPulse );
-		
-		this.__DoPulse	= NULL;
+		root:RemoveEvent( "onClientPreRender",			this.DoPulse );
+		root:RemoveEvent( "onClientVehicleEnter", 		this.OnVehicleEnter );
+		root:RemoveEvent( "onClientVehicleExit", 		this.OnVehicleExit );
+		root:RemoveEvent( "onClientVehicleStartEnter", 	this.OnVehicleStartEnter );
+		root:RemoveEvent( "onClientVehicleStartExit", 	this.OnVehicleStartExit );
 		
 		this:Detach();
 	end;
 	
-	DoPulse		= function( this, fDeltaTime )
+	OnVehicleEnter	= function( this, pPlayer, iSeat )
+		if pPlayer == CLIENT then
+			if CCamera.m_iCameraMode == 6 then
+				this.m_bCockpit	= false;
+			end
+		end
+	end;
+	
+	OnVehicleExit	= function( this, pPlayer, iSeat )
+		if pPlayer == CLIENT then
+			if CCamera.m_iCameraMode == 6 then
+				this.m_bCockpit	= false;
+				
+				this:SetTarget();
+			end
+		end
+	end;
+	
+	OnVehicleStartEnter	= function( this, pPlayer, iSeat, iDoor )
+		
+	end;
+	
+	OnVehicleStartExit	= function( this, pPlayer, iSeat, iDoor )
+		
+	end;
+	
+	DoPulse		= function( this, iTimeSlice )
+		local fDeltaTime = iTimeSlice / 1000;
+		
 		if CCamera.m_iCameraMode == 6 then
 			if this.m_bCockpit then
 				if CLIENT:IsInVehicle() then
@@ -93,11 +123,17 @@ class: CClientCamera ( CElement )
 			elseif CLIENT:IsInVehicle() then
 				this.m_bCockpit = true;
 				
-				local pVehicle = CLIENT:GetVehicle();
+				CLIENT:SetAnimation( "PED", "car_sit", -1 );
 				
-				if pVehicle and getVehicleType( pVehicle ) == "Automobile" and pVehicle:GetDriver() == CLIENT then
-					CLIENT:SetAnimation( "PED", "car_sit", -1 );
-				end
+				setAnalogControlState( "vehicle_right", 0.0 );
+				setAnalogControlState( "vehicle_left", 0.0 );
+				
+				this.m_vecPosition	= CLIENT:GetBonePosition( 6 ) - CLIENT:GetPosition();
+				
+				this.m_vecPosition.Y	= -0.2;
+				this.m_vecPosition.X	= 0.0;
+				
+				this:AttachTo( CLIENT, this.m_vecPosition );
 			end
 		end
 	end;

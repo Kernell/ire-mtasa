@@ -141,6 +141,20 @@ function CElement.GetByType( type )
 	return getElementsByType( type );
 end
 
+function CElement:AddEvent( sEvent, vFunction, this )
+	self[ vFunction ] = function( ... )
+		vFunction( this or self, ... );
+	end;
+	
+	addEventHandler( sEvent, self.__instance, self[ vFunction ] );
+end
+
+function CElement:RemoveEvent( sEvent, vFunction )
+	removeEventHandler( sEvent, self.__instance, self[ vFunction ] );
+	
+	self[ vFunction ]	= NULL;
+end
+
 function CElement:Destroy()
 	if destroyElement( self.__instance ) then
 		return true;

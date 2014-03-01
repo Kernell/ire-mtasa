@@ -369,7 +369,7 @@ end
 
 function CCommands:GlobalOOC( pPlayer, sCmd, ... )
 	if pPlayer:IsLoggedIn() then
-		if g_pGame.m_bGlobalOOC or pPlayer:HaveAccess( 'command.adminchat' ) then
+		if g_pGame.m_bGlobalOOC or pPlayer:HaveAccess( 'command.globalooc' ) then
 			local sMessage = table.concat( { ... }, " " );
 			
 			if sMessage:len() > 0 then

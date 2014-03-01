@@ -52,7 +52,7 @@ function CPlayerNametag:Update()
 	end
 	
 	if self.m_pPlayer:IsAdmin() then
-		sText	= self.m_pPlayer:GetGroups()[ 1 ]:GetCaption() + LF + self.m_pPlayer:GetUserName();
+		sText	= self.m_pPlayer:GetGroups()[ 1 ]:GetCaption();
 	end
 	
 	self:SetText( sText );

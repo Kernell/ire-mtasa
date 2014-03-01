@@ -135,20 +135,7 @@ function CCamera:ChangeMode()
 		CCamera.m_iCameraMode = ( CCamera.m_iCameraMode + 1 ) % 7;
 		
 		if CCamera.m_iCameraMode == 6 then
-			CLIENT:SetAnimation();
-			
-			setAnalogControlState( "vehicle_right", 0.0 );
-			setAnalogControlState( "vehicle_left", 0.0 );
-			
-			local pCamera = CLIENT:GetCamera();
-			
-			pCamera.m_bCockpit		= false;
-			pCamera.m_vecPosition	= CLIENT:GetBonePosition( 6 ) - CLIENT:GetPosition();
-			
-			pCamera.m_vecPosition.Y	= -0.2;
-			pCamera.m_vecPosition.X	= 0.0;
-			
-			pCamera:AttachTo( CLIENT, pCamera.m_vecPosition );
+			CLIENT:GetCamera().m_bCockpit = false;
 		elseif CCamera.m_iCameraMode < 6 then
 			CLIENT:GetCamera():SetTarget();
 			
