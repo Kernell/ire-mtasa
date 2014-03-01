@@ -28,16 +28,12 @@ class: CClientCamera ( CElement )
 		root:AddEvent( "onClientPreRender", 		this.DoPulse, 				this );
 		root:AddEvent( "onClientVehicleEnter", 		this.OnVehicleEnter, 		this );
 		root:AddEvent( "onClientVehicleExit", 		this.OnVehicleExit, 		this );
-		root:AddEvent( "onClientVehicleStartEnter", this.OnVehicleStartEnter, 	this );
-		root:AddEvent( "onClientVehicleStartExit", 	this.OnVehicleStartExit, 	this );
 	end;
 	
 	_CClientCamera	= function( this )
 		root:RemoveEvent( "onClientPreRender",			this.DoPulse );
 		root:RemoveEvent( "onClientVehicleEnter", 		this.OnVehicleEnter );
 		root:RemoveEvent( "onClientVehicleExit", 		this.OnVehicleExit );
-		root:RemoveEvent( "onClientVehicleStartEnter", 	this.OnVehicleStartEnter );
-		root:RemoveEvent( "onClientVehicleStartExit", 	this.OnVehicleStartExit );
 		
 		this:Detach();
 	end;
@@ -59,15 +55,6 @@ class: CClientCamera ( CElement )
 			end
 		end
 	end;
-	
-	OnVehicleStartEnter	= function( this, pPlayer, iSeat, iDoor )
-		
-	end;
-	
-	OnVehicleStartExit	= function( this, pPlayer, iSeat, iDoor )
-		
-	end;
-	
 	DoPulse		= function( this, iTimeSlice )
 		local fDeltaTime = iTimeSlice / 1000;
 		
@@ -122,8 +109,6 @@ class: CClientCamera ( CElement )
 				end
 			elseif CLIENT:IsInVehicle() then
 				this.m_bCockpit = true;
-				
-				CLIENT:SetAnimation( "PED", "car_sit", -1 );
 				
 				setAnalogControlState( "vehicle_right", 0.0 );
 				setAnalogControlState( "vehicle_left", 0.0 );
