@@ -8,10 +8,10 @@
 class: C3DHUD
 {
 	m_bEnabled	= true;
-	m_fX		= 1;
-	m_fY		= 1;
-	m_fWidth	= 70;
-	m_fHeight	= 1;
+	m_fX		= 0;
+	m_fY		= 0;
+	m_fWidth	= 300;
+	m_fHeight	= 50;
 	m_iColor	= tocolor( 255, 255, 255, 255 );
 	m_iBgColor	= tocolor( 0, 0, 0, 255 );
 	m_pFont		= DXFont( "Segoe UI", 32, true );
@@ -40,7 +40,7 @@ class: C3DHUD
 			end
 		end
 		
-		this.m_pRender = dxCreateRenderTarget( 200, 100, true );
+		this.m_pRender = dxCreateRenderTarget( 300, 50, true );
 		
         addEventHandler( "onClientPreRender", root, this.__Render );
 	end;

@@ -9,6 +9,8 @@ class: CVehicleHUDSpeed ( C3DHUD )
 {
 	m_pVehicle	= NULL;
 	
+	m_fScale	= 1.25;
+	
 	m_RemapOffsets	=
 	{
 		[ RUSTLER ]		= { 0.7, -4.5, 0.7 };
@@ -24,9 +26,12 @@ class: CVehicleHUDSpeed ( C3DHUD )
 		this:C3DHUD();
 	end;
 	
+	_CVehicleHUDSpeed	= function( this )
+		this:_C3DHUD();
+	end;
+	
 	DrawText	= function( this, sText, fX, fY, fWidth, fHeight, iColor )
-		dxDrawText( sText, fX, 0, fWidth, 0, iColor, 1.0, this.m_pFont, "right" );
-        dxDrawText( "км/ч", fX + fWidth + 10, 0, fWidth + 15, 0, iColor, 1.0, this.m_pFont );
+		dxDrawText( sText + " км/ч", fX, 0, fWidth, 0, iColor, 1.0, this.m_pFont, "right" );
 	end;
 	
 	Update		= function( this )
@@ -36,7 +41,9 @@ class: CVehicleHUDSpeed ( C3DHUD )
 			local fX, fY, fZ	= this:GetVehicleOffsets();
 			
 			this.m_fStartX, this.m_fStartY, this.m_fStartZ 		= getPositionInOffset( this.m_pVehicle, fX, fY, fZ );
-			this.m_fEndX, this.m_fEndY, this.m_fEndZ			= getPositionInOffset( this.m_pVehicle, fX, fY, fZ - 1.0 );
+			
+			this.m_fEndX, this.m_fEndY, this.m_fEndZ			= this.m_fStartX, this.m_fStartY, this.m_fStartZ - 0.5;
+			
 			this.m_fTowardX, this.m_fTowardY, this.m_fTowardZ	= getPositionInOffset( this.m_pVehicle, 0.0, fY * 2.0, fY * 2.0 );
 		else
 			this:SetText( NULL );

@@ -42,6 +42,8 @@ class: CClientCamera ( CElement )
 		if pPlayer == CLIENT then
 			if CCamera.m_iCameraMode == 6 then
 				this.m_bCockpit	= false;
+				
+				CLIENT:SetAlpha( 0 );
 			end
 		end
 	end;
@@ -50,6 +52,8 @@ class: CClientCamera ( CElement )
 		if pPlayer == CLIENT then
 			if CCamera.m_iCameraMode == 6 then
 				this.m_bCockpit	= false;
+				
+				CLIENT:SetAlpha( 255 );
 				
 				this:SetTarget();
 			end
@@ -106,9 +110,13 @@ class: CClientCamera ( CElement )
 					this.m_bCockpit = false;
 					
 					this:SetTarget();
+					
+					CLIENT:SetAlpha( 255 );
 				end
 			elseif CLIENT:IsInVehicle() then
 				this.m_bCockpit = true;
+				
+				CLIENT:SetAlpha( 0 );
 				
 				setAnalogControlState( "vehicle_right", 0.0 );
 				setAnalogControlState( "vehicle_left", 0.0 );

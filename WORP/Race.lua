@@ -139,19 +139,19 @@ function UpdateScoreBoard( Players, iRaceDiffServer, iRaceLap, iLaps )
 	l_Players	= Players;
 	
 	if gl_iLaps and gl_iLaps > 1 and gl_iRaceLap then
-		resourceRoot.m_pVehicleHUD.m_pRaceLaps.m_iLap		= gl_iRaceLap;
-		resourceRoot.m_pVehicleHUD.m_pRaceLaps.m_iLaps		= gl_iLaps;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceLaps.m_iLap		= gl_iRaceLap;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceLaps.m_iLaps		= gl_iLaps;
 		
-		resourceRoot.m_pVehicleHUD.m_pRaceLaps.m_bEnabled	= true;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceLaps.m_bEnabled	= true;
 	else
-		resourceRoot.m_pVehicleHUD.m_pRaceLaps.m_bEnabled	= false;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceLaps.m_bEnabled	= false;
 	end
 	
 	if gl_iStart then
-		resourceRoot.m_pVehicleHUD.m_pRaceTime.m_iTime		= gl_iStart;
-		resourceRoot.m_pVehicleHUD.m_pRaceTime.m_bEnabled	= true;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceTime.m_iTime		= gl_iStart;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceTime.m_bEnabled	= true;
 	else
-		resourceRoot.m_pVehicleHUD.m_pRaceTime.m_bEnabled	= false;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRaceTime.m_bEnabled	= false;
 	end
 	
 	if Players then
@@ -165,10 +165,10 @@ function UpdateScoreBoard( Players, iRaceDiffServer, iRaceLap, iLaps )
 			end
 		end
 		
-		resourceRoot.m_pVehicleHUD.m_pRacePosition.m_iPosition	= iPosition;
-		resourceRoot.m_pVehicleHUD.m_pRacePosition.m_bEnabled	= true;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRacePosition.m_iPosition	= iPosition;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRacePosition.m_bEnabled	= true;
 	else
-		resourceRoot.m_pVehicleHUD.m_pRacePosition.m_bEnabled	= false;
+		resourceRoot.m_pHUD.m_pVehicleHUD.m_pRacePosition.m_bEnabled	= false;
 	end
 end
 
