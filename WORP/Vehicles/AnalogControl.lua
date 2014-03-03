@@ -7,7 +7,6 @@
 
 AnalogControl = 
 {
-	fMouseX 	= 0;
 	fMouseY 	= 0;
 	
 	iBrakeTick	= 0;
@@ -15,7 +14,7 @@ AnalogControl =
 	fSteer					= 0.0;
 	fSteerTime				= 0.7;
 	fVeloSteerTime			= 0.1;
-	fSteerReleaseTime		= 0.5;
+	fSteerReleaseTime		= 0.6;
 	fVeloSteerReleaseTime	= 0.0;
 	fSteerCorrectionFactor	= 4.0;
 	
@@ -38,15 +37,15 @@ AnalogControl =
 			fX		= ( fX - .5 ) * 2;
 			fY		= ( fY - .5 ) * 2;
 			
-			this.fMouseX		= this.fMouseX + ( fX * Settings.Controls.MouseSteering.Sensitivity );
-			this.fMouseY		= this.fMouseX + ( fX * Settings.Controls.MouseSteering.Sensitivity );
+			this.fSteer		= this.fSteer + ( fX * Settings.Controls.MouseSteering.Sensitivity );
+			this.fMouseY	= this.fMouseY + ( fX * Settings.Controls.MouseSteering.Sensitivity );
 		else
-			this.fMouseX		= 0.0;
-			this.fMouseY		= 0.0;
+			this.fSteer		= 0.0;
+			this.fMouseY	= 0.0;
 		end
 		
-		this.fMouseX			= Clamp( -1.0, this.fMouseX, 1.0 );
-		this.fMouseY			= Clamp( -1.0, this.fMouseY, 1.0 );
+		this.fSteer			= Clamp( -1.0, this.fSteer, 1.0 );
+		this.fMouseY		= Clamp( -1.0, this.fMouseY, 1.0 );
 	end;
 	
 	UpdateControl	= function( this, iDeltaTime )
@@ -104,107 +103,96 @@ AnalogControl =
 			end
 		end
 		
-		if Settings.Controls.MouseSteering.Enabled then
-			if this.fMouseX > 0.0 then
-				setAnalogControlState( "vehicle_right", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, this.fMouseX ) );
-			elseif this.fMouseX < 0.0 then
-				setAnalogControlState( "vehicle_left", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, -this.fMouseX ) );
+		local bLeft		= false;
+		local bRight	= false;
+		
+		if bUIShowing then
+			return;
+		end
+		
+		local pVehicle = CLIENT:GetVehicle();
+		
+		if pVehicle and pVehicle:GetDriver() == CLIENT and CLIENT:GetHealth() > 0 then
+			if not Settings.Controls.MouseSteering.Enabled then
+				for sKey in pairs( getBoundKeys( "vehicle_left" ) ) do
+					if getKeyState( sKey ) then
+						bLeft = true;
+						
+						break;
+					end
+				end
+				
+				for sKey in pairs( getBoundKeys( "vehicle_right" ) ) do
+					if getKeyState( sKey ) then
+						bRight = true;
+						
+						break;
+					end
+				end
+				
+				local fVelocity		= pVehicle:GetVelocity():Length();
+				
+				local fSteerInput = 0.0;
+				
+				if bLeft then
+					fSteerInput = fSteerInput - 1.0;
+				end
+				
+				if bRight then
+					fSteerInput = fSteerInput + 1.0;
+				end
+				
+				if fSteerInput < this.fSteer then
+					local fSteerSpeed	= 0.0;
+					
+					if this.fSteer > 0.0 then
+						fSteerSpeed = 1.0 / ( this.fSteerReleaseTime + this.fVeloSteerReleaseTime * fVelocity );
+					else
+						fSteerSpeed	= 1.0 / ( this.fSteerTime + this.fVeloSteerTime * fVelocity );
+					end
+					
+					if this.fSteer > 0.0 then
+						fSteerSpeed = fSteerSpeed * ( 1.0 + this.fSteer * this.fSteerCorrectionFactor );
+					end
+					
+					this.fSteer = this.fSteer - ( fSteerSpeed * iDeltaTime );
+					
+					if fSteerInput > this.fSteer then
+						this.fSteer = fSteerInput;
+					end
+				elseif fSteerInput > this.fSteer then
+					local fSteerSpeed	= 0.0;
+					
+					if this.fSteer < 0.0 then
+						fSteerSpeed = 1.0 / ( this.fSteerReleaseTime + this.fVeloSteerReleaseTime * fVelocity );
+					else
+						fSteerSpeed	= 1.0 / ( this.fSteerTime + this.fVeloSteerTime * fVelocity );
+					end
+					
+					if this.fSteer < 0.0 then
+						fSteerSpeed = fSteerSpeed * ( 1.0 + -this.fSteer * this.fSteerCorrectionFactor );
+					end
+					
+					this.fSteer = this.fSteer + ( fSteerSpeed * iDeltaTime );
+					
+					if fSteerInput < this.fSteer then
+						this.fSteer = fSteerInput;
+					end
+				end
+			end
+		
+			if this.fSteer > 0.0 then
+				setAnalogControlState( "vehicle_right", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, this.fSteer ) );
+			elseif this.fSteer < 0.0 then
+				setAnalogControlState( "vehicle_left", Easing[ Settings.Controls.MouseSteering.EasingOut ]( Easing, -this.fSteer ) );
 			else
 				setAnalogControlState( "vehicle_right", 0.0 );
 				setAnalogControlState( "vehicle_left", 0.0 );
 			end
-		else
-			local bLeft		= false;
-			local bRight	= false;
 			
-			if bUIShowing then
-				return;
-			end
-			
-			local pVehicle = CLIENT:GetVehicle();
-			
-			if pVehicle and pVehicle:GetDriver() == CLIENT then
-				if CLIENT:GetHealth() > 0 then
-					for sKey in pairs( getBoundKeys( "vehicle_left" ) ) do
-						if getKeyState( sKey ) then
-							bLeft = true;
-							
-							break;
-						end
-					end
-					
-					for sKey in pairs( getBoundKeys( "vehicle_right" ) ) do
-						if getKeyState( sKey ) then
-							bRight = true;
-							
-							break;
-						end
-					end
-					
-					local fVelocity		= pVehicle:GetVelocity():Length();
-					
-					local fSteerInput = 0.0;
-					
-					if bLeft then
-						fSteerInput = fSteerInput - 1.0;
-					end
-					
-					if bRight then
-						fSteerInput = fSteerInput + 1.0;
-					end
-					
-					if fSteerInput < this.fSteer then
-						local fSteerSpeed	= 0.0;
-						
-						if this.fSteer > 0.0 then
-							fSteerSpeed = 1.0 / ( this.fSteerReleaseTime + this.fVeloSteerReleaseTime * fVelocity );
-						else
-							fSteerSpeed	= 1.0 / ( this.fSteerTime + this.fVeloSteerTime * fVelocity );
-						end
-						
-						if this.fSteer > 0.0 then
-							fSteerSpeed = fSteerSpeed * ( 1.0 + this.fSteer * this.fSteerCorrectionFactor );
-						end
-						
-						this.fSteer = this.fSteer - ( fSteerSpeed * iDeltaTime );
-						
-						if fSteerInput > this.fSteer then
-							this.fSteer = fSteerInput;
-						end
-					elseif fSteerInput > this.fSteer then
-						local fSteerSpeed	= 0.0;
-						
-						if this.fSteer < 0.0 then
-							fSteerSpeed = 1.0 / ( this.fSteerReleaseTime + this.fVeloSteerReleaseTime * fVelocity );
-						else
-							fSteerSpeed	= 1.0 / ( this.fSteerTime + this.fVeloSteerTime * fVelocity );
-						end
-						
-						if this.fSteer < 0.0 then
-							fSteerSpeed = fSteerSpeed * ( 1.0 + -this.fSteer * this.fSteerCorrectionFactor );
-						end
-						
-						this.fSteer = this.fSteer + ( fSteerSpeed * iDeltaTime );
-						
-						if fSteerInput < this.fSteer then
-							this.fSteer = fSteerInput;
-						end
-					end
-				end
-				
-				if this.fSteer > 0 then
-					setAnalogControlState( "vehicle_right", Easing:OutQuad( this.fSteer, 0.0, 1.0, 1.0 ) );
-				elseif this.fSteer < 0 then
-					setAnalogControlState( "vehicle_left", Easing:OutQuad( -this.fSteer, 0.0, 1.0, 1.0 ) );
-				else		
-					setAnalogControlState( "vehicle_right", 0.0 );
-					setAnalogControlState( "vehicle_left", 0.0 );
-				end
-				
-				if _DEBUG and isDebugViewActive() then
-					dxDrawText( "this.fSteer = " + tostring( this.fSteer ), 100, 500 );
-				end	
-			end
+			if _DEBUG and isDebugViewActive() then
+				dxDrawText( "this.fSteer = " + tostring( this.fSteer ), 100, 500 );
+			end	
 		end
 	end;
 };

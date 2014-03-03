@@ -235,11 +235,7 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 	
 	if pDriver then
 		if pDriver == CLIENT and AnalogControl then
-			if Settings.Controls.MouseSteering.Enabled then
-				pVehicle.m_pStWheel.fAngle = -AnalogControl.fMouseX;
-			else
-				pVehicle.m_pStWheel.fAngle = -AnalogControl.fSteer;
-			end
+			pVehicle.m_pStWheel.fAngle = -AnalogControl.fSteer;
 		else
 			local fAngle	= 0.0;
 			local fLeft		= getPedAnalogControlState( pDriver, "vehicle_left" ) or 0.0;
@@ -257,7 +253,7 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 		end
 	end
 	
-	pVehicle.m_pStWheel.fAngle = pVehicle.m_pStWheel.fAngle * ( 1.0 - Clamp( 0.0, pVehicle:GetVelocity():Length(), 1.0 ) );
+	pVehicle.m_pStWheel.fAngle = pVehicle.m_pStWheel.fAngle * ( 1.0 - Clamp( 0.0, pVehicle:GetVelocity():Length(), 1.0 ) * 0.8 );
 	
 	setVehicleComponentRotation( pVehicle, self, 0.0, Settings.Controls.MouseSteering.Angle * pVehicle.m_pStWheel.fAngle, 0.0 );
 end
