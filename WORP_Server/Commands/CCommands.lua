@@ -192,19 +192,13 @@ end
 function CCommands:AdminDuty( pPlayer )
 	local pChar = pPlayer:GetChar();
 	
-	pPlayer.m_bAdmin = not pPlayer.m_bAdmin;
-	
-	pPlayer:SetData( "adminduty", 		pPlayer.m_bAdmin );
-	pPlayer:SetData( "Nametag:Color",	pPlayer.m_bAdmin and pPlayer:GetGroups()[ 1 ]:GetColor() );
-	pPlayer:SetGhost( pPlayer.m_bAdmin );
+	pPlayer:SetAdminDuty( not pPlayer.m_bAdmin );
 	
 	if pChar and pChar:GetAlcohol() > 0 then
 		pChar:SetAlcohol();
 	end
 	
 	SendAdminsMessage( pPlayer:GetUserName() + ( pPlayer:IsAdmin() and " перешёл в режим" or " вышел из режима" ) + " администратора" );
-	
-	pPlayer:GetNametag():Update();
 	
 	assert( g_pDB:Query( "UPDATE uac_users SET adminduty = %q WHERE id = " + pPlayer:GetUserID(), pPlayer:IsAdmin() and "Yes" or "No" ) );
 end

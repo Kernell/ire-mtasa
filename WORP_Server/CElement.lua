@@ -5,14 +5,6 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-function CElement:SetGhost( bEnabled )
-	-- return self:SetData( 'ghost_enabled', bEnabled, true, true );
-end
-
-function CElement:GetGhost()
-	return self:GetData( 'ghost_enabled' );
-end
-
 function CElement:Clone( vecPosition, bCloneChildren )
 	vecPosition = vecPosition or Vector3();
 	

@@ -124,6 +124,8 @@ function CPlayer:OnSpawn( fX, fY, fZ, fRotation, pTeam, iSkin, iInterior, iDimen
 		self:SetCuffed();
 	end
 	
+	self:SetAdminDuty( self:IsAdmin() );
+	
 	self:SetWalkingStyle( 0 );
 	self:SetWalkingStyle( (int)(self:GetSkin().GetWalkingStyle()) );
 end

@@ -797,11 +797,8 @@ function CPlayer:InitGroups( sGroups, bAlert )
 			self:GetChat():Send( " " );
 		end
 		
-		self.m_bAdmin = self.m_bAdmin and self:HaveAccess( 'command.adminduty' );
 		
-		self:SetData( 'adminduty', 		self.m_bAdmin );
-		self:SetData( "Nametag:Color",  self.m_bAdmin and self:GetGroups()[ 1 ]:GetColor() );
-		self:SetGhost( self.m_bAdmin );
+		self:SetAdminDuty( self.m_bAdmin );
 		
 		return true;
 	end
@@ -831,6 +828,28 @@ end
 
 function CPlayer:IsAdmin()
 	return self.m_bAdmin;
+end
+
+function CPlayer:SetAdminDuty( bEnabled )
+	bEnabled = bEnabled and self:HaveAccess( 'command.adminduty' );
+	
+	self.m_bAdmin = bEnabled;
+	
+	self:SetData( 'adminduty', 		self.m_bAdmin );
+	self:SetData( "Nametag:Color",  self.m_bAdmin and self:GetGroups()[ 1 ]:GetColor() );
+	
+	self:GetNametag():Update();
+	
+	if self.m_bAdmin then
+		self:SetSkin( 0 );
+		
+		self:AddClothes( "suit2grn", "suit2", 0 );
+		self:AddClothes( "suit1trblk", "suit1tr", 2 );
+		self:AddClothes( "shoedressblk", "shoe", 3 );
+		self:AddClothes( "glasses05dark", "glasses03", 15 );
+	elseif self:IsInGame() then
+		self:SetSkin( self:GetChar().m_iSkin );
+	end
 end
 
 function CPlayer:LoadCharacters( iUserID )
