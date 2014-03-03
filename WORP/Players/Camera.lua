@@ -132,6 +132,10 @@ end
 
 function CCamera:ChangeMode()
 	if CLIENT:IsInVehicle() then
+		if CCamera.m_iCameraMode == 6 then
+			CLIENT:SetAlpha( 255 );
+		end
+		
 		CCamera.m_iCameraMode = ( CCamera.m_iCameraMode + 1 ) % 7;
 		
 		if CCamera.m_iCameraMode == 6 then

@@ -47,16 +47,6 @@ addEvent( 'CPlayer:PlaySound3D', true );
 
 addEventHandler( 'CPlayer:PlaySound3D', root, PlaySound3D );
 
-local function ProcessStaffAlpha( iTimeSlice )
-	local fDeltaTime	= iTimeSlice / 1000;
-	
-	if CCamera.m_iCameraMode == 6 and CLIENT:IsInVehicle() then
-		CLIENT:SetAlpha( 0 );
-	elseif CLIENT.m_iAdminAlpha == 255 and CLIENT:GetAlpha() ~= 255 then
-		CLIENT:SetAlpha( 255 );
-	end
-end
-
 function SetAirbrakeEnabled( bEnabled )
 	CLIENT.m_pNoClip	= NULL;
 	
@@ -162,7 +152,6 @@ function UpdatePlayer( iTimeSlice )
 	end
 end
 
-addEventHandler( 'onClientPreRender', root, ProcessStaffAlpha );
 addEventHandler( 'onClientPreRender', root, UpdatePlayer );
 
 function GetGroundPosition( sCallback )
