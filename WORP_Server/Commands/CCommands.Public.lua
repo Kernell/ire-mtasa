@@ -154,34 +154,6 @@ function CCommands:ChangeSpawn( pPlayer, sCmd )
 	end
 end
 
-function CCommands:Report( pPlayer, sCmd, ... )
-	if pPlayer:IsInGame() then
-		if pPlayer.m_ReportData.m_bLocked then
-			self:Echo( pPlayer, "эта команда для вас заблокирована" );
-			
-			return;
-		end
-		
-		local tStamp = getRealTime().timestamp;
-		
-		if pPlayer.m_ReportData.m_tStamp - tStamp <= 0 then
-			local sText = table.concat( { ... }, ' ' );
-			
-			if sText:len() > 0 then
-				pPlayer.m_ReportData.m_tStamp	= tStamp + 300;
-				pPlayer.m_ReportData.m_sText	= sText;
-				
-				SendAdminsMessage( ( "%s (%s) ID: %d - /ar(eport) для ответа" ):format( pPlayer:GetName(), pPlayer:GetUserName(), pPlayer:GetID() ), "[REPORT]: ", 128, 128, 0 );
-				SendAdminsMessage( sText, "Сообщение: ", 128, 128, 64 );
-			else
-				self:Echo( pPlayer, "<message>" );
-			end
-		else
-			self:Echo( pPlayer,  "функция доступна раз в 5 минут" );
-		end
-	end
-end
-
 function CCommands:ViewHelp( pPlayer )
 	if pPlayer:IsInGame() then
 		pPlayer:ShowHelp();

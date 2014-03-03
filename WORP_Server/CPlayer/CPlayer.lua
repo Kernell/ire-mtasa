@@ -17,6 +17,8 @@ addEvent 'onCharacterLogout'
 
 class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 {
+	m_iAdminID			= 0;
+	
 	GetNametagText		= getPlayerNametagText;
 	GetNametagColor		= getPlayerNametagColor;
 	SetNametagShowing	= setPlayerNametagShowing;
@@ -404,8 +406,8 @@ function CPlayer:ResendModInfo()
 	return resendPlayerModInfo( self.__instance );
 end
 
-function CPlayer:Redirect( ... )
-	return redirectPlayer( self.__instance, ... );
+function CPlayer:Redirect( sIP, iPort, sPassword )
+	return redirectPlayer( self.__instance, sIP or "", (int)(iPort), sPassword );
 end
 
 function CPlayer:ToggleControls( enabled, gtaControls, mtaControls )
@@ -514,8 +516,22 @@ function CPlayer:IsMuted()
 	return (bool)(self.m_iMuteSeconds);
 end
 
+function CPlayer:GetAdminID()
+	return self.m_iAdminID;
+end
+
+function CPlayer:GetAdminName()
+	return "Агент поддержки #" + self:GetAdminID();
+end
+
 function CPlayer:GetVisibleName()
-	return self:IsAdmin() and self:GetUserName() or self:GetChar():GetName();
+	if self:IsAdmin() then
+		return self:GetAdminName();
+	elseif self:IsInGame() then
+		return self:GetChar():GetName();
+	end
+	
+	return self:GetName();
 end
 
 function CPlayer:Hint( ... )
@@ -639,7 +655,7 @@ function CPlayer:ShowLoginScreen()
 end
 
 function CPlayer:Login( iID )
-	local pResult = g_pDB:Query( "SELECT `groups`, name, password, ip, DATE_FORMAT( last_logout, '%d %M %Y г. %H:%i' ) as last_login_f, DATEDIFF( CURDATE(), last_logout ) AS last_login_d, settings, adminduty, muted_time, login_history, goldpoints FROM uac_users WHERE id = " + iID + " LIMIT 1" );
+	local pResult = g_pDB:Query( "SELECT admin_id, `groups`, name, password, ip, DATE_FORMAT( last_logout, '%d %M %Y г. %H:%i' ) as last_login_f, DATEDIFF( CURDATE(), last_logout ) AS last_login_d, settings, adminduty, muted_time, login_history, goldpoints FROM uac_users WHERE id = " + iID + " LIMIT 1" );
 	
 	if pResult then
 		local pRow = pResult:FetchRow();
@@ -673,6 +689,7 @@ function CPlayer:Login( iID )
 			self.m_iUserID		= iID;
 			self.m_sUserName	= pRow.name;
 			
+			self.m_iAdminID		= pRow.admin_id;
 			self.m_bAdmin		= pRow.adminduty == "Yes";
 			
 			self:InitGroups( (string)(pRow.groups) );
@@ -754,10 +771,29 @@ function CPlayer:InitGroups( sGroups, bAlert )
 			end
 		end
 		
+		if self.m_iAdminID == 0 then
+			g_pDB:Query( "UPDATE `uac_users` SET `admin_id` = ( SELECT MAX( `admin_id` ) ) + 1 WHERE id = " + self:GetUserID() + " LIMIT 1" );
+			
+			local pResult = g_pDB:Query( "SELECT `admin_id` FROM `uac_users` WHERE `id` = " + self:GetUserID() + " LIMIT 1" );
+			
+			if pResult then
+				self.m_iAdminID = pResult:FetchRow().admin_id;
+				
+				delete ( pResult );
+			else
+				Debug( g_pDB:Error(), 2 );
+			end
+		end
+		
+		if self.m_iAdminID == 0 then
+			self.m_iAdminID = math.random( 1000, 9999 );
+		end
+		
 		self[ self:HaveAccess( 'command.adminchat' ) and 'BindKey' or 'UnbindKey' ]( self, "F4", "up", "chatbox", "adminchat" );
 		
 		if bAlert and table.getn( Groups ) > 0 then
 			self:GetChat():Send( "Вы состоите в группах: " + table.concat( Groups, ', ' ), 0, 255, 128 );
+			self:GetChat():Send( "Ваш личный номер: " + self:GetAdminID(), 255, 255, 128 );
 			self:GetChat():Send( " " );
 		end
 		
@@ -779,6 +815,10 @@ end
 
 function CPlayer:HaveAccess( sAccess )
 	if self:IsLoggedIn() then
+		if self:GetUserID() == 0 then
+			return true;
+		end
+		
 		for i, pGroup in pairs( self:GetGroups() ) do
 			if pGroup:GetID() == 0 or pGroup:GetRight( sAccess ) then
 				return true;

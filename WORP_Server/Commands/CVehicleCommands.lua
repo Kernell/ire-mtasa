@@ -716,7 +716,7 @@ function CVehicleCommands:SetOwner( pPlayer, sCmd, sOption, sID, sTargetID )
 					printf( "%s changed owner vehicle %s (ID %d) for %s (User: %s ID: %d)", pPlayer:GetUserName(), pVehicle:GetName(), pVehicle:GetID(), pTarget:GetName(), pTarget:GetUserName(), pTarget:GetUserID() );
 					
 					pPlayer:GetChat():Send( TEXT_VEHICLES_OWNER_CHANGED:format( pTarget:GetName(), pTarget:GetID(), pVehicle:GetName(), pVehicle:GetID() ), 0, 255, 128 );
-					pTarget:GetChat():Send( ( "%s %s сделал Вас владельцем автомобиля %s (ID %d)" ):format( pPlayer:GetGroups()[1]:GetCaption(), pPlayer:GetUserName(), pVehicle:GetName(), pVehicle:GetID() ), 0, 255, 128 );
+					pTarget:GetChat():Send( ( "Теперь Вы владелец автомобиля %s (ID %d)" ):format( pVehicle:GetName(), pVehicle:GetID() ), 0, 255, 128 );
 				else
 					pPlayer:GetChat():Send( TEXT_DB_ERROR, 255, 0, 0 );
 				end

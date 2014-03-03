@@ -211,19 +211,19 @@ function CClientRPC:TryLogin( sLogin, sPassword, bRemember )
 	self.m_iLoginAttempt = NULL;
 	
 	if pRow.activation_code then
-		return "Ваш аккаунт не активирован";
+		return "Ваша учётная запись не активирована";
 	end
 	
 	if pRow.ban == "Yes" then
 		local sReason	= Args[ 1 ] and " (" + pRow.ban_reason + ")" or "";
 		local sAdmin	= Args[ 2 ] and "администратором " + pRow.ban_user_name or "";
 		
-		return "Ваш аккаунт заблокирован " + sAdmin + sReason;
+		return "Ваша учётная запись заблокирована " + sAdmin + sReason;
 	end
 	
 	for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
 		if pPlr:GetUserID() == pRow.id then
-			return "Другой игрок в настоящее время находится под этим аккаунтом";
+			return "Другой игрок в настоящее время находится под этой учётной записью";
 		end
 	end
 	

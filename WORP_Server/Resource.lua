@@ -337,6 +337,7 @@ class: Resource
 				"-p, --password       пароль пользователя";
 				"-n. --name            имя пользователя (по умолчанию - логин)";
 				"-g, --groups          группы через запятую (ID и/или название)";
+				"-Z, --adminid          личный номер администратора";
 			}
 		);
 		CCommand:AddOption( 'uac', 'userdel',		CUACCommands.UserDel,			true,

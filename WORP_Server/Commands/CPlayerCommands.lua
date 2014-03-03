@@ -21,7 +21,7 @@ function CPlayerCommands:Jail( pPlayer, sCmd, sOption, sPlayerID, siMinutes, ...
 					
 					local date = getRealTime();
 					
-					outputChatBox( ( "%s посажен в бан зону администратором %s на %s %s, прична: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), pPlayer:GetUserName(), iMinutes, math.decl( iMinutes, 'минуту', 'минуты', 'минут' ), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
+					outputChatBox( ( "%s посажен в бан зону на %s %s, причина: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), iMinutes, math.decl( iMinutes, 'минуту', 'минуты', 'минут' ), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
 					
 					g_pAdminLog:Write( "%s jailed %s (%s) to ban zone (%s)", pPlayer:GetUserName(), pTarget:GetName(), pTarget:GetUserName(), sReason );
 					
@@ -83,7 +83,7 @@ function CPlayerCommands:Kick( pPlayer, sCmd, sOption, sTargetPlayer, ... )
 			if pPlayer:GetUserID() == 1 or not pTarget:HaveAccess( "general.immunity" ) then
 				local date = getRealTime();
 				
-				outputChatBox( ( "%s кикнут с сервера администратором %s, причина: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), pPlayer:GetUserName(), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
+				outputChatBox( ( "%s кикнут с сервера, причина: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
 				
 				pTarget:Kick( sReason );
 				
@@ -113,7 +113,6 @@ function CPlayerCommands:Mute( pPlayer, sCmd, sOption, sTargetPlayer, sTime, ...
 				local date = getRealTime();
 				
 				-- if iTime > 0 then
-					outputChatBox( ( "Администратор %s лишил %s права пользоваться чатом на %d %s, прична: %s (%02d-%02d-%04d)" ):format( pPlayer:GetUserName(), pTarget:GetName(), iTime, math.decl( iTime, 'минуту', 'минуты', 'минут' ), sReason, date.monthday, date.month + 1, date.year + 1900 ), root, 255, 64, 0 );
 					pTarget:GetChat():Send( "Вы лишены права пользоваться чатом на " + iTime + math.decl( iTime, ' минуту', ' минуты', ' минут' ) + "!", 255, 0, 0 );
 				-- end
 				
@@ -157,7 +156,7 @@ function CPlayerCommands:Ban( pPlayer, sCmd, sOption, sTargetPlayer, sMinutes, .
 					times = 'на ' + math.floor( iMinutes / 1440 ) + math.decl( math.floor( iMinutes / 1440 ), 'день', 'дня', 'дней' );
 				end
 				
-				local msg = ( "Администратор %s забанил %s %s, прична: %s (%02d-%02d-%04d)" ):format( pPlayer:GetUserName(), pTarget:GetName(), times, sReason, date.monthday, date.month + 1, date.year + 1900 );
+				local msg = ( "%s забанен %s, причина: %s (%02d-%02d-%04d)" ):format( pTarget:GetName(), times, sReason, date.monthday, date.month + 1, date.year + 1900 );
 				
 				outputChatBox( msg, root, 255, 64, 0 );
 				
@@ -216,7 +215,7 @@ function CPlayerCommands:SetName( pPlayer, sCmd, sOption, sTargetPlayer, sName, 
 					
 					if not iError then
 						SendAdminsMessage( TEXT_PLAYER_NAME_CHANGED_A:format( pPlayer:GetUserName(), sOldName, pTarget:GetName() ) );
-						pTarget:GetChat():Send( TEXT_PLAYER_NAME_CHANGED2:format( pPlayer:GetUserName(), sOldName, pTarget:GetName() ), 0, 255, 255 );
+						pTarget:GetChat():Send( TEXT_PLAYER_NAME_CHANGED2:format( pPlayer:GetAdminName(), sOldName, pTarget:GetName() ), 0, 255, 255 );
 						
 						return true;
 					elseif iError == 0 then
@@ -310,7 +309,7 @@ function CPlayerCommands:SetSkin( pPlayer, sCmd, sOption, sTargetPlayer, sSkin )
 					local pSkin = CPed.GetSkin( iSkin );
 					
 					if pTarget:GetChar():SetSkin( pSkin ) then
-						pTarget:GetChat():Send( TEXT_PLAYER_SKIN_CHANGED:format( pPlayer:GetUserName(), pSkin:GetID(), pSkin:GetName() ), 0, 255, 255 );
+						pTarget:GetChat():Send( TEXT_PLAYER_SKIN_CHANGED:format( pPlayer:GetAdminName(), pSkin:GetID(), pSkin:GetName() ), 0, 255, 255 );
 					else
 						pPlayer:GetChat():Error( TEXT_PLAYER_INVALID_SKIN );
 					end
@@ -479,7 +478,6 @@ function CPlayerCommands:Reconnect( pPlayer, sCmd, sOption, sTargetPlayer )
 		
 		if pTarget then
 			if pTarget == pPlayer or pPlayer:GetUserID() == 1 or not pTarget:HaveAccess( "general.immunity" ) then
-				pTarget:GetChat():Send( TEXT_PLAYER_RECONNECTED_BY_ADMIN:format( pPlayer:GetUserName() ), 255, 120, 0 );
 				pPlayer:GetChat():Send( TEXT_PLAYER_RECONNECTED:format( pTarget:GetName(), pTarget:GetID() ), 64, 255, 0 );
 				
 				pTarget:Redirect();
@@ -563,7 +561,7 @@ function CPlayerCommands:SetFaction( pPlayer, sCmd, sOption, sTargetPlayer, sFac
 				pPlayerChar:SetFaction();
 				
 				pPlayer:GetChat():Send( TEXT_PLAYER_FACTION_REMOVED:format( pTarget:GetName(), pTarget:GetID() ), 0, 255, 255 );
-				pTarget:GetChat():Send( TEXT_PLAYER_FACTION_REMOVED2:format( pPlayer:GetUserName() ), 0, 255, 255 );
+				pTarget:GetChat():Send( TEXT_PLAYER_FACTION_REMOVED2:format( pPlayer:GetAdminName() ), 0, 255, 255 );
 			else
 				local pFaction = g_pGame:GetFactionManager():Get( iFactionID );
 				
@@ -575,7 +573,7 @@ function CPlayerCommands:SetFaction( pPlayer, sCmd, sOption, sTargetPlayer, sFac
 							pPlayerChar:SetFactionRank( iRank );
 							
 							pPlayer:GetChat():Send( TEXT_PLAYER_FACTION_CHANGED:format( pTarget:GetName(), pTarget:GetID(), pFaction:GetName(), xRights, pFaction:GetRanks()[ iRank ], iRank ), 0, 255, 255 );
-							pTarget:GetChat():Send( TEXT_PLAYER_FACTION_CHANGED2:format( pPlayer:GetUserName(), pFaction:GetName(), xRights, pFaction:GetRanks()[ iRank ], iRank ), 0, 255, 255 );
+							pTarget:GetChat():Send( TEXT_PLAYER_FACTION_CHANGED2:format( pPlayer:GetAdminName(), pFaction:GetName(), xRights, pFaction:GetRanks()[ iRank ], iRank ), 0, 255, 255 );
 						else
 							pPlayer:GetChat():Error( TEXT_FACTIONS_INVALID_RANK );
 						end

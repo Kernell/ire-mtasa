@@ -44,15 +44,15 @@ function CPlayerNametag:Hide()
 end
 
 function CPlayerNametag:Update()
-	local sText	= ( "%s (%d)" ):format( self.m_pPlayer:GetName(), self.m_pPlayer:GetID() );
+	local sText	= self.m_pPlayer:GetVisibleName();
 	local Color	= { 120, 120, 120 };
 	
 	if self.m_pPlayer:IsInGame() then
 		Color	= { 255, 255, 255 };
 	end
 	
-	if self.m_pPlayer:IsAdmin() then
-		sText	= self.m_pPlayer:GetGroups()[ 1 ]:GetCaption();
+	if not self.m_pPlayer:IsAdmin() then
+		sText	= ( "%s (%d)" ):format( sText, self.m_pPlayer:GetID() );
 	end
 	
 	self:SetText( sText );

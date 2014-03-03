@@ -140,7 +140,7 @@ function CUACCommands:UserMod( pPlayer, sCmd, sOption, ... )
 				return TEXT_DB_ERROR, 255, 0, 0;
 			end
 			
-			local sNewPasswd, sNewEmail, sNewName, sNewGroups;
+			local sNewPasswd, sNewEmail, sNewName, sNewGroups, sAdminID;
 			
 			local i, f = next( Argv );
 			
@@ -153,6 +153,7 @@ function CUACCommands:UserMod( pPlayer, sCmd, sOption, ... )
 				elseif 	f == '-l' or f == '--login'		then sNewEmail		= value;
 				elseif 	f == '-n' or f == '--name'		then sNewName		= value;
 				elseif 	f == '-g' or f == '--groups'	then sNewGroups		= value;
+				elseif 	f == '-Z' or f == '--adminid'	then sAdminID		= value;
 				else
 					return "Неизвестный флаг '" + f + "'", 255, 0, 0;
 				end
@@ -244,6 +245,30 @@ function CUACCommands:UserMod( pPlayer, sCmd, sOption, ... )
 				table.insert( Updates, "groups = '" + table.concat( Groups, "," ) + "'" );
 			end
 			
+			if sAdminID then
+				local iAdminID = tonumber( sAdminID );
+				
+				if not iAdminID then
+					return "Ошибка в параметре \"Личный номер администратора\"", 255, 0, 0;
+				end
+				
+				local pResult = g_pDB:Query( "SELECT `id`, `name` FROM `uac_users` WHERE `admin_id` = " + iAdminID + " LIMIT 1" );
+				
+				if pResult then
+					local pRow = pResult:FetchRow();
+					
+					if pRow and pRow.id then
+						self:GetChat():Send( "Внимание: этот номер администратора используется " + pRow.name, 255, 196, 0 );
+					end
+					
+					delete ( pResult );
+				else
+					Debug( g_pDB:Query(), 1 );
+				end
+				
+				table.insert( Updates, "admin_id = " + iAdminID );
+			end
+			
 			if table.getn( Updates ) > 0 then
 				if g_pDB:Query( "UPDATE uac_users SET " + table.concat( Updates, ', ' ) + " WHERE id = " + iID ) then
 					if pTargetPlayer then
@@ -328,7 +353,7 @@ function CUACCommands:UserDel( pPlayer, sCmd, sOption, sEmail, ... )
 		
 		if g_pDB:qeury( "UPDATE uac_users SET deleted = 'Yes' WEHRE id = " + iID ) then
 			if pTargetPlayer then
-				pTargetPlayer:Kick( "Ваш аккаунт был удалён администратором " + pPlayer:GetUserName() );
+				pTargetPlayer:Kick( "Ваш аккаунт был удалён" );
 			end
 			
 			if bChars then
@@ -357,7 +382,7 @@ function CUACCommands:UserDel( pPlayer, sCmd, sOption, sEmail, ... )
 end
 
 function CUACCommands:AddGroup( pPlayer, sCmd, sOption, sName, sCaption, ... )
-	if sLogin and sLogin:len() > 0 and sCaption and sCaption:len() > 0 and sLogin ~= '-h' and sLogin ~= '--help' then
+	if sName and sName:len() > 0 and sCaption and sCaption:len() > 0 and sName ~= '-h' and sName ~= '--help' then
 		local sName		= g_pDB:EscapeString( sName );
 		local sCaption	= g_pDB:EscapeString( sCaption );
 		local Color		= { 255, 255, 255 };

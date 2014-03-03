@@ -151,32 +151,40 @@ function CCommands:Admins( pPlayer )
 	if pPlayer:HaveAccess( "command.adminchat" ) then
 		pPlayer:GetChat():Send( "Список администраторов", 255, 128, 0 );
 		
+		local OnlineAdmins	= {};
+		
 		for _, pPlr in pairs( g_pGame:GetPlayerManager():GetAll() ) do
 			local Groups = pPlr:GetGroups();
 			
 			if Groups and Groups[ 1 ] then
-				local iR, iG, iB	= 200, 200, 200;
-				local sGroups		= "";
-				local sIP			= pPlr:GetIP();
-				
-				for i, pGrp in ipairs( Groups ) do
-					if i > 1 then
-						sGroups = sGroups + ", ";
-					end
-					
-					sGroups = sGroups + pGrp:GetName();
-					
-					if pGrp:GetID() == 0 then
-						sIP = NULL;
-					end
-				end
-				
-				if pPlr:IsAdmin() then
-					iR, iG, iB = unpack( Groups[ 1 ]:GetColor() );
-				end
-				
-				pPlayer:GetChat():Send( "   " + pPlr:GetUserName() + " (" + pPlr:GetID() + ") IP: " + ( sIP or "Скрыт" ) + " Группы: " + sGroups, iR, iG, iB );
+				OnlineAdmins[ pPlr:GetUserName() ] = pPlr;
 			end
+		end
+		
+		local pResult = g_pDB:Query( "SELECT u.admin_id, u.name, GROUP_CONCAT( g.name ORDER BY u.groups ASC SEPARATOR ', ' ) AS 'groups' FROM uac_users u LEFT JOIN uac_groups g ON FIND_IN_SET( g.id, u.groups ) WHERE u.groups IS NOT NULL GROUP BY u.id ORDER BY u.groups" );
+		
+		local sFormat	= "%5s %s (#%d) IP: %s Группы: %s";
+		
+		if pResult then
+			for i, pRow in ipairs( pResult:GetArray() ) do
+				local iR, iG, iB	= 196, 196, 196;
+				
+				local pPlr	= OnlineAdmins[ pRow.name ];
+				local sID	= "";
+				local sIP	= "Offline";
+				
+				if pPlr then
+					sID			= "[" + pPlr:GetID() + "]";
+					sIP			= pPlr:GetIP();
+					iR, iG, iB	= 196, 255, 196;
+				end
+				
+				pPlayer:GetChat():Send( sFormat:format( sID, pRow.name, pRow.admin_id, sIP, pRow.groups ), iR, iG, iB );
+			end
+			
+			delete ( pResult );
+		else
+			Debug( g_pDB:Error(), 1 );
 		end
 	end
 end
@@ -198,48 +206,22 @@ function CCommands:AdminDuty( pPlayer )
 	
 	pPlayer:GetNametag():Update();
 	
-	assert( g_pDB:Query( "UPDATE uac_users SET adminduty = %q WHERE id = " + pPlayer:GetUserID(), pPlayer:IsAdmin() and 'Yes' or 'No' ) );
-end
-
-function CCommands:AnswerReport( pPlayer, sCmd, sID, ... )
-	local iID		= tonumber( sID );
-	local sMessage	= table.concat( { ... }, ' ' );
-	
-	if iID and sMessage:len() > 0 then
-		local pTarget = g_pGame:GetPlayerManager():Get( sID );
-		
-		if pTarget then
-			local ReportData = pTarget.m_ReportData;
-			
-			if ReportData.m_sText then
-				outputChatBox( "[REPORT]: " + ReportData.m_sText, root, 0, 128, 255 );
-				outputChatBox( pPlayer:GetUserName() + ": " + sMessage, root, 0, 156, 255 );
-				
-				ReportData.m_sText = NULL;
-			else
-				self:Echo( pPlayer, "этот игрок не отправлял жалобу" );
-			end
-		else
-			self:Echo( pPlayer, TEXT_PLAYERS_INVALID_ID );
-		end
-	else
-		self:Echo( pPlayer, "<player> <message>" );
-	end
+	assert( g_pDB:Query( "UPDATE uac_users SET adminduty = %q WHERE id = " + pPlayer:GetUserID(), pPlayer:IsAdmin() and "Yes" or "No" ) );
 end
 
 function CCommands:AdminChat( pPlayer, sCmd, ... )
 	local sMessage = table.concat( { ... }, ' ' );
 	
 	if sMessage:len() > 0 then
-		sMessage = pPlayer:GetUserName() + " (" + pPlayer:GetID() + "): " + sMessage;
+		sMessage = pPlayer:GetUserName() + ": " + sMessage;
 		
 		local Groups = pPlayer:GetGroups();
 		
 		if Groups and table.getn( Groups ) > 0 then
-			sMessage = Groups[1]:GetCaption() + " " + sMessage;
+			sMessage = Groups[ 1 ]:GetCaption() + " " + sMessage;
 		end
 		
-		SendAdminsMessage( sMessage, '', 230, 230, 0 );
+		SendAdminsMessage( sMessage, "", 230, 230, 0 );
 		
 		return true;
 	end
@@ -296,8 +278,10 @@ function CCommands:PrivateMessage( pPlayer, sCmd, sPlayer, ... )
 		local pTargetPlayer = g_pGame:GetPlayerManager():Get( sPlayer );
 		
 		if pTargetPlayer then
+			local sAdminName = pTargetPlayer:HaveAccess( "command.adminchat" ) and pPlayer:GetUserName() or pPlayer:GetAdminName();
+			
 			pPlayer:GetChat():Send( 'PM to ' + pTargetPlayer:GetName() + ' (' + pTargetPlayer:GetID() + '): ' + sMessage, 200, 0, 0 );
-			pTargetPlayer:GetChat():Send( 'PM from ' + pPlayer:GetUserName() + ': ' + sMessage, 200, 0, 0 );
+			pTargetPlayer:GetChat():Send( 'PM from ' + sAdminName + ': ' + sMessage, 200, 0, 0 );
 			
 			g_pServer:Print( 'PM: %s -> %s (%d): %s', pTargetPlayer:GetUserName(), pTargetPlayer:GetName(), pTargetPlayer:GetID(), sMessage:gsub( '%%', '%%%%' ) );
 			
