@@ -772,7 +772,7 @@ function CPlayer:InitGroups( sGroups, bAlert )
 		end
 		
 		if self.m_iAdminID == 0 then
-			g_pDB:Query( "UPDATE `uac_users` SET `admin_id` = ( SELECT MAX( `admin_id` ) ) + 1 WHERE id = " + self:GetUserID() + " LIMIT 1" );
+			g_pDB:Query( "UPDATE `uac_users`, ( SELECT MAX( `admin_id` ) + 1 AS `maxid` FROM `uac_users` ) AS users SET `admin_id` = users.maxid WHERE `id` = " + self:GetUserID() );
 			
 			local pResult = g_pDB:Query( "SELECT `admin_id` FROM `uac_users` WHERE `id` = " + self:GetUserID() + " LIMIT 1" );
 			
