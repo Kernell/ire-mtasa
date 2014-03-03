@@ -39,7 +39,7 @@ class: CUICursor
 			this:OnMouseLeave( fX, fY );
 		end
 		
-		addEventHandler( "onClientRender", 		root, this.__OnRender );
+		addEventHandler( "onClientRender", 		root, this.__OnRender, true, "low" );
 		addEventHandler( "onClientMouseEnter", 	root, this.__OnMouseEnter );
 		addEventHandler( "onClientMouseLeave", 	root, this.__OnMouseLeave );
 	end;
