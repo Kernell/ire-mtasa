@@ -37,5 +37,5 @@ function Warning( iLevel, iNumber, ... )
 end
 
 function Error( iLevel, iNumber, ... )
-	error( ( ... ) and Text_W[ iNumber ]:format( ... ) or Text_W[ iNumber ], iLevel + 1 );
+	error( ( ... ) and Text_E[ iNumber ]:format( ... ) or Text_E[ iNumber ], iLevel + 1 );
 end
