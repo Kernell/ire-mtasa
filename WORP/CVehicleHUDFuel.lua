@@ -41,10 +41,8 @@ class: CVehicleHUDFuel ( C3DHUD )
 			local fX, fY, fZ	= this:GetVehicleOffsets();
 			
 			this.m_fStartX, this.m_fStartY, this.m_fStartZ 		= getPositionInOffset( this.m_pVehicle, fX, fY, fZ );
-			
-			this.m_fEndX, this.m_fEndY, this.m_fEndZ			= this.m_fStartX, this.m_fStartY, this.m_fStartZ - 0.5;
-			
-			this.m_fTowardX, this.m_fTowardY, this.m_fTowardZ	= getPositionInOffset( this.m_pVehicle, 0.0, fY * 2.0, fY * 2.0 );
+			this.m_fEndX, this.m_fEndY, this.m_fEndZ			= getPositionInOffset( this.m_pVehicle, fX, fY, fZ - 0.5 );
+			this.m_fTowardX, this.m_fTowardY, this.m_fTowardZ	= getPositionInOffset( this.m_pVehicle, 0.0, fY * 2.0, fZ * 2.0 );
 		else
 			this:SetText( NULL );
 		end
