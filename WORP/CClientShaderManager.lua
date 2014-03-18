@@ -22,20 +22,6 @@ class: CClientShaderManager
 		
 		this.m_Shaders.GrayScale	= CClientShaderGrayScale();
 		
-		setElementData( CLIENT, "Settings.Graphics.Shaders.DepthOfField", 	Settings.Graphics.Shaders.DepthOfField, false );
-		setElementData( CLIENT, "Settings.Graphics.Shaders.HDR", 			Settings.Graphics.Shaders.HDR, 			false );
-		setElementData( CLIENT, "Settings.Graphics.Shaders.Bloom", 			Settings.Graphics.Shaders.Bloom, 		false );
-		setElementData( CLIENT, "Settings.Graphics.Shaders.RadialBlur", 	Settings.Graphics.Shaders.RadialBlur, 	false );
-		setElementData( CLIENT, "Settings.Graphics.Shaders.RoadShine3", 	Settings.Graphics.Shaders.RoadShine3, 	false );
-		setElementData( CLIENT, "Settings.Graphics.Shaders.Water", 			Settings.Graphics.Shaders.Water, 		false );
-		
-		exports.shader_hdr:SetEnabled			( Settings.Graphics.Shaders.HDR );
-		exports.shader_dof:SetEnabled			( Settings.Graphics.Shaders.DepthOfField );
-		exports.shader_bloom:SetEnabled			( Settings.Graphics.Shaders.Bloom );
-		exports.shader_radial_blur:SetEnabled	( Settings.Graphics.Shaders.RadialBlur );
-		exports.shader_roadshine3:SetEnabled	( Settings.Graphics.Shaders.RoadShine3 );
-		exports.shader_water:SetEnabled			( Settings.Graphics.Shaders.Water );
-		
 		exports.IRE_Shaders:LoadSettings( Settings.Graphics.Shaders );
 	end;
 	

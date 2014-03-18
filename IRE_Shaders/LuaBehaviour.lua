@@ -7,6 +7,8 @@
 
 class: LuaBehaviour
 {
+	FixedUpdateRate = 50;
+	
 	LuaBehaviour	= function( this )
 		if this.Start then
 			this:Start();
@@ -21,8 +23,8 @@ class: LuaBehaviour
 		end
 		
 		if this.OnPreRender then
-			function this.__OnPreRender() 
-				this:OnPreRender();
+			function this.__OnPreRender( iTimeSlice ) 
+				this:OnPreRender( iTimeSlice / 1000 );
 			end
 			
 			addEventHandler( "onClientPreRender", 		root, this.__OnPreRender );
@@ -37,8 +39,8 @@ class: LuaBehaviour
 		end
 		
 		if this.Update then
-			function this.__Update() 
-				this:Update();
+			function this.__Update( iTimeSlice ) 
+				this:Update( iTimeSlice / 1000 );
 			end
 
 			addEventHandler( "onClientPreRender", 		root, this.__Update );
@@ -49,7 +51,7 @@ class: LuaBehaviour
 				this:FixedUpdate();
 			end
 			
-			this.m_pUpdateTimer = setTimer( this.__FixedUpdate, 50, 0 );
+			this.m_pUpdateTimer = setTimer( this.__FixedUpdate, this.FixedUpdateRate, 0 );
 		end
 	end;
 	
@@ -64,6 +66,10 @@ class: LuaBehaviour
 		
 		if this.__OnPreRender then
 			removeEventHandler( "onClientPreRender", 	root, this.__OnPreRender );
+		end
+		
+		if this.__OnRenderObject then
+			removeEventHandler( "onClientHUDRender", 	root, this.__OnRenderObject );
 		end
 		
 		if this.m_pUpdateTimer then

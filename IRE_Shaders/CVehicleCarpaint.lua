@@ -91,7 +91,7 @@ class: CVehicleCarpaint ( LuaBehaviour )
 			return;
 		end
 		
-		this.m_pShader		= CShader( "carpaint_d3d9.fx", 0, this.m_fRenderDistance, false, "vehicle" );
+		this.m_pShader		= CShader( "Shaders/D3D9/carpaint.fx", 0, this.m_fRenderDistance, false, "vehicle" );
 		
 		assert( this.m_pShader );
 		

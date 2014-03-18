@@ -22,13 +22,13 @@ class: CUISettings ( CGUI, CUIAsyncQuery )
 				{
 					DepthOfField	= "Глубина резкости";
 					HDR				= "High Dynamic Range";
-					Bloom			= "Bloom эффект";
+				--	Bloom			= "Bloom эффект";
 				--	Glow			= "Cвечиние ярких областей объекта";
 					RadialBlur		= "Размытие в движении";
-					RoadShine3		= "Отражение солнца на дорогах";
+					RoadShine		= "Отражение солнца на дорогах";
 					BumpMapping		= "Рельефное текстурирование";
 					CarReflect		= "Отражения на автомобилях";
-					Water			= "Улучшеная прорисовка воды";
+					Water			= "Улучшенная прорисовка воды";
 				};
 			};
 		};

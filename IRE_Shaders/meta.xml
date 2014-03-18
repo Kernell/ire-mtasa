@@ -1,31 +1,63 @@
 <meta>
-  <min_mta_version server="1.3.4-9.05800" client="1.3.4-9.05800" />
+  <min_mta_version client="1.3.4-9.05800" />
   
-	<script src="Shared/utils.lua"            type="client" />
-	<script src="Shared/Debug.lua"            type="client" />
-	<script src="Shared/class.lua"            type="client" />
-	<script src="Shared/IElementData.lua"     type="client" />
-	<script src="Shared/CElement.lua"         type="client" />
+	<script src="matrix.lua"                    type="client" />
+	<script src="complex.lua"                   type="client" />
   
-	<script src="CShader.lua"                 type="client" />
+	<script src="Shared/utils.lua"              type="client" />
+	<script src="Shared/Debug.lua"              type="client" />
+	<script src="Shared/class.lua"              type="client" />
+	<script src="Shared/CVector.lua"            type="client" />
+	<script src="Shared/IElementData.lua"       type="client" />
+	<script src="Shared/CElement.lua"           type="client" />
+	<script src="Shared/CTexture.lua"           type="client" />
+  
+	<script src="CShader.lua"                   type="client" />
 
-	<script src="LuaBehaviour.lua"            type="client" />
+	<script src="RTPool.lua"                    type="client" />
+
+	<script src="LuaBehaviour.lua"              type="client" />
   
-	<script src="Resource.lua"                type="client" />
+	<script src="Resource.lua"                  type="client" />
   
-	<script src="CShaderManager.lua"          type="client" />
+	<script src="CShaderManager.lua"            type="client" />
   
-	<script src="CVehicle.lua"                type="client" />
-	<script src="CVehicleManager.lua"         type="client" />
-	<script src="CVehicleCarpaint.lua"        type="client" />
+	<script src="CShaderRadialBlur.lua"         type="client" />
+	<script src="CShaderDepthOfField.lua"       type="client" />
+	<script src="CShaderHDR.lua"                type="client" />
+	<script src="CShaderGaussianBlur.lua"       type="client" />
+	<script src="CShaderShine.lua"              type="client" />
+	<script src="CShaderWater.lua"              type="client" />
   
-	<script src="API.lua"                     type="client" />
+	<script src="CVehicle.lua"                  type="client" />
+	<script src="CVehicleManager.lua"           type="client" />
+	<script src="CVehicleCarpaint.lua"          type="client" />  
   
-	<file src="mta-helper.fxh"                type="client" />
+	<script src="API.lua"                       type="client" />
+
+  <export function="LoadSettings"             type="client" />
   
-	<file src="carpaint_d3d9.fx"              cache="false" />
+	<file src="Shaders/mta-helper.fxh"          cache="true" />
+  
+	<file src="Shaders/D3D9/DepthOfFieldBlurH.fx" cache="false" />
+	<file src="Shaders/D3D9/DepthOfFieldBlurV.fx" cache="false" />
+  
+	<file src="Shaders/D3D9/carpaint.fx"        cache="false" />
+	<file src="Shaders/D3D9/GaussianBlur.fx"    cache="false" />
+	<file src="Shaders/D3D9/RadialBlur.fx"      cache="false" />
+	<file src="Shaders/D3D9/Shine.fx"           cache="false" />
+  
+	<file src="Shaders/D3D9/HDRBloomCombine.fx" cache="false" />
+	<file src="Shaders/D3D9/HDRBloomExtract.fx" cache="false" />
+	<file src="Shaders/D3D9/HDRBlurH.fx"        cache="false" />
+	<file src="Shaders/D3D9/HDRBlurV.fx"        cache="false" />
+	<file src="Shaders/D3D9/HDRContrast.fx"     cache="false" />
+	<file src="Shaders/D3D9/HDRModulation.fx"   cache="false" />
+  
+	<file src="Shaders/D3D9/Water.fx"           cache="false" />
   
 	<file src="Textures/smallnoise3d.dds" />
-  
-  <export function="LoadSettings"           type="client" />
+	<file src="Textures/cube_env256.dds" />
+	<file src="Textures/radial_mask.dds" />
+	<file src="Textures/vignette1.dds" />
 </meta>

@@ -6,5 +6,5 @@
 -- Version		1.0
 
 function LoadSettings( Settings )
-
+	resourceRoot.m_pShaderManager:OnSettingsUpdate( Settings );
 end

@@ -34,6 +34,7 @@ local function new_Element( this )
 --		teleport	= CTeleport;
 --		interior	= CInerior;
 --		faction		= CFaction;
+		texture		= CTexture;
 	};
 	
 	if Classes[ sType ] then
@@ -89,6 +90,10 @@ debug.setmetatable( root,
 			end
 			
 			list[ self ][ key ] = value;
+		end;
+		
+		__gc	= function( this )
+			Debug( "Garbage collector: " + tostring( this ) );
 		end;
 	}
 );
