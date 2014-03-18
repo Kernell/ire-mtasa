@@ -127,58 +127,120 @@ end
 
 -- // Operators
 
-function Vector3.Add( vLeft, vRight )
-	local bVector = classname( vLeft ) == 'Vector3';
+function Vector3:Add( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
 	
-    return Vector3( ( bVector and vLeft.X or vLeft ) + ( bVector and vRight.X or vRight ), ( bVector and vLeft.Y or vLeft ) + ( bVector and vRight.Y or vRight ), ( bVector and vLeft.Z or vLeft ) + ( bVector and vRight.Z or vRight ) );
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX + pVector.X;
+		fY = fY + pVector.Y;
+		fZ = fZ + pVector.Z;
+	else
+		fX = fX + pVector;
+		fY = fY + pVector;
+		fZ = fZ + pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Sub( vLeft, vRight )
-    return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) - ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) - ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) - ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Sub( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
+	
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX - pVector.X;
+		fY = fY - pVector.Y;
+		fZ = fZ - pVector.Z;
+	else
+		fX = fX - pVector;
+		fY = fY - pVector;
+		fZ = fZ - pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Mul( vLeft, vRight )
-    return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) * ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) * ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) * ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Mul( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
+	
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX * pVector.X;
+		fY = fY * pVector.Y;
+		fZ = fZ * pVector.Z;
+	else
+		fX = fX * pVector;
+		fY = fY * pVector;
+		fZ = fZ * pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Div( vLeft, vRight )
-    return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) / ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) / ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) / ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Div( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
+	
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX / pVector.X;
+		fY = fY / pVector.Y;
+		fZ = fZ / pVector.Z;
+	else
+		fX = fX / pVector;
+		fY = fY / pVector;
+		fZ = fZ / pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Pow( vLeft, vRight )
-	return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) ^ ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) ^ ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) ^ ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Pow( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
+	
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX ^ pVector.X;
+		fY = fY ^ pVector.Y;
+		fZ = fZ ^ pVector.Z;
+	else
+		fX = fX ^ pVector;
+		fY = fY ^ pVector;
+		fZ = fZ ^ pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Mod( vLeft, vRight )
-    return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) % ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) % ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) % ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Mod( pVector )
+	if classname( self ) ~= "Vector3" then Error( 2, 2288 ); end
+	
+	local fX, fY, fZ = self.X, self.Y, self.Z;
+	
+	if classname( pVector ) == "Vector3" then
+		fX = fX % pVector.X;
+		fY = fY % pVector.Y;
+		fZ = fZ % pVector.Z;
+	else
+		fX = fX % pVector;
+		fY = fY % pVector;
+		fZ = fZ % pVector;
+	end
+	
+	return Vector3( fX, fY, fZ );
 end
 
-function Vector3.Equality( vLeft, vRight )
-	return Vector3(
-		( classname( vLeft ) == 'Vector3' and vLeft.X or vLeft ) == ( classname( vRight ) == 'Vector3' and vRight.X or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Y or vLeft ) == ( classname( vRight ) == 'Vector3' and vRight.Y or vRight ),
-		( classname( vLeft ) == 'Vector3' and vLeft.Z or vLeft ) == ( classname( vRight ) == 'Vector3' and vRight.Z or vRight ) 
-	);
+function Vector3:Equality( pVector )
+	if classname( pVector ) == "Vector3" then
+		return self.X == pVector.X and self.Y == pVector.Y and self.Z == pVector.Z;
+	end
+	
+	return self.X == pVector and self.Y == pVector and self.Z == pVector;
 end
 
 function Vector3:ToString()
