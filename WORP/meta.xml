@@ -5,14 +5,6 @@
   
   <include resource="IRE_Shaders" />
   
-  <include resource="shader_hdr" />
-  <include resource="shader_dof" />
-  <include resource="shader_bloom" />
-  <include resource="shader_radial_blur" />
-  <include resource="shader_glow" />
-  <include resource="shader_roadshine3" />
-  <include resource="shader_water" />
-  
   <script src="Shared/utils.lua"      type="client"/>
   <script src="Shared/Debug.lua"      type="client"/>
   <script src="Shared/class.lua"      type="client"/>
@@ -139,6 +131,9 @@
   <script src="Players/Binds.lua"           type="client"/>
   
   <script src="Resource.lua"                type="client"/>
+  
+  <export function="GetSettings"            type="client"/>
+  <export function="DXFont"                 type="client"/>
   
   <!-- Resources -->
   

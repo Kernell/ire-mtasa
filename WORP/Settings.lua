@@ -17,11 +17,11 @@ Settings	=
 		{
 			DepthOfField	= false;
 			HDR				= false;
-			Bloom			= false;
+		--	Bloom			= false;
 		--	Glow			= true;
 			RadialBlur		= false;
 		--	MotionBlur		= false;
-			RoadShine3		= false;
+			RoadShine		= false;
 			BumpMapping		= false;
 			CarReflect		= false;
 			Water			= false;
@@ -74,3 +74,7 @@ SettingsMeta	=
 SettingsMeta.__index = SettingsMeta;
 
 setmetatable( Settings, SettingsMeta );
+
+function GetSettings()
+	return Settings;
+end
