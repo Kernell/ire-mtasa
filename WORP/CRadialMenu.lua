@@ -178,6 +178,8 @@ class: CRadialMenu
 			
 			this.m_pHoverItem	= NULL;
 			
+			this:AddItem( "2-action-settings", CRadialMenu.FunctionSettings );
+			
 			local pSkin			= CLIENT:GetSkin();
 			
 			if not CLIENT:IsInVehicle() and CLIENT:GetHealth() > 10.0 then
@@ -291,5 +293,9 @@ class: CRadialMenu
 	
 	FunctionPlayerToggleCuffed	= function( this, pPlayer )
 		SERVER.Exec( "setcuffed " + pPlayer:GetData( "player_id" ) );
+	end;
+	
+	FunctionSettings			= function( this )
+		SERVER.Exec( "settings" );
 	end;
 };
