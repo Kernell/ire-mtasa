@@ -7,6 +7,6 @@ REV=`git log | grep commit | wc -l`
 git clean
 git checkout
 
-echo "VERSION\t= \"1.0.$REV\"" > WORP_Server/Version.lua
+echo "VERSION = \"1.0.$REV\"" > WORP_Server/Version.lua
 
 php post-commit-compile.php

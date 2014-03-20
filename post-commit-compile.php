@@ -1,15 +1,38 @@
-#!/bin/php
 <?php
 
 $dirs = array
 (
 	"Shared",
+	"IRE_AndroidUI",
 	"IRE_Shaders",
+	"IRE_Scoreboard",
 	"rp_models",
-	"rp_nametags" 
+	"rp_nametags",
 	"WORP",
 	"WORP_Headmove",
+	"WORP_Server",
 );
+
+function luac( $path )
+{
+	if( $handle = @fopen( $path, "r" ) )
+	{
+		$buffer = fread( $handle, 5 );
+		
+		fclose( $handle );
+		
+		if( substr( $buffer, 1, 4 ) != "MvbR" )
+		{
+			exec( "luac_mta -b -e -o $path $path" );
+			
+			return "\e[32;40m  OK  ";
+		}
+		
+		return "\e[33;40mPASSED";
+	}
+	
+	return "\e[31;40mFAILED";
+}
 
 foreach( $dirs as $dir )
 {
@@ -19,27 +42,11 @@ foreach( $dirs as $dir )
 		
 		foreach( $xml->script as $script )
 		{
-			if( $script[ "type" ] == "client" )
+			// if( $script[ "type" ] == "client" )
 			{
-				echo "Compiling ", $script[ "src" ], " ";
+				$result = luac( 'uploads/' . $dir . '/' . $script[ "src" ] );
 				
-				$file_path = $dir . '/' . $script[ "src" ];
-				
-				if( $handle = @fopen( $file_path, "r" ) )
-				{
-					$buffer = fread( $handle, 5 );
-					
-					fclose( $handle );
-					
-					if( substr( $buffer, 1, 4 ) != "MvbR" )
-						exec( "luac_mta -b -e -o $file_path $file_path" );
-					else
-						echo "skipped";
-				}
-				else
-					echo "failed to open";
-				
-				echo "\n";
+				printf( "Compiling %-70s [%s\e[m]\n", $script[ "src" ], $result );
 			}
 		}
 		

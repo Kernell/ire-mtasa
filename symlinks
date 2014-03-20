@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export CYGWIN="winsymlinks:native"
+
 folders=(
 	"IRE_AndroidUI"
 	"IRE_Scoreboard"

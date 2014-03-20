@@ -1,0 +1,34 @@
+#!/bin/bash
+
+export LANG="ru_RU.UTF-8"
+export CYGWIN="winsymlinks:native"
+
+mkdir uploads
+
+git archive master | tar -x -C ./uploads
+
+folders=(
+	"IRE_AndroidUI"
+	"IRE_Scoreboard"
+	"IRE_Shaders"
+	"rp_models"
+	"rp_nametags"
+	"WORP"
+	"WORP_Server"
+	"WORP_VehicleEngine"
+)
+
+for i in "${folders[@]}"
+do
+	ln -fs ../Shared uploads/$i
+done
+
+REV=`git log | grep commit | wc -l`
+
+echo "VERSION = \"1.0.$REV\"" > uploads/WORP_Server/Version.lua
+
+php post-commit-compile.php
+
+# lftp -e "mirror -R uploads /mta/CziXbQEr5l/mods/deathmatch/resources/[ire]" -u user677700 146.255.195.66
+
+# rm -rf uploads
