@@ -41,213 +41,181 @@
 		David Manura http://lua-users.org/wiki/DavidManura
 		
 	MODIFIED TO SUIT THE MTA SCRIPTING SYSTEM
+	
+	MODIFIED TO SUIT THE MTA ROLEPLAY SCRIPTING SYSTEM
 ]]--
 
---////////////
---// matrix //
---////////////
+local fiszerocomplex = function( cx ) return complex.is(cx,0,0) end
+local fiszeronumber = function( num ) return num == 0 end
 
-matrix = {}
-
--- access to the metatable we set at the end of the file
-local matrix_meta = {}
-
--- access to the symbolic metatable
-local symbol_meta = {}; symbol_meta.__index = symbol_meta
--- set up a symbol type
-local function newsymbol(o)
-	return setmetatable({tostring(o)}, symbol_meta)
-end
-
---/////////////////////////////
---// Get 'new' matrix object //
---/////////////////////////////
-
---// matrix:new ( rows [, comlumns [, value]] )
--- if rows is a table then sets rows as matrix
--- if rows is a table of structure {1,2,3} then it sets it as a vector matrix
--- if rows and columns are given and are numbers, returns a matrix with size rowsxcolumns
--- if num is given then returns a matrix with given size and all values set to num
--- if rows is given as number and columns is "I", will return an identity matrix of size rowsxrows
-function matrix:new( rows, columns, value )
-	-- check for given matrix
-	if type( rows ) == "table" then
-		-- check for vector
-		if type(rows[1]) ~= "table" then -- expect a vector
-			return setmetatable( {{rows[1]},{rows[2]},{rows[3]}},matrix_meta )
+class: Matrix
+{
+	Matrix		= function( this, ... )
+		local args = { ... };
+		
+		if classof( args[ 1 ] ) == Matrix then
+			args = args[ 1 ];
 		end
-		return setmetatable( rows,matrix_meta )
-	end
-	-- get matrix table
-	local mtx = {}
-	local value = value or 0
-	-- build identity matrix of given rows
-	if columns == "I" then
-		for i = 1,rows do
-			mtx[i] = {}
-			for j = 1,rows do
-				if i == j then
-					mtx[i][j] = 1
-				else
-					mtx[i][j] = 0
+		
+		if type( args[ 1 ] ) == "table" then
+			for i in ipairs( args ) do
+				this[ i ] = {};
+				
+				for j in ipairs( args[ i ] ) do
+					this[ i ][ j ] = args[ i ][ j ];
+				end
+			end
+			
+			return;
+		end
+		
+		local rows, columns, value = unpack( args );
+		
+		local value = value or 0;
+		
+		if columns == "I" then
+			for i = 1, rows do
+				this[ i ] = {};
+				
+				for j = 1, rows do
+					if i == j then
+						this[ i ][ j ] = 1;
+					else
+						this[ i ][ j ] = 0;
+					end
+				end
+			end
+		else
+			for i = 1, rows do
+				this[ i ] = {};
+				
+				for j = 1, columns do
+					this[ i ][ j ] = value;
 				end
 			end
 		end
-	-- build new matrix
-	else
-		for i = 1,rows do
-			mtx[i] = {}
-			for j = 1,columns do
-				mtx[i][j] = value
+	end;
+	
+	Add		= function( this, pMatrix )
+		local pNewMatrix = new. Matrix;
+		
+		for i in ipairs( this ) do
+			pNewMatrix[ i ] = {};
+			
+			for j in ipairs( this[ 1 ] ) do
+				pNewMatrix[ i ][ j ] = this[ i ][ j ] + pMatrix[ i ][ j ];
 			end
 		end
-	end
-	-- return matrix with shared metatable
-	return setmetatable( mtx,matrix_meta )
-end
-
---// matrix ( rows [, comlumns [, value]] )
--- set __call behaviour of matrix
--- for matrix( ... ) as matrix.new( ... )
-setmetatable( matrix, { __call = function( ... ) return matrix.new( ... ) end } )
-
-
--- functions are designed to be light on checks
--- so we get Lua errors instead on wrong input
--- matrix.<functions> should handle any table of structure t[i][j] = value
--- we always return a matrix with scripts metatable
--- cause its faster than setmetatable( mtx, getmetatable( input matrix ) )
-
---///////////////////////////////
---// matrix 'matrix' functions //
---///////////////////////////////
-
---// for real, complx and symbolic matrices //--
-
--- note: real and complex matrices may be added, subtracted, etc.
---		real and symbolic matrices may also be added, subtracted, etc.
---		but one should avoid using symbolic matrices with complex ones
---		since it is not clear which metatable then is used
-
---// matrix.add ( m1, m2 )
--- Add 2 matrices; m2 may be of bigger size than m1
-function matrix.add( m1, m2 )
-	local mtx = {}
-	for i = 1,#m1 do
-		mtx[i] = {}
-		for j = 1,#m1[1] do
-			mtx[i][j] = m1[i][j] + m2[i][j]
-		end
-	end
-	return setmetatable( mtx, matrix_meta )
-end
-
---// matrix.sub ( m1 ,m2 )
--- Subtract 2 matrices; m2 may be of bigger size than m1
-function matrix.sub( m1, m2 )
-	local mtx = {}
-	for i = 1,#m1 do
-		mtx[i] = {}
-		for j = 1,#m1[1] do
-			mtx[i][j] = m1[i][j] - m2[i][j]
-		end
-	end
-	return setmetatable( mtx, matrix_meta )
-end
-
---// matrix.mul ( m1, m2 )
--- Multiply 2 matrices; m1 columns must be equal to m2 rows
--- e.g. #m1[1] == #m2
-function matrix.mul( m1, m2 )
-	-- multiply rows with columns
-	local mtx = {}
-	for i = 1,#m1 do
-		mtx[i] = {}
-		for j = 1,#m2[1] do
-			local num = m1[i][1] * m2[1][j]
-			for n = 2,#m1[1] do
-				num = num + m1[i][n] * m2[n][j]
+		
+		return pNewMatrix;
+	end;
+	
+	Sub		= function( this, pMatrix )
+		local pNewMatrix = new. Matrix;
+		
+		for i in ipairs( this ) do
+			pNewMatrix[ i ] = {};
+			
+			for j in ipairs( this[ 1 ] ) do
+				pNewMatrix[ i ][ j ] = this[ i ][ j ] - pMatrix[ i ][ j ];
 			end
-			mtx[i][j] = num
 		end
-	end
-	return setmetatable( mtx, matrix_meta )
-end
-
---//  matrix.div ( m1, m2 )
--- Divide 2 matrices; m1 columns must be equal to m2 rows
--- m2 must be square, to be inverted,
--- if that fails returns the rank of m2 as second argument
--- e.g. #m1[1] == #m2; #m2 == #m2[1]
-function matrix.div( m1, m2 )
-	local rank; m2,rank = matrix.invert( m2 )
-	if not m2 then return m2, rank end -- singular
-	return matrix.mul( m1, m2 )
-end
-
---// matrix.mulnum ( m1, num )
--- Multiply matrix with a number
--- num may be of type 'number','complex number' or 'string'
--- strings get converted to complex number, if that fails then to symbol
-function matrix.mulnum( m1, num )
-	if type(num) == "string" then
-		num = complex.to(num) or newsymbol(num)
-	end
-	local mtx = {}
-	-- multiply elements with number
-	for i = 1,#m1 do
-		mtx[i] = {}
-		for j = 1,#m1[1] do
-			mtx[i][j] = m1[i][j] * num
+		
+		return pNewMatrix;
+	end;
+	
+	Mul		= function( this, pMatrix )
+		local pNewMatrix = new. Matrix;
+		
+		for i in ipairs( this ) do
+			pNewMatrix[ i ] = {};
+			
+			for j in ipairs( pMatrix[ 1 ] ) do
+				local num = this[ i ][ 1 ] * pMatrix[ 1 ][ j ];
+				
+				for n = 2, table.getn( this[ 1 ] ) do
+					num = num + this[ i ][ n ] * pMatrix[ n ][ j ];
+				end
+				
+				pNewMatrix[ i ][ j ] = num;
+			end
 		end
-	end
-	return setmetatable( mtx, matrix_meta )
-end
-
---// matrix.divnum ( m1, num )
--- Divide matrix by a number
--- num may be of type 'number','complex number' or 'string'
--- strings get converted to complex number, if that fails then to symbol
-function matrix.divnum( m1, num )
-	if type(num) == "string" then
-		num = complex.to(num) or newsymbol(num)
-	end
-	local mtx = {}
-	-- divide elements by number
-	for i = 1,#m1 do
-		mtx[i] = {}
-		for j = 1,#m1[1] do
-			mtx[i][j] = m1[i][j] / num
+		
+		return pNewMatrix;
+	end;
+	
+	Div		= function( this, pMatrix )
+		local pMatrix, rank = pMatrix:Invert();
+		
+		if not pMatrix then
+			return pMatrix, rank;
 		end
+		
+		return this * pMatrix;
+	end;
+	
+	MulNum		= function( this, num )
+		if type( num ) == "string" then
+			num = complex.to( num ) or newsymbol( num ); -- TODO:
+		end
+		
+		local pNewMatrix = new. Matrix;
+		
+		for i in ipairs( this ) do
+			pNewMatrix[ i ] = {};
+			
+			for j in ipairs( this[ 1 ] ) do
+				pNewMatrix[ i ][ j ] = this[ i ][ j ] * num;
+			end
+		end
+		
+		return pNewMatrix;
+	end;
+	
+	DivNum		= function( this, num )
+		if type( num ) == "string" then
+			num = complex.to( num ) or newsymbol( num ); -- TODO:
+		end
+		
+		local pNewMatrix = new. Matrix;
+		
+		for i in ipairs( this ) do
+			pNewMatrix[ i ] = {};
+			
+			for j in ipairs( this[ 1 ] ) do
+				pNewMatrix[ i ][ j ] = this[ i ][ j ] / num;
+			end
+		end
+		
+		return pNewMatrix;
+	end;
+	
+	Pow		= function( this, num )
+		assert( num == math.floor( num ), "exponent not an integer" );
+		
+		if num == 0 then
+			return Matrix( table.getn( this ), "I" );
+		end
+		
+		if num < 0 then
+			local pMatrix, rank = this:Invert();
+			
+			if not pMatrix then
+				return this, rank;
+			end
+			
+			num = -num;
+		end
+		
+		local pNewMatrix = Matrix( this );
+		
+		for i = 2, num do
+			pNewMatrix = pNewMatrix * this;
+		end
+		
+		return pNewMatrix;
 	end
-	return setmetatable( mtx, matrix_meta )
-end
-
-
---// for real and complex matrices only //--
-
---// matrix.pow ( m1, num )
--- Power of matrix; mtx^(num)
--- num is an integer and may be negative
--- m1 has to be square
--- if num is negative and inverting m1 fails
--- returns the rank of matrix m1 as second argument
-function matrix.pow( m1, num )
-	assert(num == math.floor(num), "exponent not an integer")
-	if num == 0 then
-		return matrix:new( #m1,"I" )
-	end
-	if num < 0 then
-		local rank; m1,rank = matrix.invert( m1 )
-      if not m1 then return m1, rank end -- singular
-		num = -num
-	end
-	local mtx = matrix.copy( m1 )
-	for i = 2,num	do
-		mtx = matrix.mul( mtx,m1 )
-	end
-	return mtx
-end
+};
 
 --// matrix.det ( m1 )
 -- Calculate the determinant of a matrix
@@ -259,8 +227,6 @@ end
 -- here we try to get the nearest element to |1|, (smallest pivot element)
 -- os that usually we have |mtx[i][j]/subdet| > 1 or mtx[i][j];
 -- with complex matrices we use the complex.abs function to check if it is bigger or smaller
-local fiszerocomplex = function( cx ) return complex.is(cx,0,0) end
-local fiszeronumber = function( num ) return num == 0 end
 function matrix.det( m1 )
 
 	-- check if matrix is quadratic
