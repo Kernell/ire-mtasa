@@ -11,7 +11,31 @@ class: CShaderShine ( LuaBehaviour )
 	
 	m_WorldTextures		=
 	{
-		"*",
+		"*"
+	};
+	
+	m_RemoveList =
+	{
+		"",												-- unnamed
+		"vehicle*", "?emap*", "?hite*",					-- vehicles
+		"*92*", "*wheel*", "*interior*",				-- vehicles
+		"*handle*", "*body*", "*decal*",				-- vehicles
+		"*8bit*", "*logos*", "*badge*",					-- vehicles
+		"*plate*", "*sign*",							-- vehicles
+		"shad*",										-- shadows
+		"coronastar",									-- coronas
+		"tx*",											-- grass effect
+		"lod*",											-- lod models
+		"cj_w_grad",									-- checkpoint texture
+		"*cloud*",										-- clouds
+		"*smoke*",										-- smoke
+		"sphere_cj",									-- nitro heat haze mask
+		"particle*",									-- particle skid and maybe others
+		"water*", "sw_sand", "coral",					-- sea
+		"sm_des_bush*", "*tree*", "*ivy*", "*pine*",	-- trees and shrubs
+		"veg_*", "*largefur*", "hazelbr*", "weeelm",
+		"*branch*", "cypress*", "plant*", "sm_josh_leaf",
+		"trunk3", "*bark*", "gen_log", "trunk5",
 	};
 	
 	m_fMaxEffectDistance	= 250.0;
@@ -20,17 +44,17 @@ class: CShaderShine ( LuaBehaviour )
 	m_iDectectorScore	= 0.0;
 	m_pDetectorList		=
 	{
-		{ X = -1, Y = -1, Status = 0 },
-		{ X =  0, Y = -1, Status = 0 },
-		{ X =  1, Y = -1, Status = 0 },
+		{ X = -1, Y = -1, Status = false },
+		{ X =  0, Y = -1, Status = false },
+		{ X =  1, Y = -1, Status = false },
 		
-		{ X = -1, Y =  0, Status = 0 },
-		{ X =  0, Y =  0, Status = 0 },
-		{ X =  1, Y =  0, Status = 0 },
+		{ X = -1, Y =  0, Status = false },
+		{ X =  0, Y =  0, Status = false },
+		{ X =  1, Y =  0, Status = false },
 		
-		{ X = -1, Y =  1, Status = 0 },
-		{ X =  0, Y =  1, Status = 0 },
-		{ X =  1, Y =  1, Status = 0 },
+		{ X = -1, Y =  1, Status = false },
+		{ X =  0, Y =  1, Status = false },
+		{ X =  1, Y =  1, Status = false },
 	};
 	
 	m_ShineDirections =
@@ -102,7 +126,7 @@ class: CShaderShine ( LuaBehaviour )
 		this.m_fScreenX			= pShaderManager.m_fScreenX;
 		this.m_fScreenY			= pShaderManager.m_fScreenY;
 		
-		this.m_pShader			= CShader( "Shaders/D3D" + DIRECT3D_VERSION + "/Shine.fx" );
+		this.m_pShader			= CShader( "Shaders/D3D" + DIRECT3D_VERSION + "/Shine.fx", 0, this.m_fMaxEffectDistance, false, "world,object" );
 		
 		this:SetValue( "sStrength", 2.0 );
 		this:SetValue( "sFadeEnd", this.m_fMaxEffectDistance );
@@ -110,6 +134,10 @@ class: CShaderShine ( LuaBehaviour )
 		
 		for i, sTex in ipairs( this.m_WorldTextures ) do
 			this.m_pShader:ApplyToWorldTexture( sTex );
+		end
+		
+		for i, sTex in ipairs( this.m_RemoveList ) do
+			this.m_pShader:RemoveFromWorldTexture( sTex );
 		end
 		
 		this.m_pLightDirection	= Vector3();
@@ -139,7 +167,7 @@ class: CShaderShine ( LuaBehaviour )
 		
 		local iSecond = 0;
 		
-		if iMinute ~= m_pTime.Minute then
+		if iMinute ~= this.m_pTime.Minute then
 			this.m_iMinuteStartTickCount = getTickCount();
 			
 			local fGameSpeed = Clamp( 0.01, getGameSpeed(), 10.0 );
@@ -163,13 +191,13 @@ class: CShaderShine ( LuaBehaviour )
 		
 		local fFadeTarget	= 0.0;
 		
-		if this.m_iDectectorPos > 0.0 then
+		if this.m_iDectectorScore > 0.0 then
 			fFadeTarget		= 1.0;
 		else
 			fFadeTarget		= 0.0;
 		end
 		
-		local fFadeDiff		= math.clamp( -fDeltaTime, fFadeTarget - this.m_fFadeCurrent, fDeltaTime );
+		local fFadeDiff		= Clamp( -fDeltaTime, fFadeTarget - this.m_fFadeCurrent, fDeltaTime );
 		
 		this.m_fFadeCurrent	= this.m_fFadeCurrent + fFadeDiff;
 		
@@ -232,22 +260,22 @@ class: CShaderShine ( LuaBehaviour )
 		
 		local vecEnd		= vecPosition - this.m_pLightDirection * 200;
 		
-		if pDetector.Status == 1 then
+		if pDetector.Status then
 			this.m_iDectectorScore = this.m_iDectectorScore - 1;
 		end
 		
-		pDetector.Status = vecPosition:IsLineOfSightClear( vecEnd, true, false, false ) and 1 or 0;
+		pDetector.Status = vecPosition:IsLineOfSightClear( vecEnd, true, false, false );
 		
-		if pDetector.Status == 1 then
+		if pDetector.Status then
 			this.m_iDectectorScore = this.m_iDectectorScore + 1;
 		end
 		
-		if this.m_iDectectorScore < 0 or this.m_iDectectorScore > 9 then
-			Debug( "CShaderShine->m_iDectectorScore = " + tostring( this.m_iDectectorScore ) );
-		end
-		
 		if false then
-			dxDrawLine3D( vecPosition.X, vecPosition.Y, vecPosition.Z, vecEnd.X, vecEnd.Y, vecEnd.Z, pDetector.status == 1 and tocolor( 255, 0, 255 ) or tocolor( 255, 255, 0 ) );
+			if this.m_iDectectorScore < 0 or this.m_iDectectorScore > 9 then
+				Debug( "CShaderShine->m_iDectectorScore = " + tostring( this.m_iDectectorScore ) );
+			end
+			
+			dxDrawLine3D( vecPosition.X, vecPosition.Y, vecPosition.Z, vecEnd.X, vecEnd.Y, vecEnd.Z, pDetector.Status and tocolor( 255, 0, 255 ) or tocolor( 255, 255, 0 ) );
 		end
 	end;
 	
@@ -255,6 +283,7 @@ class: CShaderShine ( LuaBehaviour )
 		local iWeatherID		= math.min( getWeather(), table.getn( this.m_WeatherInfluence ) - 1 );
 		
 		local pWeatherInf		= this.m_WeatherInfluence[ iWeatherID + 1 ];
+		
 		local fSunSize			= pWeatherInf[ 2 ];
 		local fSunTranslucency	= pWeatherInf[ 3 ];
 		local fSunBright		= pWeatherInf[ 4 ];

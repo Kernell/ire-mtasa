@@ -1,5 +1,3 @@
-// #define GENERATE_NORMALS
-
 #include "/Shaders/mta-helper.fxh"
 
 texture sReflectionTexture;
@@ -112,8 +110,8 @@ technique Water
 {
     pass P0
     {
-        VertexShader = compile vs_2_0 VertexShaderFunction();
-        PixelShader  = compile ps_2_0 PixelShaderFunction();
+        VertexShader	= compile vs_2_0 VertexShaderFunction();
+        PixelShader  	= compile ps_2_0 PixelShaderFunction();
     }
 }
 

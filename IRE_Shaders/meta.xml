@@ -26,6 +26,7 @@
 	<script src="CShaderDepthOfField.lua"       type="client" />
 	<script src="CShaderHDR.lua"                type="client" />
 	<script src="CShaderGaussianBlur.lua"       type="client" />
+	<script src="CShaderNormalMap.lua"          type="client" />
 	<script src="CShaderShine.lua"              type="client" />
 	<script src="CShaderWater.lua"              type="client" />
   
@@ -53,6 +54,8 @@
 	<file src="Shaders/D3D9/HDRBlurV.fx"        cache="false" />
 	<file src="Shaders/D3D9/HDRContrast.fx"     cache="false" />
 	<file src="Shaders/D3D9/HDRModulation.fx"   cache="false" />
+  
+	<file src="Shaders/D3D9/NormalMap.fx"       cache="false" />
   
 	<file src="Shaders/D3D9/Water.fx"           cache="false" />
   

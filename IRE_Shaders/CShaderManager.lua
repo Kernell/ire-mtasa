@@ -14,6 +14,7 @@ class: CShaderManager ( LuaBehaviour )
 	m_ShaderPriority	=
 	{
 		"Water";
+		"Shine";
 		"GaussianBlur";
 		"DepthOfField";
 		"HDR";
@@ -44,13 +45,13 @@ class: CShaderManager ( LuaBehaviour )
 		
 		this.m_Textures = {};
 		
-		for i, sTex in ipairs( CShaderManager.m_Textures ) do
-			this.m_Textures[ sTex ] = dxCreateTexture( "Textures/" + sTex + ".dds" );
-		end
-		
-		this.Textures			=
+		this.Textures	=
 		{
 			__index		= function( self, sName )
+				if this.m_Textures[ sName ] == NULL then
+					this.m_Textures[ sName ] = dxCreateTexture( "Textures/" + sName + ".dds" );
+				end
+				
 				return this.m_Textures[ sName ];
 			end;
 			
