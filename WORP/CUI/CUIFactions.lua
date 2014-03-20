@@ -55,6 +55,8 @@ class: CUIFactions ( CGUI, CUIAsyncQuery )
 			function pTab.List.Fill( Data )
 				pTab.List.m_aData = Data;
 				
+				pTab.List:Clear();
+				
 				for i, pFaction in ipairs( Data ) do
 					pTab.List.AddItem( pFaction );
 				end
@@ -107,6 +109,8 @@ class: CUIFactions ( CGUI, CUIAsyncQuery )
 			
 			function pTab.List.Fill( Data )
 				pTab.List.m_aData = Data;
+				
+				pTab.List:Clear();
 				
 				for i, pFaction in ipairs( Data ) do
 					pTab.List.AddItem( pFaction );
@@ -163,17 +167,6 @@ class: CUIFactions ( CGUI, CUIAsyncQuery )
 			{
 				X				= 10;
 				Y				= 10;
-				Width			= this.Width - 20;
-				Height			= 20;
-				Font			= CEGUIFont( "Segoe UI", 9, true );
-				Color			= { 255, 128, 0 };
-				VerticalAlign	= "center";
-			};
-			
-			pTab:CreateLabel( "Обработка заявки может длиться в течении трёх недель" )
-			{
-				X				= 10;
-				Y				= 30;
 				Width			= this.Width - 20;
 				Height			= 20;
 				Font			= CEGUIFont( "Segoe UI", 9, true );
@@ -410,7 +403,14 @@ class: CUIFactions ( CGUI, CUIAsyncQuery )
 					
 					pMsgBox.Button[ "Да" ].OnClick = function()
 						local function Complete( Data )
-							this.ButtonClose.Click();
+							this.Window.Tab.List.m_aData	= NULL;
+							this.Window.Tab.Manage.m_aData	= NULL;
+							
+							local pMsgBox2 = this:ShowDialog( MessageBox( "Поздравляем! Организация успешно создана.\nТеперь Вы можете управлять ею, но для начала Вам необходимо создать счёт в банке.", "Создание организации", MessageBoxButtons.OK, MessageBoxIcon.Information ) );
+						
+							pMsgBox2.Button[ "OK" ].OnClick	= function()	
+								this.Window.Tab:SetSelected( this.Window.Tab.Manage );
+							end;
 						end
 						
 						this:AsyncQuery( Complete, "CFactionManager", "Create", sTitle, sAbbr, pTab.List.m_aData[ iInterior + 1 ].ID, iType );

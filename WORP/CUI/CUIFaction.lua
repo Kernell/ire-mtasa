@@ -10,11 +10,8 @@ class: CUIFaction ( CGUI, CUIAsyncQuery )
 	ID			= 0;
 	Caption		= "Ваша организация";
 	NoCaption	= "Вы не состоите в организации";
-	X			= "center";
-	Y			= "center";
-	Width		= 600;
-	Height		= 400;
-	Sizable		= false;
+	Width		= 650;
+	Height		= 450;
 	
 	TestRight	= function( this, eRight )
 		return ( this.m_iRights '&' ( eRight ) ) ~= 0;
@@ -27,8 +24,8 @@ function CUIFaction:CUIFaction( sRights, Info )
 	
 	self.Window		= self:CreateWindow( Info and self.Caption or self.NoCaption )
 	{
-		X			= self.X;
-		Y			= self.Y;
+		X			= "center";
+		Y			= "center";
 		Width		= self.Width;
 		Height		= self.Height;
 		Sizable		= false;
