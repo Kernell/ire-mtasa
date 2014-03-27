@@ -50,7 +50,20 @@ local ClassMeta	=
 	end;
 };
 
-ClassMeta.__index	= ClassMeta;
+ClassMeta.__index = function( self, vKey )
+	-- local pProperty = ClassMeta.__property;
+	local pProperty = rawget( self, "__property" );
+	
+	if pProperty and pProperty[ vKey ] and pProperty[ vKey ].get then
+		if type( pProperty[ vKey ].get ) == "function" then
+			return pProperty[ vKey ].get( self );
+		end
+		
+		return pProperty[ vKey ].get;
+	end
+	
+	return ClassMeta[ vKey ];
+end
 
 class			= 
 {
@@ -73,9 +86,9 @@ class			=
 			end
 		end
 		
-		local TClass	= this:Create( sClassName, true );
+		local TClass	= this:Create( sClassName or sName, true );
 		
-		Space[ sClassName ] = TClass;
+		Space[ sClassName or sName ] = TClass;
 		
 		return function( this, ... )
 			local Args1	= { ... };
@@ -135,7 +148,24 @@ class			=
 		};
 		
 		CClass.__class 	= CClass;
-		CClass.__index 	= CClass;
+		
+		function CClass:__index( vKey )
+			local pProperty = rawget( CClass, "__property" );
+			
+			if pProperty and pProperty[ vKey ] and pProperty[ vKey ].get then
+				if type( pProperty[ vKey ].get ) == "function" then
+					return pProperty[ vKey ].get( self );
+				end
+				
+				return pProperty[ vKey ].get;
+			end
+			
+			return rawget( CClass, vKey );
+		end
+		
+		function CClass:__gc()
+			
+		end
 		
 		setmetatable( CClass, ClassMeta );
 		
@@ -148,13 +178,7 @@ class			=
 		for i, _CClass in ipairs( CClass.__bases ) do
 			for key, value in pairs( _CClass ) do
 				if not Protected[ key ] then
-					if type( value ) == 'function' and ( not CClass.__static or not CClass.__static[ key ] ) then						
-						CClass[ key ]	= function( ... )
-							return _CClass[ key ]( ... );
-						end
-					else
-						CClass[ key ]	= value;
-					end
+					CClass[ key ]	= value;
 				end
 			end
 		end
@@ -163,16 +187,26 @@ class			=
 	SetValues	= function( this, CClass, Values )
 		for key, value in pairs( Values ) do
 			if not Protected[ key ] then
-				if tonumber( key ) and type( value ) == "table" and value.__static then
-					if not CClass.__static then
-						CClass.__static = {};
-					end
-					
-					for k, v in pairs( value ) do
-						if not Protected[ k ] then
-							CClass.__static[ k ] = true;
-							CClass[ k ] = v;
+				if tonumber( key ) and type( value ) == "table" then
+					if value.__static then
+						if not CClass.__static then
+							CClass.__static = {};
 						end
+						
+						for k, v in pairs( value ) do
+							if not Protected[ k ] then
+								CClass.__static[ k ] = true;
+								CClass[ k ] = v;
+							end
+						end
+					elseif value.__property then
+						if not CClass.__property then
+							CClass.__property = {};
+						end
+						
+						local sKey = value.__property;
+						
+						CClass.__property[ sKey ] = value;
 					end
 				else
 					CClass[ key ] = value;
@@ -200,6 +234,19 @@ new		=
 }
 
 setmetatable( new, new );
+
+property	=
+{
+	__index		= function( this, sName )
+		return function( t, Values )
+			Values.__property	= sName;
+			
+			return Values;
+		end;
+	end;
+};
+
+setmetatable( property, property );
 
 function static( Values )
 	Values.__static = true;
@@ -233,20 +280,14 @@ end
 
 function delete( pObject )
 	if classof( pObject ) then
-		if pObject[ '_' .. pObject.__name ] then
-			pObject[ '_' .. pObject.__name ]( pObject );
+		if pObject[ "_" + pObject.__name ] then
+			pObject[ "_" + pObject.__name ]( pObject );
 		end
 		
-		if CElement and pObject.__instance then
-			CElement.RemoveFromList( pObject );
-		end		
+		pObject:__gc();
 		
-		if type( pObject ) == 'table' then
+		if type( pObject ) == "table" then
 			setmetatable( pObject, NULL );
-			
-			-- for i, v in pairs( pObject ) do
-				-- pObject[ i ] = NULL;
-			-- end
 		end
 		
 		collectgarbage( "collect" );
