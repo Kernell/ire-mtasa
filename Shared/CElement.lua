@@ -183,8 +183,9 @@ class: CElement
 --
 
 local ElementCache	= {};
+local UserdataMeta;
 
-local UserdataMeta	=
+UserdataMeta	=
 {
 	__new		= function( this )
 		local sType			= getElementType( this );
