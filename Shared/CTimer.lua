@@ -8,7 +8,7 @@
 class: CTimer
 {
 	CTimer		= function( this, vCallback, iInterval, iCount, ... )
-		this.m_hTimer = setTimer( callback, interval, count or 0, ... );
+		this.m_hTimer = setTimer( vCallback, iInterval, iCount or 0, ... );
 	end;
 	
 	_CTimer		= function( this )
