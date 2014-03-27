@@ -65,6 +65,18 @@ ClassMeta.__index = function( self, vKey )
 	return ClassMeta[ vKey ];
 end
 
+ClassMeta.__newindex = function( self, vKey, vValue )
+	local pProperty = rawget( self, "__property" );
+	
+	if pProperty and pProperty[ vKey ] and type( pProperty[ vKey ].set ) == "function" then
+		pProperty[ vKey ].set( self, vValue );
+		
+		return;
+	end
+	
+	rawset( self, vKey, vValue );
+end;
+
 class			= 
 {
 	__newindex	= function( this )
@@ -73,16 +85,19 @@ class			=
 	
 	__index		= function( this, sName )
 		local Space			= _G;
-		local Names			= sName:split( "." );
-		local sClassName	= Names[ table.getn( Names ) ];
 		
-		table.remove( Names );
-		
-		for i, sNamespace in ipairs( Names ) do
-			if type( Space[ sNamespace ] ) == "table" then
-				Space = Space[ sNamespace ];
-			else
-				error( "attempt to index '" + sNamespace + "' in " + sName, 2 );
+		if split then
+			local Names	= sName:split( "." );
+			sClassName	= Names[ table.getn( Names ) ];
+			
+			table.remove( Names );
+			
+			for i, sNamespace in ipairs( Names ) do
+				if type( Space[ sNamespace ] ) == "table" then
+					Space = Space[ sNamespace ];
+				else
+					error( "attempt to index '" + sNamespace + "' in " + sName, 2 );
+				end
 			end
 		end
 		
