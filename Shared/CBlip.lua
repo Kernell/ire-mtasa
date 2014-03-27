@@ -1,5 +1,9 @@
--- Author:      	Kernell
--- Version:     	1.0.0
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2014
+-- License		Proprietary Software
+-- Version		1.0
 
 enum "eBlipSprite"
 {
@@ -69,75 +73,43 @@ enum "eBlipSprite"
     'BLIP_SPRITE_SPRAY'
 };
 
-class "CBlip" ( CElement )
-
-function CBlip:CBlip( vecPosition, ... )
-	vecPosition = vecPosition or Vector3();
+class: CBlip ( CElement )
+{
+	CBlip		= function( this, pTarget, ... )
+		pTarget = pTarget or Vector3();
+		
+		local pElement		= NULL;
+		
+		if classname( pTarget ) == "Vector3" then
+			pElement		= createBlip( pTarget.X, pTarget.Y, pTarget.Z, ... );
+		elseif isElement( pTarget ) then
+			pElement		= createBlipAttachedTo( pTarget, ... );
+		else
+			error( "Bad argument #1 to 'CBlip (wanted 'object', got '" + typeof( vecPosition ) + "')'", 2 );
+		end
+		
+		pElement( this );
+		
+		return pElement;
+	end;
 	
-	if classname( vecPosition ) == 'Vector3' then
-		self.__instance		= createBlip( vecPosition.X, vecPosition.Y, vecPosition.Z, ... );
-	elseif vecPosition:IsElement() then
-		self.__instance		= createBlipAttachedTo( vecPosition.__instance, ... );
-	else
-		error( "Bad argument #1 to 'CBlip.Create (wanted 'Vector3' or 'CElement', got '" + typeof( vecPosition ) + "')'", 2 );
-	end
+	_CBlip		= destroyElement;
 	
-	if not self.__instance then error( "failed to create blip", 2 ) end
-end
-
-function CBlip:_CBlip()
-	self:Destroy();
-end
-
-function CBlip:GetColor()
-	return getBlipColor( self.__instance );
-end
-
-function CBlip:GetIcon()
-	return getBlipIcon( self.__instance );
-end
-
-function CBlip:GetSize()
-	return getBlipSize( self.__instance );
-end
-
-function CBlip:SetColor( iRed, iGreen, iBlue, iAlpha )
-	local bResult, sError 	= is_type( iRed,	'number', 'iRed' 	);	if not iRed 	then error( sError, 2 ) end
-	local bResult, sError 	= is_type( iGreen,	'number', 'iGreen'	);	if not iGreen	then error( sError, 2 ) end
-	local bResult, sError 	= is_type( iBlue, 	'number', 'iBlue' 	);	if not iBlue 	then error( sError, 2 ) end
-	local bResult, sError 	= is_type( iAlpha,	'number', 'iAlpha' 	);	if not iAlpha 	then error( sError, 2 ) end
+	GetColor	= function( this )
+		return CColor( getBlipColor( this ) );
+	end;
 	
-	return setBlipColor( self.__instance, iRed, iGreen, iBlue, iAlpha );
-end
-
-function CBlip:SetIcon( iIcon )
-	local bResult, sError 	= is_type( iIcon,	'number', 'iIcon' 	);	if not iIcon 	then error( sError, 2 ) end
+	GetIcon				= getBlipIcon;
+	GetSize				= getBlipSize;
+	GetOrdering			= getBlipOrdering;
+	GetVisibleDistance	= getBlipVisibleDistance;
 	
-	return setBlipIcon( self.__instance, iIcon );
-end
-
-function CBlip:SetSize( iSize )
-	local bResult, sError 	= is_type( iSize,	'number', 'iSize' 	);	if not iSize 	then error( sError, 2 ) end
+	SetColor			= function( this, pColor )
+		return setBlipColor( this, pColor.R, pColor.G, pColor.B, pColor.A );
+	end;
 	
-	return setBlipSize( self.__instance, iSize );
-end
-
-function CBlip:GetOrdering()
-	return getBlipOrdering( self.__instance );
-end
-
-function CBlip:SetOrdering( iOrder )
-	local bResult, sError 	= is_type( iOrder,	'number', 'iOrder' 	);	if not iOrder 	then error( sError, 2 ) end
-	
-	return setBlipOrdering( self.__instance, iOrder );
-end
-
-function CBlip:GetVisibleDistance()
-	return getBlipVisibleDistance( self.__instance );
-end
-
-function CBlip:SetVisibleDistance( fDistance )
-	local bResult, sError 	= is_type( fDistance,	'number', 'fDistance' 	);	if not fDistance 	then error( sError, 2 ) end
-	
-	return setBlipVisibleDistance( self.__instance, fDistance );
-end
+	SetIcon				= setBlipIcon;
+	SetSize				= setBlipSize;
+	SetOrdering			= setBlipOrdering;
+	SetVisibleDistance	= setBlipVisibleDistance;
+};

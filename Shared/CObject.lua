@@ -5,55 +5,31 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CObject" ( CElement );
-
-function CObject:CObject( instance )
-	if instance and isElement( instance ) and getElementType( instance ) == 'object' then
-		self.__instance = instance;
-	end
-end
-
-function CObject:_CObject()
-	self:Destroy();
-end
-
-function CObject.Create( iModel, vecPosition, vecRotation )
-	vecPosition = vecPosition or Vector3();
-	vecRotation = vecRotation or Vector3();
-	
-	local pObject = createObject( iModel, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z );
-	
-	if not pObject then
-		Debug( "failed to create object", 1 );
+class: CObject ( CElement )
+{
+	CObject			= function( this, iModel, vecPosition, vecRotation )
+		vecPosition = vecPosition or Vector3();
+		vecRotation = vecRotation or Vector3();
 		
-		return NULL;
-	end
+		local pElement = createObject( iModel, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z );
+		
+		pElement( this );
+		
+		return pElement;
+	end;
 	
-	return pObject;
-end
-
-function CObject:Move( time, target, target_rot, ... )
-	target_rot = target_rot or Vector3();
+	_CObject		= destroyElement;
 	
-	return moveObject( self.__instance, time, target.X, target.Y, target.Z, target_rot.X, target_rot.Y, target_rot.Z, ... );
-end
-
-function CObject:Stop()
-	return stopObject( self.__instance );
-end
-
-function CObject:SetScale( scale )
-	return setObjectScale( self.__instance, scale or 1.0 );
-end
-
-function CObject:GetScale()
-	return getObjectScale( self.__instance );
-end
-
-function CObject:SetBreakable( bBreakable )
-	return setObjectBreakable( self.__instance, bBreakable );
-end
-
-function CObject:IsBreakable()
-	return isObjectBreakable( self.__instance );
-end
+	Move			= function( this, iTime, vecPosition, vecRotation, ... )
+		vecPosition = vecPosition or Vector3();
+		vecRotation = vecRotation or Vector3();
+		
+		return moveObject( this, iTime, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z, ... );
+	end;
+	
+	Stop			= stopObject;
+	SetScale		= setObjectScale;
+	GetScale		= getObjectScale;
+	SetBreakable	= setObjectBreakable;
+	IsBreakable		= isObjectBreakable;
+};

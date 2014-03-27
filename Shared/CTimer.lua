@@ -5,23 +5,21 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CTimer"
-
-function CTimer:CTimer( callback, interval, count, ... )
-	self.__instance = setTimer( callback, interval, count or 0, ... );
+class: CTimer
+{
+	CTimer		= function( this, vCallback, iInterval, iCount, ... )
+		this.m_hTimer = setTimer( callback, interval, count or 0, ... );
+	end;
 	
-	assert( self.__instance, "failed to create timer" );
-end
-
-function CTimer:_CTimer()
-	self:Kill();
-	self = NULL;
-end
-
-function CTimer:Kill()
-	return killTimer( self.__instance );
-end
-
-function CTimer:GetDetails()
-	return getTimerDetails( self.__instance );
-end
+	_CTimer		= function( this )
+		this:Kill();
+	end;
+	
+	Kill		= function( this )
+		return killTimer( this.m_hTimer );
+	end;
+	
+	GetDetails	= function( this )
+		return getTimerDetails( this.m_hTimer );
+	end;
+};
