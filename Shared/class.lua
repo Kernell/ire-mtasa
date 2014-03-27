@@ -75,7 +75,7 @@ ClassMeta.__newindex = function( self, vKey, vValue )
 	end
 	
 	rawset( self, vKey, vValue );
-end;
+end
 
 class			= 
 {
@@ -178,6 +178,18 @@ class			=
 			return rawget( CClass, vKey );
 		end
 		
+		function CClass:__newindex( vKey, vValue )
+			local pProperty = rawget( CClass, "__property" );
+			
+			if pProperty and pProperty[ vKey ] and type( pProperty[ vKey ].set ) == "function" then
+				pProperty[ vKey ].set( self, vValue );
+				
+				return;
+			end
+			
+			rawset( self, vKey, vValue );
+		end
+		
 		function CClass:__gc()
 			
 		end
@@ -193,7 +205,13 @@ class			=
 		for i, _CClass in ipairs( CClass.__bases ) do
 			for key, value in pairs( _CClass ) do
 				if not Protected[ key ] then
-					CClass[ key ]	= value;
+					-- if type( value ) == "function" and ( not CClass.__static or not CClass.__static[ key ] ) then						
+						-- CClass[ key ]	= function( ... )
+							-- return _CClass[ key ]( ... );
+						-- end
+					-- else
+						CClass[ key ]	= value;
+					-- end
 				end
 			end
 		end
