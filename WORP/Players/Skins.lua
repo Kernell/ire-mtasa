@@ -1052,7 +1052,7 @@ function GetSkins()
 end
 
 function CPed:GetSkin()
-	local skin = typeof( self ) == "object" and getElementModel( self.__instance ) or tonumber( self );
+	local skin = typeof( self ) == "object" and self:GetModel() or tonumber( self );
 	
 	return skin and
 	{
@@ -1065,6 +1065,5 @@ function CPed:GetSkin()
 		IsValid			= function() return tobool( SKIN_NAMES[ skin ] and skins[ skin ] and SKIN_ANIM_GROUPS[ skin ] ); end;
 		IsSpecial		= function() return SPEC_SKINS[ skin ] end;
 		HaveArmor		= function() return ARMOR_SKINS[ skin ] end;
-	}
-	or false;
+	};
 end

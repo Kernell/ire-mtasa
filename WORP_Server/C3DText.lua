@@ -8,7 +8,7 @@
 class "C3DText"
 
 function C3DText:C3DText( vecPosition, sText, iRed, iGreen, iBlue, iAlpha )	
-	self.m_pElement		= CElement.Create( '3DText' );
+	self.m_pElement		= CElement( '3DText' );
 	
 	self:SetText		( sText );
 	self:SetColor		( iRed, iGreen, iBlue, iAlpha );

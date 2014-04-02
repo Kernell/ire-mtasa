@@ -35,12 +35,12 @@
   <script src="Shared/blowfish.lua"/>
   <script src="Shared/base64.lua"/>
   <script src="Shared/Array.lua"/>
+  <script src="Shared/CColor.lua"/>
   <script src="Shared/timezone.lua"/>
   <script src="Shared/CDateTime.lua"/>
-  <script src="Shared/CVector.lua"/>
+  <script src="Shared/Vector3.lua"/>
   <script src="Shared/IElementData.lua"/>
   <script src="Shared/CElement.lua"/>
-    <script src="CElement.lua"/>
   <script src="Shared/CPed.lua"/>
   <script src="CPed.lua"/>
   <script src="Shared/CBlip.lua"/>

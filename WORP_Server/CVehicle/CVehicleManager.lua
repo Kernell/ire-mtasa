@@ -221,9 +221,40 @@ local VehicleNames	=
 	[ ZR350 ]		= { "ZR-350" };
 };
 
+DEFAULT_VEHICLE_FUEL	= 100.0
+
 class: CVehicleManager ( CManager )
 {
 	m_ColorManager = NULL;
+	
+	static
+	{
+		DefaultData	=
+		{
+			character_id	= 0;
+			fuel			= DEFAULT_VEHICLE_FUEL;
+			engine			= "on";
+			lights			= "off";
+			locked			= "No";
+			rentable		= "No";
+			rent_price		= 0;
+			rent_time		= 0;
+			last_driver		= "N/A";
+			last_time		= 0;
+			handling		= NULL;
+			upgrades		= NULL;
+			panel_states	= NULL;
+			door_state		= NULL;
+			element_data	= NULL;
+			siren			= 0;
+			whelen			= 0;
+			radio_id		= 0;
+			radio_volume	= 1.0;
+			
+			default_interior	= 0;
+			default_dimension	= 0;
+		};
+	};
 };
 
 function CVehicleManager:CVehicleManager()
@@ -287,8 +318,6 @@ function CVehicleManager:Init()
 	self.m_List				= {};
 	self.m_iMaxVehicleID	= 0;
 	
-	local iCount, iTick = 0, getTickCount();
-	
 	local pResult = g_pDB:Query( "SELECT * FROM " + DBPREFIX + "vehicles WHERE deleted IS NULL ORDER BY id ASC" );
 	
 	if not pResult then
@@ -308,14 +337,10 @@ function CVehicleManager:Init()
 		if pVehicle then
 			pVehicle:SetInterior( pRow.interior );
 			pVehicle:SetDimension( pRow.dimension );
-			
-			iCount = iCount + 1;
 		end
 	end
 	
 	delete ( pResult );
-	
---	Debug( ( "Loaded %d vehicles (%d ms)" ):format( iCount, getTickCount() - iTick ) );
 	
 	local pResult = g_pDB:Query( "SELECT * FROM " + DBPREFIX + "fuelpoints WHERE deleted = 'No' ORDER BY id ASC" );
 	
@@ -341,16 +366,118 @@ function CVehicleManager:DoPulse( tReal )
 end
 
 function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, pDBField )
-	local pVehicle = CVehicle( self, iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, pDBField );
+	pDBField	= pDBField or CVehicleManager.DefaultData;
 	
-	if pVehicle:GetID() == INVALID_ELEMENT_ID then
-		delete ( pVehicle );
-		return NULL;
+	local pVehicle = CVehicle( iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 );
+	
+	pVehicle.m_pVehicleManager = pVehicleManager;
+	
+	pVehicle.m_pComponents				= CVehicleComponents( pVehicle );
+	pVehicle.m_pUpgrades				= CVehicleUpgrades( pVehicle );
+	pVehicle.m_pSiren					= CVehicleSiren( pVehicle, pDBField.siren, pDBField.whelen );
+	
+	pVehicle.m_pRadio					= new. CSound;
+	pVehicle.m_pRadio.vecPosition		= vecPosition;
+	pVehicle.m_pRadio.m_pAttachedTo 	= pVehicle;
+	pVehicle.m_pRadio.m_sMemberID		= "m_pRadio";
+	
+	if VEHICLE_RADIO[ pDBField.radio_id ] then
+		pVehicle.m_pRadio.m_sPath			= VEHICLE_RADIO[ pDBField.radio_id ][ 2 ];
+		pVehicle.m_pRadio.m_fVolume 		= pDBField.radio_volume;
+		pVehicle.m_pRadio.m_fMaxDistance 	= pVehicle.m_pRadio.m_fVolume * 100.0;
+		
+		pVehicle.m_pRadio:Play();
 	end
+	
+	pVehicle.m_pData.m_iRadioID 		= pDBField.radio_id;
+	pVehicle.m_pData.m_fRadioVolume	= pDBField.radio_volume;
+	
+	local Upgrades		= fromJSON( pDBField.upgrades );
+	
+	if Upgrades then
+		for key, value in pairs( Upgrades ) do
+			if type( value ) == "number" and value <= 3 then
+				pVehicle:SetPaintjob( value );
+			else
+				pVehicle.m_pUpgrades:Add( value );
+			end
+		end
+	end
+	
+	local Handling = fromJSON( pDBField.handling );
+	
+	if Handling then
+		for key, value in pairs( Handling ) do
+			pVehicle:SetHandling( key, value );
+		end
+	end
+	
+	local PanelStates = fromJSON( pDBField.panel_states );
+	
+	if PanelStates then
+		for key, value in pairs( PanelStates ) do
+			pVehicle:SetPanelState( tonumber( key ), value );
+		end
+	end
+	
+	local DoorStates = fromJSON( pDBField.door_state );
+	
+	if DoorStates then
+		for key, value in pairs( DoorStates ) do
+			pVehicle:SetDoorState( tonumber( key ), value );
+		end
+	end
+	
+	pVehicle.m_iID				= iID;
+	pVehicle.m_iCharID			= pDBField.character_id or 0;
+	pVehicle.m_fFuel			= pDBField.fuel;
+--	pVehicle.m_bEngine			= ( pDBField.engine or "on" ) == "on";
+--	pVehicle.m_bLights			= ( pDBField.lights or "off" ) == "on";
+--	pVehicle.m_bLocked			= ( pDBField.locked or "No" ) == "Yes";
+	pVehicle.m_bRentable		= ( pDBField.rentable or "No" ) == "Yes";
+	pVehicle.m_iRentPrice		= pDBField.rent_price or 0;
+	pVehicle.m_iRentTime		= pDBField.rent_time or 0;
+	
+	pVehicle.m_sLastDriver		= pDBField.last_driver or "N/A";
+	pVehicle.m_iLastTime		= pDBField.last_time or getRealTime().timestamp;
+	
+	pVehicle.m_Data				= fromJSON( pDBField.element_data );
+	
+	if pVehicle.m_Data then
+		for key, value in pairs( pVehicle.m_Data ) do
+			pVehicle:SetData( key, value );
+		end
+	end
+	
+	pVehicle.m_vecDefaultPosition	= Vector3( pDBField.default_x, pDBField.default_y, pDBField.default_z );
+	pVehicle.m_vecDefaultRotation	= Vector3( pDBField.default_rx, pDBField.default_ry, pDBField.default_rz );
+	pVehicle.m_iDefaultInterior		= pDBField.default_interior;
+	pVehicle.m_iDefaultDimension	= pDBField.default_dimension;
+	
+	if not pVehicle.m_sRegPlate then
+		pVehicle:GenerateRegPlate();
+	end
+	
+	local pColor = fromJSON( pDBField.color );
+	
+	if pColor then
+		pVehicle:SetColor		( unpack( pColor ) );
+	else
+		pVehicle:RandomizeColor();
+	end
+	
+	pVehicle:SetEngineState		( pDBField.engine == "on" );
+	pVehicle:SetLights			( pDBField.lights == "on" );
+	pVehicle:SetLocked			( pDBField.locked == "Yes" );
+	pVehicle:SetHeadLightColor	( unpack( fromJSON( pDBField.lights_color ) or { 255, 255, 255 } ) );
+	pVehicle:SetWheelStates		( unpack( fromJSON( pDBField.wheels_states ) or { 0, 0, 0, 0 } ) );
+	pVehicle:SetHealth			( Clamp( 300.0, pDBField.health or 1000.0, 1000.0 ) );
 	
 	if iID > self.m_iMaxVehicleID then
 		self.m_iMaxVehicleID = iID;
 	end
+	
+	self:AddToList( pVehicle );
 	
 	return pVehicle;
 end
@@ -398,14 +525,10 @@ function CVehicleManager:Create( iModel, vecPosition, vecRotation, iInterior, iD
 				
 				delete ( pResult );
 				
-				local pVehicle = CVehicle( self, iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, pDBField );
+				local pVehicle = self:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, pDBField );
 				
 				pVehicle:SetInterior( iInterior );
 				pVehicle:SetDimension( iDimension );
-				
-				if iID > self.m_iMaxVehicleID then
-					self.m_iMaxVehicleID = iID;
-				end
 				
 				return pVehicle;
 			else
@@ -444,7 +567,7 @@ function CVehicleManager:GetRandomRegPlate()
 end
 
 function CVehicleManager:IsValidModel( iVehicleModel )
-	iVehicleModel = tonumber( iVehicleModel ) or 0;
+	iVehicleModel = (int)(iVehicleModel);
 	
 	return iVehicleModel >= 400 and iVehicleModel <= 611 and iVehicleModel ~= 570;
 end

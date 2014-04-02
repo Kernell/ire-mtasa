@@ -194,7 +194,7 @@ function CVehicleUpgrades:Add( sUpgrade )
 	
 	self.m_Upgrades[ sUpgrade ] = true;
 	
-	return addVehicleUpgrade( self.m_pVehicle.__instance, sUpgrade );
+	return addVehicleUpgrade( self.m_pVehicle, sUpgrade );
 end
 
 function CVehicleUpgrades:Get( sSlot )
@@ -208,19 +208,19 @@ end
 function CVehicleUpgrades:GetCompatible( iSlot )
 	if classname( self ) ~= 'CVehicleUpgrades' then error( TEXT_E2288, 2 ) end
 	
-	return getVehicleCompatibleUpgrades( self.m_pVehicle.__instance, iSlot );
+	return getVehicleCompatibleUpgrades( self.m_pVehicle, iSlot );
 end
 
 function CVehicleUpgrades:GetUpgradeOnSlot( iSlot )
 	if classname( self ) ~= 'CVehicleUpgrades' then error( TEXT_E2288, 2 ) end
 	
-	return getVehicleUpgradeOnSlot( self.m_pVehicle.__instance, iSlot );
+	return getVehicleUpgradeOnSlot( self.m_pVehicle, iSlot );
 end
 
 function CVehicleUpgrades:GetAll()
 	if classname( self ) ~= 'CVehicleUpgrades' then error( TEXT_E2288, 2 ) end
 	
-	return getVehicleUpgrades( self.m_pVehicle.__instance );
+	return getVehicleUpgrades( self.m_pVehicle );
 end
 
 function CVehicleUpgrades:Remove( vUpgrade )
@@ -244,7 +244,7 @@ function CVehicleUpgrades:Remove( vUpgrade )
 		return true;
 	end
 	
-	return removeVehicleUpgrade( self.m_pVehicle.__instance, vUpgrade );
+	return removeVehicleUpgrade( self.m_pVehicle, vUpgrade );
 end
 
 function CVehicleUpgrades:ToJSON()

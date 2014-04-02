@@ -89,9 +89,9 @@ class: CFactionTaxi ( CFaction )
 	
 	SetPlayerJob		= function( this, pPlayer, vecPosition )
 		if vecPosition then
-			pPlayer.m_pJob = CMarker.Create( vecPosition, "checkpoint", 10.0, 255, 255, 0, 96, pClient.__instance );
+			pPlayer.m_pJob = CMarker( vecPosition, "checkpoint", 10.0, 255, 255, 0, 96, pClient );
 			
-			CBlip( pPlayer.m_pJob, 0, 2.0, 255, 0, 0, 255, 10, 9999.0, pPlayer.__instance ):SetParent( pPlayer.m_pJob );
+			CBlip( pPlayer.m_pJob, 0, 2.0, 255, 0, 0, 255, 10, 9999.0, pPlayer ):SetParent( pPlayer.m_pJob );
 			
 			function pPlayer.m_pJob.OnHit( ... )
 				this:OnTaxiMarkerHit( ... );

@@ -93,7 +93,7 @@ function CClientRPC:SWATRopeResult( fGroundZ )
 					
 					self.swat_rope	= vecRope;
 					
-					triggerClientEvent( root, "CreateSWATRope", self.__instance, self.swat_rope.X, self.swat_rope.Y, self.swat_rope.Z, time );
+					triggerClientEvent( root, "CreateSWATRope", self, self.swat_rope.X, self.swat_rope.Y, self.swat_rope.Z, time );
 					
 					self:SetControlState( 'enter_exit', true );
 					

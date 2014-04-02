@@ -395,15 +395,15 @@ function CInterior:UpdateMarker()
 		end
 		
 		if self.m_sInteriorID == "dummy" then
-			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "checkpoint", 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "checkpoint", 1, unpack( Color ) );
 		elseif InteriorData.Position == NULL or ( self:GetOwner() == 0 and self:GetType() ~= INTERIOR_TYPE_NONE and self:GetPrice() > 0 ) then
-			self.m_pOutsideMarker	= CPickup.Create( self.m_vecOutsidePosition, 3, self:GetType() == INTERIOR_TYPE_COMMERCIAL and 1272 or 1273 );
+			self.m_pOutsideMarker	= CPickup( self.m_vecOutsidePosition, 3, self:GetType() == INTERIOR_TYPE_COMMERCIAL and 1272 or 1273 );
 		else
-			self.m_pOutsideMarker	= CMarker.Create( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
 		end
 		
 		if InteriorData.Position then
-			self.m_pInsideMarker		= CMarker.Create( InteriorData.Position + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			self.m_pInsideMarker		= CMarker( InteriorData.Position + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
 			
 			self.m_pInsideMarker.Rotation		= InteriorData.Rotation;
 			self.m_pInsideMarker:SetInterior	( InteriorData.Interior );

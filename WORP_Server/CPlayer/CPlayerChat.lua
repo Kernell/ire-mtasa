@@ -56,7 +56,7 @@ class: CPlayerChat
 	Hide		= function( this )
 		if classname( this ) ~= 'CPlayerChat' then error( TEXT_E2288, 2 ) end
 		
-		return showChat( this.m_pPlayer.__instance, false );
+		return showChat( this.m_pPlayer, false );
 	end;
 
 	Error		= function( this, sText, ... )

@@ -51,7 +51,7 @@ class: CPlayerAnimation
 		if iPriority == NULL then
 			this.m_pLastAnimation = NULL;
 			
-			return setPedAnimation( this.__instance );
+			return setPedAnimation( this );
 		end
 
 		iPriority			= (int)(iPriority);
@@ -63,7 +63,7 @@ class: CPlayerAnimation
 		this.m_pLastAnimation	= NULL;
 		
 		if sBlock == NULL then
-			return setPedAnimation( this.__instance );
+			return setPedAnimation( this );
 		end
 		
 		iTime				= tonumber( iTime ) or -1;
@@ -81,6 +81,6 @@ class: CPlayerAnimation
 			};
 		end
 		
-		return setPedAnimation( this.__instance, sBlock, sAnimation, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame );
+		return setPedAnimation( this, sBlock, sAnimation, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame );
 	end;
 };

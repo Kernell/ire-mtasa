@@ -16,7 +16,7 @@ class: CBank
 		this.m_iID = iID or (int)((string)(this) - "table: ");
 		
 		if iModel then
-			this.m_pObject = CObject.Create( iModel, vecPosition - Vector3( 0.0, 0.0, .325 ), vecRotation + Vector3( 0.0, 0.0, 180.0 ) );
+			this.m_pObject = CObject( iModel, vecPosition - Vector3( 0.0, 0.0, .325 ), vecRotation + Vector3( 0.0, 0.0, 180.0 ) );
 			
 			this.m_pObject:SetInterior( iInterior );
 			this.m_pObject:SetDimension( iDimension );
@@ -27,7 +27,7 @@ class: CBank
 		
 		vecPosition.Z	= vecPosition.Z - 0.81;
 		
-		this.m_pMarker	= CMarker.Create( vecPosition, "cylinder", 1.0, 0, 255, 0, 128 );
+		this.m_pMarker	= CMarker( vecPosition, "cylinder", 1.0, 0, 255, 0, 128 );
 		
 		this.m_pMarker:SetInterior	( iInterior );
 		this.m_pMarker:SetDimension	( iDimension );

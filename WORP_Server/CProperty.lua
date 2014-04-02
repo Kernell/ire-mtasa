@@ -5,12 +5,6 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-ePropertyType =
-{
-	COMMERCIAL		= 0;
-	HOUSE			= 1;
-};
-
 ePropertyOwner =
 {
 	CHARACTER		= 0;
@@ -20,11 +14,10 @@ ePropertyOwner =
 class: CProperty
 {
 	m_iID				= 0;
-	m_pInterior			= NULL;
 	m_iOwnerID			= 0;
 	m_iOwnerType		= ePropertyOwner.CHARACTER;
-	m_iType				= ePropertyType.COMMERCIAL;
 	m_iPrice			= 0;
+	m_sMapName			= "";
 	m_sName				= "NULL";
 	m_bLocked			= false;
 	m_vecDropPosition	= NULL;
@@ -48,7 +41,7 @@ class: CProperty
 		delete ( this.m_pInsideMarker );
 		
 		this.m_p3DText			= NULL;
-		this.m_pMarker	= NULL;
+		this.m_pMarker			= NULL;
 		this.m_pInsideMarker	= NULL;
 	end;
 	
@@ -85,9 +78,9 @@ class: CProperty
 		end
 		
 		if this.m_iPrice > 0 then
-			this.m_pMarker	= CPickup.Create( this.m_vecPosition, 3, this.m_iType == ePropertyType.COMMERCIAL and 1272 or 1273 );
+			this.m_pMarker	= CPickup( this.m_vecPosition, 3, 1273 );
 		else
-			this.m_pMarker	= CMarker.Create( this.m_vecPosition + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			this.m_pMarker	= CMarker( this.m_vecPosition + Vector3( 0, 0, 0.54 ), "arrow", 1.0, CPropertyManager.m_pDefaultColor );
 		end
 		
 		this.m_pMarker:SetInterior( this.m_iInterior );
@@ -96,7 +89,7 @@ class: CProperty
 		this.m_pMarker.Rotation		= this.m_fRotation;
 		
 		if this.m_pInterior then
-			this.m_pInsideMarker		= CMarker.Create( this.m_pInterior.Position + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			this.m_pInsideMarker		= CMarker( this.m_pInterior.Position + Vector3( 0, 0, .54 ), "arrow", 1, CPropertyManager.m_pDefaultColor );
 			
 			this.m_pInsideMarker.Rotation		= this.m_pInterior.Rotation;
 			
@@ -123,7 +116,7 @@ class: CProperty
 			this.m_pBlip = NULL;
 		end
 		
-		if this.m_pInterior and this.m_pInterior.Blip and this.m_iType == ePropertyType.COMMERCIAL and this.m_iOwnerID ~= 0 then
+		if this.m_pInterior and this.m_pInterior.Blip and this.m_iOwnerID ~= 0 then
 			this.m_pBlip = CBlip( this.m_vecPosition, this.m_pInterior.Blip, 2, 255, 255, 255, 255, 0, 250.0 );
 			
 			this.m_pBlip:SetInterior( this.m_iInterior );
@@ -148,7 +141,7 @@ class: CProperty
 					table.insert( aHint, "Эта собственность продаётся" );
 				end
 				
-				if this.m_iType == ePropertyType.COMMERCIAL or this.m_iPrice > 0 or ( this.m_iOwnerID == pClient:GetChar():GetID() and this.m_iOwnerType == ePropertyOwner.CHARACTER ) then
+				if this.m_iPrice > 0 or ( this.m_iOwnerID == pClient:GetChar():GetID() and this.m_iOwnerType == ePropertyOwner.CHARACTER ) then
 					table.insert( aHint, "X - Информация" );
 				end
 			end
@@ -262,7 +255,6 @@ class: CProperty
 				ID			= this.m_iID;
 				Interior	= NULL;
 				Name		= this.m_sName;
-				Type		= this.m_iType;
 				Price		= this.m_iPrice;
 				Locked		= this.m_bLocked;
 				Owner		= NULL;

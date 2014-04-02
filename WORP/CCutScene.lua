@@ -68,7 +68,7 @@ function CCutScene:CCutScene( pCutScene, ID )
 					self.m_Records[ i ].m_Frames 		= pRecord.Frames;
 					self.m_Records[ i ].m_vecTargetP	= Vector3( pRecord.Frames[ 1 ][ 1 ], pRecord.Frames[ 1 ][ 2 ], pRecord.Frames[ 1 ][ 3 ] );
 					self.m_Records[ i ].m_vecTargetR	= Vector3( pRecord.Frames[ 1 ][ 4 ], pRecord.Frames[ 1 ][ 5 ], pRecord.Frames[ 1 ][ 6 ] );
-					self.m_Records[ i ].m_pPed			= CPed.Create( pRecord.Ped or CLIENT:GetModel(), self.m_Records[ i ].m_vecTargetP, self.m_Records[ i ].m_vecTargetR );
+					self.m_Records[ i ].m_pPed			= CPed( pRecord.Ped or CLIENT:GetModel(), self.m_Records[ i ].m_vecTargetP, self.m_Records[ i ].m_vecTargetR );
 					
 					if pRecord.Vehicle then
 						local pVehicle = createVehicle( pRecord.Vehicle,

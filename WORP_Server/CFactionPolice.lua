@@ -45,7 +45,7 @@ function CClientRPC:SAPD_RequestBackup()
 					delete ( pVehicle.m_pBlip );
 				end
 				
-				pVehicle.m_pBlip = CBlip( pVehicle, 0, 1, 255, 0, 0, 255, 100, 99999.9, pFaction.m_pElement.__instance );
+				pVehicle.m_pBlip = CBlip( pVehicle, 0, 1, 255, 0, 0, 255, 100, 99999.9, pFaction.m_pElement );
 				pVehicle.m_pBlip:SetParent( pVehicle );
 				
 				self:OnChat( pVehicle:GetRegPlate() + " запрашивает подкрепление на " + pVehicle:GetZoneName(), 2 );

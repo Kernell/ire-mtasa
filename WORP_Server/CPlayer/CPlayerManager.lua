@@ -5,6 +5,9 @@
 -- License		Proprietary Software
 -- Version		1.0
 
+addEvent( "onCharacterLogin" );
+addEvent( "onCharacterLogout" );
+
 class: CPlayerManager ( CManager );
 
 function CPlayerManager:CPlayerManager()
@@ -53,12 +56,12 @@ function CPlayerManager:CPlayerManager()
 	
 	local scoreboard_columns =
 	{
-		{ 'player_id', 		40, 'ID', 1 };
-		{ 'player_level',	80, 'Level', 10 };
+		{ "player_id", 		40, "ID", 1 };
+		{ "player_level",	80, "Level", 10 };
 	};
 	
-	t_logged_in			= CTeam( 'Players', 255, 255, 255 );
-	t_not_logged_in		= CTeam( 'Not logged in', 120, 120, 120 );
+	t_logged_in			= CTeam( "Players", 255, 255, 255 );
+	t_not_logged_in		= CTeam( "Not logged in", 120, 120, 120 );
 	
 	exports.scoreboard:scoreboardSetColumnPriority( "name", 5 );
 	
@@ -162,7 +165,9 @@ function CPlayerManager:DeleteAll()
 		iCount = iCount + 1;
 	end
 	
-	if _DEBUG then Debug( ( 'All players (%d) saved (%d ms)' ):format( iCount, getTickCount() - iTick ) ); end
+	if _DEBUG then
+		Debug( ( "All players (%d) saved (%d ms)" ):format( iCount, getTickCount() - iTick ) );
+	end
 end
 
 function CPlayerManager:AddToList( pPlayer )
@@ -174,7 +179,7 @@ function CPlayerManager:AddToList( pPlayer )
 	
 	pPlayer.m_iID = iID + 1;
 	
-	self.m_List[ pPlayer.m_iID ] = pPlayer.__instance;
+	self.m_List[ pPlayer.m_iID ] = pPlayer;
 	
 	pPlayer:SetID( "player:" + pPlayer.m_iID );
 end

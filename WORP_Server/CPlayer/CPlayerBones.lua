@@ -20,7 +20,7 @@ end
 function CPlayerBones:AttachObject( iBone, iModel, vecPosition, vecRotation )
 	if classname( self ) ~= 'CPlayerBones' then error( TEXT_E2288, 2 ) end
 	
-	local pObject = CObject.Create( iModel, self.m_pClient:GetPosition() );
+	local pObject = CObject( iModel, self.m_pClient:GetPosition() );
 	
 	if pObject then
 		self:Release( iBone );

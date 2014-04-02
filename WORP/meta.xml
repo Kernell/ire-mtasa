@@ -5,24 +5,24 @@
   
   <include resource="IRE_Shaders" />
   
-  <script src="Shared/utils.lua"      type="client"/>
-  <script src="Shared/Debug.lua"      type="client"/>
-  <script src="Shared/class.lua"      type="client"/>
-  <script src="Shared/Easing.lua"     type="client"/>
-  <script src="Shared/CVector.lua"    type="client"/>
-  <script src="Shared/Vector4.lua"    type="client"/>
-  <script src="Shared/IElementData.lua"   type="client"/>
-  <script src="Shared/CElement.lua"   type="client"/>
-  <script src="Shared/CPed.lua"       type="client"/>
-    <script src="CPed.lua"              type="client"/>
-  <script src="Shared/CPlayer.lua"    type="client"/>
-  <script src="Shared/CBlip.lua"      type="client"/>
-  <script src="Shared/CColShape.lua"  type="client"/>
-  <script src="Shared/CMarker.lua"    type="client"/>
-  <script src="Shared/CObject.lua"    type="client"/>
-  <script src="Shared/CPickup.lua"    type="client"/>
-  <script src="Shared/CTimer.lua"     type="client"/>
-  <script src="Shared/CDateTime.lua"  type="client"/>
+  <script src="Shared/utils.lua"        type="client"/>
+  <script src="Shared/Debug.lua"        type="client"/>
+  <script src="Shared/class.lua"        type="client"/>
+  <script src="Shared/Easing.lua"       type="client"/>
+  <script src="Shared/Vector3.lua"      type="client"/>
+  <script src="Shared/Vector4.lua"      type="client"/>
+  <script src="Shared/CColor.lua"       type="client"/>
+  <script src="Shared/IElementData.lua" type="client"/>
+  <script src="Shared/CElement.lua"     type="client"/>
+  <script src="Shared/CPed.lua"         type="client"/>
+  <script src="Shared/CPlayer.lua"      type="client"/>
+  <script src="Shared/CBlip.lua"        type="client"/>
+  <script src="Shared/CColShape.lua"    type="client"/>
+  <script src="Shared/CMarker.lua"      type="client"/>
+  <script src="Shared/CObject.lua"      type="client"/>
+  <script src="Shared/CPickup.lua"      type="client"/>
+  <script src="Shared/CTimer.lua"       type="client"/>
+  <script src="Shared/CDateTime.lua"    type="client"/>
   
   <script src="Shared/Globals.lua"    type="client"/>
   

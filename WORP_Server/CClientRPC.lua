@@ -89,7 +89,7 @@ function CClientRPC:CClientRPC()
 			__index = function( t, sIndex )
 				table.insert( aSpace, sIndex );
 				
-				local pElement = this.__instance and getElementType( this.__instance ) == "player" and this.__instance or root;
+				local pElement = this:IsValid() and getElementType( this ) == "player" and this or root;
 				
 				local pObject = 
 				{

@@ -17,7 +17,7 @@ class: CClientCamera ( CElement )
 	m_fCockpitReleaseTime		= 0.3;
 	
 	CClientCamera	= function( this, pCamera )
-		this:CElement( pCamera );
+		pCamera( this );
 		
 		this.m_vecCockpit			= Vector3();
 		this.m_vecPosition			= Vector3();

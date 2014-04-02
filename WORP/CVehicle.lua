@@ -386,7 +386,7 @@ class: CVehicle ( CElement )
 };
 
 function CVehicle:GetDriver()
-	return getVehicleOccupant( self.__instance, 0 );
+	return getVehicleOccupant( self, 0 );
 end
 
 function CVehicle:GetFakeVelocity()
@@ -406,9 +406,7 @@ function CVehicle:GetSpeed()
 end
 
 function CVehicle:CVehicle( pVehicle )
-	self:CElement();
-	
-	self.__instance		= pVehicle;
+	pVehicle( self );
 	
 	local Components = getVehicleComponents( pVehicle );
 	

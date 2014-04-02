@@ -7,7 +7,7 @@
 
 class: CMapManager ( CManager )
 {
-	__instance	= createElement( "CMap", "CMap" );
+	m_pRoot	= createElement( "CMap", "CMap" );
 };
 
 function CMapManager:CMapManager()
@@ -70,7 +70,7 @@ function CMapManager:Init()
 				
 				if pResult2 then
 					for _, r in ipairs( pResult2:GetArray() ) do
-						local pObject = CObject.Create( r.model, Vector3( r.x, r.y, r.z ), Vector3( r.rx, r.ry, r.rz ) );
+						local pObject = CObject( r.model, Vector3( r.x, r.y, r.z ), Vector3( r.rx, r.ry, r.rz ) );
 						
 						if pMap:AddObject( pObject, r.interior, r.alpha, r.scale, r.doublesided == "Yes", r.frozen == "Yes", r.collisions == "Yes" ) then
 							iObjectCount = iObjectCount + 1;

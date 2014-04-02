@@ -33,7 +33,7 @@ local MAP_FIXES	=
 	{ Model = 1256; Position = Vector3( 612.45721435547, -12.34316444397, 1000.071899414 ); Rotation = Vector3( 339.0, 270, 90 ); };
 };
 
-local OUTSIDE_MARKER = CMarker.Create( OUTSIDE.POSITION, "cylinder", 4.0, 190, 255, 0, 100 ); OUTSIDE_MARKER:SetInterior( OUTSIDE.INTERIOR );
+local OUTSIDE_MARKER = CMarker( OUTSIDE.POSITION, "cylinder", 4.0, 190, 255, 0, 100 ); OUTSIDE_MARKER:SetInterior( OUTSIDE.INTERIOR );
 
 class: CVehicleTuning
 {
@@ -46,7 +46,7 @@ class: CVehicleTuning
 		self.m_iDimension = pPlayer:GetID();
 		
 		for i, data in ipairs( MAP_FIXES ) do
-			local pObject = CObject.Create( data.Model, data.Position, data.Rotation );
+			local pObject = CObject( data.Model, data.Position, data.Rotation );
 			
 			pObject:SetInterior( INSIDE.INTERIOR );
 			pObject:SetDimension( self.m_iDimension );

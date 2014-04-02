@@ -258,8 +258,8 @@ function CRace:OnPlayerCP( pPlayer )
 			return true;
 		end
 		
-		pPlayer.m_pRaceMarker 			= CMarker.Create( self.m_CPs[ pPlayer.m_iRaceCP ], "checkpoint", self.m_fSize, self.m_iRed, self.m_iGreen, self.m_iBlue, 200, pPlayer.__instance );
-		pPlayer.m_pRaceMarker.m_pBlip	= CBlip( pPlayer.m_pRaceMarker, BLIP_SPRITE_NONE, 2, self.m_iRed, self.m_iGreen, self.m_iBlue, 255, 0, 99999.0, pPlayer.__instance );
+		pPlayer.m_pRaceMarker 			= CMarker( self.m_CPs[ pPlayer.m_iRaceCP ], "checkpoint", self.m_fSize, self.m_iRed, self.m_iGreen, self.m_iBlue, 200, pPlayer );
+		pPlayer.m_pRaceMarker.m_pBlip	= CBlip( pPlayer.m_pRaceMarker, BLIP_SPRITE_NONE, 2, self.m_iRed, self.m_iGreen, self.m_iBlue, 255, 0, 99999.0, pPlayer );
 		
 		pPlayer.m_pRaceMarker.m_pPlayer = pPlayer;
 		pPlayer.m_pRaceMarker.OnHit 	= OnMarkerHit;
@@ -271,8 +271,8 @@ function CRace:OnPlayerCP( pPlayer )
 			pPlayer.m_pRaceMarker:SetIcon( "arrow" );
 			pPlayer.m_pRaceMarker:SetTarget( vecNextCP );
 			
-			local pNextMarker 	= CMarker.Create( vecNextCP, "checkpoint", self.m_fSize, self.m_iRed, self.m_iGreen, self.m_iBlue, 100, pPlayer.__instance );
-			local pBlip 		= CBlip( vecNextCP, BLIP_SPRITE_NONE, 1, self.m_iRed, self.m_iGreen, self.m_iBlue, 128, 0, 99999.0, pPlayer.__instance );
+			local pNextMarker 	= CMarker( vecNextCP, "checkpoint", self.m_fSize, self.m_iRed, self.m_iGreen, self.m_iBlue, 100, pPlayer );
+			local pBlip 		= CBlip( vecNextCP, BLIP_SPRITE_NONE, 1, self.m_iRed, self.m_iGreen, self.m_iBlue, 128, 0, 99999.0, pPlayer );
 			
 			pNextMarker:SetParent( pPlayer.m_pRaceMarker.m_pBlip );
 			pBlip:SetParent( pNextMarker );

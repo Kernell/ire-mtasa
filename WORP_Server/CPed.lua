@@ -5,31 +5,8 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-function CPed:CPed( ... )
-	local arg = { ... };
-	
-	if type( arg[ 1 ] ) == 'number' then
-		local vecPosition	= arg[ 2 ] or Vector3();
-		local bSynced		= arg[ 4 ] == NULL or (bool)(arg[ 4 ]);
-	
-		self.__instance = createPed( (int)(arg[ 1 ]), vecPosition.X, vecPosition.Y, vecPosition.Z, (float)(arg[ 3 ]), bSynced );
-		
-		CElement.SetRotation( self.__instance, Vector3( 0, 0, (float)(arg[ 3 ]) ) );
-		
-		if not self.__instance then
-			Debug( "failed to create ped", 1 );
-			
-			self.m_ID = INVALID_ELEMENT_ID;
-		end
-		
-		self:CElement( self.__instance );
-	elseif arg[ 1 ] and isElement( arg[ 1 ] ) then
-		self.__instance = arg[ 1 ];
-	end
-end
-
 function CPed:_CPed()
-	destroyElement( self.__instance );
+	destroyElement( self );
 	
 	g_pGame:GetPedManager():RemoveFromList( self );
 	

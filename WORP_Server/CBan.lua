@@ -5,72 +5,25 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class "CBan"
+GetBans		= getBans;
 
-local ban_list = {};
-
-function CBan:CBan( ban )
-	self.__instance = ban;
-	
-	ban_list[ ban ] = self;
-end
-
-function CBan.Add( IP, Username, Serial, response, reason, seconds )
-	local ban = addBan( IP, Username, Serial, type( response ) == 'table' and response.__instance or response, reason, tonumber( seconds ) or 0 );
-	
-	return CBan( ban );
-end
-
-function CBan:GetAll()
-	local bans = {};
-	
-	for _, ban in ipairs( getBans() ) do
-		local ban = ban_list[ ban ] or CBan( ban );
+class: CBan
+{
+	CBan		= function( this, sIP, sUsername, sSerial, pResponse, sReason, iSeconds )
+		local pBan = addBan( sIP, sUsername, sSerial, pResponse, sReason, (int)(iSeconds) );
 		
-		table.insert( bans, ban );
-	end
-	
-	return bans;
-end
-
-function CBan:GetAdmin()
-	return getBanAdmin( self.__instance );
-end
-
-function CBan:GetIP()
-	return getBanIP( self.__instance );
-end
-
-function CBan:GetReason()
-	return getBanReason( self.__instance );
-end
-
-function CBan:GetSerial()
-	return getBanSerial( self.__instance );
-end
-
-function CBan:GetTime()
-	return getBanTime( self.__instance );
-end
-
-function CBan:GetUnbanTime()
-	return getUnbanTime( self.__instance );
-end
-
-function CBan:GetUsername()
-	return getBanUsername( self.__instance );
-end
-
-function CBan:GetNick()
-	return getBanNick( self.__instance );
-end
-
-function CBan:Remove( response )
-	if removeBan( self.__instance, type( response ) == 'table' and response.__instance or response ) then
-		ban_list[ self.__instance ] = nil;
+		pBan( this );
 		
-		return true;
-	end
+		return pBan;
+	end;
 	
-	return false
-end
+	GetAdmin		= getBanAdmin;
+	GetIP			= getBanIP;
+	GetReason		= getBanReason;
+	GetSerial		= getBanSerial;
+	GetTime			= getBanTime;
+	GetUnbanTime	= getUnbanTime;
+	GetUsername		= getBanUsername;
+	GetNick			= getBanNick;
+	Remove			= removeBan;
+};

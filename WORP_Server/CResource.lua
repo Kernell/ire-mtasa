@@ -14,14 +14,14 @@ enum "eResourceState"
 	RESOURCE_STATE_STOPPING	= "stopping";
 };
 
-class "CResource"
+class: CResource
 {
-	CResource = function( self, vResource )
-		self.API	=
+	CResource = function( this, vResource )
+		this.API	=
 		{
 			__index	= function( _, sFunction )
 				return function( ... )
-					local Result = { pcall( call, self, sFunction, ... ) };
+					local Result = { pcall( call, this, sFunction, ... ) };
 					
 					if not Result[ 1 ] then
 						error( Result[ 2 ], 2 );
@@ -32,14 +32,14 @@ class "CResource"
 			end;
 		};
 		
-		setmetatable( self.API, self.API );
+		setmetatable( this.API, this.API );
 		
 		if type( vResource ) == 'string' then
 			vResource = getResourceFromName( vResource );
 		end
 		
 		if vResource then
-			CElement.AddToList( self, vResource );
+			vResource( this );
 		end
 		
 		return vResource;

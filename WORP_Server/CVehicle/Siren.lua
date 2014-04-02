@@ -52,11 +52,11 @@ function CVehicle:InitSirens( sSirenType, bEnabled )
 			end
 			
 			if type( pSiren ) == 'table' and table.getn( pSiren ) > 0 then
-				removeVehicleSirens( self.__instance );
-				addVehicleSirens( self.__instance, table.getn( pSiren ), 3, true, false, true, true );
+				removeVehicleSirens( self );
+				addVehicleSirens( self, table.getn( pSiren ), 3, true, false, true, true );
 				
 				for i, pData in ipairs( pSiren ) do
-					setVehicleSirens( self.__instance, i, pData.X, pData.Y, pData.Z, pData.Red, pData.Green, pData.Blue, pData.Alpha, pData.MinAlpha );
+					setVehicleSirens( self, i, pData.X, pData.Y, pData.Z, pData.Red, pData.Green, pData.Blue, pData.Alpha, pData.MinAlpha );
 				end
 				
 				self:SetSirensOn( bEnabled );

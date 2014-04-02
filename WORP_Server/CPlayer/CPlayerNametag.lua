@@ -16,11 +16,11 @@ function CPlayerNametag:_CPlayerNametag()
 end
 
 function CPlayerNametag:SetColor( ... )
-	return setPlayerNametagColor( self.m_pPlayer.__instance, ... );
+	return setPlayerNametagColor( self.m_pPlayer, ... );
 end
 
 function CPlayerNametag:GetColor()
-	return getPlayerNametagColor( self.m_pPlayer.__instance );
+	return getPlayerNametagColor( self.m_pPlayer );
 end
 
 function CPlayerNametag:GetText()
@@ -32,7 +32,7 @@ function CPlayerNametag:SetText( sText )
 end
 
 function CPlayerNametag:IsShowing()
-	return isPlayerNametagShowing( self.m_pPlayer.__instance );
+	return isPlayerNametagShowing( self.m_pPlayer );
 end
 
 function CPlayerNametag:Show()

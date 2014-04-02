@@ -41,7 +41,7 @@ class: CVehicleSiren
 	m_iType				= 0;
 	
 	CVehicleSiren		= function( this, pVehicle, iSirenState, iWhelenState )
-		this.m_pVehicle	= pVehicle.__instance;
+		this.m_pVehicle	= pVehicle;
 		
 		this:Install();
 		

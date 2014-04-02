@@ -7,6 +7,29 @@
 
 class: CPed ( CElement )
 {
+	property: Vehicle
+	{
+		get	= getPedOccupiedVehicle;
+		
+		set	= function( this, pVehicle )
+			if pVehicle then
+				if getElementType( pVehicle ) == "vehicle" then
+					this:WarpIntoVehicle( pVehicle, 0 );
+				elseif type( pVehicle ) == "table" then
+					if getElementType( pVehicle ) ~= "vehicle" then
+						Error( 3, 2342, "Vehicle", "element:vehicle", tostring( pVehicle ) );
+					end
+					
+					this:WarpIntoVehicle( pVehicle[ 1 ], pVehicle[ 2 ] );
+				else
+					Error( 3, 2342, "Vehicle", "element:vehicle' or 'table", tostring( pVehicle ) );
+				end
+			else
+				this:RemoveFromVehicle();
+			end
+		end;
+	};
+	
 	CPed		= function( this, iModel, vecPosition, ... )
 		vecPosition = vecPosition or Vector3();
 		

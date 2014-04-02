@@ -11,9 +11,9 @@ function CMap:CMap( sName, iID, iDimension, bProtected )
 	sName = sName:lower();
 	
 	if not g_pGame:GetMapManager():Get( sName ) then
-		self.m_pElement	= CElement.Create( "CMap", "CMap:" + (string)(iID) );
+		self.m_pElement	= CElement( "CMap", "CMap:" + (string)(iID) );
 		
-		self.m_pElement:SetParent( g_pGame:GetMapManager() );
+		self.m_pElement:SetParent( g_pGame:GetMapManager().m_pRoot );
 		
 		self.m_iID				= iID;
 		self.m_sName			= sName;

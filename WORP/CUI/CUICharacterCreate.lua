@@ -470,7 +470,7 @@ class: CUICharacterCreate ( CGUI, CUIAsyncQuery )
 		this.Window:BringToFront();
 		this:ShowCursor();
 		
-		this.m_pPed = CPed.Create( 0, Vector3( 1711.233, -1671.350, 42.469 ), 312.0 );
+		this.m_pPed = CPed( 0, Vector3( 1711.233, -1671.350, 42.469 ), 312.0 );
 		
 		this.m_pPed:SetDimension( CLIENT:GetDimension() );
 		this.m_pPed:SetInterior( CLIENT:GetInterior() );

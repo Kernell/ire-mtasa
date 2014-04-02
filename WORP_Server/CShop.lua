@@ -88,11 +88,11 @@ function CShop:CShop( iID, iInteriorID, iPickupID, sType, vecPosition, iInterior
 	end
 	
 	if iPickupID then
-		self.m_pMarker	= CPickup.Create( vecPosition, 3, iPickupID );
+		self.m_pMarker	= CPickup( vecPosition, 3, iPickupID );
 	else
 		vecPosition.Z	= vecPosition.Z - 0.9;
 		
-		self.m_pMarker	= CMarker.Create( vecPosition, "cylinder", 1.0, 255, 255, 0, 196 );
+		self.m_pMarker	= CMarker( vecPosition, "cylinder", 1.0, 255, 255, 0, 196 );
 	end
 	
 	self.m_pMarker.m_pShop		= self;

@@ -1052,7 +1052,7 @@ function GetSkins()
 end
 
 function CPed:GetSkin()
-	local skin = typeof( self ) == "object" and getElementModel( self.__instance ) or tonumber( self );
+	local skin = typeof( self ) == "object" and self:GetModel() or tonumber( self );
 	
 	return skin and
 	{

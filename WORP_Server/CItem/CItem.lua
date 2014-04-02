@@ -85,7 +85,7 @@ function CItem:Spawn( vecPosition, vecRotation, iInterior, iDimension )
 		local vecPosition		= self.m_vecPosition + self.m_vecSpawnPos;
 		local vecRotation		= self.m_vecRotation + self.m_vecSpawnRot;
 		
-		self.m_pEntity 			= CObject.Create( self.m_iModel, vecPosition, vecRotation );
+		self.m_pEntity 			= CObject( self.m_iModel, vecPosition, vecRotation );
 		
 		self.m_pEntity:SetInterior		( iInterior );
 		self.m_pEntity:SetDimension		( iDimension );

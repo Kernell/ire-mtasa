@@ -38,7 +38,7 @@ class: CGate
 		this.m_pColShape.OnHit		= this.OnHit;
 		this.m_pColShape.OnLeave	= this.OnLeave;
 		
-		this.m_pObject				= CObject.Create( iModel, this.m_vecPosition, this.m_vecRotation );
+		this.m_pObject				= CObject( iModel, this.m_vecPosition, this.m_vecRotation );
 		
 		this.m_pObject:SetInterior	( this.m_iInterior );
 		this.m_pObject:SetDimension	( this.m_iDimension );

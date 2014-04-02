@@ -13,9 +13,9 @@ class: CEventMarker
 		this.m_sOnLeave	= sOnLeave;
 		
 		if type( vModel ) == "string" then
-			this.m_pMarker = CMarker.Create( vecPosition, vModel, fSize, Color and unpack( Color ) );
+			this.m_pMarker = CMarker( vecPosition, vModel, fSize, Color and unpack( Color ) );
 		else
-			this.m_pMarker = CPickup.Create( vecPosition, 3, (int)(vModel) );
+			this.m_pMarker = CPickup( vecPosition, 3, (int)(vModel) );
 		end
 		
 		this.m_pMarker:SetInterior( iInterior );

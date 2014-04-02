@@ -7,7 +7,7 @@
 
 local FillVehicle;
 
-local pFuelRoot = CElement.Create( "fuelRoot" );
+local pFuelRoot = CElement( "fuelRoot" );
 
 local FuelConfig	=
 {

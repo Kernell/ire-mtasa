@@ -51,7 +51,7 @@ function CMapCommands:Add( pPlayer, sCmd, sOption, sName, fOffsetX, fOffsetY, fO
 					local fY	= value.y + (float)(fOffsetY);
 					local fZ	= value.z + (float)(fOffsetZ);
 				
-					local pObject = CObject.Create( value.model, Vector3( fX, fY, fZ ), Vector3( value.rx, value.ry, value.rz ) );
+					local pObject = CObject( value.model, Vector3( fX, fY, fZ ), Vector3( value.rx, value.ry, value.rz ) );
 					
 					if pObject then
 						if g_pDB:Insert( DBPREFIX + "map_objects",

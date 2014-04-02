@@ -12,9 +12,6 @@ DEFAULT_CAMERA_TARGET		= Vector3( 1585.96, 0.0, 84.12 );
 NEW_CHAR_CAMERA_POSITION	= Vector3( 1714.2, -1670.7, 42.9 );
 NEW_CHAR_CAMERA_TARGET		= Vector3( 1628.2, -1719.5, 28.4 );
 
-addEvent 'onCharacterLogin'
-addEvent 'onCharacterLogout'
-
 class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 {
 	m_iAdminID			= 0;
@@ -33,10 +30,7 @@ class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 };
 
 function CPlayer:CPlayer( pPlayerManager, pClient )
-	self.__instance			= pClient;
-	
-	self:CElement			( pClient );
-	self:CPed				( pClient );
+	pClient( self );
 	
 	self:CPlayerTutorial	( pClient );
 	self:CPlayerAnimation	( pClient );
@@ -61,14 +55,13 @@ function CPlayer:CPlayer( pPlayerManager, pClient )
 	};
 	
 	pPlayerManager:AddToList( self );
-	CElement.AddToList( self );
 	
-	self:SetData( 'player_id', self:GetID(), true, true );
+	self:SetData( "player_id", self:GetID(), true, true );
 	self:SetData( "CPlayer::m_Controls", self.m_aControls );
 	self:SetData( "CPlayer::m_ControlStates", self.m_aControlStates );
 	
 	if _DEBUG then
-		Debug( 'Creating player "' + self:GetName() + ' (' + self:GetID() + ')"' );
+		Debug( "Creating player \'" + self:GetName() + "\' (" + self:GetID() + ")" );
 	end
 end
 
@@ -84,7 +77,7 @@ function CPlayer:_CPlayer()
 	end
 	
 	if _DEBUG then
-		Debug( 'Removed player "' + self:GetName() + ' (' + self:GetID() + ')"' );
+		Debug( "Removed player \"" + self:GetName() + " (" + self:GetID() + ")" );
 	end
 	
 	delete ( self.m_pCamera );
@@ -104,15 +97,15 @@ function CPlayer:_CPlayer()
 end
 
 function CPlayer:GetName()
-	return getPlayerName( self.__instance );
+	return getPlayerName( self );
 end
 
 function CPlayer:GetPing()
-	return getPlayerPing( self.__instance );
+	return getPlayerPing( self );
 end
 
 function CPlayer:GetTeam()
-	return getPlayerTeam( self.__instance );
+	return getPlayerTeam( self );
 end
 
 function CPlayer:Unlink( sType, sReason, pResponsePlayer )
@@ -349,76 +342,76 @@ function CPlayer:MessageBox( sCallback, ... )
 end
 
 function CPlayer:Ban( Reason, Seconds, Player )
-	return CBan( banPlayer( self.__instance, false, false, true, classof( Player ) == CPlayer and Player:GetUserName() or "Server", Reason, (int)(Seconds) ) );
+	return CBan( banPlayer( self, false, false, true, classof( Player ) == CPlayer and Player:GetUserName() or "Server", Reason, (int)(Seconds) ) );
 end
 
 function CPlayer:Kick( Reason )
-	return kickPlayer( self.__instance, Reason );
+	return kickPlayer( self, Reason );
 end
 
 function CPlayer:Spawn( pos, rotation, skin, int, dim, team )
 	pos = pos or Vector3();
 	
-	return spawnPlayer( self.__instance, pos.X, pos.Y, pos.Z, rotation or 0, skin or 0, int or 0, dim or 0, type( team ) == 'table' and team.__instance or team or nil );
+	return spawnPlayer( self, pos.X, pos.Y, pos.Z, rotation or 0, skin or 0, int or 0, dim or 0, team );
 end
 
 function CPlayer:SetAnnounceValue( key, value )
-	return setPlayerAnnounceValue( self.__instance, key, value );
+	return setPlayerAnnounceValue( self, key, value );
 end
 
 function CPlayer:GetAnnounceValue( key )
-	return getPlayerAnnounceValue( self.__instance, key );
+	return getPlayerAnnounceValue( self, key );
 end
 
 function CPlayer:SetBlurLevel( level )
-	return setPlayerBlurLevel( self.__instance, (int)(level) );
+	return setPlayerBlurLevel( self, (int)(level) );
 end
 
 function CPlayer:GetBlurLevel()
-	return getPlayerBlurLevel( self.__instance );
+	return getPlayerBlurLevel( self );
 end
 
 function CPlayer:GetIP()
-	return getPlayerIP( self.__instance );
+	return getPlayerIP( self );
 end
 
 function CPlayer:GetSerial()
-	return getPlayerSerial( self.__instance );
+	return getPlayerSerial( self );
 end
 
 function CPlayer:SetName( name )
-	return setPlayerName( self.__instance, name );
+	return setPlayerName( self, name );
 end
 
 function CPlayer:SetTeam( pTeam )
-	return setPlayerTeam( self.__instance, classof( pTeam ) == CTeam and pTeam.__instance or pTeam );
+	return setPlayerTeam( self, pTeam );
 end
 
 function CPlayer:GetMTAVersion()
-	return getPlayerVersion( self.__instance );
+	return getPlayerVersion( self );
 end
 
 function CPlayer:GetIdleTime()
-	return getPlayerIdleTime( self.__instance );
+	return getPlayerIdleTime( self );
 end
 
 function CPlayer:ResendModInfo()
-	return resendPlayerModInfo( self.__instance );
+	return resendPlayerModInfo( self );
 end
 
 function CPlayer:Redirect( sIP, iPort, sPassword )
-	return redirectPlayer( self.__instance, sIP or "", (int)(iPort), sPassword );
+	return redirectPlayer( self, sIP or "", (int)(iPort), sPassword );
 end
 
 function CPlayer:ToggleControls( enabled, gtaControls, mtaControls )
-	return toggleAllControls( self.__instance, tobool( enabled ), gtaControls == nil and true or tobool( gtaControls ), mtaControls == nil and true or tobool( mtaControls ) );
+	return toggleAllControls( self, tobool( enabled ), gtaControls == nil and true or tobool( gtaControls ), mtaControls == nil and true or tobool( mtaControls ) );
 end
 
 function CPlayer:DisableControls( ... )
 	for _, control in ipairs( { ... } ) do
 		self.m_aControls[ control ] = false;
 		
-		toggleControl( self.__instance, control, false );
+		toggleControl( self, control, false );
 	end
 	
 	self:SetData( "CPlayer::m_Controls", self.m_aControls );
@@ -428,7 +421,7 @@ function CPlayer:EnableControls( ... )
 	for _, control in ipairs( { ... } ) do
 		self.m_aControls[ control ] = true;
 		
-		toggleControl( self.__instance, control, true );
+		toggleControl( self, control, true );
 	end
 	
 	self:SetData( "CPlayer::m_Controls", self.m_aControls );
@@ -439,11 +432,11 @@ function CPlayer:SetControlState( control, state )
 	
 	self:SetData( "CPlayer::m_ControlStates", self.m_aControlStates );
 	
-	return setControlState( self.__instance, control, state );
+	return setControlState( self, control, state );
 end
 
 function CPlayer:GetControlState( control )
-	return getControlState( self.__instance, control );
+	return getControlState( self, control );
 end
 
 function CPlayer:BindKey( key, state, func, ... )
@@ -458,9 +451,9 @@ function CPlayer:BindKey( key, state, func, ... )
 		
 		self.m_Binds[ func ] = Function;
 		
-		return bindKey( self.__instance, key, state, Function, ... );
+		return bindKey( self, key, state, Function, ... );
 	else
-		return bindKey( self.__instance, key, state, func, ... );
+		return bindKey( self, key, state, func, ... );
 	end
 end
 
@@ -469,7 +462,7 @@ function CPlayer:UnbindKey( key, state, func )
 		func = self.m_Binds[ func ] or func;
 	end
 	
-	if unbindKey( self.__instance, key, state, func ) then
+	if unbindKey( self, key, state, func ) then
 		self.m_Binds[ func ] = nil;
 		
 		return true;
@@ -483,17 +476,17 @@ function CPlayer:IsKeyBound( key, state, func )
 		func = self.m_Binds[ func ] or func;
 	end
 	
-	return isKeyBound( self.__instance, key, state, func );
+	return isKeyBound( self, key, state, func );
 end
 
 function CPlayer:PlaySoundFrontEnd( sound )
-	return playSoundFrontEnd( self.__instance, sound );
+	return playSoundFrontEnd( self, sound );
 end
 
 -- Command Handlers
 
 function CPlayer:ExecuteCommand( command, ... )
-	return executeCommandHandler( command, self.__instance, table.concat( { ... }, ' ' ) );
+	return executeCommandHandler( command, self, table.concat( { ... }, ' ' ) );
 end
 
 function CPlayer:SetMuted( iTime )
@@ -558,27 +551,27 @@ function CPlayer:AttachToBone( pObject, iBone, vecPosition, vecRotation )
 	vecPosition = vecPosition or Vector3();
 	vecRotation = vecRotation or Vector3();
 	
-	return exports.bone_attach:attachElementToBone( pObject.__instance, self.__instance, iBone, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z );
+	return exports.bone_attach:attachElementToBone( pObject, self, iBone, vecPosition.X, vecPosition.Y, vecPosition.Z, vecRotation.X, vecRotation.Y, vecRotation.Z );
 end
 
 function CPlayer:DetachFromBone( pObject )
 	Warning( 2, 8106, "CPlayer::DetachFromBone" );
 	
-	return exports.bone_attach:detachElementFromBone( pObject.__instance );
+	return exports.bone_attach:detachElementFromBone( pObject );
 end
 
 function CPlayer:IsAttachedToBone( pObject )
 	Warning( 2, 8106, "CPlayer::IsAttachedToBone" );
 	
-	return exports.bone_attach:isElementAttachedToBone( pObject.__instance );
+	return exports.bone_attach:isElementAttachedToBone( pObject );
 end
 
 function CPlayer:PlaySound3D( ... )
-	return triggerClientEvent( "CPlayer:PlaySound3D", self.__instance, ... );
+	return triggerClientEvent( "CPlayer:PlaySound3D", self, ... );
 end
 
 function CPlayer:TakeScreenShot( fWidth, fHeight, sTag, iQuality, iMaxBandwith )
-	return takePlayerScreenShot( self.__instance, fWidth, fHeight, sTag or "", iQuality or 100, iMaxBandwith or 5000  );
+	return takePlayerScreenShot( self, fWidth, fHeight, sTag or "", iQuality or 100, iMaxBandwith or 5000  );
 end
 
 function CPlayer:SprintHandler( key, state )
@@ -1007,7 +1000,7 @@ function CPlayer:UpdateSpectate()
 			self.m_pSpectatingPlayer = self.m_pSpectatingPlayer:GetSpectating();
 		end
 		
-		self:Client().SetSpectating( self.m_pSpectatingPlayer.__instance, 
+		self:Client().SetSpectating( self.m_pSpectatingPlayer, 
 			{ 
 				money		= self.m_pSpectatingPlayer:GetChar():GetMoney();
 				username	= self.m_pSpectatingPlayer:GetUserName();

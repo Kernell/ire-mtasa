@@ -90,7 +90,7 @@ function CPlayer:SetCuffed( bCuffed, pPlayer )
 		self.m_pCuffedTo		= pPlayer and pPlayer:IsInGame() and pPlayer or NULL;
 		
 		if self.m_bCuffed then
-			self:Client().UpdateCuffed( self.m_pCuffedTo and self.m_pCuffedTo.__instance );
+			self:Client().UpdateCuffed( self.m_pCuffedTo and self.m_pCuffedTo );
 			
 			if not self:IsInVehicle() and not self.m_bLowHPAnim then
 				self:SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
