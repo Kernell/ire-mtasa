@@ -372,7 +372,7 @@ class: CBankManager ( CManager )
 				pAccountInfo = { id = 0; owner_id = pChar:GetID(); amount = pChar:GetMoney(); locked = NULL };
 			else
 				if sPIN then
-					pAccountInfo = this:ClientHandle( self, OpenCard, sBankAccountID, sPIN );
+					pAccountInfo = this:ClientHandle( this, OpenCard, sBankAccountID, sPIN );
 					
 					if type( pAccountInfo ) ~= "table" then
 						return pAccountInfo;
@@ -399,7 +399,7 @@ class: CBankManager ( CManager )
 					end
 					
 					if pProperty then
-						if pProperty:IsElementInside( self ) or pProperty.m_pOutsideMarker:GetPosition():Distance( pChar:GetPosition() ) < 5.0 then
+						if pProperty:IsElementInside( this ) or pProperty.m_pOutsideMarker:GetPosition():Distance( pChar:GetPosition() ) < 5.0 then
 							if pProperty:GetType() == INTERIOR_TYPE_NONE then
 								return "Данная собственность недоступна для покупки";
 							end
