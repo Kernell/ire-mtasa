@@ -255,11 +255,11 @@ class: CUIPropertyMenu ( CGUI )
 						function pPayDialog:OnSelect( sAccountID, sPIN )
 							this.Window:SetEnabled( false );
 							
-							this:AsyncQuery( this.ButtonClose.Click, "Bank__Buy", "Property", iID, sAccountID, sPIN );
+							this:AsyncQuery( this.ButtonClose.Click, "CBankManager", "Buy", "Property", iID, sAccountID, sPIN );
 						end
 					end
 					
-					this:AsyncQuery( Complete, "Bank__GetAccounts" );
+					this:AsyncQuery( Complete, "CBankManager", "GetAccounts" );
 				end;
 			};
 		end
