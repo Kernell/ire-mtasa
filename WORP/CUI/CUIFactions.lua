@@ -97,7 +97,7 @@ class: CUIFactions ( CGUI, CUIAsyncQuery )
 					return;
 				end
 				
-				this:AsyncQuery( pTab.List.Fill, "Bank__GetFactions", { "m_iID", "m_sName", "m_iType", "m_sRegistered" } );
+				this:AsyncQuery( pTab.List.Fill, "CBankManager", "GetFactions", { "m_iID", "m_sName", "m_iType", "m_sRegistered" } );
 			end
 			
 			pTab.List	= pTab:CreateGridList{ 0, 0, this.Window.Tab.Width - 20, this.Window.Tab.Height - 20 }
