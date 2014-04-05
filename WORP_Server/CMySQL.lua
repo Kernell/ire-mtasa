@@ -5,21 +5,28 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-DBUSER	= 'root'
-DBPASS	= ''
-DBNAME	= 'mta'
-DBHOST	= 'localhost'
-
-class "CMySQL"
+class: CMySQL
 {
 -- private:
 	m_bTransaction	= false;
 	
 -- public:
+	DBUSER		= "root";
+	DBPASS		= "";
+	DBNAME		= "users";
+	DBHOST		= "localhost";
+	DBENGINE	= "MyISAM";
+	
 	--[[ static const std::string ]] CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
 -- public:
-	CMySQL = function( this, sUser, sPasswd, sDatabase, sHost, Options )		
+	CMySQL = function( this, sUser, sPasswd, sDatabase, sHost, Options )
 		if sUser and sPasswd and sHost then
+			this.DBUSER 	= sUser or this.DBUSER;
+			this.DBPASS 	= sPasswd or this.DBPASS;
+			this.DBNAME 	= sDatabase or this.DBNAME;
+			this.DBHOST		= sHost or this.DBHOST;
+			this.DBENGINE	= Options and Options[ "engine" ] or this.DBENGINE;
+			
 			this:Connect( sUser, sPasswd, sDatabase, sHost, Options );
 		end
 	end;
@@ -42,15 +49,11 @@ class "CMySQL"
 	
 	Connect = function( this, sUser, sPasswd, sDatabase, sHost, Options )
 		if not this.m_pHandler or not this:Ping() then
-			this.DBUSER 	= sUser 	or DBUSER;
-			this.DBPASS 	= sPasswd 	or DBPASS;
-			this.DBNAME 	= sDatabase or DBNAME;
-			this.DBHOST		= sHost 	or DBHOST;
-			this.DBENGINE	= Options and Options[ 'engine' ] or DBENGINE;
-			
 			this.m_pHandler = mysql_connect( this.DBHOST, this.DBUSER , this.DBPASS, this.DBNAME );
 			
 			if not this.m_pHandler then
+				Debug( "Unable to connect to MySQL server (" + this.DBHOST + ")"" );
+				
 				return false;
 			end
 			
