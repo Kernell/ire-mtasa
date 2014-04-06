@@ -52,7 +52,7 @@ class: CMySQL
 			this.m_pHandler = mysql_connect( this.DBHOST, this.DBUSER , this.DBPASS, this.DBNAME );
 			
 			if not this.m_pHandler then
-				Debug( "Unable to connect to MySQL server (" + this.DBHOST + ")"" );
+				Debug( "Unable to connect to MySQL server (" + this.DBHOST + ")" );
 				
 				return false;
 			end
