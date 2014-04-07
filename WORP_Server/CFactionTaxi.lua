@@ -103,7 +103,7 @@ class: CFactionTaxi ( CFaction )
 	end;
 	
 	OnTaxiMarkerHit		= function( this, pMarker, pPlayer, bMatching )
-		if bMatching and pPlayer:type() == "player" and pMarker == pPlayer.m_pJob then
+		if bMatching and getElementType( pPlayer ) == "player" and pMarker == pPlayer.m_pJob then
 			local pChar	= pPlayer:GetChar();
 			
 			local pVehicle = pChar and pPlayer:GetVehicleSeat() == 0 and pPlayer:GetVehicle();

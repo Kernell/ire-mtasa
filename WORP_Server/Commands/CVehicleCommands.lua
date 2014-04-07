@@ -398,7 +398,7 @@ function CVehicleCommands:Spawn( pPlayer, sCmd, sOption, ... )
 				local vecRotation	= Vector3( 0, 0, fRotation + 90 );
 				local sPlate		= ( "%03d NULL" ):format( iID );
 				
-				local pVehicle = CVehicle( pVehicleManager, iID, iModel, vecPosition, vecRotation, sPlate );
+				local pVehicle = pVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate );
 				
 				pVehicle:SetInterior( pPlayer:GetInterior() );
 				pVehicle:SetDimension( pPlayer:GetDimension() );

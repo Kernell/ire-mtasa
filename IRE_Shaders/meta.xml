@@ -8,7 +8,6 @@
 	<script src="Shared/Debug.lua"              type="client" />
 	<script src="Shared/class.lua"              type="client" />
 	<script src="Shared/Vector3.lua"            type="client" />
-	<script src="Shared/IElementData.lua"       type="client" />
 	<script src="Shared/CElement.lua"           type="client" />
 	<script src="Shared/CTexture.lua"           type="client" />
   

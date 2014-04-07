@@ -1057,7 +1057,7 @@ function CPed:GetSkin()
 	return skin and
 	{
 		GetID			= function() return skin; end;
-		GetName			= function() return SKIN_NAMES[ skin ] or 'invalid skin ' + skin; end;
+		GetName			= function() return SKIN_NAMES[ skin ] or "invalid skin " + skin; end;
 		GetColor		= function() return skins[ skin ] and skins[ skin ].color; end;
 		GetGender		= function() return skins[ skin ] and skins[ skin ].gender; end;
 		GetAnimGroup	= function() return SKIN_ANIM_GROUPS[ skin ]; end;
@@ -1068,3 +1068,5 @@ function CPed:GetSkin()
 	}
 	or false;
 end
+
+CPlayer.GetSkin	= CPed.GetSkin;

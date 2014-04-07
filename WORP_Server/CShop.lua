@@ -112,7 +112,7 @@ function CShop:_CShop()
 end
 
 function CShop.OnMarkerHit( this, pPlayer, bMatching )
-	if ( bMatching or this:type() == 'pickup' ) and pPlayer:type() == 'player' and pPlayer:IsInGame() then
+	if ( bMatching or getElemenType( this ) == "pickup" ) and getElemenType( pPlayer ) == "player" and pPlayer:IsInGame() then
 		this.m_pShop:InitDialog( pPlayer, this.m_pShop.m_iID );
 	end
 	

@@ -154,7 +154,7 @@ class: CVehicleTuning
 }
 
 function OUTSIDE_MARKER:OnHit( pVehicle, bMatching )
-	if bMatching and pVehicle:type() == 'vehicle' then
+	if bMatching and getElemenType( pVehicle ) == "vehicle" then
 		local pPlayer = pVehicle:GetDriver();
 		
 		if _DEBUG then

@@ -231,6 +231,10 @@ function gl_Components.speedo_needle_ok:Update( pVehicle )
 end
 
 function gl_Components.stwheel_ok:Update( pVehicle )
+	if not pVehicle.m_pStWheel then
+		return;
+	end
+	
 	local pDriver = pVehicle:GetDriver();
 	
 	if pDriver then
@@ -526,7 +530,7 @@ addEventHandler( "onClientPreRender", root,
 
 addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot,
 	function()
-		if source:type() == "vehicle" then
+		if getElementType( source ) == "vehicle" then
 			local m_Color = source:GetData( "color" );
 			
 			if m_Color then
@@ -547,7 +551,7 @@ addEventHandler( "onClientElementDataChange", CVehicle.m_pRoot,
 		else
 			local sComponent = sDataName:match( "CVehicleComponents-->([A-Za-z0-9_]+)" );
 			
-			if sComponent and source:type() == "vehicle" then
+			if sComponent and getElementType( source ) == "vehicle" then
 				source:UpdateComponent( sComponent );
 			end
 		end

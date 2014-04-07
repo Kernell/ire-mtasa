@@ -29,39 +29,39 @@ class: CPlayer ( CPed, CPlayerTutorial, CPlayerAnimation )
 	end;
 };
 
-function CPlayer:CPlayer( pPlayerManager, pClient )
-	pClient( self );
+function CPlayer:CPlayer( pPlayerManager, this )
+	this( self );
 	
-	self:CPlayerTutorial	( pClient );
-	self:CPlayerAnimation	( pClient );
+	this:CPlayerTutorial	( this );
+	this:CPlayerAnimation	( this );
 	
-	self.m_pPlayerManager	= pPlayerManager;
+	this.m_pPlayerManager	= pPlayerManager;
 	
-	self.m_pCamera 			= CPlayerCamera		( pClient );
-	self.m_pHUD 			= CClientHUD		( pClient );
-	self.m_pChat 			= CPlayerChat		( pClient );
-	self.m_pNametag 		= CPlayerNametag	( pClient );
-	self.m_pBones			= CPlayerBones		( pClient );
+	this.m_pCamera 			= CPlayerCamera		( this );
+	this.m_pHUD 			= CClientHUD		( this );
+	this.m_pChat 			= CPlayerChat		( this );
+	this.m_pNametag 		= CPlayerNametag	( this );
+	this.m_pBones			= CPlayerBones		( this );
 	
-	self.m_pCharacter 		= NULL;
-	self.m_Binds			= {};
-	self.m_aControls 		= {};
-	self.m_aControlStates	= {};
-	self.m_ReportData		=
+	this.m_pCharacter 		= NULL;
+	this.m_Binds			= {};
+	this.m_aControls 		= {};
+	this.m_aControlStates	= {};
+	this.m_ReportData		=
 	{
 		m_tStamp			= 0;
 		m_sText				= NULL;
 		m_bLocked			= true;
 	};
 	
-	pPlayerManager:AddToList( self );
+	pPlayerManager:AddToList( this );
 	
-	self:SetData( "player_id", self:GetID(), true, true );
-	self:SetData( "CPlayer::m_Controls", self.m_aControls );
-	self:SetData( "CPlayer::m_ControlStates", self.m_aControlStates );
+	this:SetData( "player_id", this:GetID(), true, true );
+	this:SetData( "CPlayer::m_Controls", this.m_aControls );
+	this:SetData( "CPlayer::m_ControlStates", this.m_aControlStates );
 	
 	if _DEBUG then
-		Debug( "Creating player \'" + self:GetName() + "\' (" + self:GetID() + ")" );
+		Debug( "Creating player \'" + this:GetName() + "\' (" + this:GetID() + ")" );
 	end
 end
 
@@ -834,14 +834,14 @@ function CPlayer:SetAdminDuty( bEnabled )
 	self:GetNametag():Update();
 	
 	if self.m_bAdmin then
-		self:SetSkin( 0 );
+		self:SetModel( 0 );
 		
 		self:AddClothes( "suit2grn", "suit2", 0 );
 		self:AddClothes( "suit1trblk", "suit1tr", 2 );
 		self:AddClothes( "shoedressblk", "shoe", 3 );
 		self:AddClothes( "glasses05dark", "glasses03", 15 );
 	elseif self:IsInGame() then
-		self:SetSkin( self:GetChar().m_iSkin );
+		self:SetModel( self:GetChar().m_iSkin );
 	end
 end
 

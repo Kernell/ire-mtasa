@@ -1067,3 +1067,5 @@ function CPed:GetSkin()
 		HaveArmor		= function() return ARMOR_SKINS[ skin ] end;
 	};
 end
+
+CPlayer.GetSkin	= CPed.GetSkin;

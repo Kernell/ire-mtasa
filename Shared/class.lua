@@ -53,7 +53,7 @@ local ClassMeta	=
 ClassMeta.__index = function( self, vKey )
 	-- local pProperty = ClassMeta.__property;
 	local pProperty = rawget( self, "__property" );
-	
+
 	if pProperty and pProperty[ vKey ] and pProperty[ vKey ].get then
 		if type( pProperty[ vKey ].get ) == "function" then
 			return pProperty[ vKey ].get( self );

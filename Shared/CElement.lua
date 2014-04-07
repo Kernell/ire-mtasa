@@ -23,8 +23,21 @@ class: CElement
 	
 	_CElement				= destroyElement;
 	
-	AddEvent				= addEventHandler;				-- TODO: 
-	RemoveEvent				= removeEventHandler;			-- TODO: 
+	Destroy					= destroyElement;
+	
+	AddEvent				= function( this, sEvent, vFunction, pObject )
+		this[ vFunction ]	= function( ... )
+			vFunction( pObject or this, ... );
+		end;
+		
+		addEventHandler( sEvent, this, this[ vFunction ] );
+	end;
+
+	RemoveEvent				= function( this, sEvent, vFunction )
+		removeEventHandler( sEvent, this, this[ vFunction ] );
+		
+		this[ vFunction ]	= NULL;
+	end;
 	
 	IsValid					= isElement;
 	GetID					= getElementID;
@@ -182,44 +195,37 @@ class: CElement
 
 --
 
-local ElementCache	= {};
 local UserdataMeta;
+local ElementCache	= {};
+local Type2Class	=
+{
+	camera			= "CClientCamera";
+	console			= "CConsole";
+	player			= "CPlayer";
+	ped				= "CPed";
+	vehicle			= "CVehicle";
+	object			= "CObject";
+	pickup			= "CPickup";
+	marker			= "CMarker";
+	-- colshape		= "CColShape";
+	blip			= "CBlip";
+	radararea		= "CRadarArea";
+	team			= "CTeam";
+	shader			= "CShader";
+	sound			= "CSound";
+	Sound			= not CLIENT and "CSound" or NULL;
+	-- teleport		= "CTeleport";
+	-- interior		= "CInterior";
+	-- faction		= "CFaction";
+	texture			= "CTexture";
+};
 
 UserdataMeta	=
 {
-	__new		= function( this )
-		local sType			= getElementType( this );
+	__new		= function( this )	
+		local sClassName	= Type2Class[ getElementType( this ) ];
 		
-		local Type2Class	=
-		{
-			camera			= "CClientCamera";
-			console			= "CConsole";
-			player			= "CPlayer";
-			ped				= "CPed";
-			vehicle			= "CVehicle";
-			object			= "CObject";
-			pickup			= "CPickup";
-			marker			= "CMarker";
-			-- colshape		= "CColShape";
-			blip			= "CBlip";
-			radararea		= "CRadarArea";
-			team			= "CTeam";
-			shader			= "CShader";
-			sound			= "CSound";
-			Sound			= not CLIENT and "CSound" or NULL;
-			-- teleport		= "CTeleport";
-			-- interior		= "CInterior";
-			-- faction		= "CFaction";
-			texture			= "CTexture";
-		};
-		
-		local pObject = NULL;
-		
-		if Type2Class[ sType ] then
-			pObject = new [ Type2Class[ sType ] ];
-		else
-			pObject	= new. CElement;
-		end
+		local pObject = new [ _G[ sClassName ] and sClassName or "CElement" ];
 		
 		ElementCache[ this ] = pObject;
 		

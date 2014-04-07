@@ -8,7 +8,7 @@
 class: CVehicle ( CElement, LuaBehaviour )
 {
 	CVehicle		= function( this, pVehicle )
-		CElement.AddToList( this, pVehicle );
+		pVehicle( this );
 		
 		if pVehicle:GetData( "RemapBody" ) then -- TODO: Переделать под все автомобили
 			this.m_pCarpaint	= new. CVehicleCarpaint;

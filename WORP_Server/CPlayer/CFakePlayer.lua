@@ -61,7 +61,7 @@ class: CFakePlayer ( CPlayer )
 	end;
 	
 	Spawn			= function( this, vecSpawn, fRotation, iSkin, iInterior, iDimension )
-		this:SetSkin( iSkin );
+		this:SetModel( iSkin );
 		this:SetPosition( vecSpawn );
 		this:SetRotation( fRotation );
 		this:SetInterior( iInterior );

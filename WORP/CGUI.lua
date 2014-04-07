@@ -32,13 +32,13 @@ local CGUI_meta	= {};
 
 setmetatable( CGUI, CGUI_meta );
 
-CGUI.__type 		= 'class';
+CGUI.__type 		= "class";
 CGUI.__bases		= {};
 CGUI.__virtual		= {};
 CGUI.__inherited	= {};
 CGUI.__from			= {};
 CGUI.__class 		= CGUI;
-CGUI.__name 		= 'CGUI';
+CGUI.__name 		= "CGUI";
 CGUI.__index 		= CGUI;
 
 function CGUI_meta:__call()
@@ -69,7 +69,7 @@ function CGUI:ShowCursor( bToggleControls )
 end
 
 function CGUI:HideCursor( bToggleControls )
-	CursorVisible[ self ] = nil;
+	CursorVisible[ self ] = NULL;
 	
 	updateCursorVisible( bToggleControls );
 end
@@ -94,7 +94,7 @@ function CGUI:CreateButton( btn_sCaption )
 			this.__instance  	= guiCreateButton( this.X, this.Y, this.Width, this.Height, btn_sCaption, bRelative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 
 		addEventHandler( 'onClientGUIClick', 	this.__instance, function( ... ) if this.Click then this.Click( ... ) end end, false );
 		addEventHandler( 'onClientMouseEnter', 	this.__instance, function( ... ) if this.MouseEnter then this.MouseEnter( ... ) end end, false );
@@ -124,7 +124,7 @@ function CGUI:CreateCheckBox( sCaption )
 			this.__instance  	= guiCreateCheckBox( this.X, this.Y, this.Width, this.Height, sCaption, this.Selected, bRelative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:GetSelected()
 			return guiCheckBoxGetSelected( self.__instance );
@@ -188,7 +188,7 @@ function CGUI:CreateComboBox( cmb_sCaption )
 			this.__instance  	= guiCreateComboBox( cmb_tData.X, cmb_tData.Y, cmb_tData.Width, cmb_tData.Height, cmb_sCaption, relative ); 
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:AddItem( value )
 			return guiComboBoxAddItem( self.__instance, value ); -- int
@@ -252,7 +252,7 @@ function CGUI:CreateEdit( sCaption )
 			this.__instance  	= guiCreateEdit( this.X, this.Y, this.Width, this.Height, sCaption, bRelative or false ); 
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:SetMasked( status )
 			return guiEditSetMasked( self.__instance, status );
@@ -476,7 +476,7 @@ function CGUI:CreateGridList( grd_tData )
 			this.__instance  	= guiCreateGridList( grd_tData[ 1 ], grd_tData[ 2 ], grd_tData[ 3 ], grd_tData[ 4 ], relative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:AddColumn( title, width )
 			self[ title ] = guiGridListAddColumn( self.__instance, title, width );
@@ -597,7 +597,7 @@ function CGUI:CreateMemo( sText )
 			this.__instance  	= guiCreateMemo( this.X, this.Y, this.Width, this.Height, sText, bRelative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this.SetReadOnly( this, status )
 			return guiMemoSetReadOnly( this.__instance, status );
@@ -644,7 +644,7 @@ function CGUI:CreateProgressBar( x, y, width, height, bRelative )
 		this.__instance  	= guiCreateProgressBar( x, y, width, height, bRelative ); -- element
 	end
 	
-	CElement.AddToList( this );
+	this.__instance( this );
 	
 	function this:GetProgress()
 		return guiProgressBarGetProgress( self.__instance ); -- float
@@ -671,7 +671,7 @@ function CGUI:CreateRadioButton( sCaption )
 			this.__instance  	= guiCreateRadioButton( this.X, this.Y, this.Width, this.Height, sCaption, bRelative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:GetSelected()
 			return guiRadioButtonGetSelected( self.__instance );
@@ -705,7 +705,7 @@ function CGUI:CreateScrollBar( x, y, width, height, horizontal, relative )
 		this.__instance  	= guiCreateScrollBar( x, y, width, height, horizontal, relative ); -- gui-scrollbar 
 	end
 	
-	CElement.AddToList( this );
+	this.__instance( this );
 	
 	function this:GetScrollPosition()
 		return guiScrollBarGetScrollPosition( self.__instance ); -- float 
@@ -731,7 +731,7 @@ function CGUI:CreateScrollPane( fX, fY, fWidth, fHeight, bRelative )
 		this.__instance  	= guiCreateScrollPane( fX, fY, fWidth, fHeight, (bool)(bRelative) ); -- element
 	end
 	
-	CElement.AddToList( this );
+	this.__instance( this );
 	
 	function this:GetHorizontalScrollPosition( ... )
 		return guiScrollPaneGetHorizontalScrollPosition( self.__instance, ... ); -- ?
@@ -787,7 +787,7 @@ function CGUI:CreateStaticImage( img_sPath )
 			instance.__instance  	= guiCreateStaticImage( aData.X, aData.Y, aData.Width, aData.Height, img_sPath, bRelative ); -- element
 		end
 		
-		CElement.AddToList( instance );
+		instance.__instance( instance );
 		
 		function instance:LoadImage( filename )
 			return self, guiStaticImageLoadImage( self.__instance, filename ); -- bool 
@@ -876,7 +876,7 @@ function CGUI:CreateTabPanel( tab_tData )
 		instance.__instance  	= guiCreateTabPanel( tab_tData.X, tab_tData.Y, tab_tData.Width, tab_tData.Height, relative ); -- element 
 	end
 	
-	CElement.AddToList( instance );
+	instance.__instance( instance );
 	
 	function instance:GetSelected()
 		return guiGetSelectedTab( self.__instance ); -- element
@@ -904,7 +904,7 @@ function CGUI:CreateTab( text, bEnabled )
 		instance.__instance  	= guiCreateTab( text ); -- element 
 	end
 	
-	CElement.AddToList( instance );
+	instance.__instance( instance );
 	
 	function instance:Delete( pTab )
 		return guiDeleteTab( self.__instance, pTab );
@@ -935,7 +935,7 @@ function CGUI:CreateLabel( sCaptopn )
 			this.__instance  	= guiCreateLabel( this.X, this.Y, (int)(this.Width), this.Height, sCaptopn, bRelative );
 		end
 		
-		CElement.AddToList( this );
+		this.__instance( this );
 		
 		function this:GetFontHeight()
 			return guiLabelGetFontHeight( self.__instance );
@@ -1028,7 +1028,7 @@ function CGUI:CreateWindow( sTitle )
 		
 		aData.__instance  = guiCreateWindow( aData.X, aData.Y, aData.Width, aData.Height, sTitle, bRelative );
 		
-		CElement.AddToList( aData );
+		aData.__instance( aData );
 		
 		function aData.SetSizable( this, bSizable )
 			return guiWindowSetSizable( this.__instance, bSizable );

@@ -1,4 +1,4 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2014
@@ -143,7 +143,7 @@ function FillVehicle( pPlayer, key, state )
 end
 
 local function OnFuelHit( pFuel, pPlayer, bMatching )
-	if bMatching and pPlayer:type() == 'player' and pPlayer:IsInGame() then
+	if bMatching and getElemenType( pPlayer ) == "player" and pPlayer:IsInGame() then
 		local pVehicle = pPlayer:GetVehicleSeat() == 0 and pPlayer:GetVehicle();
 		
 		if pVehicle then
@@ -156,7 +156,7 @@ local function OnFuelHit( pFuel, pPlayer, bMatching )
 end
 
 local function OnFuelLeave( pFuel, pPlayer, bMatching )
-	if bMatching and pPlayer:type() == 'player' then
+	if bMatching and getElemenType( pPlayer ) == "player" then
 		pPlayer:FinalizeFuel();
 	end
 end

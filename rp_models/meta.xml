@@ -1,7 +1,7 @@
 <meta>
   <info author="Kernell" version="1.0.0"/>
   
-  <min_mta_version server="1.3.4-9.05800" client="1.3.4-9.05800" />
+  <min_mta_version server="1.3.5-9.06025" client="1.3.5-9.06025" />
   
   <script src="Shared/utils.lua" type="client"/>
   <script src="Shared/Debug.lua" type="client"/>

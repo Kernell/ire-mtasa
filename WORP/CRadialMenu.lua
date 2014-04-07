@@ -180,8 +180,6 @@ class: CRadialMenu
 			
 			this:AddItem( "2-action-settings", CRadialMenu.FunctionSettings );
 			
-			local pSkin			= CLIENT:GetSkin();
-			
 			if not CLIENT:IsInVehicle() and CLIENT:GetHealth() > 10.0 then
 				local pPlayer		= this.FindNearestPlayer( 1.0 );
 				

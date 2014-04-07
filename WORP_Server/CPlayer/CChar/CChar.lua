@@ -327,7 +327,7 @@ function CChar:SetSkin( pSkin )
 	
 		assert( g_pDB:Query( "UPDATE " + DBPREFIX + "characters SET skin = %d WHERE id = %d", pSkin:GetID(), self:GetID() ) );
 		
-		self.m_pClient:SetSkin( pSkin );
+		self.m_pClient:SetModel( pSkin );
 		
 		return true;
 	end

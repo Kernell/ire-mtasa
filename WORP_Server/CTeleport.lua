@@ -72,7 +72,7 @@ end
 function CTeleport:OnHit( pElement, bMatching )
 	local this = self.m_pTeleport;
 	
-	if bMatching and this and pElement:type() == "player" and pElement.m_pTeleportMarker == NULL and this:CanUse( pElement ) then
+	if bMatching and this and getElemenType( pElement ) == "player" and pElement.m_pTeleportMarker == NULL and this:CanUse( pElement ) then
 		pElement.m_pTeleportMarker = self;
 		
 		pElement:Hint( "Подсказка", "F - Войти", "info" );

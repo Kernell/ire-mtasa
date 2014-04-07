@@ -122,4 +122,25 @@ class: CPed ( CElement )
 		
 		return setPedLookAt( this, pVector.X, pVector.Y, pVector.Z, ... );
 	end;
+	
+	-- Server
+	
+	GetFightingStyle		= getPedFightingStyle;
+	SetFightingStyle		= setPedFightingStyle;
+	GetGravity				= getPedGravity;
+	SetGravity				= setPedGravity;
+	GetVehicleSeat			= getPedOccupiedVehicleSeat;
+	GiveJetPack				= givePedJetPack;
+	RemoveJetPack			= removePedJetPack;
+	IsDead					= isPedDead;
+	Kill					= killPed;
+	ReloadWeapon			= reloadPedWeapon;
+	RemoveFromVehicle		= removePedFromVehicle;
+	SetArmor				= setPedArmor;
+	SetChoking				= setPedChoking;
+	SetStat					= setPedStat;
+	WarpInVehicle			= warpPedIntoVehicle;
+	GiveWeapon				= giveWeapon;
+	SetWeaponAmmo			= setWeaponAmmo;
+	TakeAllWeapons			= takeAllWeapons;
 };
