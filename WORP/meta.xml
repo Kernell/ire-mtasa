@@ -133,7 +133,6 @@
   <script src="Resource.lua"                type="client"/>
   
   <export function="GetSettings"            type="client"/>
-  <export function="DXFont"                 type="client"/>
   
   <!-- Resources -->
   
