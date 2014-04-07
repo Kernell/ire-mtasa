@@ -569,7 +569,7 @@ end
 function CVehicleManager:IsValidModel( iVehicleModel )
 	iVehicleModel = (int)(iVehicleModel);
 	
-	return iVehicleModel >= 400 and iVehicleModel <= 611 and iVehicleModel ~= 570;
+	return iVehicleModel >= 400 and iVehicleModel <= 611;
 end
 
 function CVehicleManager:GetModelByName( sName )
