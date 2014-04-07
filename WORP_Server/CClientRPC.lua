@@ -48,6 +48,7 @@ class: CClientRPC
 {
 	CBankManager			= function( ... )	return g_pGame:GetBankManager():ClientHandle( ... );	end;
 	CFactionManager			= function( ... )	return g_pGame:GetFactionManager():ClientHandle( ... );	end;
+	CNPCManager				= function( ... )	return g_pGame:GetNPCManager():ClientHandle( ... );		end;
 	CPlayerManager			= function( ... )	return g_pGame:GetPlayerManager():ClientHandle( ... );	end;
 };
 

@@ -203,7 +203,7 @@ function GetAnimation( anim_group, index )
 end
 
 function CPed:OnModelChange( iPrevSkin, iSkin )
-	if classof( self ) == CPed or classof( self ) == CPlayer then
+	if classof( self ) == CPed or classof( self ) == CNPC or classof( self ) == CPlayer then
 		local pSkin = CPed.GetSkin( iSkin );
 		
 		local iStyle = (int)(pSkin.GetWalkingStyle());

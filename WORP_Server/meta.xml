@@ -42,7 +42,6 @@
   <script src="Shared/IElementData.lua"/>
   <script src="Shared/CElement.lua"/>
   <script src="Shared/CPed.lua"/>
-  <script src="CPed.lua"/>
   <script src="Shared/CBlip.lua"/>
   <script src="Shared/CColShape.lua"/>
   <script src="Shared/CMarker.lua"/>
@@ -80,7 +79,8 @@
   <script src="CGate.lua"/>
   <script src="CGateManager.lua"/>
   
-  <script src="CPedManager.lua"/>
+  <script src="CNPC.lua"/>
+  <script src="CNPCManager.lua"/>
   <script src="CBan.lua"/>
   <script src="CTeam.lua"/>
   <script src="CMessageBox.lua"/>
@@ -106,7 +106,7 @@
   <script src="Commands/CInteriorCommands.Public.lua"/>
   <script src="Commands/CMapCommands.lua"/>
   <script src="Commands/CMarkerCommands.lua"/>
-  <script src="Commands/CPedCommands.lua"/>
+  <script src="Commands/CNPCCommands.lua"/>
   <script src="Commands/CPlayerCommands.lua"/>
   <script src="Commands/CRaceCommands.lua"/>
   <script src="Commands/CShopCommands.lua"/>

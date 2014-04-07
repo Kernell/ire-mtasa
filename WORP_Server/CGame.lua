@@ -34,7 +34,7 @@ function CGame:CGame()
 	CGroupManager();
 	CBankManager();
 	CFactionManager();
-	CPedManager();
+	CNPCManager();
 	CPlayerManager();
 	CVehicleManager();
 	CGateManager();

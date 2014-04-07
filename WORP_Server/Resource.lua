@@ -167,17 +167,18 @@ class: Resource
 		CCommand:AddOption( 'system', 'setooc',			CSystemCommands.SetOOC,			true,	"<enabled> —— Включение/выключение глобального OOC чата" );
 		CCommand:AddOption( 'system', '--help',			CSystemCommands.Help );
 
-		CCommand:RegisterCommand( 'ped', NULL, true );
+		CCommand:RegisterCommand( 'npc', NULL, true );
 		
-		CCommand:AddOption( 'ped', 'create',			CPedCommands.Create,			true,	"<model>" );
-		CCommand:AddOption( 'ped', 'remove',			CPedCommands.Remove,			true,	"<ped id>" );
-		CCommand:AddOption( 'ped', 'setposition',		CPedCommands.SetPosition,		true,	"<ped id> [x y z] [rotation]" );
-		CCommand:AddOption( 'ped', 'setanimation',		CPedCommands.SetAnimation,		true,	"<ped id> <lib> <name> [time = 0] [loop = false] [update position = false] [interruptable = false] [freeze last frame = false]" );
-		CCommand:AddOption( 'ped', 'setfrozen',			CPedCommands.SetFrozen,			true,	"<ped id> [frozen = false]" );
-		CCommand:AddOption( 'ped', 'setdamageproof',	CPedCommands.SetDamageProof,	true,	"<ped id> [damageproof = false]" );
-		CCommand:AddOption( 'ped', 'setcollisions',		CPedCommands.SetCollisions,		true,	"<ped id> [collisions = false]" );
-		CCommand:AddOption( 'ped', 'toggle_labels',		CPedCommands.ToggleLabels,		true,	"—— Включение/выключение отображения информации над педами" );
-		CCommand:AddOption( 'ped', '--help',			CPedCommands.Help );
+		CCommand:AddOption( 'npc', 'create',			CNPCCommands.Create,			true,	"<model>" );
+		CCommand:AddOption( 'npc', 'remove',			CNPCCommands.Remove,			true,	"<npc id>" );
+		CCommand:AddOption( 'npc', 'setposition',		CNPCCommands.SetPosition,		true,	"<npc id> [x y z] [rotation]" );
+		CCommand:AddOption( 'npc', 'setanimation',		CNPCCommands.SetAnimation,		true,	"<npc id> <lib> <name> [time = 0] [loop] [update position] [interruptable] [freeze last frame]" );
+		CCommand:AddOption( 'npc', 'setfrozen',			CNPCCommands.SetFrozen,			true,	"<npc id> [frozen = false]" );
+		CCommand:AddOption( 'npc', 'setdamageproof',	CNPCCommands.SetDamageProof,	true,	"<npc id> [damageproof = false]" );
+		CCommand:AddOption( 'npc', 'setcollisions',		CNPCCommands.SetCollisions,		true,	"<npc id> [collisions = false]" );
+		CCommand:AddOption( 'npc', 'setinteractive',	CNPCCommands.SetInteractive,	true,	"<npc id> <command name>" );
+		CCommand:AddOption( 'npc', 'toggle_labels',		CNPCCommands.ToggleLabels,		true,	"—— Включение/выключение отображения информации над педами" );
+		CCommand:AddOption( 'npc', '--help',			CNPCCommands.Help );
 		
 		CCommand:RegisterCommand( 'player', NULL, true );
 

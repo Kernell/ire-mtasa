@@ -180,33 +180,43 @@ class: CRadialMenu
 			
 			this:AddItem( "2-action-settings", CRadialMenu.FunctionSettings );
 			
+			local pIntColShape = CLIENT:GetData( "CInterior::m_pColShape" );
+			
 			if not CLIENT:IsInVehicle() and CLIENT:GetHealth() > 10.0 then
-				local pPlayer		= this.FindNearestPlayer( 1.0 );
+				local pPed		= this.FindNearestPed( 1.0 );
 				
-				if pPlayer then
-					local fHealth 		= pPlayer:GetHealth();
-					local iFactionID	= CLIENT:GetData( "CFaction::ID" );
-					
-					if fHealth > 10.0 then
-						this:AddItem( "13-handshake", 	CRadialMenu.FunctionPlayerHello, 	pPlayer );
-						this:AddItem( "13-kiss", 		CRadialMenu.FunctionPlayerKiss, 	pPlayer );
+				if pPed then
+					if pPed:GetType() == "player" then
+						local fHealth 		= pPed:GetHealth();
+						local iFactionID	= CLIENT:GetData( "CFaction::ID" );
 						
-						if false then
-							this:AddItem( "13-marry", CRadialMenu.FunctionPlayerPropose, pPlayer );
+						if fHealth > 10.0 then
+							this:AddItem( "13-handshake", 	CRadialMenu.FunctionPlayerHello, 	pPed );
+							this:AddItem( "13-kiss", 		CRadialMenu.FunctionPlayerKiss, 	pPed );
+							
+							if false then -- TODO: Добавить проверку на церковь
+								this:AddItem( "13-marry", CRadialMenu.FunctionPlayerPropose, pPed );
+							end
+							
+							if iFactionID == 2 then
+								this:AddItem( "13-handcuffs", CRadialMenu.FunctionPlayerToggleCuffed, pPed );
+							end
+						elseif fHealth < 100.0 then					
+							if iFactionID == 4 then
+								this:AddItem( "13-heal", CRadialMenu.FunctionPlayerHeal, pPed );
+							end
 						end
+					elseif pPed:GetType() == "ped" then
+						local fHealth 		= pPed:GetHealth();
 						
-						if iFactionID == 2 then
-							this:AddItem( "13-handcuffs", CRadialMenu.FunctionPlayerToggleCuffed, pPlayer );
-						end
-					elseif fHealth < 100.0 then					
-						if iFactionID == 4 then
-							this:AddItem( "13-heal", CRadialMenu.FunctionPlayerHeal, pPlayer );
+						if fHealth > 10.0 then
+							if pPed:GetData( "Interactive" ) then
+								this:AddItem( "6-social-chat", CRadialMenu.FunctionNPCInteractive, pPed );
+							end
 						end
 					end
 				end
 			end
-			
-			local pIntColShape = CLIENT:GetData( "CInterior::m_pColShape" );
 			
 			if pIntColShape and CLIENT:IsWithinColShape( pIntColShape ) then
 				this:AddItem( "13-home", CRadialMenu.FunctionInteriorMenu );
@@ -235,25 +245,37 @@ class: CRadialMenu
 			end
 		end;
 		
-		FindNearestPlayer	= function( fMinDistance )
+		FindNearestPed	= function( fMinDistance )
 			local vecPosition	= CLIENT:GetPosition():Offset( 1.0, CLIENT:GetRotation() );
 			local iDimension	= CLIENT:GetDimension();
-			local fMinDistance	= fMinDistance or 2.0;
-			local pPlayer		= NULL;
+			local fMinDistance	= fMinDistance or NULL;
+			local pPed			= NULL;
 			
-			for i, pPlr in ipairs( getElementsByType( "player", root, true ) ) do
-				if pPlr ~= CLIENT and not pPlr:GetData( "adminduty" ) and pPlr:GetDimension() == iDimension and pPlr:GetHealth() > 0 then
-					local fDistance = pPlr:GetPosition():Distance( vecPosition );
+			for i, pNPC in ipairs( getElementsByType( "ped", root, true ) ) do
+				if pNPC:GetDimension() == iDimension and pNPC:GetHealth() > 0 then
+					local fDistance = pNPC:GetPosition():Distance( vecPosition );
 					
-					if fDistance < fMinDistance then
-						pPlayer = pPlr;
+					if fDistance < ( fMinDistance or 4.0 ) then
+						pPed = pNPC;
 						
 						fMinDistance = fDistance;
 					end
 				end
 			end
 			
-			return pPlayer;
+			for i, pPlr in ipairs( getElementsByType( "player", root, true ) ) do
+				if pPlr ~= CLIENT and not pPlr:GetData( "adminduty" ) and pPlr:GetDimension() == iDimension and pPlr:GetHealth() > 0 then
+					local fDistance = pPlr:GetPosition():Distance( vecPosition );
+					
+					if fDistance < ( fMinDistance or 2.0 ) then
+						pPed = pPlr;
+						
+						fMinDistance = fDistance;
+					end
+				end
+			end
+			
+			return pPed;
 		end;
 	};
 	
@@ -295,5 +317,9 @@ class: CRadialMenu
 	
 	FunctionSettings			= function( this )
 		SERVER.Exec( "settings" );
+	end;
+	
+	FunctionNPCInteractive		= function( this, pPed )
+		SERVER.CPedManager( "Interact", pPed );
 	end;
 };

@@ -104,7 +104,7 @@ class: CVehicleCarpaint ( LuaBehaviour )
 			this.m_pShader:SetValue( "bColorTextureLoaded", true );
 		end
 		
-		this.m_pShader:SetValue( "sRandomTexture", 		resourceRoot.m_pShaderManager.m_Textures.smallnoise3d );
+		this.m_pShader:SetValue( "sRandomTexture", 		resourceRoot.m_pShaderManager.Textures[ "smallnoise3d" );
 		this.m_pShader:SetValue( "sReflectionTexture", 	resourceRoot.m_pShaderManager.m_pScreen );
 		
 		for _, sTexture in ipairs( this.m_Textures ) do
