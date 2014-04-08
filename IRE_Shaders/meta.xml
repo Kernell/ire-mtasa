@@ -62,4 +62,7 @@
 	<file src="Textures/cube_env256.dds" />
 	<file src="Textures/radial_mask.dds" />
 	<file src="Textures/vignette1.dds" />
+  
+	<file src="Fonts/consola.ttf" />
+	<file src="Fonts/consolab.ttf" />
 </meta>

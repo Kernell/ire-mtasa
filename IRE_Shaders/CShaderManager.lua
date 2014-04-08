@@ -32,7 +32,7 @@ class: CShaderManager ( LuaBehaviour )
 	m_iFPS					= 0;
 	m_iFPSUpdateInterval	= 100;
 	m_iFPSLastUpdate		= 0;
-	m_pFPSFont				= dxCreateFont( ":WORP/Resources/Fonts/consola.ttf", 16 );
+	m_pFPSFont				= dxCreateFont( "Fonts/consola.ttf", 16 );
 	m_iFPSColor1			= tocolor( 255, 255, 255 );
 	m_iFPSColor2			= tocolor( 0, 0, 0 );
 	
