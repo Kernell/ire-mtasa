@@ -1,4 +1,4 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2014
@@ -7,8 +7,10 @@
 
 class: CNPC ( CPed )
 {
-	CNPC	= function( this, ... )
+	CNPC	= function( this, iID, ... )
 		this = this:CPed( ... );
+		
+		this.m_ID	= iID;
 		
 		g_pGame:GetNPCManager():AddToList( this );
 		

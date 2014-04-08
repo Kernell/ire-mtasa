@@ -131,10 +131,9 @@ class: CNPCManager ( CManager )
 	end;
 	
 	Add	= function( this, iID, iModel, vecPosition, fRotation, iInterior, iDimension, sAnimLib, sAnimName, iAnimTime, bAnimLoop, bAnimUpdatePos, bAnimInterruptable, bAnimFreezeLastFrame, bCollisions, bFrozen, bDamageProof, sInteractiveCommand )
-		local pNPC = CNPC( iModel, vecPosition, fRotation );
+		local pNPC = CNPC( iID, iModel, vecPosition, fRotation );
 		
 		if pNPC:IsValid() then
-			pNPC.m_ID 					= iID;
 			pNPC.m_sInteractiveCommand	= sInteractiveCommand;
 			pNPC.m_sAnimLib 			= sAnimLib or NULL;
 			pNPC.m_sAnimName			= sAnimName or NULL;
