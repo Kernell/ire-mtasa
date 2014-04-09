@@ -5,6 +5,17 @@
 -- License		Proprietary Software
 -- Version		1.0
 
+enum "ePedAnimation"
+{
+	"PED_ANIMATION_LIB";
+	"PED_ANIMATION_NAME";
+	"PED_ANIMATION_TIME";
+	"PED_ANIMATION_LOOP";
+	"PED_ANIMATION_UPDATE_POS";
+	"PED_ANIMATION_INTERRUPTABLE";
+	"PED_ANIMATION_FREEZE_LAST_FRAME";
+};
+
 class: CPed ( CElement )
 {
 	property: Vehicle

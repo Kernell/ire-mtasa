@@ -11,8 +11,8 @@ class: CCommand
 };
 
 function CCommand:Main( pPlayer, sCmd, sOption, ... )
-	assert( pPlayer );
-	assert( sCmd );
+	ASSERT( pPlayer );
+	ASSERT( sCmd );
 	
 	if sOption then
 		local Option = self.m_Options[ sOption ];
@@ -71,7 +71,7 @@ function CCommand:RegisterCommand( Commands, Function, bRestricted, TFaction )
 		Commands = { Commands };
 	end
 	
-	assert( eFactionFlags, "eFactionFlags" );
+	ASSERT( eFactionFlags, "eFactionFlags" );
 	
 	local sCmd				= Commands[ 1 ];
 	

@@ -382,7 +382,7 @@ function CInterior:UpdateMarker()
 	if InteriorData then
 		local Color 			= g_pGame:GetInteriorManager():GetColor( self );
 		
-		assert( Color, eInteriorType[ self:GetType() ] );
+		ASSERT( Color, eInteriorType[ self:GetType() ] );
 		
 		if self.m_pOutsideMarker then
 			delete ( self.m_pOutsideMarker );

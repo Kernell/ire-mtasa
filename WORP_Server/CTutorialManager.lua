@@ -31,9 +31,9 @@ class: CTutorialManager ( CManager )
 		
 		this.m_TutorialStrings	= {};
 		
-		assert( g_pGame:GetEventManager():Add( CTutorialManager.HandleConnect, 		EVENT_TYPE_CONNECT,			this ) );
-		assert( g_pGame:GetEventManager():Add( CTutorialManager.HandleNewCharacter,	EVENT_TYPE_NEW_CHARACTER,	this ) );
-		assert( g_pGame:GetEventManager():Add( CTutorialManager.HandleDeath,		EVENT_TYPE_DEATH,			this ) );
+		ASSERT( g_pGame:GetEventManager():Add( CTutorialManager.HandleConnect, 		EVENT_TYPE_CONNECT,			this ) );
+		ASSERT( g_pGame:GetEventManager():Add( CTutorialManager.HandleNewCharacter,	EVENT_TYPE_NEW_CHARACTER,	this ) );
+		ASSERT( g_pGame:GetEventManager():Add( CTutorialManager.HandleDeath,		EVENT_TYPE_DEATH,			this ) );
 		
 		local pResult = g_pDB:Query( "SELECT `id`, `type`, `text` FROM `" + DBPREFIX + "tutorials` ORDER BY `id` ASC" );
 		

@@ -154,8 +154,8 @@ addEventHandler( 'onClientRender', root,
 
 addEventHandler( 'OnPlayerChatMessage', root,
 	function ( sMessage, iType, fDistance )
-		assert( sMessage );
-		assert( iType );
+		ASSERT( sMessage );
+		ASSERT( iType );
 		
 		local iColor, iBackgroundColor;
 		

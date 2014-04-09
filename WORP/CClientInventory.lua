@@ -311,7 +311,7 @@ local iImageW, iImageH		= 240, 90;
 local pItemColShape			= NULL;
 local itemRoot				= getElementByID( 'itemRoot' );
 
-assert( itemRoot and itemRoot:GetType() == 'itemRoot', "getElementByID( 'itemRoot' )->GetType() == 'itemRoot'" );
+ASSERT( itemRoot and itemRoot:GetType() == 'itemRoot', "getElementByID( 'itemRoot' )->GetType() == 'itemRoot'" );
 
 local function Draw()
 	if pItemColShape and isElement( pItemColShape ) then

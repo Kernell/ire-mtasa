@@ -32,9 +32,9 @@ function CPlayerCamera:GetMatrix()
 	
 	local fX, fY, fZ, fLX, fLY, fLZ, fRoll, fFOV = getCameraMatrix( self.m_pPlayer );
 	
-	assert( fX, 'Assertion failed - fX' );
-	assert( fY, 'Assertion failed - fY' );
-	assert( fZ, 'Assertion failed - fZ' );
+	ASSERT( fX, 'Assertion failed - fX' );
+	ASSERT( fY, 'Assertion failed - fY' );
+	ASSERT( fZ, 'Assertion failed - fZ' );
 	
 	return Vector3( fX, fY, fZ ), Vector3( fLX, fLY, fLZ ), fRoll, fFOV;
 end

@@ -34,7 +34,7 @@ function CCutScene:CCutScene( pPlayer, sName )
 		return false;
 	end
 	
-	assert( loadstring( Result ) )();
+	ASSERT( loadstring( Result ) )();
 	
 	local pCutScene 	= _G[ sName ];
 	

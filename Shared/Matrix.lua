@@ -191,7 +191,7 @@ class: Matrix
 	end;
 	
 	Pow		= function( this, num )
-		assert( num == math.floor( num ), "exponent not an integer" );
+		ASSERT( num == math.floor( num ), "exponent not an integer" );
 		
 		if num == 0 then
 			return Matrix( table.getn( this ), "I" );
@@ -230,7 +230,7 @@ class: Matrix
 function matrix.det( m1 )
 
 	-- check if matrix is quadratic
-	assert(#m1 == #m1[1], "matrix not square")
+	ASSERT(#m1 == #m1[1], "matrix not square")
 	
 	local size = #m1
 	
@@ -442,7 +442,7 @@ end
 -- on success: returns inverted matrix
 -- on failure: returns nil,'rank of matrix'
 function matrix.invert( m1 )
-	assert(#m1 == #m1[1], "matrix not square")
+	ASSERT(#m1 == #m1[1], "matrix not square")
 	local mtx = matrix.copy( m1 )
 	local ident = setmetatable( {},matrix_meta )
 	if matrix.type( mtx ) == "complex" then
@@ -502,7 +502,7 @@ local function get_abs_avg( m1, m2 )
 end
 -- square root function
 function matrix.sqrt( m1, iters )
-	assert(#m1 == #m1[1], "matrix not square")
+	ASSERT(#m1 == #m1[1], "matrix not square")
 	local iters = iters or math.huge
 	local y = matrix.copy( m1 )
 	local z = matrix(#y, 'I')
@@ -532,7 +532,7 @@ end
 -- conditions same as matrix.sqrt
 -- returns same values as matrix.sqrt
 function matrix.root( m1, root, iters )
-	assert(#m1 == #m1[1], "matrix not square")
+	ASSERT(#m1 == #m1[1], "matrix not square")
 	local iters = iters or math.huge
 	local mx = matrix.copy( m1 )
 	local my = matrix.mul(mx:invert(),mx:pow(root-1))
@@ -734,7 +734,7 @@ end
 -- will return m1m2; rows have to be the same
 -- e.g.: #m1 == #m2
 function matrix.concath( m1,m2 )
-	assert(#m1 == #m2, "matrix size mismatch")
+	ASSERT(#m1 == #m2, "matrix size mismatch")
 	local docopy = matrix.type( m1 ) == "number" and num_copy or t_copy
 	local mtx = {}
 	local offset = #m1[1]
@@ -756,7 +756,7 @@ end
 --					m2
 -- columns have to be the same; e.g.: #m1[1] == #m2[1]
 function matrix.concatv( m1,m2 )
-	assert(#m1[1] == #m2[1], "matrix size mismatch")
+	ASSERT(#m1[1] == #m2[1], "matrix size mismatch")
 	local docopy = matrix.type( m1 ) == "number" and num_copy or t_copy
 	local mtx = {}
 	for i = 1,#m1 do
@@ -986,7 +986,7 @@ end
 -- we set now all elements to a complex number
 -- also set the metatable
 function matrix.tocomplex( mtx )
-	assert( matrix.type(mtx) == "number", "matrix not of type 'number'" )
+	ASSERT( matrix.type(mtx) == "number", "matrix not of type 'number'" )
 	for i = 1,#mtx do
 		for j = 1,#mtx[1] do
 			mtx[i][j] = complex.to( mtx[i][j] )
@@ -998,7 +998,7 @@ end
 --// matrix.remcomplex ( mtx )
 -- set the matrix elements to a number or complex number string
 function matrix.remcomplex( mtx )
-	assert( matrix.type(mtx) == "complex", "matrix not of type 'complex'" )
+	ASSERT( matrix.type(mtx) == "complex", "matrix not of type 'complex'" )
 	for i = 1,#mtx do
 		for j = 1,#mtx[1] do
 			mtx[i][j] = complex.tostring( mtx[i][j] )
@@ -1010,7 +1010,7 @@ end
 --// matrix.conjugate ( m1 )
 -- get the conjugate complex matrix
 function matrix.conjugate( m1 )
-	assert( matrix.type(m1) == "complex", "matrix not of type 'complex'" )
+	ASSERT( matrix.type(m1) == "complex", "matrix not of type 'complex'" )
 	local mtx = {}
 	for i = 1,#m1 do
 		mtx[i] = {}
@@ -1028,7 +1028,7 @@ end
 --// matrix.tosymbol ( mtx )
 -- set the matrix elements to symbolic values
 function matrix.tosymbol( mtx )
-	assert( matrix.type( mtx ) ~= "tensor", "cannot convert type 'tensor' to 'symbol'" )
+	ASSERT( matrix.type( mtx ) ~= "tensor", "cannot convert type 'tensor' to 'symbol'" )
 	for i = 1,#mtx do
 		for j = 1,#mtx[1] do
 			mtx[i][j] = newsymbol( mtx[i][j] )
@@ -1040,7 +1040,7 @@ end
 --// matrix.gsub( m1, from, to )
 -- perform gsub on all elements
 function matrix.gsub( m1,from,to )
-	assert( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
+	ASSERT( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
 	local mtx = {}
 	for i = 1,#m1 do
 		mtx[i] = {}
@@ -1055,7 +1055,7 @@ end
 -- replace one letter by something else
 -- replace( "a",4,"b",7, ... ) will replace a with 4 and b with 7
 function matrix.replace( m1,... )
-	assert( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
+	ASSERT( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
 	local tosub,args = {},{...}
 	for i = 1,#args,2 do
 		tosub[args[i]] = args[i+1]
@@ -1073,7 +1073,7 @@ end
 --// matrix.solve ( m1 )
 -- solve; tries to solve a symbolic matrix to a number
 function matrix.solve( m1 )
-	assert( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
+	ASSERT( matrix.type( m1 ) == "symbol", "matrix not of type 'symbol'" )
 	local mtx = {}
 	for i = 1,#m1 do
 		mtx[i] = {}

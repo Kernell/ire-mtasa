@@ -835,7 +835,7 @@ function CVehicleCommands:Shop( pPlayer, sCmd, sOption, sOption2, ... )
 				
 				local pos = pPlayer:GetPosition();
 				
-				assert( g_pDB:Query( "INSERT INTO " + DBPREFIX + "vehicles_shop (models,x,y,z) VALUES ('" + table.concat( m, ',' ) + "', " + pos.X + ", " + pos.Y + ", " + pos.Z + ")" ) );
+				ASSERT( g_pDB:Query( "INSERT INTO " + DBPREFIX + "vehicles_shop (models,x,y,z) VALUES ('" + table.concat( m, ',' ) + "', " + pos.X + ", " + pos.Y + ", " + pos.Z + ")" ) );
 				
 				CVehicle.InitShops();
 				
@@ -853,7 +853,7 @@ function CVehicleCommands:Shop( pPlayer, sCmd, sOption, sOption2, ... )
 			shop_id = tonumber( shop_id );
 			
 			if shop_id then
-				local result = assert( g_pDB:Query( "SELECT COUNT(id) AS count FROM " .. DBPREFIX .. "vehicles_shop WHERE deleted = 'No' AND id = " .. shop_id ) );
+				local result = ASSERT( g_pDB:Query( "SELECT COUNT(id) AS count FROM " .. DBPREFIX .. "vehicles_shop WHERE deleted = 'No' AND id = " .. shop_id ) );
 				
 				local row = result:FetchRow();
 				
@@ -872,7 +872,7 @@ function CVehicleCommands:Shop( pPlayer, sCmd, sOption, sOption2, ... )
 				local int = pPlayer:GetInterior();
 				local dim = pPlayer:GetDimension();
 				
-				assert( g_pDB:Query( "INSERT INTO " .. DBPREFIX .. "vehicles_shop_spots (shop_id,x,y,z,rx,ry,rz,interior,dimension) VALUES (%d,%f,%f,%f,%f,%f,%f,%d,%d)", shop_id, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, int, dim ) );
+				ASSERT( g_pDB:Query( "INSERT INTO " .. DBPREFIX .. "vehicles_shop_spots (shop_id,x,y,z,rx,ry,rz,interior,dimension) VALUES (%d,%f,%f,%f,%f,%f,%f,%d,%d)", shop_id, pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, int, dim ) );
 				
 				pPlayer:GetChat():Send( "Spot added (ID: " .. g_pDB:InsertID() .. ")", 0, 255, 255 );
 			else
@@ -902,7 +902,7 @@ function CVehicleCommands:Fuelpoint( pPlayer,sCmd, sOption, sOption2, ... )
 		add = function()
 			local vecPosition = pPlayer:GetPosition();
 			
-			assert( g_pDB:Query( "INSERT INTO " + DBPREFIX + "fuelpoints (x,y,z) VALUES (" + vecPosition.X + "," + vecPosition.Y + ", " + ( vecPosition.Z - .7 ) + ")" ) );
+			ASSERT( g_pDB:Query( "INSERT INTO " + DBPREFIX + "fuelpoints (x,y,z) VALUES (" + vecPosition.X + "," + vecPosition.Y + ", " + ( vecPosition.Z - .7 ) + ")" ) );
 			
 			local iID		= g_pDB:InsertID();
 			local pResult	= g_pDB:Query( "SELECT * FROM " + DBPREFIX + "fuelpoints WHERE id = " + iID );

@@ -261,10 +261,10 @@ for weapon_id, skills in pairs( weapons_data ) do
 	for skill, weapon_data in pairs( skills ) do
 		for property, value in pairs( weapon_data ) do
 			if property == 'flags' then
-				assert( setWeaponProperty( weapon_id, skill, "flags", getWeaponProperty( weapon_id, skill, "flags" ) ), 'flags' );
+				ASSERT( setWeaponProperty( weapon_id, skill, "flags", getWeaponProperty( weapon_id, skill, "flags" ) ), 'flags' );
 			end
 			
-			assert( setWeaponProperty( weapon_id, skill, property, value ), property );
+			ASSERT( setWeaponProperty( weapon_id, skill, property, value ), property );
 		end
 	end
 end

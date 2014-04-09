@@ -158,8 +158,8 @@ function OUTSIDE_MARKER:OnHit( pVehicle, bMatching )
 		local pPlayer = pVehicle:GetDriver();
 		
 		if _DEBUG then
-			assert( pPlayer, "Assertion failed in pVehicle->GetDriver()" );
-			assert( pPlayer:IsInGame(), "Assertion failed in pPlayer->IsInGame()" );
+			ASSERT( pPlayer, "Assertion failed in pVehicle->GetDriver()" );
+			ASSERT( pPlayer:IsInGame(), "Assertion failed in pPlayer->IsInGame()" );
 		end
 		
 		if pPlayer and pPlayer:IsInGame() and _DEBUG then

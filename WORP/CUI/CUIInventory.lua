@@ -340,7 +340,7 @@ function CUIInventory:CreateTexture( sClassName )
 	if not pTexture then
 		pTexture	= dxCreateTexture( "Resources/Images/BrokenImage.png", "argb", false, "wrap" );
 		
-		assert( pTexture, [[I3DDevice->CreateSprite( "Resources/Images/BrokenImage.png" );]] );
+		ASSERT( pTexture, [[I3DDevice->CreateSprite( "Resources/Images/BrokenImage.png" );]] );
 	end
 	
 	return pTexture;

@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-assert( CLIENT, "This script is client-side only" );
+ASSERT( CLIENT, "This script is client-side only" );
 
 class: CTexture
 {

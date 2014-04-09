@@ -309,7 +309,7 @@ function Blowfish:unescape( value )
 		
 		local c = string.char( t1 * 16 + t2 );
 		
-		-- assert( c ~= '\0', t1 * 16 + t2 );
+		-- ASSERT( c ~= '\0', t1 * 16 + t2 );
 		
 		if c ~= '\0' then
 			result = result .. c;
@@ -455,8 +455,8 @@ function Blowfish:wordunescape( value )
 	
 	-- // reverse byteorder for intel systems
 	for i = 7, 1, -2 do
-		local t1	= assert( value:byte( i ), "t1[<" .. value:len() .. ">" .. i .. "]" );
-		local t2	= assert( value:byte( i + 1 ), "t1[<" .. value:len() .. ">" .. i + 1 .. "]" );
+		local t1	= ASSERT( value:byte( i ), "t1[<" .. value:len() .. ">" .. i .. "]" );
+		local t2	= ASSERT( value:byte( i + 1 ), "t1[<" .. value:len() .. ">" .. i + 1 .. "]" );
 		
 		if t1 < 58 then
 			t1 = t1 - 48;

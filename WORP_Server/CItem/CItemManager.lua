@@ -36,7 +36,7 @@ end
 
 function CItemManager:Load( pOwner )
 	if pOwner then
-		assert( pOwner.m_Items );
+		ASSERT( pOwner.m_Items );
 	end
 	
 	local pResult = g_pDB:Query( "SELECT `id`, `value`, `condition`, `class`, `data`, `position`, `rotation`, `interior`, `dimension` FROM " + DBPREFIX + "items WHERE owner " + ( pOwner and ( "= '" + classname( pOwner ) + "[" + (int)(pOwner:GetID()) + "]'" ) or "IS NULL" ) + " ORDER BY id ASC" );

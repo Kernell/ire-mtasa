@@ -93,7 +93,7 @@ class: CVehicleCarpaint ( LuaBehaviour )
 		
 		this.m_pShader		= CShader( "Shaders/D3D9/carpaint.fx", 0, this.m_fRenderDistance, false, "vehicle" );
 		
-		assert( this.m_pShader );
+		ASSERT( this.m_pShader );
 		
 		for var, value in pairs( this.m_Variables ) do
 			this.m_pShader:SetValue( var, value );

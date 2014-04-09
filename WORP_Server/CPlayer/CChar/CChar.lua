@@ -325,7 +325,7 @@ function CChar:SetSkin( pSkin )
 	if pSkin:IsValid() or pSkin:IsSpecial() then
 		self.m_iSkin = pSkin:GetID() or self.m_iSkin;
 	
-		assert( g_pDB:Query( "UPDATE " + DBPREFIX + "characters SET skin = %d WHERE id = %d", pSkin:GetID(), self:GetID() ) );
+		ASSERT( g_pDB:Query( "UPDATE " + DBPREFIX + "characters SET skin = %d WHERE id = %d", pSkin:GetID(), self:GetID() ) );
 		
 		self.m_pClient:SetModel( pSkin );
 		

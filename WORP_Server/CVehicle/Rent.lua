@@ -7,7 +7,7 @@
 
 function CVehicle:SetRentTime( iSeconds )
 	if type( iSeconds ) == 'number' then
-		assert( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rent_time = %d WHERE id = %d", iSeconds, self:GetID() ) );
+		ASSERT( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rent_time = %d WHERE id = %d", iSeconds, self:GetID() ) );
 		
 		self.m_iRentTime = iSeconds;
 		
@@ -21,7 +21,7 @@ end
 
 function CVehicle:SetRentPrice( iAmount )
 	if type( iAmount ) == 'number' then
-		assert( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rent_price = %d WHERE id = %d", iAmount, self:GetID() ) );
+		ASSERT( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rent_price = %d WHERE id = %d", iAmount, self:GetID() ) );
 		
 		self.m_iRentPrice = iAmount;
 		
@@ -36,7 +36,7 @@ end
 function CVehicle:SetRentable( bRentable )
 	self.m_bRentable = tobool( bRentable );
 	
-	assert( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rentable = %q WHERE id = %d", self.m_bRentable and 'Yes' or 'No', self:GetID() ) );
+	ASSERT( g_pDB:Query( "UPDATE " .. DBPREFIX .. "vehicles SET rentable = %q WHERE id = %d", self.m_bRentable and 'Yes' or 'No', self:GetID() ) );
 	
 	return true;
 end

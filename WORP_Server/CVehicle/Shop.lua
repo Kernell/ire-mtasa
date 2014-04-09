@@ -61,13 +61,13 @@ function CVehicle:GetPrice()
 end
 
 function CVehicle.GetRandomShop()
-	local result = assert( g_pDB:Query( "SELECT id FROM " + DBPREFIX + "vehicles_shop WHERE deleted = 'No' ORDER BY RAND() LIMIT 1" ) );
+	local result = ASSERT( g_pDB:Query( "SELECT id FROM " + DBPREFIX + "vehicles_shop WHERE deleted = 'No' ORDER BY RAND() LIMIT 1" ) );
 	
 	local id = result:FetchRow().id;
 	
 	delete ( result );
 	
-	return assert( shops[ id ], "undefined vehicle shop (ID: " + (string)( id ) + ")" );
+	return ASSERT( shops[ id ], "undefined vehicle shop (ID: " + (string)( id ) + ")" );
 end
 
 function CClientRPC:VehicleBuy( iID, bRentable )
@@ -177,7 +177,7 @@ function CClientRPC:VehicleSell( result, button, state, vehicle_id )
 end
 
 function CClientRPC:VehicleSellTo( result, button, state, iVehicleID, iPrice, pPlayer )
-	assert( type( iPrice ) == 'number', "typeof iPrice == int" );
+	ASSERT( type( iPrice ) == 'number', "typeof iPrice == int" );
 	
 	if self:IsInGame() and isElement( pPlayer) and pPlayer:IsInGame() then
 		if result == 'Да' then

@@ -11,7 +11,7 @@ class "CLog"
 }
 
 function CLog:CLog( sName, bDate )
-	assert( is_type( sName, "string", "name" ) );
+	ASSERT( is_type( sName, "string", "name" ) );
 
 	local tReal = getRealTime();
 	
@@ -21,7 +21,7 @@ function CLog:CLog( sName, bDate )
 	
 	local pFile = fileExists( sPath ) and fileOpen( sPath ) or fileCreate( sPath );
 	
-	assert( pFile, "failed to create file " + self.m_sName + ".log" );
+	ASSERT( pFile, "failed to create file " + self.m_sName + ".log" );
 	
 --	fileSetPos( pFile, fileGetSize( pFile ) );
 --	fileWrite( pFile, ( "===========================================================\nLog start: %02d:%02d:%02d %02d:%02d:%04d\n===========================================================\n" ):format( time.hour, time.minute, time.second, time.monthday, time.month + 1, time.year + 1900 ) );

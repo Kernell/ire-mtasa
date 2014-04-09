@@ -200,7 +200,7 @@ function CCommands:AdminDuty( pPlayer )
 	
 	SendAdminsMessage( pPlayer:GetUserName() + ( pPlayer:IsAdmin() and " перешёл в режим" or " вышел из режима" ) + " администратора" );
 	
-	assert( g_pDB:Query( "UPDATE uac_users SET adminduty = %q WHERE id = " + pPlayer:GetUserID(), pPlayer:IsAdmin() and "Yes" or "No" ) );
+	ASSERT( g_pDB:Query( "UPDATE uac_users SET adminduty = %q WHERE id = " + pPlayer:GetUserID(), pPlayer:IsAdmin() and "Yes" or "No" ) );
 end
 
 function CCommands:AdminChat( pPlayer, sCmd, ... )

@@ -11,6 +11,8 @@ if CLIENT then
 	addEvent( 'onServerDebugMessage', true );
 end
 
+ASSERT	= assert;
+
 function Eval( sCode )
 	return assert( loadstring( sCode ) )();
 end
