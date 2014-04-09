@@ -24,13 +24,7 @@ class: CNPCManager ( CManager )
 				{ Field = "collisions_enabled",				Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
 				{ Field = "damage_proof",					Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "No" };
 				{ Field = "frozen",							Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "No" };
-				{ Field = "animation_lib",					Type = "varchar(255)",			Null = "YES",	Key = "", 		Default = NULL };
-				{ Field = "animation_name",					Type = "varchar(255)",			Null = "YES",	Key = "", 		Default = NULL };
-				{ Field = "animation_time",					Type = "int(4)",				Null = "No",	Key = "", 		Default = -1 };
-				{ Field = "animation_loop",					Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
-				{ Field = "animation_update_position",		Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
-				{ Field = "animation_interruptable",		Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
-				{ Field = "animation_freeze_last_frame",	Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
+				{ Field = "animation_cycle",				Type = "text",					Null = "YES",	Key = "",		Default = NULL };
 				{ Field = "deleted",						Type = "timestamp",				Null = "YES",	Key = "", 		Default = NULL };
 			}
 		);
@@ -40,9 +34,7 @@ class: CNPCManager ( CManager )
 		local sQuery = "\
 			SELECT \
 				id, model, position, rotation, dimension, interior, interactive_command, \
-				collisions_enabled, damage_proof, frozen, \
-				animation_lib, animation_name, animation_time, animation_loop, animation_update_position, \
-				animation_interruptable, animation_freeze_last_frame \
+				collisions_enabled, damage_proof, frozen, animation_cycle \
 			FROM " + DBPREFIX + "npc \
 			WHERE deleted IS NULL \
 			ORDER BY id ASC";
@@ -51,11 +43,16 @@ class: CNPCManager ( CManager )
 		
 		if pResult then
 			for i, pRow in ipairs( pResult:GetArray() ) do
-				this:Add( pRow.id, pRow.model, Vector3( pRow.position ), pRow.rotation, pRow.interior, pRow.dimension, pRow.animation_lib, pRow.animation_name, pRow.animation_time,
-					pRow.animation_loop == "Yes",
-					pRow.animation_update_position == "Yes",
-					pRow.animation_interruptable == "Yes",
-					pRow.animation_freeze_last_frame == "Yes",
+				if pRow.animation_cycle then
+					for i, pAnim in ipairs( fromJSON( pRow.animation_cycle ) ) do
+						for key, value in pairs( pAnim ) do
+							pRow.animation_cycle[ i ][ key ] 		= NULL;
+							pRow.animation_cycle[ i ][ (int)(key) ] = value;
+						end
+					end
+				end
+				
+				this:Add( pRow.id, pRow.model, Vector3( pRow.position ), pRow.rotation, pRow.interior, pRow.dimension, pRow.animation_cycle,
 					pRow.collisions_enabled == "Yes",
 					pRow.frozen == "Yes",
 					pRow.damage_proof == "Yes",
@@ -101,7 +98,7 @@ class: CNPCManager ( CManager )
 		return AsyncQuery.BAD_REQUEST;
 	end;
 	
-	Create	= function( this, iModel, vecPosition, fRotation, iInterior, iDimension, sAnimLib, sAnimName, iAnimTime, bAnimLoop, bAnimUpdatePos, bAnimInterruptable, bAnimFreezeLastFrame, bCollisions, bFrozen, bDamageProof, sInteractiveCommand )
+	Create	= function( this, iModel, vecPosition, fRotation, iInterior, iDimension, aAnimationCycle, bCollisions, bFrozen, bDamageProof, sInteractiveCommand )
 		local Data	=
 		{
 			model						= iModel;
@@ -110,19 +107,13 @@ class: CNPCManager ( CManager )
 			interior					= iInterior;
 			dimension					= iDimension;
 			interactive_command			= sInteractiveCommand;
-			animation_lib				= sAnimLib;
-			animation_name				= sAnimName;
-			animation_time				= (int)(iAnimTime);
-			animation_loop				= bAnimLoop and "Yes" or "No";
-			animation_update_position	= bAnimUpdatePos and "Yes" or "No";
-			animation_interruptable		= bAnimInterruptable and "Yes" or "No";
-			animation_freeze_last_frame	= bAnimFreezeLastFrame and "Yes" or "No";
+			animation_cycle				= aAnimationCycle and toJSON( aAnimationCycle ) or NULL;
 		};
 		
 		local iID = g_pDB:Insert( DBPREFIX + "npc", Data );
 		
 		if iID then
-			return this:Add( iID, iModel, vecPosition, fRotation, iInterior, iDimension, sAnimLib, sAnimName, iAnimTime, bAnimLoop, bAnimUpdatePos, bAnimInterruptable, bAnimFreezeLastFrame, bCollisions, bFrozen, bDamageProof, sInteractiveCommand );
+			return this:Add( iID, iModel, vecPosition, fRotation, iInterior, iDimension, aAnimationCycle, bCollisions, bFrozen, bDamageProof, sInteractiveCommand );
 		end
 		
 		Debug( g_pDB:Error(), 1 );
@@ -130,18 +121,12 @@ class: CNPCManager ( CManager )
 		return NULL;
 	end;
 	
-	Add	= function( this, iID, iModel, vecPosition, fRotation, iInterior, iDimension, sAnimLib, sAnimName, iAnimTime, bAnimLoop, bAnimUpdatePos, bAnimInterruptable, bAnimFreezeLastFrame, bCollisions, bFrozen, bDamageProof, sInteractiveCommand )
+	Add	= function( this, iID, iModel, vecPosition, fRotation, iInterior, iDimension, aAnimationCycle, bCollisions, bFrozen, bDamageProof, sInteractiveCommand )
 		local pNPC = CNPC( iID, iModel, vecPosition, fRotation );
 		
 		if pNPC:IsValid() then
 			pNPC.m_sInteractiveCommand	= sInteractiveCommand;
-			pNPC.m_sAnimLib 			= sAnimLib or NULL;
-			pNPC.m_sAnimName			= sAnimName or NULL;
-			pNPC.m_iAnimTime			= (int)(iAnimTime);
-			pNPC.m_bAnimLoop			= (bool)(bAnimLoop);
-			pNPC.m_bAnimUpdatePos		= (bool)(bAnimUpdatePos);
-			pNPC.m_bAnimInterruptable	= (bool)(bAnimInterruptable);
-			pNPC.m_bAnimFreezeLastFrame	= (bool)(bAnimFreezeLastFrame);
+			pNPC.m_aAnimationCycle		= aAnimationCycle;
 			
 			pNPC:SetID( "npc:" + iID );
 			pNPC:SetInterior( iInterior );
@@ -150,10 +135,6 @@ class: CNPCManager ( CManager )
 			pNPC:SetFrozen( (bool)(bFrozen) );
 			pNPC:SetData( "DamageProof", (bool)(bDamageProof) );
 			pNPC:SetData( "Interactive", sInteractiveCommand );
-			
-			if pNPC.m_sAnimLib then
-				pNPC:SetAnimation( pNPC.m_sAnimLib, pNPC.m_sAnimName, pNPC.m_iAnimTime, pNPC.m_bAnimLoop, pNPC.m_bAnimUpdatePos, pNPC.m_bAnimInterruptable, pNPC.m_bAnimFreezeLastFrame );
-			end
 			
 			return pNPC;
 		end

@@ -1,4 +1,4 @@
-﻿-- Innovation Roleplay Engine
+-- Innovation Roleplay Engine
 --
 -- Author		Kernell
 -- Copyright	© 2011 - 2014
@@ -72,38 +72,72 @@ function CNPCCommands:SetPosition( pPlayer, sCmd, sOption, sID, sX, sY, sZ, sRot
 	return false;
 end
 
-function CNPCCommands:SetAnimation( pPlayer, sCmd, sOption, sID, sLib, sName, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame )
+function CNPCCommands:AddAnimation( pPlayer, sCmd, sOption, sID, sLib, sName, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame )
 	local iID = (int)(sID);
 	
-	if iID > 0 and sLib and sName then
-		local pNPC = g_pGame:GetNPCManager():Get( iID );
-		
-		if pNPC then
-			pNPC.m_sAnimLib 			= sLib;
-			pNPC.m_sAnimName			= sName;
-			pNPC.m_iAnimTime			= (int)(iTime);
-			pNPC.m_bAnimLoop			= (bool)(bLoop);
-			pNPC.m_bAnimUpdatePos		= (bool)(bUpdatePosition);
-			pNPC.m_bAnimInterruptable	= (bool)(bInterruptable);
-			pNPC.m_bAnimFreezeLastFrame	= (bool)(bFreezeLastFrame);
-			
-			if g_pDB:Query( "UPDATE " + DBPREFIX + "npc SET animation_lib = %q, animation_name = %q, animation_time = %d, animation_loop = %q, animation_update_position = %q, animation_interruptable = %q, animation_freeze_last_frame = %q WHERE id = " + pNPC:GetID(),
-				pNPC.m_sAnimLib, pNPC.m_sAnimName, pNPC.m_iAnimTime, pNPC.m_bAnimLoop and "Yes" or "No", pNPC.m_bAnimUpdatePos and "Yes" or "No", pNPC.m_bAnimInterruptable and "Yes" or "No", pNPC.m_bAnimFreezeLastFrame and "Yes" or "No" )
-			then
-				pNPC:SetAnimation( pNPC.m_sAnimLib, pNPC.m_sAnimName, pNPC.m_iAnimTime, pNPC.m_bAnimLoop, pNPC.m_bAnimUpdatePos, pNPC.m_bAnimInterruptable, pNPC.m_bAnimFreezeLastFrame );
-				
-				return TEXT_NPC_ANIMATION_UPDATED:format( iID ), 0, 255, 128;
-			end
-			
-			Debug( g_pDB:Error(), 1 );
-			
-			return TEXT_DB_ERROR, 255, 0, 0;
-		end
-		
+	if iID == 0 and sLib and sName then
+		return false;
+	end
+	
+	local pNPC = g_pGame:GetNPCManager():Get( iID );
+	
+	if pNPC == NULL then
 		return TEXT_NPC_NOT_FOUND_ID:format( iID ), 255, 0, 0;
 	end
 	
-	return false;
+	local pAnimation =
+	{
+		[ PED_ANIMATION_LIB ] 					= sLib;
+		[ PED_ANIMATION_NAME ]					= sName;
+		[ PED_ANIMATION_TIME ]					= (int)(iTime);
+		[ PED_ANIMATION_LOOP ]					= (bool)(bLoop);
+		[ PED_ANIMATION_UPDATE_POS ]			= (bool)(bUpdatePosition);
+		[ PED_ANIMATION_INTERRUPTABLE ]			= (bool)(bInterruptable);
+		[ PED_ANIMATION_FREEZE_LAST_FRAME ]		= (bool)(bFreezeLastFrame);
+	};
+	
+	table.insert( pNPC.m_aAnimationCycle, pAnimation );
+	
+	if not g_pDB:Query( "UPDATE " + DBPREFIX + "npc SET animation_cycle = '" + toJSON( pNPC.m_aAnimationCycle ) + "' WHERE id = " + iID ) then
+		table.remove( pNPC.m_aAnimationCycle );
+		
+		Debug( g_pDB:Error(), 1 );
+		
+		return TEXT_DB_ERROR, 255, 0, 0;
+	end
+	
+	pNPC.m_iAnimTimeEnd	= 0;
+	pNPC.m_iAnimIndex	= 0;
+	
+	return TEXT_NPC_ANIMATION_UPDATED:format( iID ), 0, 255, 128;
+	
+end
+
+function CNPCCommands:ClearAnimations( pPlayer, sCmd, sOption, sID )
+	local iID = (int)(sID);
+	
+	if iID == 0 then
+		return false;
+	end
+	
+	local pNPC = g_pGame:GetNPCManager():Get( iID );
+	
+	if pNPC == NULL then
+		return TEXT_NPC_NOT_FOUND_ID:format( iID ), 255, 0, 0;
+	end
+	
+	if not g_pDB:Query( "UPDATE " + DBPREFIX + "npc SET animation_cycle = NULL WHERE id = " + iID ) then
+		Debug( g_pDB:Error(), 1 );
+		
+		return TEXT_DB_ERROR, 255, 0, 0;
+	end
+	
+	pNPC.m_aAnimationCycle = NULL;
+	
+	pNPC.m_iAnimTimeEnd		= 0;
+	pNPC.m_iAnimIndex		= 0;
+	
+	return TEXT_NPC_ANIMATION_CLEARED:format( iID ), 0, 255, 128;
 end
 
 function CNPCCommands:SetFrozen( pPlayer, sCmd, sOption, sID, sbFrozen )

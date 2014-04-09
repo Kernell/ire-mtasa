@@ -172,7 +172,8 @@ class: Resource
 		CCommand:AddOption( 'npc', 'create',			CNPCCommands.Create,			true,	"<model>" );
 		CCommand:AddOption( 'npc', 'remove',			CNPCCommands.Remove,			true,	"<npc id>" );
 		CCommand:AddOption( 'npc', 'setposition',		CNPCCommands.SetPosition,		true,	"<npc id> [x y z] [rotation]" );
-		CCommand:AddOption( 'npc', 'setanimation',		CNPCCommands.SetAnimation,		true,	"<npc id> <lib> <name> [time = 0] [loop] [update position] [interruptable] [freeze last frame]" );
+		CCommand:AddOption( 'npc', 'addanimation',		CNPCCommands.AddAnimation,		true,	"<npc id> <lib> <name> [time = 0] [loop] [update position] [interruptable] [freeze last frame]" );
+		CCommand:AddOption( 'npc', 'clearanimations',	CNPCCommands.ClearAnimations,	true,	"<npc id>" );
 		CCommand:AddOption( 'npc', 'setfrozen',			CNPCCommands.SetFrozen,			true,	"<npc id> [frozen = false]" );
 		CCommand:AddOption( 'npc', 'setdamageproof',	CNPCCommands.SetDamageProof,	true,	"<npc id> [damageproof = false]" );
 		CCommand:AddOption( 'npc', 'setcollisions',		CNPCCommands.SetCollisions,		true,	"<npc id> [collisions = false]" );
