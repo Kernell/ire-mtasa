@@ -9,6 +9,7 @@ class: CUIRegistration ( CGUI, CUIAsyncQuery )
 {
 	CUIRegistration		= function( this )
 		local Consolas10			= CEGUIFont( "Consolas", 10 );
+		local ConsolasBold10		= CEGUIFont( "Consolas", 10, true );
 		local Consolas12			= CEGUIFont( "Consolas", 12 );
 		local ConsolasBold32		= CEGUIFont( "Consolas", 32, true );
 		
@@ -57,6 +58,16 @@ class: CUIRegistration ( CGUI, CUIAsyncQuery )
 			Font	= Consolas10;
 		};
 		
+		this.PasswordStrength	= this.Window:CreateLabel( "" )
+		{
+			X		= 230;
+			Y		= 208;
+			Width	= 204;
+			Height	= 22;
+			Font	= ConsolasBold10;
+			HorizontalAlign	= { "right", false };
+		};
+		
 		this.Window:CreateLabel( "Отображаемое имя (Nickname):" )
 		{
 			X		= 30;
@@ -93,6 +104,40 @@ class: CUIRegistration ( CGUI, CUIAsyncQuery )
 			Height		= 28;
 			MaxLength	= 64;
 			Masked		= true;
+			
+			Change		= function()
+				local sPassword	= this.PasswordBox:GetText();
+				
+				if sPassword then
+					if sPassword:len() == 0 then
+						this.PasswordStrength:SetText( "" );
+						
+						return;
+					end
+					
+					local iStrength = PasswordStrength:Meter( sPassword );
+					
+					if iStrength < 2 then
+						this.PasswordStrength:SetText( "Очень плохой" );
+						this.PasswordStrength:SetColor( 200, 0, 0 );
+					elseif iStrength < 4 then
+						this.PasswordStrength:SetText( "Плохой" );
+						this.PasswordStrength:SetColor( 255, 0, 0 );
+					elseif iStrength < 5 then
+						this.PasswordStrength:SetText( "Средний" );
+						this.PasswordStrength:SetColor( 255, 128, 0 );
+					elseif iStrength < 7 then
+						this.PasswordStrength:SetText( "Нормальный" );
+						this.PasswordStrength:SetColor( 255, 255, 0 );
+					elseif iStrength < 9 then
+						this.PasswordStrength:SetText( "Хороший" );
+						this.PasswordStrength:SetColor( 64, 200, 0 );
+					elseif iStrength < 13 then
+						this.PasswordStrength:SetText( "Очень хороший" );
+						this.PasswordStrength:SetColor( 0, 255, 0 );
+					end
+				end
+			end;
 		};
 		
 		this.Nick		= this.Window:CreateEdit( "" )

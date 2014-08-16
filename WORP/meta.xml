@@ -26,6 +26,8 @@
   
   <script src="Shared/Globals.lua"    type="client"/>
   
+  <script src="Shared/PasswordStrength.lua"    type="client"/>
+  
   <script src="Settings.lua"          type="client"/>
   <script src="CClientRPC.lua"        type="client"/>
   <script src="Globals.lua"           type="client"/>
