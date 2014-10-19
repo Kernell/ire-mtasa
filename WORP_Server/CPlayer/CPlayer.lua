@@ -688,7 +688,7 @@ function CPlayer:Login( iID )
 			self:InitGroups( (string)(pRow.groups) );
 			
 			self.muted_time				= pRow.muted_time;
-			self.m_Settings				= fromJSON( pRow.settings ) or {};
+			self.m_Settings				= pRow.settings and fromJSON( pRow.settings ) or {};
 			self.m_ReportData.m_bLocked	= pRow.report_locked == "Yes";
 			
 			local sLastLogin = false;
