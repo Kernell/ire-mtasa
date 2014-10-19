@@ -25,9 +25,11 @@ class: CClientCamera ( CElement )
 		this.m_vecPositionBehind	= Vector3( 0.4, 0.0, 0.7 );
 		this.m_vecRotationBehind	= Vector3( 0.0, 0.0, 180.0 );
 		
-		root:AddEvent( "onClientPreRender", 		this.DoPulse, 				this );
-		root:AddEvent( "onClientVehicleEnter", 		this.OnVehicleEnter, 		this );
-		root:AddEvent( "onClientVehicleExit", 		this.OnVehicleExit, 		this );
+		root:AddEvent( "onClientPreRender", 		this.DoPulse, 				pCamera );
+		root:AddEvent( "onClientVehicleEnter", 		this.OnVehicleEnter, 		pCamera );
+		root:AddEvent( "onClientVehicleExit", 		this.OnVehicleExit, 		pCamera );
+		
+		return pCamera;
 	end;
 	
 	_CClientCamera	= function( this )
@@ -59,6 +61,7 @@ class: CClientCamera ( CElement )
 			end
 		end
 	end;
+	
 	DoPulse		= function( this, iTimeSlice )
 		local fDeltaTime = iTimeSlice / 1000;
 		
