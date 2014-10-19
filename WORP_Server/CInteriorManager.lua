@@ -9,9 +9,9 @@ class: CInteriorManager ( CManager )
 {
 	m_InteriorColors	= 
 	{
-		[ INTERIOR_TYPE_NONE ]			= { 255, 255, 255, 128 };
-		[ INTERIOR_TYPE_COMMERCIAL ]	= { 0, 128, 255, 128 };
-		[ INTERIOR_TYPE_HOUSE ]			= { 0, 255, 0, 128 };
+		[ INTERIOR_TYPE_NONE ]			= CColor( 255, 255, 255, 128 );
+		[ INTERIOR_TYPE_COMMERCIAL ]	= CColor( 0, 128, 255, 128 );
+		[ INTERIOR_TYPE_HOUSE ]			= CColor( 0, 255, 0, 128 );
 	};
 };
 

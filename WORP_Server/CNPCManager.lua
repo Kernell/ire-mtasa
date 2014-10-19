@@ -21,9 +21,9 @@ class: CNPCManager ( CManager )
 				{ Field = "interior",						Type = "smallint(3)",			Null = "NO",	Key = "", 		Default = 0 };
 				{ Field = "dimension",						Type = "smallint(6)",			Null = "NO",	Key = "", 		Default = 0 };
 				{ Field = "interactive_command",			Type = "varchar(255)",			Null = "YES",	Key = "", 		Default = NULL };
-				{ Field = "collisions_enabled",				Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "Yes" };
-				{ Field = "damage_proof",					Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "No" };
-				{ Field = "frozen",							Type = "enum('Yes', 'No')",		Null = "NO",	Key = "", 		Default = "No" };
+				{ Field = "collisions_enabled",				Type = "enum('Yes','No')",		Null = "NO",	Key = "", 		Default = "Yes" };
+				{ Field = "damage_proof",					Type = "enum('Yes','No')",		Null = "NO",	Key = "", 		Default = "No" };
+				{ Field = "frozen",							Type = "enum('Yes','No')",		Null = "NO",	Key = "", 		Default = "No" };
 				{ Field = "animation_cycle",				Type = "text",					Null = "YES",	Key = "",		Default = NULL };
 				{ Field = "deleted",						Type = "timestamp",				Null = "YES",	Key = "", 		Default = NULL };
 			}

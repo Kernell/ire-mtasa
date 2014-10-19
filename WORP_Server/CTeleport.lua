@@ -10,8 +10,8 @@ class "CTeleport";
 function CTeleport:CTeleport( ID, vecPosition1, vecRotation1, iInterior1, iDimension1, vecPosition2, vecRotation2, iInterior2, iDimension2, iFactionID )
 	self.m_ID	= ID;
 	
-	self.m_pMarker1 				= CMarker( vecPosition1 + Vector3( 0, 0, .54 ), "arrow", 1, 255, 255, 0, 128 );
-	self.m_pMarker2 				= CMarker( vecPosition2 + Vector3( 0, 0, .54 ), "arrow", 1, 255, 255, 0, 128 );
+	self.m_pMarker1 				= CMarker( vecPosition1 + Vector3( 0, 0, .54 ), "arrow", 1, CColor( 255, 255, 0, 128 ) );
+	self.m_pMarker2 				= CMarker( vecPosition2 + Vector3( 0, 0, .54 ), "arrow", 1, CColor( 255, 255, 0, 128 ) );
 	
 	self.m_pMarker1.m_pTeleport				= self;
 	self.m_pMarker1.m_pTarget				= self.m_pMarker2;

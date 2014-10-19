@@ -34,7 +34,7 @@ function CInterior:CInterior( iID, sInteriorID, iCharacterID, sName, sType, iPri
 		self.m_iPrice				= iPrice;
 		self.m_bLocked				= bLocked;
 		self.m_iFactionID			= iFactionID;
-		self.m_p3DText				= C3DText();
+	--	self.m_p3DText				= C3DText();
 		self.m_pColShape			= pInt.BoundingBox and CColShape( "Cuboid", unpack( pInt.BoundingBox ) ) or NULL;
 		self.m_Store				= pInt.Store and Store or NULL;
 		
@@ -395,15 +395,15 @@ function CInterior:UpdateMarker()
 		end
 		
 		if self.m_sInteriorID == "dummy" then
-			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "checkpoint", 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "checkpoint", 1, Color );
 		elseif InteriorData.Position == NULL or ( self:GetOwner() == 0 and self:GetType() ~= INTERIOR_TYPE_NONE and self:GetPrice() > 0 ) then
 			self.m_pOutsideMarker	= CPickup( self.m_vecOutsidePosition, 3, self:GetType() == INTERIOR_TYPE_COMMERCIAL and 1272 or 1273 );
 		else
-			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			self.m_pOutsideMarker	= CMarker( self.m_vecOutsidePosition + Vector3( 0, 0, .54 ), "arrow", 1, Color );
 		end
 		
 		if InteriorData.Position then
-			self.m_pInsideMarker		= CMarker( InteriorData.Position + Vector3( 0, 0, .54 ), "arrow", 1, unpack( Color ) );
+			self.m_pInsideMarker		= CMarker( InteriorData.Position + Vector3( 0, 0, .54 ), "arrow", 1, Color );
 			
 			self.m_pInsideMarker.Rotation		= InteriorData.Rotation;
 			self.m_pInsideMarker:SetInterior	( InteriorData.Interior );

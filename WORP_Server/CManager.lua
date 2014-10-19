@@ -21,6 +21,8 @@ class: CManager
 		g_pGame[ sGetFuncName ] = function()
 			return this;
 		end
+		
+		this.m_List = {};
 	end;
 	
 	DeleteAll		= function( this )

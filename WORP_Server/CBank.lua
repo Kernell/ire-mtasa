@@ -27,7 +27,7 @@ class: CBank
 		
 		vecPosition.Z	= vecPosition.Z - 0.81;
 		
-		this.m_pMarker	= CMarker( vecPosition, "cylinder", 1.0, 0, 255, 0, 128 );
+		this.m_pMarker	= CMarker( vecPosition, "cylinder", 1.0, CColor( 0, 255, 0, 128 ) );
 		
 		this.m_pMarker:SetInterior	( iInterior );
 		this.m_pMarker:SetDimension	( iDimension );
