@@ -157,7 +157,7 @@ class: Resource
 		
 		CCommand:AddOption( 'world', 'setweather',		CWorldCommands.SetWeather,		true, 	"<weather> —— Устанавливает погоду" );
 		CCommand:AddOption( 'world', 'settime',			CWorldCommands.SetTime,			true, 	"<hour> [minute=0] —— Устанавливает время" );
-		CCommand:AddOption( 'world', 'resettime',		CWorldCommands.ResetTime,		true, 	"Востанавливает время" );
+		CCommand:AddOption( 'world', 'resettime',		CWorldCommands.ResetTime,		true, 	"Восстанавливает время" );
 		CCommand:AddOption( 'world', '--help',			CWorldCommands.Help );
 
 		CCommand:RegisterCommand( 'system', NULL, true );
@@ -326,7 +326,7 @@ class: Resource
 			{
 				"<login> [options]";
 				"Options:";
-				"-p, --password       пароль для нового пользователя";
+				"-p, --password        пароль для нового пользователя";
 				"-n. --name            имя пользователя (по умолчанию - логин)";
 				"-g, --groups          группы через запятую (ID и/или название)";
 			}
@@ -335,10 +335,10 @@ class: Resource
 			{
 				"[flags] <login>";
 				"Options:";
-				"-l, --login              логин пользователя";
-				"-p, --password       пароль пользователя";
-				"-n. --name            имя пользователя (по умолчанию - логин)";
-				"-g, --groups          группы через запятую (ID и/или название)";
+				"-l, --login            логин пользователя";
+				"-p, --password         пароль пользователя";
+				"-n. --name             имя пользователя (по умолчанию - логин)";
+				"-g, --groups           группы через запятую (ID и/или название)";
 				"-Z, --adminid          личный номер администратора";
 			}
 		);
