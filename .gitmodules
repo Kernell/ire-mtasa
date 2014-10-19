@@ -19,3 +19,6 @@
 [submodule "WORP_VehicleEngine/Shared"]
 	path = WORP_VehicleEngine/Shared
 	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "IRE_Server/Shared"]
+	path = IRE_Server/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
