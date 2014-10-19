@@ -22,6 +22,7 @@
     <right name="function.shutdown"               access="true"></right>
     <right name="function.redirectPlayer"         access="true"></right>
     <right name="function.kickPlayer"             access="true"></right>
+    <right name="function.addBan"                 access="true"></right>
     <right name="function.banPlayer"              access="true"></right>
     <right name="function.fetchRemote"            access="true"></right>
     <right name="function.fetchRemote"            access="true"></right>
@@ -180,7 +181,6 @@
   <script src="CVehicle/Main.lua"/>
   <script src="CVehicle/Events.lua"/>
   <script src="CVehicle/Handling.lua"/>
-  <script src="CVehicle/Shop.lua"/>
   <script src="CVehicle/Fuel.lua"/>
   <script src="CVehicle/Rent.lua"/>
   <script src="CVehicle/PayAndSpray.lua"/>
