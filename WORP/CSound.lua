@@ -19,7 +19,7 @@ class: CSound
 		if sPath and vecPosition then
 			this.m_pSound = playSound3D( sPath, vecPosition.X, vecPosition.Y, vecPosition.Z, bLoop );
 			
-			CElement.AddToList( this, this.m_pSound );
+			this.m_pSound( this );
 			
 			return this.m_pSound;
 		end
