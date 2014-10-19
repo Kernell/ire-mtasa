@@ -38,7 +38,7 @@ AnalogControl =
 			fY		= ( fY - .5 ) * 2;
 			
 			this.fSteer		= this.fSteer + ( fX * Settings.Controls.MouseSteering.Sensitivity );
-			this.fMouseY	= this.fMouseY + ( fX * Settings.Controls.MouseSteering.Sensitivity );
+			this.fMouseY	= this.fMouseY + ( fY * Settings.Controls.MouseSteering.Sensitivity );
 		else
 			this.fSteer		= 0.0;
 			this.fMouseY	= 0.0;
