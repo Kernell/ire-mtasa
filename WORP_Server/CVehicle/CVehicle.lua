@@ -20,16 +20,22 @@ class: CVehicle ( CElement, IElementData )
 	};
 	
 	m_iID			= 0;
+	m_iCharID		= 0;
+	m_fFuel			= 0;
+	m_sLastDriver	= 0;
+	m_iLastTime		= 0;
 	m_pSiren		= NULL;
 	m_pRadio		= NULL;
 --	m_bRadio		= true;
 	
-	CVehicle		= function( this, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 )
+	CVehicle		= function( this, iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 )
 		if type( iModel ) ~= "number" then
 			Error( 3, 2342, "iModel", "number", type( iModel ) );
 		end
 		
 		this = this:Create( iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 );
+		
+		this.m_iID	= iID;
 		
 		this:SetID( "vehicle:" + this:GetID() );
 		
@@ -56,7 +62,7 @@ class: CVehicle ( CElement, IElementData )
 		
 		this.m_pRadio = NULL;
 		
-		this.m_pVehicleManager:RemoveFromList( this );
+		g_pGame:GetVehicleManager():RemoveFromList( this );
 		this:Destroy();
 	end;
 	
@@ -321,7 +327,7 @@ function CVehicle:GetLastDriver()
 end
 
 function CVehicle:GenerateRegPlate()
-	self.m_sRegPlate = self.m_pVehicleManager:GetRandomRegPlate();
+	self.m_sRegPlate = g_pGame:GetVehicleManager():GetRandomRegPlate();
 
 	return self.m_sRegPlate;
 end
@@ -346,7 +352,7 @@ function CVehicle:GetRegPlate()
 end
 
 function CVehicle:RandomizeColor()
-	return self:SetColor( self.m_pVehicleManager:GetRandomColor( self.m_iModel ) );
+	return self:SetColor( g_pGame:GetVehicleManager():GetRandomColor( self.m_iModel ) );
 end
 
 function CVehicle:SetColor( ... )

@@ -368,7 +368,7 @@ end
 function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2, pDBField )
 	pDBField	= pDBField or CVehicleManager.DefaultData;
 	
-	local pVehicle = CVehicle( iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 );
+	local pVehicle = CVehicle( iID, iModel, vecPosition, vecRotation, sPlate, iVariant1, iVariant2 );
 	
 	pVehicle.m_pVehicleManager = pVehicleManager;
 	
@@ -390,9 +390,9 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 	end
 	
 	pVehicle.m_pData.m_iRadioID 		= pDBField.radio_id;
-	pVehicle.m_pData.m_fRadioVolume	= pDBField.radio_volume;
+	pVehicle.m_pData.m_fRadioVolume		= pDBField.radio_volume;
 	
-	local Upgrades		= fromJSON( pDBField.upgrades );
+	local Upgrades		= pDBField.upgrades and fromJSON( pDBField.upgrades );
 	
 	if Upgrades then
 		for key, value in pairs( Upgrades ) do
@@ -404,7 +404,7 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 		end
 	end
 	
-	local Handling = fromJSON( pDBField.handling );
+	local Handling = pDBField.handling and fromJSON( pDBField.handling );
 	
 	if Handling then
 		for key, value in pairs( Handling ) do
@@ -412,7 +412,7 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 		end
 	end
 	
-	local PanelStates = fromJSON( pDBField.panel_states );
+	local PanelStates = pDBField.panel_states and fromJSON( pDBField.panel_states );
 	
 	if PanelStates then
 		for key, value in pairs( PanelStates ) do
@@ -420,7 +420,7 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 		end
 	end
 	
-	local DoorStates = fromJSON( pDBField.door_state );
+	local DoorStates = pDBField.door_state and fromJSON( pDBField.door_state );
 	
 	if DoorStates then
 		for key, value in pairs( DoorStates ) do
@@ -428,7 +428,6 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 		end
 	end
 	
-	pVehicle.m_iID				= iID;
 	pVehicle.m_iCharID			= pDBField.character_id or 0;
 	pVehicle.m_fFuel			= pDBField.fuel;
 --	pVehicle.m_bEngine			= ( pDBField.engine or "on" ) == "on";
@@ -441,7 +440,7 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 	pVehicle.m_sLastDriver		= pDBField.last_driver or "N/A";
 	pVehicle.m_iLastTime		= pDBField.last_time or getRealTime().timestamp;
 	
-	pVehicle.m_Data				= fromJSON( pDBField.element_data );
+	pVehicle.m_Data				= pDBField.element_data and fromJSON( pDBField.element_data );
 	
 	if pVehicle.m_Data then
 		for key, value in pairs( pVehicle.m_Data ) do
@@ -458,7 +457,7 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 		pVehicle:GenerateRegPlate();
 	end
 	
-	local pColor = fromJSON( pDBField.color );
+	local pColor = pDBField.color and fromJSON( pDBField.color );
 	
 	if pColor then
 		pVehicle:SetColor		( unpack( pColor ) );
@@ -469,9 +468,14 @@ function CVehicleManager:Add( iID, iModel, vecPosition, vecRotation, sPlate, iVa
 	pVehicle:SetEngineState		( pDBField.engine == "on" );
 	pVehicle:SetLights			( pDBField.lights == "on" );
 	pVehicle:SetLocked			( pDBField.locked == "Yes" );
-	pVehicle:SetHeadLightColor	( unpack( fromJSON( pDBField.lights_color ) or { 255, 255, 255 } ) );
-	pVehicle:SetWheelStates		( unpack( fromJSON( pDBField.wheels_states ) or { 0, 0, 0, 0 } ) );
+	pVehicle:SetHeadLightColor	( unpack( pDBField.lights_color and fromJSON( pDBField.lights_color ) or { 255, 255, 255 } ) );
+	pVehicle:SetWheelStates		( unpack( pDBField.wheels_states and fromJSON( pDBField.wheels_states ) or { 0, 0, 0, 0 } ) );
 	pVehicle:SetHealth			( Clamp( 300.0, pDBField.health or 1000.0, 1000.0 ) );
+	
+	pVehicle:SetData( "character_id",	pVehicle.m_iCharID,		true, true );
+	pVehicle:SetData( "fuel",			pVehicle.m_fFuel,		true, true );
+	pVehicle:SetData( "last_driver",	pVehicle.m_sLastDriver,	true, true );
+	pVehicle:SetData( "last_time",		pVehicle.m_iLastTime,	true, true );
 	
 	if iID > self.m_iMaxVehicleID then
 		self.m_iMaxVehicleID = iID;

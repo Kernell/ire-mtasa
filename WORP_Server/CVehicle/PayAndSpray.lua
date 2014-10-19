@@ -27,7 +27,7 @@ function Init()
 	for iID, pGarage in pairs( Garages ) do
 		setGarageOpen( iID, true );
 		
-		local pMarker = CMarker( pGarage[ 1 ], 'cylinder', 4.0, 255, 255, 255, 0 );
+		local pMarker = CMarker( pGarage[ 1 ], 'cylinder', 4.0, CColor( 255, 255, 255, 0 ) );
 		
 		CBlip( pMarker, BLIP_SPRITE_SPRAY, 2, 255, 255, 255, 255, 1, 250.0 ):SetParent( pMarker );
 		
