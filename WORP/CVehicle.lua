@@ -255,6 +255,8 @@ function gl_Components.stwheel_ok:Update( pVehicle )
 			
 			pVehicle.m_pStWheel.fAngle	= fAngle;
 		end
+	else
+		pVehicle.m_pStWheel.fAngle = 0.0;
 	end
 	
 	pVehicle.m_pStWheel.fAngle = pVehicle.m_pStWheel.fAngle * ( 1.0 - Clamp( 0.0, pVehicle:GetVelocity():Length(), 1.0 ) * 0.8 );
@@ -420,9 +422,14 @@ function CVehicle:CVehicle( pVehicle )
 		end
 	end
 	
-	if self.m_pLightsShader then
-		delete ( self.m_pLightsShader );
-		self.m_pLightsShader = NULL;
+	if self.m_pLightsOnShader then
+		delete ( self.m_pLightsOnShader );
+		self.m_pLightsOnShader	= NULL;
+	end
+	
+	if self.m_pLightsOffShader then
+		delete ( self.m_pLightsOffShader );
+		self.m_pLightsOffShader	= NULL;
 	end
 	
 	if CVehicle.LightTextures[ getElementModel( pVehicle ) ] then
@@ -443,6 +450,8 @@ function CVehicle:CVehicle( pVehicle )
 		iTime			= 50;
 		iTickEnd		= 0;
 	};
+	
+	return pVehicle;
 end
 
 function CVehicle:SetComponentPosition( sVehicleComponent, vecPosition )
@@ -531,15 +540,17 @@ addEventHandler( "onClientPreRender", root,
 addEventHandler( "onClientElementStreamIn", CVehicle.m_pRoot,
 	function()
 		if getElementType( source ) == "vehicle" then
-			local m_Color = source:GetData( "color" );
+			local pVehicle = CVehicle( source );
+			
+			local m_Color = pVehicle:GetData( "color" );
 			
 			if m_Color then
-				source:SetColor( unpack( m_Color ) );
+				pVehicle:SetColor( unpack( m_Color ) );
 			end
 			
-			source:SetWiperState( source:GetData( "m_iWiperState" ) );
+			pVehicle:SetWiperState( pVehicle:GetData( "m_iWiperState" ) );
 			
-			source:UpdateComponents();
+			pVehicle:UpdateComponents();
 		end
 	end
 );
