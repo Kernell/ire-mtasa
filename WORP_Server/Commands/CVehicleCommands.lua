@@ -352,7 +352,7 @@ function CVehicleCommands:Goto( pPlayer, sCmd, sOption, sID )
 			local vecRotation	= pVehicle:GetRotation();
 			
 			pPlayer:SetPosition( pVehicle:GetPosition():Offset( 2.5, vecRotation.Z ) );
-			pPlayer:SetRotation( vecRotation.Z + 90 );
+			pPlayer:SetRotation( vecRotation + Vector3( 0.0, 0.0, 90.0 ) );
 			pPlayer:SetInterior( pVehicle:GetInterior() );
 			pPlayer:SetDimension( pVehicle:GetDimension() );
 		else
@@ -393,7 +393,7 @@ function CVehicleCommands:Spawn( pPlayer, sCmd, sOption, ... )
 			end
 			
 			if iID then
-				local fRotation		= pPlayer:GetRotation();
+				local fRotation		= pPlayer:GetRotation().Z;
 				local vecPosition	= pPlayer:GetPosition():Offset( 2.5, fRotation );
 				local vecRotation	= Vector3( 0, 0, fRotation + 90 );
 				local sPlate		= ( "%03d NULL" ):format( iID );

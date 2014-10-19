@@ -451,7 +451,7 @@ function CPlayerCommands:Warp( pClient, sCmd, sOption, sPlayer1, sPlayer2 )
 	end
 	
 	pPlayer1:SetPosition( vecNewPosition );
-	pPlayer1:SetRotation( vecNewRotation.Z );
+	pPlayer1:SetRotation( vecNewRotation );
 	
 	return true;
 end
