@@ -2,15 +2,12 @@
 
 $dirs = array
 (
-	"Shared",
-	"IRE_AndroidUI",
 	"IRE_Shaders",
-	"IRE_Scoreboard",
 	"rp_models",
 	"rp_nametags",
 	"WORP",
 	"WORP_Headmove",
-	"WORP_Server",
+//	"WORP_Server",
 );
 
 function luac( $path )
@@ -42,7 +39,7 @@ foreach( $dirs as $dir )
 		
 		foreach( $xml->script as $script )
 		{
-			// if( $script[ "type" ] == "client" )
+			if( $script[ "type" ] == "client" )
 			{
 				$result = luac( 'uploads/' . $dir . '/' . $script[ "src" ] );
 				
