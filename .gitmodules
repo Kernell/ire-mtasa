@@ -1,0 +1,21 @@
+[submodule "WORP_Server/Shared"]
+	path = WORP_Server/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "WORP/Shared"]
+	path = WORP/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "rp_nametags/Shared"]
+	path = rp_nametags/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "rp_models/Shared"]
+	path = rp_models/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "IRE_Shaders/Shared"]
+	path = IRE_Shaders/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "IRE_UI/Shared"]
+	path = IRE_UI/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+[submodule "WORP_VehicleEngine/Shared"]
+	path = WORP_VehicleEngine/Shared
+	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
