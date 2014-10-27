@@ -107,7 +107,7 @@ PSInput VertexShaderFunction( VSInput VS )
 	PS.Tangent 		= normalize( mul( Tangent, (float3x3)gWorldInverseTranspose ).xyz);
 	PS.Binormal 	= normalize( mul( Binormal, (float3x3)gWorldInverseTranspose ).xyz );
 	
-    PS.View = normalize(viewDirection); 
+    PS.View = normalize( viewDirection ); 
 	
 	PS.TexCoord_dust = VS.TexCoord;
 	
@@ -123,7 +123,7 @@ PSInput VertexShaderFunction( VSInput VS )
 	if( ( gCameraDirection.z > sRefFlan ) && sRefFl == 1 )
 	{
 		eyeVector	= mul( VS.Position, gWorldViewProjection );
-		projectedY	= ( ( ( -eyeVector.y ) /eyeVector.z * sProjectedYvecMul) * sProjectedYsize + 0.5 ) - sProjectedYoffset;
+		projectedY	= ( ( ( -eyeVector.y ) /eyeVector.z * sProjectedYvecMul ) * sProjectedYsize + 0.5 ) - sProjectedYoffset;
 	}
 	
 	float3 Nn 	= VS.Normal / ( length( VS.Normal ) * sNorFac );

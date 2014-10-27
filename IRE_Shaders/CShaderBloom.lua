@@ -56,7 +56,7 @@ class: CShaderBloom ( LuaBehaviour )
 		pCurrentTexture	= this:ApplyGBlurH( pCurrentTexture, this.m_fBloom );
 		pCurrentTexture	= this:ApplyGBlurV( pCurrentTexture, this.m_fBloom );
 		
-		dxSetRenderTarget()
+		dxSetRenderTarget();
 		
 		if pCurrentTexture then
 			this.m_pAddBlendShader:SetValue( "TEX0", pCurrentTexture );

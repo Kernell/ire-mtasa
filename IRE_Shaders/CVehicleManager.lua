@@ -48,11 +48,15 @@ class: CVehicleManager
 	PerformChecks	= function( this, pVehicle )
 		if this.m_StreamedVehicles[ pVehicle ] == NULL then
 			this.m_StreamedVehicles[ pVehicle ] = CVehicle( pVehicle );
+			
+			Debug( "Add Ref " + pVehicle:GetID(), 0, 255, 255, 255 );
 		end
 	end;
 	
 	Remove		= function( this, pVehicle )
 		if this.m_StreamedVehicles[ pVehicle ] then
+			Debug( "Remove Ref " + pVehicle:GetID(), 0, 255, 255, 255 );
+			
 			delete ( this.m_StreamedVehicles[ pVehicle ] );
 		end
 		
