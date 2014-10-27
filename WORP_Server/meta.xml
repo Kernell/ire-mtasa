@@ -244,11 +244,6 @@
   <script src="CBank.lua"/>
   <script src="CBankManager.lua"/>
   
-  <!-- CTeleport -->
-  
-  <script src="CTeleport.lua" />
-  <script src="CTeleportManager.lua" />
-  
   <!-- CEventMarker -->
   
   <script src="CEventMarker.lua" />
