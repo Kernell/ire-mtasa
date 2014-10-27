@@ -33,7 +33,7 @@
   <script src="Shared/Debug.lua"/>
   <script src="Shared/class.lua"/>
   <script src="Shared/bit32.lua"/>
-  <script src="Shared/blowfish.lua"/>
+  <script src="Shared/Blowfish.lua"/>
   <script src="Shared/base64.lua"/>
   <script src="Shared/Array.lua"/>
   <script src="Shared/CColor.lua"/>
