@@ -20,6 +20,7 @@ class: Resource
 		
 		this.m_pHUD			= CClientHUD();
 		this.m_pCursors		= CUICursor();
+		this.m_pCamera		= CClientCamera( CLIENT:GetCamera() );
 	end;
 	
 	OnStop		= function()
