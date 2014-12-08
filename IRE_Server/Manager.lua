@@ -10,7 +10,7 @@ class. Manager
 	m_List			= NULL;
 	
 	Manager			= function()
-		table.insert( gGame.Managers, this );
+		table.insert( Server.Game.Managers, this );
 		
 		this.m_List = {};
 	end;

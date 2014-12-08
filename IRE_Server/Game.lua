@@ -12,17 +12,65 @@ class. Game
 	CharactersLimit			= 1;
 	
 	Game		= function()
-		_G.gGame	= this;
-		
 		this.DebugTicks	= {};
 		this.Managers	= {};
 		
+		function this.__OnPlayerJoin( ... )
+			this.PlayerJoin( source, ... );
+		end
+		
+		function this.__OnPlayerQuit( ... )
+			this.PlayerJoin( source, ... );
+		end
+		
+		function this.__OnChangeNick()
+			return cancelEvent();
+		end
+		
+		addEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
+		addEventHandler( "onPlayerQuit", 			root, this.__OnPlayerQuit );
+		addEventHandler( "onPlayerChangeNick",		root, this.__OnChangeNick );
+	end;
+	
+	_Game		= function()
+		removeEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
+		removeEventHandler( "onPlayerQuit", 		root, this.__OnPlayerQuit );
+		removeEventHandler( "onPlayerChangeNick",	root, this.__OnChangeNick );
+		
+		Server.DB.StartTransaction( true );
+		
+		if not this.Environment.RealSync then
+			local day	= this.Environment.Day;
+			local month	= this.Environment.Month;
+			local year	= this.Environment.Year;
+			
+			Server.DB.Query( "REPLACE INTO `game_config` ( `key`, `value` ) VALUE ( 'day', '" + day + "' ), ( 'month', '" + month + "' ), ( 'year', '" + year + "' )" );
+		end
+		
+		for i = table.getn( this.Managers ), 1, -1 do
+			local manager = this.Managers[ i ];
+			
+			if manager then
+				delete ( manager );
+			end
+		end
+		
+		Server.DB.Commit( true );
+		
+		this.Managers 		= NULL;
+		
+		this.__OnPlayerJoin = NULL;
+		this.__OnPlayerQuit = NULL;
+		this.__OnChangeNick = NULL;
+	end;
+	
+	Init		= function()
 		this.Environment				= new. Environment();
 	--	this.BlipManager				= new. BlipManager();
 	--	this.WeatherManager				= new. WeatherManager();
 	--	this.WorldManager				= new. WorldManager();
 		
-		local result	= gDB.Query( "SELECT `key`, `value` FROM `game_config`" );
+		local result	= Server.DB.Query( "SELECT `key`, `value` FROM `game_config`" );
 	
 		if result then
 			for i, row in pairs( result.GetArray() ) do
@@ -56,16 +104,15 @@ class. Game
 			
 			delete ( result );
 		else
-			Debug( gDB.Error(), 1 );
+			Debug( Server.DB.Error(), 1 );
 		end
 		
 	--	this.EventManager				= new. EventManager();
 	--	this.MapManager					= new. MapManager();
-	--	this.GroupManager				= new. GroupManager();
+		this.GroupManager				= new. GroupManager();
 	--	this.BankManager				= new. BankManager();
 	--	this.FactionManager				= new. FactionManager();
 	--	this.NPCManager					= new. NPCManager();
-	--	this.PlayerManager				= new. PlayerManager();
 	--	this.VehicleManager				= new. VehicleManager();
 	--	this.GateManager				= new. GateManager();
 	--	this.RaceManager				= new. RaceManager();
@@ -75,6 +122,7 @@ class. Game
 	--	this.ShopManager				= new. ShopManager();
 	--	this.EventMarkerManager			= new. EventMarkerManager();
 	--	this.TutorialManager			= new. TutorialManager();
+		this.PlayerManager				= new. PlayerManager();
 		
 		for i, manager in ipairs( this.Managers ) do
 			if manager.Init then
@@ -87,58 +135,6 @@ class. Game
 				end
 			end
 		end
-		
-		function this.__OnPlayerJoin( ... )
-			this.PlayerJoin( source, ... );
-		end
-		
-		function this.__OnPlayerQuit( ... )
-			this.PlayerJoin( source, ... );
-		end
-		
-		function this.__OnChangeNick()
-			return cancelEvent();
-		end
-		
-		addEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
-		addEventHandler( "onPlayerQuit", 			root, this.__OnPlayerQuit );
-		addEventHandler( "onPlayerChangeNick",		root, this.__OnChangeNick );
-		
-		for i, player in ipairs( getElementsByType( "player" ) ) do
-			this.PlayerJoin( player );
-		end
-	end;
-	
-	_Game		= function()
-		removeEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
-		removeEventHandler( "onPlayerQuit", 		root, this.__OnPlayerQuit );
-		removeEventHandler( "onPlayerChangeNick",	root, this.__OnChangeNick );
-		
-		gDB.StartTransaction( true );
-		
-		if not this.Environment.RealSync then
-			local day	= this.Environment.Day;
-			local month	= this.Environment.Month;
-			local year	= this.Environment.Year;
-			
-			gDB.Query( "REPLACE INTO `game_config` ( `key`, `value` ) VALUE ( 'day', '" + day + "' ), ( 'month', '" + month + "' ), ( 'year', '" + year + "' )" );
-		end
-		
-		for i = table.getn( this.Managers ), 1, -1 do
-			local manager = this.Managers[ i ];
-			
-			if manager then
-				delete ( manager );
-			end
-		end
-		
-		gDB.Commit( true );
-		
-		this.Managers 		= NULL;
-		
-		this.__OnPlayerJoin = NULL;
-		this.__OnPlayerQuit = NULL;
-		this.__OnChangeNick = NULL;
 	end;
 	
 	DoPulse		= function()

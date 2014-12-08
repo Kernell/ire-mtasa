@@ -51,7 +51,6 @@
   <script src="Shared/Timer.lua"/>
   <script src="Shared/Vector3.lua"/>
   
-  
   <script src="Commands/IConsoleCommand.lua"/>
   
   <script src="Commands/CC_Bank.lua"/>
@@ -79,4 +78,8 @@
   <script src="Manager.lua"/>
   
   <script src="Environment.lua"/>
+  <script src="GroupManager.lua"/>
+  <script src="PlayerManager.lua"/>
+  
+  <script src="Group.lua"/>
 </meta>

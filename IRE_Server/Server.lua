@@ -14,11 +14,17 @@ class. Server
 		SERVER_COUNTDOWN_RESTART	= 2;
 	};
 	
-	CountDown		= 0;
-	CountDownType	= SERVER_COUNTDOWN_NONE;
+	static
+	{
+		CountDown		= 0;
+		CountDownType	= SERVER_COUNTDOWN_NONE;
+		
+		Game			= false;
+		DB				= false;
+		Console			= false;
+		Blowfish		= false;
+	};
 	
-	Game			= NULL;
-	DB				= NULL;
 	DoPulseTimer	= NULL;
 	
 	Server		= function()
@@ -27,20 +33,20 @@ class. Server
 		local MySQLPass		= get "mysql.password";
 		local MySQLDB		= get "mysql.dbname";
 		
-		DBPREFIX			= get "mysql.prefix";
-		DBENGINE			= get "mysql.engine";
+		_G.DBPREFIX			= get "mysql.prefix";
+		_G.DBENGINE			= get "mysql.engine";
 		
-		this.DB			= new. MySQL( MySQLUser, MySQLPass, MySQLDB, MySQLHost );
+		Server.DB			= new. MySQL( MySQLUser, MySQLPass, MySQLDB, MySQLHost );
 		
-		if not this.DB.Ping() then
+		if not Server.DB.Ping() then
 			return cancelEvent( true );
 		end
-
-		_G.gDB		= this.DB;
 		
-		this.Console	= new. Console();
-		this.Blowfish	= new. Blowfish( "576F726C644F66526F6C65506C6179426C6F77666973684B6579" );
-		this.Game		= new. Game();
+		Server.Console	= new. Console();
+		Server.Blowfish	= new. Blowfish( "576F726C644F66526F6C65506C6179426C6F77666973684B6579" );
+		Server.Game		= new. Game();
+		
+		Server.Game.Init();
 	end;
 	
 	_Server		= function()
@@ -48,20 +54,21 @@ class. Server
 			this.DoPulseTimer.Kill();
 		end
 		
-		delete ( this.Game );
-		delete ( this.DB );
-		delete ( this.Blowfish );
-		delete ( this.Console );
+		delete ( Server.Game );
+		delete ( Server.DB );
+		delete ( Server.Blowfish );
+		delete ( Server.Console );
 		
-		this.Blowfish 		= NULL;
-		this.Console 		= NULL;
-		this.Game			= NULL;
-		this.DB				= NULL;
+		Server.Blowfish 	= NULL;
+		Server.Console 		= NULL;
+		Server.Game			= NULL;
+		Server.DB			= NULL;
+		
 		this.DoPulseTimer	= NULL;
 	end;
 	
 	Startup		= function()
-		this.Console.Initialize();
+		Server.Console.Initialize();
 		
 		if this.DoPulseTimer then
 			this.DoPulseTimer.Kill();
@@ -75,24 +82,24 @@ class. Server
 	end;
 	
 	DoPulse		= function()
-		if this.Game then
-			this.Game.DoPulse();
+		if Server.Game then
+			Server.Game.DoPulse();
 		end
 		
-		if this.CountDown > 0 then 
-			this.CountDown = this.CountDown - 1;
+		if Server.CountDown > 0 then 
+			Server.CountDown = Server.CountDown - 1;
 			
-			if this.CountDownType ~= SERVER_COUNTDOWN_NONE then
-				if this.CountDown <= 10 or this.CountDown % 60 == 0 then
-					local sType		= this.CountDownType == SERVER_COUNTDOWN_SHUTDOWN and "Выключение" or "Рестарт";
+			if Server.CountDownType ~= SERVER_COUNTDOWN_NONE then
+				if Server.CountDown <= 10 or Server.CountDown % 60 == 0 then
+					local sType		= Server.CountDownType == SERVER_COUNTDOWN_SHUTDOWN and "Выключение" or "Рестарт";
 					
-				--	Player.Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( sType, this.CountDown % 3600 / 60, this.CountDown % 60  ) );
+				--	Player.Client().CFlowingText( ( "%s сервера через %d:%02d" ):format( sType, Server.CountDown % 3600 / 60, Server.CountDown % 60  ) );
 				end
 			
-				if this.CountDown == 0 then
-					if this.CountDownType == SERVER_COUNTDOWN_RESTART then
+				if Server.CountDown == 0 then
+					if Server.CountDownType == SERVER_COUNTDOWN_RESTART then
 						this.Restart();
-					elseif this.CountDownType == SERVER_COUNTDOWN_SHUTDOWN then
+					elseif Server.CountDownType == SERVER_COUNTDOWN_SHUTDOWN then
 						Server.Shutdown( "System timer" );
 					end
 				end

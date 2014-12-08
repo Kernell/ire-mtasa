@@ -388,7 +388,7 @@ class. MySQL
 		local Field		= Column.Field;
 		local Type		= Column.Type;
 		local Null		= Column.Null and ( Column.Null == "NO" and "NOT NULL" or "NULL" );
-		local Default	= Column.Default ~= false and ( Column.Default and ( CMySQL[ Column.Default ] or ( "'" + (string)(Column.Default) + "'" ) ) or "NULL" );
+		local Default	= Column.Default ~= false and ( Column.Default and ( MySQL[ Column.Default ] or ( "'" + (string)(Column.Default) + "'" ) ) or "NULL" );
 		local Extra		= NULL;
 		
 		if Default == "NULL" and Null == "NOT NULL" then

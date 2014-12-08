@@ -13,75 +13,63 @@ class. MySQLResult
 		Pool = {};
 	};
 	
-	m_pResult		= NULL;
+	result		= NULL;
 	
 	MySQLResult	= function( pResult )
-		this.m_pResult = pResult;
+		this.result = pResult;
 		
-		this.m_ID	= tostring( this.m_pResult );
+		this.ID	= tostring( this.result );
 		
-		MySQLResult.Pool[ this.m_ID ] = this;
+		MySQLResult.Pool[ this.ID ] = this;
 	end;
 	
 	_MySQLResult	= function()
-		if this.m_pResult then
-			this.m_pResult:free();
+		this.Free();
+	end;
+	
+	Free			= function()
+		if this.result then
+			this.result:free();
 			
-			MySQLResult.Pool[ this.m_ID ] = NULL;
+			MySQLResult.Pool[ this.ID ] = NULL;
 			
-			this.m_pResult = NULL;
+			this.result = NULL;
 		end
 	end;
 
 	Empty			= function()
-		return this.m_pResult == NULL;
+		return this.result == NULL;
 	end;
 	
 	DataSeek 		= function( offset )
-		return this.m_pResult:data_seek( offset );
+		return this.result:data_seek( offset );
 	end;
 	
 	FieldSeek 		= function( offset )
-		return this.m_pResult:field_seek( offset );
+		return this.result:field_seek( offset );
 	end;
 	
 	FieldTell 		= function()
-		return this.m_pResult:field_tell();
+		return this.result:field_tell();
 	end;
 	
 	NumFields 		= function()
-		return this.m_pResult:num_fields();
+		return this.result:num_fields();
 	end;
 	
 	NumRows			= function()
-		return this.m_pResult:num_rows();
+		return this.result:num_rows();
 	end;
 	
-	FetchRow		= function()
-		local t = false;
-		
-		if this.NumRows() > 0 then
-			t = {};
-			
-			for key, value in pairs( this.m_pResult:fetch_assoc() ) do
-				if value ~= mysql_null() then
-					t[ key ] = tonumber( value ) or value;
-				end
-			end
-		end
-		
-		return t;
-	end;
-	
-	FetchAssoc 		= function()
-		return this.m_pResult:rows_assoc();
+	FetchRow 		= function()
+		return this.result:rows_assoc();
 	end;
 	
 	GetArray 		= function()
 		local Array = {};
 		
 		if this.NumRows() > 0 then
-			for _, row in this.FetchAssoc() do
+			for _, row in this.result:rows_assoc() do
 				local Row = {};
 				
 				for key, value in pairs( row ) do
