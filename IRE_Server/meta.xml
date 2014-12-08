@@ -1,0 +1,82 @@
+<meta>
+  <info
+    name="Innovation Roleplay Engine"
+    author="Kernell"
+    type="gamemode"
+    version="1.0"
+  />
+  
+  <min_mta_version
+    server="1.4.0-9.06814.0"
+    client="1.4.0-9.06814.0"
+  />
+  
+  <aclrequest>
+    <right name="general.ModifyOtherObjects"                  access="true"></right>
+    
+    <right name="function.executeCommandHandler"              access="true"></right>
+    <right name="function.setServerConfigSetting"             access="true"></right>
+    <right name="function.startResource"                      access="true"></right>
+    <right name="function.restartResource"                    access="true"></right>
+    <right name="function.stopResource"                       access="true"></right>
+    <right name="function.shutdown"                           access="true"></right>
+    <right name="function.redirectPlayer"                     access="true"></right>
+    <right name="function.kickPlayer"                         access="true"></right>
+    <right name="function.addBan"                             access="true"></right>
+    <right name="function.banPlayer"                          access="true"></right>
+    <right name="function.fetchRemote"                        access="true"></right>
+    <right name="function.fetchRemote"                        access="true"></right>
+    <right name="function.aclReload"                          access="true"></right>
+  </aclrequest>
+  
+  <script src="Version.lua"/>
+
+  <script src="Shared/utils.lua"/>
+  <script src="Shared/Debug.lua"/>
+  <script src="Shared/class.lua"/>
+  <script src="Shared/timezone.lua"/>
+  <script src="Shared/base64.lua"/>
+  
+  <script src="Shared/Array.lua"/>
+  <script src="Shared/Blowfish.lua"/>
+  <script src="Shared/Color.lua"/>
+  <script src="Shared/DateTime.lua"/>
+  <script src="Shared/Element.lua"/>
+  <script src="Shared/ColShape.lua"/>
+  <script src="Shared/Blip.lua"/>
+  <script src="Shared/Marker.lua"/>
+  <script src="Shared/Object.lua"/>
+  <script src="Shared/Ped.lua"/>
+  <script src="Shared/Pickup.lua"/>
+  <script src="Shared/Timer.lua"/>
+  <script src="Shared/Vector3.lua"/>
+  
+  
+  <script src="Commands/IConsoleCommand.lua"/>
+  
+  <script src="Commands/CC_Bank.lua"/>
+  <script src="Commands/CC_Faction.lua"/>
+  <script src="Commands/CC_Game.lua"/>
+  <script src="Commands/CC_Map.lua"/>
+  <script src="Commands/CC_Marker.lua"/>
+  <script src="Commands/CC_NPC.lua"/>
+  <script src="Commands/CC_Player.lua"/>
+  <script src="Commands/CC_Property.lua"/>
+  <script src="Commands/CC_Race.lua"/>
+  <script src="Commands/CC_System.lua"/>
+  <script src="Commands/CC_UAC.lua"/>
+  <script src="Commands/CC_Vehicle.lua"/>
+  <script src="Commands/CC_Exec.lua"/>
+
+  <script src="MySQL.lua"/>
+  <script src="MySQLResult.lua"/>
+  
+  <script src="Resource.lua"/>
+  <script src="Console.lua"/>
+  <script src="Server.lua"/>
+  <script src="Game.lua"/>  
+  
+  <script src="Manager.lua"/>
+  
+  <script src="Environment.lua"/>
+</meta>

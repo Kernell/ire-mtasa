@@ -1,15 +1,18 @@
 [submodule "WORP_Server/Shared"]
 	path = WORP_Server/Shared
-	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+	url = https://Kernell@bitbucket.org/co-in/libs.git
 [submodule "WORP/Shared"]
 	path = WORP/Shared
-	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+	url = https://Kernell@bitbucket.org/co-in/libs.git
 [submodule "rp_nametags/Shared"]
 	path = rp_nametags/Shared
-	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+	url = https://Kernell@bitbucket.org/co-in/libs.git
 [submodule "rp_models/Shared"]
 	path = rp_models/Shared
-	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+	url = https://Kernell@bitbucket.org/co-in/libs.git
 [submodule "IRE_Shaders/Shared"]
 	path = IRE_Shaders/Shared
-	url = git@bitbucket.org:mtaroleplay/ire-shared-libs.git
+	url = https://Kernell@bitbucket.org/co-in/libs.git
+[submodule "IRE_Server/Shared"]
+	path = IRE_Server/Shared
+	url = https://Kernell@bitbucket.org/co-in/libs.git
