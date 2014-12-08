@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Map ( IConsoleCommand )
+class. CC_Map : IConsoleCommand
 {
 	CC_Map	= function( ... )
 		this.IConsoleCommand( ... );	

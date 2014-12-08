@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: MySQL
+class. MySQL
 {
 	m_bTransaction	= false;
 	

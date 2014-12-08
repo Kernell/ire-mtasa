@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: Console
+class. Console
 {
 	Console		= function()
 		this.Commands	= {};

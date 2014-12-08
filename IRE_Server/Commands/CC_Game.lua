@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Game ( IConsoleCommand )
+class. CC_Game : IConsoleCommand
 {
 	CC_Game	= function( ... )
 		this.IConsoleCommand( ... );	

@@ -7,7 +7,7 @@
 
 _DEBUG 			= VERSION == "1.0 development";
 
-class: Resource
+class. Resource
 {
 	static
 	{

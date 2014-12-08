@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Exec ( IConsoleCommand )
+class. CC_Exec : IConsoleCommand
 {
 	CC_Exec	= function( ... )
 		this.IConsoleCommand( ... );	

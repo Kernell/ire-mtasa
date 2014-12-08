@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_UAC ( IConsoleCommand )
+class. CC_UAC : IConsoleCommand
 {
 	CC_UAC	= function( ... )
 		this.IConsoleCommand( ... );	

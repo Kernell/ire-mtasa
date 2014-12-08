@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_NPC ( IConsoleCommand )
+class. CC_NPC : IConsoleCommand
 {
 	CC_NPC		= function( ... )
 		this.IConsoleCommand( ... );

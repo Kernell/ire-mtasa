@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Faction ( IConsoleCommand )
+class. CC_Faction : IConsoleCommand
 {
 	CC_Faction	= function( ... )
 		this.IConsoleCommand( ... );	

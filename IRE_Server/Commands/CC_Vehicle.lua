@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Vehicle ( IConsoleCommand )
+class. CC_Vehicle : IConsoleCommand
 {
 	CC_Vehicle	= function( ... )
 		this.IConsoleCommand( ... );

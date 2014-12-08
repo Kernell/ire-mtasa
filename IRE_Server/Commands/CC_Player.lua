@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Player ( IConsoleCommand )
+class. CC_Player : IConsoleCommand
 {
 	CC_Player	= function( ... )
 		this.IConsoleCommand( ... );	

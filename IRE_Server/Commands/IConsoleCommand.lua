@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: IConsoleCommand
+class. IConsoleCommand
 {
 	IConsoleCommand	= function( Name )
 		this.Name			= Name;

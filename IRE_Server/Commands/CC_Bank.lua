@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Bank ( IConsoleCommand )
+class. CC_Bank : IConsoleCommand
 {
 	CC_Bank	= function( ... )
 		this.IConsoleCommand( ... );	

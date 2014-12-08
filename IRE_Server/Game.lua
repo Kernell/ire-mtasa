@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: Game
+class. Game
 {
 	RegistrationEnabled		= true;
 	AllowMultiaccount		= false;

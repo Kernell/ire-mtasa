@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Race ( IConsoleCommand )
+class. CC_Race : IConsoleCommand
 {
 	CC_Race	= function( ... )
 		this.IConsoleCommand( ... );

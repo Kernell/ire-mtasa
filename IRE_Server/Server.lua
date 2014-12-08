@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: Server
+class. Server
 {
 	enum "eServerCountDown"
 	{

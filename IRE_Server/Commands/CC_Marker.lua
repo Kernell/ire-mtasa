@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Marker ( IConsoleCommand )
+class. CC_Marker : IConsoleCommand
 {
 	CC_Marker	= function( ... )
 		this.IConsoleCommand( ... );	

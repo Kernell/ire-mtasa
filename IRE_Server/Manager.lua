@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: Manager
+class. Manager
 {
 	m_List			= NULL;
 	

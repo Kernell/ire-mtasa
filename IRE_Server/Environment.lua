@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: Environment ( Manager )
+class. Environment : Manager
 {
 	MinuteDuration		= 15000;
 	RealSync			= false;

@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class: CC_Property ( IConsoleCommand )
+class. CC_Property : IConsoleCommand
 {
 	CC_Property	= function( ... )
 		this.IConsoleCommand( ... );	

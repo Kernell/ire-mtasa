@@ -5,10 +5,14 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-local MySQLResultList = {};
 
-class: MySQLResult
+class. MySQLResult
 {
+	static 
+	{
+		Pool = {};
+	};
+	
 	m_pResult		= NULL;
 	
 	MySQLResult	= function( pResult )
@@ -16,14 +20,14 @@ class: MySQLResult
 		
 		this.m_ID	= tostring( this.m_pResult );
 		
-		MySQLResultList[ this.m_ID ] = this;
+		MySQLResult.Pool[ this.m_ID ] = this;
 	end;
 	
 	_MySQLResult	= function()
 		if this.m_pResult then
 			this.m_pResult:free();
 			
-			MySQLResultList[ this.m_ID ] = NULL;
+			MySQLResult.Pool[ this.m_ID ] = NULL;
 			
 			this.m_pResult = NULL;
 		end
