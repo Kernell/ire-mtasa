@@ -74,14 +74,14 @@ class. Player : Ped
 		
 		local this = player;
 		
-		-- this.Tutorial			= new. PlayerTutorial	( player );
-		-- this.Animation			= new. PlayerAnimation	( player );
-		-- this.Spectator 			= new. PlayerSpectator	( player );
+		this.Tutorial			= new. PlayerTutorial	( player );
+		this.Animation			= new. PlayerAnimation	( player );
+		this.Spectator 			= new. PlayerSpectator	( player );
 		this.Camera 			= new. PlayerCamera		( player );
 		this.HUD 				= new. PlayerHUD		( player );
 		this.Chat 				= new. PlayerChat		( player );
 		this.Nametag 			= new. PlayerNametag	( player );
-		-- this.Bones				= new. PlayerBones		( player );
+		this.Bones				= new. PlayerBones		( player );
 		
 		this.Character 			= NULL;
 		this.Binds				= {};
@@ -110,7 +110,7 @@ class. Player : Ped
 	_Player	= function()
 		this.OnColShapeLeave( false );
 		
-		-- delete ( this.Tutorial );
+		delete ( this.Tutorial );
 		
 		if this.IsInGame() then
 			delete ( this.Character );
@@ -122,13 +122,13 @@ class. Player : Ped
 			Debug( "Removed player \"" + this.GetName() + " (" + this.GetID() + ")" );
 		end
 		
-		-- delete ( this.Animation );
-		-- delete ( this.Spectator );
+		delete ( this.Animation );
+		delete ( this.Spectator );
 		delete ( this.Camera );
 		delete ( this.HUD );
 		delete ( this.Chat );
 		delete ( this.Nametag );
-		-- delete ( this.Bones );
+		delete ( this.Bones );
 		
 		this.Tutorial	= NULL;
 		this.Animation	= NULL;
