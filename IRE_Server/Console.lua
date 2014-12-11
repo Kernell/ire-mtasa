@@ -130,12 +130,26 @@ class. Console
 	
 	static
 	{
-		Log		= function( ... )
-			local bResult, sMessage = pcall( string.format, ... );
+		Log		= function( format, ... )
+			local text = format;
 			
-			if not bResult then error( sMessage, 2 ) end
+			if ( ... ) then
+				local args = { ... };
+				
+				for i = 1, table.getn( args ) do
+					args[ i ] = args[ i ]:gsub( "%%", "%%%%" );
+				end
+				
+				local result;
+				
+				result, text = pcall( string.format, format, unpack( args ) );
+				
+				if not result then
+					error( text, 2 );
+				end
+			end
 			
-			return outputServerLog( sMessage );
+			return outputServerLog( text );
 		end;
 	}
 };
