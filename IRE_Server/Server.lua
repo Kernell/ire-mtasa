@@ -23,6 +23,7 @@ class. Server
 		DB				= false;
 		Console			= false;
 		Blowfish		= false;
+		RPC				= false;
 	};
 	
 	DoPulseTimer	= NULL;
@@ -33,10 +34,10 @@ class. Server
 		local MySQLPass		= get "mysql.password";
 		local MySQLDB		= get "mysql.dbname";
 		
-		_G.DBPREFIX			= get "mysql.prefix";
-		_G.DBENGINE			= get "mysql.engine";
-		
 		Server.DB			= new. MySQL( MySQLUser, MySQLPass, MySQLDB, MySQLHost );
+		
+		Server.DB.Prefix	= get "mysql.prefix";
+		Server.DB.Engine	= get "mysql.engine";
 		
 		if not Server.DB.Ping() then
 			return cancelEvent( true );
@@ -45,6 +46,7 @@ class. Server
 		Server.Console	= new. Console();
 		Server.Blowfish	= new. Blowfish( "576F726C644F66526F6C65506C6179426C6F77666973684B6579" );
 		Server.Game		= new. Game();
+		Server.RPC		= new. ClientRPC( resource.GetName() );
 		
 		Server.Game.Init();
 	end;

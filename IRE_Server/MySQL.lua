@@ -7,13 +7,15 @@
 
 class. MySQL
 {
-	m_bTransaction	= false;
+	Transaction	= false;
 	
-	DBUSER		= "root";
-	DBPASS		= "";
-	DBNAME		= "users";
-	DBHOST		= "localhost";
-	DBENGINE	= "MyISAM";
+	User		= "root";
+	Pass		= "";
+	Database	= "users";
+	Hostname	= "localhost";
+	
+	Prefix		= "";
+	Engine		= "MyISAM";
 	
 	static
 	{
@@ -22,11 +24,11 @@ class. MySQL
 	
 	MySQL = function( sUser, sPasswd, sDatabase, sHost, Options )
 		if sUser and sPasswd and sHost then
-			this.DBUSER 	= sUser or this.DBUSER;
-			this.DBPASS 	= sPasswd or this.DBPASS;
-			this.DBNAME 	= sDatabase or this.DBNAME;
-			this.DBHOST		= sHost or this.DBHOST;
-			this.DBENGINE	= Options and Options[ "engine" ] or this.DBENGINE;
+			this.User 		= sUser or this.User;
+			this.Pass 		= sPasswd or this.Pass;
+			this.Database 	= sDatabase or this.Database;
+			this.Hostname	= sHost or this.Hostname;
+			this.Engine		= Options and Options[ "engine" ] or this.Engine;
 			
 			this.Connect( sUser, sPasswd, sDatabase, sHost, Options );
 		end
@@ -42,7 +44,7 @@ class. MySQL
 			
 			this.m_pHandler		= NULL;
 			
-			Debug( "MySQL closed (" + this.DBHOST + ")" );
+			Debug( "MySQL closed (" + this.Hostname + ")" );
 			
 			return true;
 		end
@@ -52,15 +54,15 @@ class. MySQL
 	
 	Connect = function( sUser, sPasswd, sDatabase, sHost, Options )
 		if not this.m_pHandler or not this.Ping() then
-			this.m_pHandler = mysql_connect( this.DBHOST, this.DBUSER , this.DBPASS, this.DBNAME );
+			this.m_pHandler = mysql_connect( this.Hostname, this.User , this.Pass, this.Database );
 			
 			if not this.m_pHandler then
-				Debug( "Unable to connect to MySQL server (" + this.DBHOST + ")" );
+				Debug( "Unable to connect to MySQL server (" + this.Hostname + ")" );
 				
 				return false;
 			end
 			
-			Debug( "MySQL connected (" + this.DBHOST + ")" );
+			Debug( "MySQL connected (" + this.Hostname + ")" );
 			
 			this.Query( "SET NAMES utf8" );
 			this.Query( "SET lc_time_names = 'ru_RU'" );
@@ -75,7 +77,7 @@ class. MySQL
 		if not this.m_pHandler or not this.Ping() then
 			Debug( "MySQL server has gone away", 2 );
 			
-			this.Connect( this.DBUSER, this.DBPASS, this.DBNAME, this.DBHOST );
+			this.Connect( this.User, this.Pass, this.Database, this.Hostname );
 			
 			if not this.Ping() then
 				this.m_sLastError = 'MySQL server is lost';
@@ -213,7 +215,7 @@ class. MySQL
 			table.insert( Fields, sSecondary );
 			table.insert( Fields, sUnique );
 			
-			local sQuery = "CREATE TABLE `" + sTableName + "`(\n  " + table.concat( Fields, ",\n  " ) + "\n) ENGINE=" + this.DBENGINE + " DEFAULT CHARSET=utf8;";
+			local sQuery = "CREATE TABLE `" + sTableName + "`(\n  " + table.concat( Fields, ",\n  " ) + "\n) ENGINE=" + this.Engine + " DEFAULT CHARSET=utf8;";
 			
 			if this.Query( sQuery ) then
 				Debug( "MySQL - Created table " + sTableName, 3 );
@@ -339,18 +341,18 @@ class. MySQL
 	end;
 	
 	StartTransaction = function( bForce )
-		if this.DBENGINE == 'InnoDB' and not this.m_bTransaction then
-			this.m_bTransaction			= true;
-			this.m_bTransactionForce	= (bool)(bForce);
+		if this.Engine == 'InnoDB' and not this.Transaction then
+			this.Transaction		= true;
+			this.TransactionForce	= (bool)(bForce);
 			
 			this.Query( "START TRANSACTION" );
 		end
 	end;
 	
 	Commit = function( bForce )
-		if this.m_bTransaction and ( not this.m_bTransactionForce or bForce ) then
-			this.m_bTransaction			= false;
-			this.m_bTransactionForce	= false;
+		if this.Transaction and ( not this.TransactionForce or bForce ) then
+			this.Transaction		= false;
+			this.TransactionForce	= false;
 			
 			this.Query( "COMMIT" );
 		end
