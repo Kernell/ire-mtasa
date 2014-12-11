@@ -15,6 +15,35 @@ class. PlayerManager : Manager
 		
 		NEW_CHAR_CAMERA_POSITION	= new. Vector3( 1714.2, -1670.7, 42.9 );
 		NEW_CHAR_CAMERA_TARGET		= new. Vector3( 1628.2, -1719.5, 28.4 );
+		
+		AntiFloodCommands =
+		{
+			-- hardcoded
+			say			= true;
+			teamsay		= true;
+			me			= true;
+			--
+			GlobalOOC	= true;
+			o			= true;
+			LocalOOC	= true;
+			b			= true;
+			c			= true;
+			shout		= true;
+			s			= true;
+			whisper		= true;
+			w			= true;
+			try			= true;
+			['do']		= true;
+			dice		= true;
+			coin		= true;
+			-- phone
+			p			= true;
+			sms			= true;
+			-- adm
+			adminchat	= false;
+			a			= false;
+			pm			= false;
+		};
 	};
 
 	TeamLoggedIn	= NULL;
@@ -23,7 +52,7 @@ class. PlayerManager : Manager
 	PlayerManager	= function()
 		this.Manager();
 		
-		Server.DB.CreateTable( DBPREFIX + "characters",
+		Server.DB.CreateTable( Server.DB.Prefix + "characters",
 			{
 				{ Field = "id",					Type = "int(11) unsigned",					Null = "NO",	Key = "PRI", 		Default = NULL,	Extra = "auto_increment" };
 				{ Field = "user_id",			Type = "int(11)",							Null = "NO",	Key = "",			Default = NULL,	};
@@ -70,6 +99,8 @@ class. PlayerManager : Manager
 		root.OnPlayerJoin.Add( this.PlayerJoin );
 		root.OnPlayerQuit.Add( this.PlayerQuit );
 		root.OnPlayerChangeNick.Add( this.PlayerChangeNick );
+		root.OnPlayerDamage.Add( this.PlayerHit );
+		root.OnPlayerCommand.Add( this.PlayerCommand );
 if _DEBUG then
 		root.OnPlayerModInfo.Add( this.PlayerModInfo );
 end
@@ -79,6 +110,8 @@ end
 		root.OnPlayerJoin.Remove( this.PlayerJoin );
 		root.OnPlayerQuit.Remove( this.PlayerQuit );
 		root.OnPlayerChangeNick.Remove( this.PlayerChangeNick );
+		root.OnPlayerDamage.Remove( this.PlayerHit );
+		root.OnPlayerCommand.Remove( this.PlayerCommand );
 if _DEBUG then
 		root.OnPlayerModInfo.Remove( this.PlayerModInfo );
 end
@@ -106,10 +139,42 @@ end
 	end;
 
 	PlayerModInfo	= function( sender, e, file, List )
-		Debug( "ModInfo: " + player.GetName() + " - " + file );
+		Debug( "ModInfo: " + sender.GetName() + " - " + file );
 		
 		for i, mod in ipairs( List ) do
 			Debug( (string)(mod.id) + ": " + (string)(mod.name) + " (" + (string)(mod.hash) + ")" );
+		end
+	end;
+	
+	PlayerHit	= function( sender, e, attacker, weaponID, bodypart, loss )
+		if bodypart == 9 then
+			if sender.GetArmor() <= 0 then
+				sender.Kill( attacker, weaponID, 9 );
+			end
+		end
+	end;
+	
+	PlayerCommand	= function( sender, e, cmd )
+		if not PlayerManager.AntiFloodCommands[ cmd ] then
+			return;
+		end
+		
+		if sender.IsMuted() then
+			sender.Chat.Send( "Вы лишены права пользоваться чатом. Осталось: " + sender.GetMuted() + " секунд", 255, 128, 0 );
+			
+			e.Cancel();
+			
+			return;
+		end
+		
+		sender.Antiflood = ( sender.Antiflood or 0 ) + 1;
+		
+		if sender.Antiflood > 10 then
+			sender.SetMuted( 10 * 60 );
+			
+			sender.Chat.Send( "Вы лишены права пользоваться чатом на 10 минут!", 255, 0, 0 );
+		elseif sender.Antiflood > 5 then
+			sender.GetChat.Send( "Прекратите флудить, иначе Вы будете лишены права пользоваться чатом!", 255, 0, 0 );
 		end
 	end;
 
@@ -202,5 +267,9 @@ end
 		if _DEBUG then
 			Debug( string.format( "All players (%d) saved (%d ms)", count, getTickCount() - tick ) );
 		end
+	end;
+	
+	ClientHandle	= function( player, command, ... )
+		return true;
 	end;
 }
