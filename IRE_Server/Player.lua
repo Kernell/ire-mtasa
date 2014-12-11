@@ -784,8 +784,9 @@ class. Player : Ped
 
 		this.IsAdmin = adminDuty;
 
-		this.SetData( "Player:IsAdmin", 		this.IsAdmin );
-		this.SetData( "Player:Nametag:Color", 	this.IsAdmin and this.Groups[ 0 ].GetColor() );
+		this.SetData( "Player::IsAdmin", 		this.IsAdmin );
+		
+		this.Nametag.SetColor( this.IsAdmin and this.Groups[ 0 ].GetColor() );
 
 		this.Nametag.Update();
 
