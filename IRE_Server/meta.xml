@@ -70,6 +70,8 @@
   <script src="MySQL.lua"/>
   <script src="MySQLResult.lua"/>
   
+  <script src="ClientRPC.lua"/>
+  
   <script src="Resource.lua"/>
   <script src="Console.lua"/>
   <script src="Server.lua"/>
@@ -82,4 +84,5 @@
   <script src="PlayerManager.lua"/>
   
   <script src="Group.lua"/>
+  <script src="Player.lua"/>
 </meta>

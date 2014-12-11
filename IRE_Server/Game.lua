@@ -14,29 +14,9 @@ class. Game
 	Game		= function()
 		this.DebugTicks	= {};
 		this.Managers	= {};
-		
-		function this.__OnPlayerJoin( ... )
-			this.PlayerJoin( source, ... );
-		end
-		
-		function this.__OnPlayerQuit( ... )
-			this.PlayerJoin( source, ... );
-		end
-		
-		function this.__OnChangeNick()
-			return cancelEvent();
-		end
-		
-		addEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
-		addEventHandler( "onPlayerQuit", 			root, this.__OnPlayerQuit );
-		addEventHandler( "onPlayerChangeNick",		root, this.__OnChangeNick );
 	end;
 	
 	_Game		= function()
-		removeEventHandler( "onPlayerJoin",			root, this.__OnPlayerJoin );
-		removeEventHandler( "onPlayerQuit", 		root, this.__OnPlayerQuit );
-		removeEventHandler( "onPlayerChangeNick",	root, this.__OnChangeNick );
-		
 		Server.DB.StartTransaction( true );
 		
 		if not this.Environment.RealSync then
@@ -155,13 +135,5 @@ class. Game
 		this.DebugTicks[ "DoPulse" ] = getTickCount() - tick;
 		
 		root.SetData( "DebugDoPulseTicks", this.DebugTicks );
-	end;
-	
-	PlayerJoin	= function( playerEntity )
-		this.PlayerManager.Create( playerEntity );
-	end;
-	
-	PlayerQuit	= function( playerEntity, type, reason, responsePlayer )
-		this.PlayerManager.Unlink( type, reason, responsePlayer );
 	end;
 };

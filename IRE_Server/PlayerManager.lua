@@ -64,8 +64,8 @@ class. PlayerManager : Manager
 			}
 		);
 		
-		this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
-		this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
+		-- this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
+		-- this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
 
 		root.OnPlayerJoin.Add( this.PlayerJoin );
 		root.OnPlayerQuit.Add( this.PlayerQuit );
@@ -89,23 +89,23 @@ end
 		for _, player in pairs( getElementsByType( "player" ) ) do
 			this.PlayerJoin( player );
 		end
-
+		
 		return true;
 	end;
 
-	PlayerJoin	= function( player )
-		this.Create( player );
+	PlayerJoin	= function( sender, e )
+		this.Create( sender );
 	end;
 
-	PlayerQuit	= function( player, type, reason, responsePlayer )
-		this.Unlink( player, type, reason, responsePlayer );
+	PlayerQuit	= function( sender, e, type, reason, responsePlayer )
+		this.Unlink( sender, type, reason, responsePlayer );
 	end;
 
-	PlayerChangeNick	= function()
-		cancelEvent();
+	PlayerChangeNick	= function( sender, e, oldName, newName )
+		e.Cancel();
 	end;
 
-	PlayerModInfo	= function( player, file, List )
+	PlayerModInfo	= function( sender, e, file, List )
 		Debug( "ModInfo: " + player.GetName() + " - " + file );
 		
 		for i, mod in ipairs( List ) do
@@ -131,7 +131,7 @@ end
 		return player;
 	end;
 
-	Unlink	= function( playerEntity, type, reason, responsePlayerEntity )
+	Unlink	= function( player, type, reason, responsePlayerEntity )
 		player.Unlink( type, reason, responsePlayer );
 	end;
 
@@ -158,11 +158,11 @@ end
 	end;
 
 	RemoveFromList	= function( player )
-		this.m_List[ pPlayer:GetID() ]	= NULL;
+		this.m_List[ player:GetID() ]	= NULL;
 		
-		delete ( pPlayer );
+		delete ( player );
 		
-		pPlayer = NULL;	
+		player = NULL;	
 	end;
 
 	Get	= function( vArg1, bCaseSensitive )
@@ -200,7 +200,7 @@ end
 		end
 		
 		if _DEBUG then
-			Debug.Info( String.Format( "All players (%d) saved (%d ms)", count, getTickCount() - tick ) );
+			Debug( string.format( "All players (%d) saved (%d ms)", count, getTickCount() - tick ) );
 		end
 	end;
 }

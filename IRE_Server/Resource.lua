@@ -7,12 +7,12 @@
 
 _DEBUG 			= VERSION == "1.0 development";
 
-class. Resource
+class. Resource : Element
 {
 	static
 	{
 		Main	= function( this )
-			addEventHandler	( "onResourceStop", resourceRoot, Resource.OnStop, true, "high" );
+			resourceRoot.OnResourceStop.Add( Resource.OnStop, true, "high" );
 			
 			setGameType		( "Role-Playing Game" );
 			setMapName		( "Los Angeles" );
@@ -28,11 +28,11 @@ class. Resource
 			this.Server.Startup();
 		end;
 		
-		OnStop	= function( this )
+		OnStop	= function( sender, e, this )
 			delete ( this.Server );
 			this.Server 	= NULL;
 			
-			removeEventHandler( "onResourceStop", resourceRoot, Resource.OnStop );
+			resourceRoot.OnResourceStop.Remove( Resource.OnStop );
 		end;
 	};
 	
