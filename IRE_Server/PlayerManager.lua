@@ -101,6 +101,8 @@ class. PlayerManager : Manager
 		root.OnPlayerChangeNick.Add( this.PlayerChangeNick );
 		root.OnPlayerDamage.Add( this.PlayerHit );
 		root.OnPlayerCommand.Add( this.PlayerCommand );
+		root.OnPlayerChat.Add( this.PlayerChat );
+		root.OnPlayerPrivateMessage.Add( this.PlayerPrivateMessage );
 if _DEBUG then
 		root.OnPlayerModInfo.Add( this.PlayerModInfo );
 end
@@ -112,6 +114,8 @@ end
 		root.OnPlayerChangeNick.Remove( this.PlayerChangeNick );
 		root.OnPlayerDamage.Remove( this.PlayerHit );
 		root.OnPlayerCommand.Remove( this.PlayerCommand );
+		root.OnPlayerChat.Remove( this.PlayerChat );
+		root.OnPlayerPrivateMessage.Remove( this.PlayerPrivateMessage );
 if _DEBUG then
 		root.OnPlayerModInfo.Remove( this.PlayerModInfo );
 end
@@ -176,6 +180,16 @@ end
 		elseif sender.Antiflood > 5 then
 			sender.GetChat.Send( "Прекратите флудить, иначе Вы будете лишены права пользоваться чатом!", 255, 0, 0 );
 		end
+	end;
+	
+	PlayerChat	= function( sender, e, ... )
+		e.Cancel();
+		
+		sender.Chat.OnChat( ... );
+	end;
+	
+	PlayerPrivateMessage	= function( sender, e )
+		e.Cancel();
 	end;
 
 	DoPulse	= function( realTime )
