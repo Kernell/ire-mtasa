@@ -18,11 +18,12 @@ class. ClientRPC
 		TOO_MANY_REQUESTS	= 429;
 	};
 	
-	ClientRPC	= function( id )
-		this.ID	= id;
+	ClientRPC	= function( serverID, clientID )
+		this.ServerID	= serverID;
+		this.ClientID	= clientID;
 		
-		this.Server2ClientName	= "ClientRPC::Server2Client" + this.ID;
-		this.Client2ServerName	= "ClientRPC::Client2Server" + this.ID;
+		this.Server2ClientName	= "ClientRPC::" + this.ServerID + "2" + this.ClientID;
+		this.Client2ServerName	= "ClientRPC::" + this.ClientID + "2" + this.ServerID;
 		
 		this.Client2Server = function( data, ... )
 			if not client or not client.IsValid() or type( data ) ~= "table" then
@@ -32,7 +33,7 @@ class. ClientRPC
 			local vResult = ClientRPC.ClientHandle( client, data, ... );
 			
 			if data.ID then
-				client.RPC.NULL( vResult or ClientRPC.NOT_FOUND, data.ID );
+				client.RPC.NULL( vResult and ClientRPC.OK or ClientRPC.NOT_FOUND, data.ID, vResult );
 			end
 		end;
 		

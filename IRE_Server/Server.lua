@@ -46,7 +46,7 @@ class. Server
 		Server.Console	= new. Console();
 		Server.Blowfish	= new. Blowfish( "576F726C644F66526F6C65506C6179426C6F77666973684B6579" );
 		Server.Game		= new. Game();
-		Server.RPC		= new. ClientRPC( resource.GetName() );
+		Server.RPC		= new. ClientRPC( "IRE_Server", "IRE_Client" );
 		
 		Server.Game.Init();
 	end;
