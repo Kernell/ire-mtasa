@@ -16,3 +16,6 @@
 [submodule "IRE_Server/Shared"]
 	path = IRE_Server/Shared
 	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
+[submodule "IRE_Client/Shared"]
+	path = IRE_Client/Shared
+	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
