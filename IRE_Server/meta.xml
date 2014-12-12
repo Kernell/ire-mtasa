@@ -85,9 +85,13 @@
   
   <script src="Group.lua"/>
   
+  <script src="PlayerAnimation.lua"/>
   <script src="PlayerCamera.lua"/>
   <script src="PlayerHUD.lua"/>
   <script src="PlayerChat.lua"/>
   <script src="PlayerNametag.lua"/>
+  <script src="PlayerTutorial.lua"/>
+  <script src="PlayerSpectator.lua"/>
+  <script src="PlayerBones.lua"/>
   <script src="Player.lua"/>
 </meta>
