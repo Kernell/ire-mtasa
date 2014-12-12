@@ -1,0 +1,35 @@
+<meta>
+  <info
+    name="Innovation Roleplay Engine"
+    author="Kernell"
+    type="script"
+    version="1.0"
+  />
+  
+  <min_mta_version
+    server="1.4.0-9.06814.0"
+    client="1.4.0-9.06814.0"
+  />
+  
+  <script src="Shared/utils.lua"        type="client"/>
+  <script src="Shared/Debug.lua"        type="client"/>
+  <script src="Shared/class.lua"        type="client"/>
+  <script src="Shared/Easing.lua"       type="client"/>
+  <script src="Shared/Vector3.lua"      type="client"/>
+  <script src="Shared/Vector4.lua"      type="client"/>
+  <script src="Shared/Color.lua"        type="client"/>
+  <script src="Shared/Element.lua"      type="client"/>
+  <script src="Shared/Ped.lua"          type="client"/>
+  <script src="Shared/Player.lua"       type="client"/>
+  <script src="Shared/Blip.lua"         type="client"/>
+  <script src="Shared/ColShape.lua"     type="client"/>
+  <script src="Shared/Marker.lua"       type="client"/>
+  <script src="Shared/Object.lua"       type="client"/>
+  <script src="Shared/Pickup.lua"       type="client"/>
+  <script src="Shared/Timer.lua"        type="client"/>
+  <script src="Shared/DateTime.lua"     type="client"/>
+  
+  <script src="RPC.lua"        type="client"/>
+  
+  <script src="Resource.lua"        type="client"/>
+</meta>
