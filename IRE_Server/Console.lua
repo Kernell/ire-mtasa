@@ -137,7 +137,9 @@ class. Console
 				local args = { ... };
 				
 				for i = 1, table.getn( args ) do
-					args[ i ] = args[ i ]:gsub( "%%", "%%%%" );
+					if type( args[ i ] ) == "string" then
+						args[ i ] = args[ i ]:gsub( "%%", "%%%%" );
+					end
 				end
 				
 				local result;
