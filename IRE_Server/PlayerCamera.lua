@@ -34,7 +34,7 @@ class. PlayerCamera
 	end;
 	
 	SetInterior	= function( interior )
-		return setCameraInterior( this.Player, interior );
+		return setCameraInterior( this.Player, (int)(interior) );
 	end;
 	
 	SetFreeLookEnabled	= function( enabled )
