@@ -8,7 +8,7 @@
 class. PlayerHUD
 {
 	PlayerHUD		= function( player )
-		this.Player	= pClient;
+		this.Player	= player;
 	end;
 	
 	_PlayerHUD		= function( player )
