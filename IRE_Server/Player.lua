@@ -20,7 +20,7 @@ class. Player : Ped
 					local obj = 
 					{
 						__call	= function( tt, ... )
-							triggerClientEvent( this, Server.RPC.Server2Client, this, namespace, ... );
+							triggerClientEvent( this, Server.RPC.Server2ClientName, this, namespace, ... );
 						end;
 						
 						__index	= t.__index;
