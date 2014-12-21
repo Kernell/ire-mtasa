@@ -38,8 +38,8 @@ class. RPC
 		this.Server2ClientName	= "ClientRPC::" + this.ServerID + "2" + this.ClientID;
 		this.Client2ServerName	= "ClientRPC::" + this.ClientID + "2" + this.ServerID;
 		
-		this.Server2Client	= function( namespace, ... )
-			if namespace[ 1 ] == "NULL" then
+		this.Server2Client	= function( data, ... )
+			if data.Namespace[ 1 ] == "NULL" then
 				local args = { ... };
 				
 				local statusCode, id, result = unpack( args );
@@ -62,21 +62,33 @@ class. RPC
 				return;
 			end
 			
-			local current	= _G;
+			local result		= NULL;
+			local statusCode	= 200;
+			local current		= _G;
 			
-			for i, name in ipairs( namespace ) do
+			for i, name in ipairs( data.Namespace ) do
 				if current[ name ] then
 					current	= current[ name ];
 				else
-					error( "attempt to index '" + name + "'" );
+					if data.ID then
+						statusCode = 404;
+					else
+						error( "attempt to index '" + name + "'" );
+					end
 				end
 			end
 			
-			current( ... );
+			if statusCode == 200 then
+				result = current( ... );
+			end
+			
+			if data.ID then
+				triggerServerEvent( this.Client2ServerName, CLIENT, { ID = data.ID; Function = NULL; }, result, statusCode );
+			end
 		end
 		
 		addEvent( this.Server2ClientName, true );
-
+		
 		addEventHandler( this.Server2ClientName, root, this.Server2Client );
 		
 		_G.SERVER =
@@ -119,6 +131,10 @@ class. RPC
 	
 	Query	= function( id, key, ... )
 		local cr = coroutine.running();
+		
+		if not cr then
+			error( "RPC can be used only in the event or coroutine", 3 );
+		end
 		
 		local timer = setTimer( function() this.Timeout( id ) end, 5000, 1 );
 		
