@@ -57,13 +57,15 @@ class. Server
 		end
 		
 		delete ( Server.Game );
-		delete ( Server.DB );
 		delete ( Server.Blowfish );
 		delete ( Server.Console );
+		delete ( Server.RPC );
+		delete ( Server.DB );
 		
 		Server.Blowfish 	= NULL;
 		Server.Console 		= NULL;
 		Server.Game			= NULL;
+		Server.RPC			= NULL;
 		Server.DB			= NULL;
 		
 		this.DoPulseTimer	= NULL;

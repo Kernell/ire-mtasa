@@ -49,13 +49,13 @@ class. PlayerCamera
 		position	= position or Vector3();
 		target		= target or Vector3();
 		
-		this.Player.RPC.Camera.SetLocked( false );
+		this.Player.SetData( "Player::Camera::Locked", false );
 		
 		return setCameraMatrix( this.Player, position.X, position.Y, position.Z, target.X, target.Y, target.Z, ... );
 	end;
 
 	SetTarget	= function( target )
-		this.Player.RPC.Camera.SetLocked( false );
+		this.Player.SetData( "Player::Camera::Locked", false );
 		
 		return setCameraTarget( this.Player, target or this.Player );
 	end;

@@ -20,7 +20,37 @@ class. Player : Ped
 					local obj = 
 					{
 						__call	= function( tt, ... )
-							triggerClientEvent( this, Server.RPC.Server2ClientName, this, namespace, ... );
+							local cr = coroutine.running();
+							
+							if not cr then
+								triggerClientEvent( this, Server.RPC.Server2ClientName, this, { ID = NULL, Namespace = namespace; }, ... );
+								
+								return;
+							end
+							
+							local tick		= getTickCount();
+							
+							local id = this.ID + table.concat( namespace, '.' ) + (string)(tick);
+							
+							local handle = Server.RPC.CreateThread( id, cr );
+							
+							handle.Call( this, namespace, ... );
+							
+							coroutine.yield();
+							
+							local result = NULL;
+							
+							if handle.StatusCode == 200 then
+								result = handle.Result;
+							else
+								handle.Destroy();
+								
+								error( handle.StatusCode + " - " + handle.StatusText, 2 );
+							end
+							
+							handle.Destroy();
+							
+							return result;
 						end;
 						
 						__index	= t.__index;

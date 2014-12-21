@@ -9,58 +9,42 @@ _DEBUG 			= VERSION == "1.0 development";
 
 class. Resource : Element
 {
-	static
-	{
-		Main	= function( this )
-			resourceRoot.OnResourceStop.Add( Resource.OnStop, true, "high" );
-			
-			setGameType		( "Role-Playing Game" );
-			setMapName		( "Los Angeles" );
-			setRuleValue	( "Author", "Kernell" );
-			setRuleValue	( "Version", VERSION );
-			setRuleValue	( "License", "Proprietary Software" );
-			setRuleValue	( "ServerVersion", getVersion().tag );
-			
-			SetDefaultTimezone( "Europe/Moscow" );
-			
-			this.Server		= new. Server();
-			
-			this.Server.Startup();
-		end;
+	OnStart	= function()
+		setGameType		( "Role-Playing Game" );
+		setMapName		( "Los Angeles" );
+		setRuleValue	( "Author", "Kernell" );
+		setRuleValue	( "Version", VERSION );
+		setRuleValue	( "License", "Proprietary Software" );
+		setRuleValue	( "ServerVersion", getVersion().tag );
 		
-		OnStop	= function( sender, e, this )
-			delete ( this.Server );
-			this.Server 	= NULL;
-			
-			resourceRoot.OnResourceStop.Remove( Resource.OnStop );
-		end;
-	};
+		SetDefaultTimezone( "Europe/Moscow" );
+		
+		this.Server		= new. Server();
+		
+		this.Server.Startup();
+	end;
+	
+	OnStop	= function()
+		delete ( this.Server );
+		this.Server = NULL;
+		
+		this.GetRoot().OnResourceStart.Remove( Resource.OnStart );
+		this.GetRoot().OnResourceStop.Remove( Resource.OnStop );
+	end;
 	
 	Resource = function( resource )
-		this.API	=
-		{
-			__index	= function( _, sFunction )
-				return function( ... )
-					local result = { pcall( call, this, sFunction, ... ) };
-					
-					if not result[ 1 ] then
-						error( result[ 2 ], 2 );
-					end
-					
-					return unpack( result, 2 );
-				end;
-			end;
-		};
-		
-		setmetatable( this.API, this.API );
-		
-		if type( resource ) == 'string' then
+		if type( resource ) == "string" then
 			resource = getResourceFromName( resource );
 		end
 		
 		if resource then
 			resource( this );
 		end
+		
+		local this = resource;
+		
+		this.GetRoot().OnResourceStart.Add( this.OnStart, true, "high" );
+		this.GetRoot().OnResourceStop.Add( this.OnStop, true, "high" );
 		
 		return resource;
 	end;
@@ -150,8 +134,4 @@ class. Resource : Element
 	end;
 };
 
-addEventHandler( "onResourceStart", resourceRoot,
-	function( resource )
-		Resource.Main( resource );
-	end
-);
+new. Resource( resource );
