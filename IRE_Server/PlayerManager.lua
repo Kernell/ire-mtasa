@@ -237,7 +237,7 @@ end
 	end;
 
 	RemoveFromList	= function( player )
-		this.m_List[ player:GetID() ]	= NULL;
+		this.m_List[ player.GetID() ]	= NULL;
 		
 		delete ( player );
 		
@@ -272,8 +272,6 @@ end
 		
 		for i, player in pairs( this.GetAll() ) do
 			player.Unlink();
-
-			this.RemoveFromList( player );
 
 			count = count + 1;
 		end
