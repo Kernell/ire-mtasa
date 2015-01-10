@@ -65,6 +65,22 @@ class. MySQLResult
 		return this.result:rows_assoc();
 	end;
 	
+	GetRow			= function()
+		local t = false;
+		
+		if this.NumRows() > 0 then
+			t = {};
+			
+			for key, value in pairs( this.result:fetch_assoc() ) do
+				if value ~= mysql_null() then
+					t[ key ] = tonumber( value ) or value;
+				end
+			end
+		end
+		
+		return t;
+	end;
+	
 	GetArray 		= function()
 		local Array = {};
 		
