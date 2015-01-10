@@ -93,8 +93,8 @@ class. PlayerManager : Manager
 			}
 		);
 		
-		-- this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
-		-- this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
+		this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
+		this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
 
 		root.OnPlayerJoin.Add( this.PlayerJoin );
 		root.OnPlayerQuit.Add( this.PlayerQuit );
@@ -130,68 +130,6 @@ end
 		return true;
 	end;
 
-	PlayerJoin	= function( sender, e )
-		this.Create( sender );
-	end;
-
-	PlayerQuit	= function( sender, e, type, reason, responsePlayer )
-		this.Unlink( sender, type, reason, responsePlayer );
-	end;
-
-	PlayerChangeNick	= function( sender, e, oldName, newName )
-		e.Cancel();
-	end;
-
-	PlayerModInfo	= function( sender, e, file, List )
-		Debug( "ModInfo: " + sender.GetName() + " - " + file );
-		
-		for i, mod in ipairs( List ) do
-			Debug( (string)(mod.id) + ": " + (string)(mod.name) + " (" + (string)(mod.hash) + ")" );
-		end
-	end;
-	
-	PlayerHit	= function( sender, e, attacker, weaponID, bodypart, loss )
-		if bodypart == 9 then
-			if sender.GetArmor() <= 0 then
-				sender.Kill( attacker, weaponID, 9 );
-			end
-		end
-	end;
-	
-	PlayerCommand	= function( sender, e, cmd )
-		if not PlayerManager.AntiFloodCommands[ cmd ] then
-			return;
-		end
-		
-		if sender.IsMuted() then
-			sender.Chat.Send( "Вы лишены права пользоваться чатом. Осталось: " + sender.GetMuted() + " секунд", 255, 128, 0 );
-			
-			e.Cancel();
-			
-			return;
-		end
-		
-		sender.Antiflood = ( sender.Antiflood or 0 ) + 1;
-		
-		if sender.Antiflood > 10 then
-			sender.SetMuted( 10 * 60 );
-			
-			sender.Chat.Send( "Вы лишены права пользоваться чатом на 10 минут!", 255, 0, 0 );
-		elseif sender.Antiflood > 5 then
-			sender.GetChat.Send( "Прекратите флудить, иначе Вы будете лишены права пользоваться чатом!", 255, 0, 0 );
-		end
-	end;
-	
-	PlayerChat	= function( sender, e, ... )
-		e.Cancel();
-		
-		sender.Chat.OnChat( ... );
-	end;
-	
-	PlayerPrivateMessage	= function( sender, e )
-		e.Cancel();
-	end;
-
 	DoPulse	= function( realTime )
 		for ID, player in pairs( this.GetAll() ) do
 			player.DoPulse( realTime );
@@ -206,6 +144,8 @@ end
 			
 			return NULL;
 		end
+		
+		player.SetTeam( this.TeamNotLoggedIn );
 		
 		return player;
 	end;
@@ -282,6 +222,96 @@ end
 	end;
 	
 	ClientHandle	= function( player, command, ... )
-		return true;
+		if command == "Ready" then
+			player.ShowLoginScreen();
+			
+			player.ToggleControls( true, true, false );
+			player.DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous", "vehicle_left", "vehicle_right" );
+			
+			player.BindKey( "horn", "both", player.KeyVehicleHorn );
+			player.BindKey( "j", "up", player.KeyVehicleToggleEngine );
+			player.BindKey( "k", "up", player.KeyVehicleToggleLocked );
+			player.BindKey( "l", "up", player.KeyVehicleToggleLights );
+			
+			player.BindKey( "sprint", "both", player.KeySprint );
+			
+			return true;
+		elseif command == "SignIn" then
+			local data = ( { ... } )[ 1 ];
+			
+			if data then
+			
+			end
+			
+			return "Ошибка авторизации";
+		end
+		
+		return false;
 	end;
+	
+	-- Events
+	
+	PlayerJoin	= function( sender, e )
+		this.Create( sender );
+	end;
+
+	PlayerQuit	= function( sender, e, type, reason, responsePlayer )
+		this.Unlink( sender, type, reason, responsePlayer );
+	end;
+
+	PlayerChangeNick	= function( sender, e, oldName, newName )
+		e.Cancel();
+	end;
+
+	PlayerModInfo	= function( sender, e, file, List )
+		Debug( "ModInfo: " + sender.GetName() + " - " + file );
+		
+		for i, mod in ipairs( List ) do
+			Debug( (string)(mod.id) + ": " + (string)(mod.name) + " (" + (string)(mod.hash) + ")" );
+		end
+	end;
+	
+	PlayerHit	= function( sender, e, attacker, weaponID, bodypart, loss )
+		if bodypart == 9 then
+			if sender.GetArmor() <= 0 then
+				sender.Kill( attacker, weaponID, 9 );
+			end
+		end
+	end;
+	
+	PlayerCommand	= function( sender, e, cmd )
+		if not PlayerManager.AntiFloodCommands[ cmd ] then
+			return;
+		end
+		
+		if sender.IsMuted() then
+			sender.Chat.Send( "Вы лишены права пользоваться чатом. Осталось: " + sender.GetMuted() + " секунд", 255, 128, 0 );
+			
+			e.Cancel();
+			
+			return;
+		end
+		
+		sender.Antiflood = ( sender.Antiflood or 0 ) + 1;
+		
+		if sender.Antiflood > 10 then
+			sender.SetMuted( 10 * 60 );
+			
+			sender.Chat.Send( "Вы лишены права пользоваться чатом на 10 минут!", 255, 0, 0 );
+		elseif sender.Antiflood > 5 then
+			sender.GetChat.Send( "Прекратите флудить, иначе Вы будете лишены права пользоваться чатом!", 255, 0, 0 );
+		end
+	end;
+	
+	PlayerChat	= function( sender, e, ... )
+		e.Cancel();
+		
+		sender.Chat.OnChat( ... );
+	end;
+	
+	PlayerPrivateMessage	= function( sender, e )
+		e.Cancel();
+	end;
+	
+	---
 }

@@ -169,7 +169,7 @@ class. Player : Ped
 		this.Nametag	= NULL;
 		this.Bones		= NULL;
 		
-		this.RemoveData( "player_id" );
+		this.RemoveData( "Player::ID" );
 		this.Destroy();
 	end;
 	
@@ -229,42 +229,42 @@ class. Player : Ped
 	ShowLoginScreen = function()
 		this.InitLoginCamera();
 		
-		local result = Server.DB.Query( "SELECT `login`, `password` FROM `uac_users` WHERE `autologin` = '%d' LIMIT 1", this.GetSerial() );
+		local result = Server.DB.Query( "SELECT `login`, `password` FROM `uac_users` WHERE `autologin` = '%s' LIMIT 1", this.GetSerial() );
 		
 		if result then
-			local row = result.FetchRow();
+			local row = result.GetRow();
 			
 			result.Free();
 			
 			if row then
-				this.Client.ShowLoginScreen( true, false, row[ "login" ] );
+				this.RPC.UI.LoginScreen.Show( { login = row[ "login" ] } );
 				
 				return;
 			end
 		end
 		
-		this.Client.ShowLoginScreen( true );
+		this.RPC.UI.LoginScreen.Show( { login = "" } );
 	end;
 
 	InitLoginCamera = function()
 		if this.IsInVehicle() then
 			this.RemoveFromVehicle();
 		end
-
-		this.RemoveData( "player_level" );
-
+		
+		this.RemoveData( "Player::Level" );
+		
 		this.HUD.HideComponents( "all" );
 		this.Chat.Hide();
-
+		
 		this.Spawn( PlayerManager.DEFAULT_SPAWN_POSITION, 0, 0, 0, 0, Server.Game.PlayerManager.TeamNotLoggedIn );
-		this.SetName( "not_logged_in_" + this.GetID() );
-
+		this.SetName( "Not_logged_in_" + this.GetID() );
+		
 		this.Nametag.Hide();
 		this.Nametag.Update();
-
+		
 		this.SetAlpha( 0 );
 		this.SetCollisionsEnabled( false );
-
+		
 		this.Camera.SetInterior();
 		this.Camera.SetMatrix( PlayerManager.DEFAULT_CAMERA_POSITION, PlayerManager.DEFAULT_CAMERA_TARGET );
 		this.Camera.Fade( true );
@@ -664,7 +664,7 @@ class. Player : Ped
 	end;
 
 	ToggleControls	= function( enabled, gta, mta )
-		return toggleAllControls( enabled, gta, mta );
+		return toggleAllControls( this, enabled, gta, mta );
 	end;
 	
 	DisableControls	= function( ... )
@@ -873,4 +873,32 @@ class. Player : Ped
 		
 		return true;
 	end;
+	
+	-- Key handlers
+	
+	KeySprint			= function( key, state )
+		this.SetControlState( "walk", state == "up" );
+	end;
+	
+	KeyVehicleHorn		= function( key, state )
+		local vehicle = this.GetVehicle();
+		
+		if vehicle and this.GetVehicleSeat() == 0 then
+			vehicle.Horn( state == "down" );
+		end
+	end;
+	
+	KeyVehicleToggleEngine	= function()
+	
+	end;
+	
+	KeyVehicleToggleLocked	= function()
+		
+	end;
+	
+	KeyVehicleToggleLights	= function()
+		
+	end;
+	
+	--
 }
