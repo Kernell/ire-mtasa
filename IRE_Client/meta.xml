@@ -29,7 +29,35 @@
   <script src="Shared/Timer.lua"        type="client"/>
   <script src="Shared/DateTime.lua"     type="client"/>
   
-  <script src="RPC.lua"        type="client"/>
+  <script src="RPC.lua"             type="client"/>
+  <script src="CEGUI.lua"           type="client"/>
+  <script src="UIDialog.lua"        type="client"/>
+  <script src="UIManager.lua"       type="client"/>
+  <script src="UICursor.lua"        type="client"/>
+  <script src="UIFont.lua"          type="client"/>
+  <script src="UIRadialMenu.lua"    type="client"/>
   
   <script src="Resource.lua"        type="client"/>
+  
+  <!-- UI -->
+  
+  <file src="UI/LoginScreen.xml"/>
+  
+  <!-- Fonts -->
+  
+  <file src="Resources/Fonts/consola.ttf"/>
+  <file src="Resources/Fonts/consolab.ttf"/>
+  
+  <file src="Resources/Fonts/segoeui.ttf"/>
+  <file src="Resources/Fonts/segoeuib.ttf"/>
+  
+  <file src="Resources/Fonts/micross.ttf"/>
+  
+  <!-- Cursors -->
+  
+  <file src="Resources/Cursors/Arrow.png" />
+  <file src="Resources/Cursors/Move.png" />
+  <file src="Resources/Cursors/Link.png" />
+  <file src="Resources/Cursors/Text.png" />
+  <file src="Resources/Cursors/Unavailable.png" />
 </meta>
