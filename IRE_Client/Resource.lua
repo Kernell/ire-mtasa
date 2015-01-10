@@ -21,9 +21,18 @@ class. Resource
 	
 	OnStart		= function()
 		this.RPC	= new. RPC( "IRE_Server", "IRE_Client" );
+		this.UI		= new. UIManager();
+		
+		_G.UI = this.UI.UI;
+		
+		SERVER.PlayerManager( "Ready", guiGetScreenSize() );
 	end;
 	
 	OnStop		= function()
+		delete ( this.UI );
+		delete ( this.RPC );
+		
+		_G.UI = NULL;
 	end;
 };
 
