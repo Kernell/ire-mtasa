@@ -1,0 +1,417 @@
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2014
+-- License		Proprietary Software
+-- Version		1.0
+
+class. UIDialog
+{
+	static
+	{
+		Nodes	=
+		{
+			window		= "CreateWindow";
+			label		= "CreateLabel";
+			tab			= "CreateTab";
+			tabpanel	= "CreateTabPanel";
+			image		= "CreateImage";
+			scrollpane	= "CreateScrollPane";
+			scrollbar	= "CreateScrollBar";
+			radiobutton	= "CreateRadioButton";
+			progressbar	= "CreateProgressBar";
+			memo		= "CreateMemo";
+			gridlist	= "CreateGridList";
+			input		= "CreateEdit";
+			select		= "CreateComboBox";
+			checkbox	= "CreateCheckBox";
+			button		= "CreateButton";
+			
+			item	 	= "AddItem";
+		};
+	};
+	
+	Name		= NULL;
+	
+	UIDialog	= function( name )
+		this.BufferX, this.BufferY = guiGetScreenSize();
+		
+		local path	= "UI/" + name + ".xml";
+		
+		if fileExists( path ) then
+			this.Name	= name;
+			this.Struct	= {};
+			this.Vars	= {};
+			
+			local xml = xmlLoadFile( path );
+			
+			if xml then
+				this.LoadNode( this.Struct, xml );
+				
+				xmlUnloadFile( xml );
+			end
+		end
+	end;
+	
+	_UIDialog	= function()
+		this.Hide();
+		
+		resourceRoot.UI.UIList[ this.Name ] = NULL;
+		
+		this.Name	= NULL;
+		this.Struct	= NULL;
+		this.Vars	= NULL;
+	end;
+	
+	Destroy		= function()
+		delete ( this );
+	end;
+	
+	LoadNode	= function( struct, xmlNode )
+		for i, node in ipairs( xmlNodeGetChildren( xmlNode ) ) do
+			local nodeName		= xmlNodeGetName( node );
+			local attributes	= xmlNodeGetAttributes( node );
+			
+			if nodeName == "var" then
+				this.Vars[ attributes.name ] = attributes.value;
+			else			
+				if attributes.font then
+					attributes.font = UI.Font.CEGUI( unpack( string.split( attributes.font, " " ) ) );
+				end
+				
+				if attributes.color then
+					attributes.color = string.split( attributes.color, "," );
+				end
+				
+				if attributes.horizontalalign then
+					attributes.horizontalalign = string.split( attributes.horizontalalign, " " );
+				end
+				
+				attributes.node 	= node;
+				attributes.nodeName = nodeName;
+				
+				table.insert( struct, attributes );
+			end
+			
+			this.LoadNode( attributes, node );
+		end
+	end;
+	
+	Show		= function( vars )
+		for key, value in pairs( vars ) do
+			this.Vars[ key ] = value;
+		end
+		
+		if this.Window then
+			this.Hide();
+		end
+		
+		this.ElementNames = {};
+		this.ElementIDs = {};
+		
+		this.Create( this.Struct );
+		
+		this.Window.ShowCursor();
+	end;
+	
+	Hide		= function()
+		this.Window.HideCursor();
+		
+		if this.Window then
+			destroyElement( this.Window );
+		end
+		
+		this.Window = NULL;
+		
+		this.ElementNames = NULL;
+		this.ElementIDs = NULL;
+	end;
+	
+	IsVisible	= function()
+		return this.Window and guiGetVisible( this.Window );
+	end;
+	
+	IsValid		= function()
+		return this.Name ~= NULL;
+	end;
+	
+	Create		= function( struct, parent )
+		for i, data in ipairs( struct ) do
+			local funcName = UIDialog.Nodes[ data.nodeName ];
+			
+			if funcName then
+				for key, value in pairs( data ) do
+					if type( value ) == "string" and value[ 1 ] == "{" and value[ -1 ] == "}" then
+						local varName = value:sub( 2, -2 );
+						
+						if this.Vars[ varName ] then
+							data[ key ] = this.Vars[ varName ];
+						end
+					end
+				end
+				
+				if data.nodeName == "window" then
+					data.x			= data.x or "center";
+					data.y			= data.y or "center";
+					data.width		= data.width or ( this.BufferX * 0.5 );
+					data.height		= data.height or ( this.BufferY * 0.5 );
+				else
+					data.x			= data.x or 20;
+					data.y			= data.y or 20;
+					data.width		= data.width or 64;
+					data.height		= data.height or 64;
+				end
+				
+				data.relative	= false;
+				
+				if typeof( data.x ) == "number" and typeof( data.y ) == "number" then
+					data.relative = data.x <= 1.0 and data.y <= 1.0 and data.width <= 1.0 and data.height <= 1.0;
+				end
+				
+				if data.x == "center" then
+					data.x	= data.relative and ( 1.0 - data.width ) * 0.5 or ( this.BufferX - data.width ) * 0.5;
+				end
+				
+				if data.y == "center" then
+					data.y	= data.relative and ( 1.0 - data.width ) * 0.5 or ( this.BufferY - data.height ) * 0.5;
+				end
+				
+				local element = this[ funcName ]( data, parent );
+				
+				if data.name then
+					this.ElementNames[ data.name ] = element;
+				end
+				
+				if element then
+					element.Parent	= parent;
+					element.Name	= data.name;
+					element.X		= data.x;
+					element.Y		= data.y;
+					element.Width	= data.width;
+					element.Height	= data.height;
+					element.Type	= data.node;
+					
+					if data.cursor then
+						element.Cursor = data.cursor;
+					end
+					
+					if data.onclick then
+						element.OnClick = data.onclick;
+					end
+					
+					this.Create( data, element );
+				end
+			end
+		end
+	end;
+	
+	CreateWindow	= function( data )
+		local window = new. CEGUIWindow( data.x, data.y, data.width, data.height, data.title or "", data.relative );
+		
+		if data.sizable ~= NULL then
+			window.SetSizable( (bool)(data.sizable) );
+		end
+		
+		if data.movable ~= NULL then
+			window.SetMovable( (bool)(data.movable) );
+		end
+		
+		local function onClick( sender, e, ... )
+			this.OnClick( sender, e, ... );
+		end
+		
+		window.OnClientGUIClick.Add( onClick, true );
+		
+		this.Window = window;
+		
+		return window;
+	end;
+	
+	CreateLabel		= function( data, parent )
+		local element	= new. CEGUILabel( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
+		
+		if data.font then
+			element.SetFont( data.font );
+		end
+		
+		if data.color then
+			element.SetColor( unpack( data.color ) );
+		end
+		
+		if data.horizontalalign then
+			element.SetHorizontalAlign( data.horizontalalign[ 1 ], (bool)(data.horizontalalign[ 2 ]) );
+		end
+		
+		if data.verticalAlign then
+			element.SetVerticalAlign( data.verticalAlign );
+		end
+		
+		return element;
+	end;
+	
+	CreateTab		= function( data, parent )
+		local element	= new. CEGUITab( data.text, parent );
+		
+		if data.selected then
+			parent.SetSelected( element );
+		end
+		
+		return element;
+	end;
+	
+	CreateTabPanel	= function( data, parent )
+		local element	= new. CEGUITabPanel( data.x, data.y, data.width, data.height, data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateImage		= function( data, parent )
+		local element	= new. CEGUIImage( data.x, data.y, data.width, data.height, data.src, data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateScrollPane	= function( data, parent )
+		local element	= new. CEGUIScrollPane( data.x, data.y, data.width, data.height, data.relative, parent );
+		
+		element.SetScrollBars( data.horizontal ~= NULL, data.vertical ~= NULL );
+		
+		if data.horizontal then
+			element.SetHorizontalScrollPosition( data.horizontal );
+		end
+		
+		if data.vertical then
+			element.SetVerticalScrollPosition( data.vertical );
+		end
+		
+		return element;
+	end;
+	
+	CreateScrollBar		= function( data, parent )
+		local element	= new. CEGUIScrollBar( data.x, data.y, data.width, data.height, data.align == "horizontal", data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateRadioButton	= function( data, parent )
+		local element	= new. CEGUIRadioButton( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
+		
+		if data.selected then
+			element.SetSelected( true );
+		end
+		
+		return element;
+	end;
+	
+	CreateProgressBar	= function( data, parent )
+		local element	= new. CEGUIProgressBar( data.x, data.y, data.width, data.height, data.relative, parent );
+		
+		if data.progress then
+			element.SetProgress( data.progress );
+		end
+		
+		return element;
+	end;
+	
+	CreateMemo			= function( data, parent )
+		local element	= new. CEGUIMemo( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
+		
+		if data.readonly then
+			element.SetReadOnly( true );
+		end
+		
+		if data.caret then
+			element.SetCaretIndex( data.caret );
+		end
+		
+		return element;
+	end;
+	
+	CreateGridList		= function( data, parent )
+		local element	= new. CEGUIGridList( data.x, data.y, data.width, data.height, data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateEdit			= function( data, parent )
+		local element	= new. CEGUIEdit( data.x, data.y, data.width, data.height, data.value, data.relative, parent );
+		
+		if data.placeholder then
+			element.SetPlaceHolder( data.placeholders );
+		end
+		
+		if data.masked then
+			element.SetMasked( (bool)(data.masked) );
+		end
+		
+		if data.maxlength then
+			element.SetMaxLength( data.maxlength );
+		end
+		
+		if data.readonly then
+			element.SetReadOnly( true );
+		end
+		
+		if data.caret then
+			element.SetCaretIndex( data.caret );
+		end
+		
+		return element;
+	end;
+	
+	CreateComboBox		= function( data, parent )
+		local element	= new. CEGUIComboBox( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateCheckBox		= function( data, parent )
+		local element	= new. CEGUICheckBox( data.x, data.y, data.width, data.height, data.text, (bool)(data.selected), data.relative, parent );
+		
+		return element;
+	end;
+	
+	CreateButton		= function( data, parent )
+		local element	= new. CEGUIButton( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
+		
+		return element;
+	end;
+	
+	AddItem			= function( data, parent )
+		local parentType = parent and parent.Type;
+		
+		if parentType == "select" then
+			local value = xmlNodeGetValue( data.node );
+			
+			if value then
+				parent.AddItem( value );
+			end
+		end
+	end;
+	
+	-- Event raisers
+	
+	OnClick		= function( sender, e, ... )
+		if sender.OnClick then
+			local data = {};
+			
+			for name, element in pairs( this.ElementNames ) do
+				data[ name ] = element.GetValue();
+			end
+			
+			local result = SERVER.PlayerManager( sender.OnClick, data );
+			
+			if type( result ) == "string" then
+				local errorElement = this.ElementIDs.error
+				
+				if errorElement then
+					errorElement.SetText( result );
+				else
+					-- TODO: MessageBox
+					
+					Debug( result );
+				end
+			end
+		end
+	end;
+};
