@@ -274,7 +274,7 @@ class. Player : Ped
 		local result = Server.DB.Query( "SELECT admin_id, `groups`, name, password, ip, DATE_FORMAT( last_logout, '%d %M %Y г. %H:%i' ) as last_login_f, DATEDIFF( CURDATE(), last_logout ) AS last_login_d, settings, adminduty, muted_time, login_history, goldpoints FROM uac_users WHERE id = " + UserID + " LIMIT 1" );
 		
 		if result ~= NULL then
-			local row = result.FetchRow();
+			local row = result.GetRow();
 	
 			result.Free();
 
@@ -290,7 +290,7 @@ class. Player : Ped
 					table.remove( this.LoginHistory, 1 );
 				end
 				
-				local sUpdateQuery = "UPDATE `uac_users` SET \
+				local updateQuery = "UPDATE `uac_users` SET \
 					`login_history` = '" + table.concat( this.LoginHistory, '\n' ) + "',\
 					`serial` = '" + serial + "', `ip` = '" + ip + "',\
 					`last_login` = NOW(),\
@@ -298,7 +298,7 @@ class. Player : Ped
 					`autologin` = " + ( this.AutoLogin and ( "'" + serial + "'" ) or "NULL" ) + "\
 				WHERE `id` = " + UserID;
 
-				if Server.DB.Query( updateQuery ) then
+				if not Server.DB.Query( updateQuery ) then
 					Debug( Server.DB.Error(), 1 );
 				end
 				
@@ -331,7 +331,7 @@ class. Player : Ped
 		
 				this.GP = row[ "goldpoints" ];
 
-				this.Client.Settings.Load( not row[ "settings" ] and row[ "settings" ] or "" );
+			--	this.RPC.Settings.Load( not row[ "settings" ] and row[ "settings" ] or "" );
 		
 				-- Load characters
 		
@@ -369,7 +369,7 @@ class. Player : Ped
 			this.Groups = {};
 
 			if groups ~= NULL then
-				for i, groupID in groups:split( ',' ) do
+				for i, groupID in ipairs( groups:split( ',' ) ) do
 					local group = Server.Game.GroupManager.Get( (int)(groupID) );
 
 					if group ~= NULL then
@@ -612,7 +612,7 @@ class. Player : Ped
 	end;
 	
 	Ban	= function( reason, seconds, player )
-		return banPlayer( this, false, false, true, typeof( player ) == "Player" and player.GetUserName() or "Server", Reason, (int)(Seconds) )
+		return banPlayer( this, false, false, true, typeof( player ) == "Player" and player.GetUserName() or "Server", reason, (int)(seconds) );
 	end;
 
 	Kick	= function( reason )
@@ -814,9 +814,9 @@ class. Player : Ped
 
 		this.IsAdmin = adminDuty;
 
-		this.SetData( "Player::IsAdmin", 		this.IsAdmin );
+		this.SetData( "Player::IsAdmin", this.IsAdmin );
 		
-		this.Nametag.SetColor( this.IsAdmin and this.Groups[ 0 ].GetColor() );
+		this.Nametag.SetColor( this.IsAdmin and this.Groups[ 1 ].GetColor() );
 
 		this.Nametag.Update();
 
@@ -851,11 +851,11 @@ class. Player : Ped
 			end
 			
 			if characterCount == 0 then
-				this.RPC.SelectCharacter( "NEW", characterCount == 0 );
-			elseif characterCount == 1 and Game.CharactersLimit == 1 then
-				this.RPC.SelectCharacter( characters[ 0 ][ "name" ], characters[ 0 ][ "surname" ] );
+				this.RPC.UI.CharacterCreate( "NEW", characterCount == 0 );
+			elseif characterCount == 1 and Server.Game.CharactersLimit == 1 then
+				-- TODO: Select character
 			else
-				this.RPC.CUICharacterSelect( characters, Game.CharactersLimit == 0 or characterCount < Game.CharactersLimit );
+				this.RPC.UI.CharacterList( characters, Server.Game.CharactersLimit == 0 or characterCount < Server.Game.CharactersLimit );
 
 				this.Characters = characters;
 			end
