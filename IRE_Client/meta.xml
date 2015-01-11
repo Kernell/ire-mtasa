@@ -31,6 +31,7 @@
   
   <script src="RPC.lua"             type="client"/>
   <script src="CEGUI.lua"           type="client"/>
+  <script src="MessageBox.lua"      type="client"/>
   <script src="UIDialog.lua"        type="client"/>
   <script src="UIManager.lua"       type="client"/>
   <script src="UICursor.lua"        type="client"/>
@@ -60,4 +61,12 @@
   <file src="Resources/Cursors/Link.png" />
   <file src="Resources/Cursors/Text.png" />
   <file src="Resources/Cursors/Unavailable.png" />
+  
+  <!-- MessageBox -->
+  
+  <file src="Resources/Images/Error.png"/>
+  <file src="Resources/Images/Information.png"/>
+  <file src="Resources/Images/Okay.png"/>
+  <file src="Resources/Images/Warning.png"/>
+  <file src="Resources/Images/Question.png"/>
 </meta>
