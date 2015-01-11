@@ -240,7 +240,72 @@ end
 			local data = ( { ... } )[ 1 ];
 			
 			if data then
-			
+				if data.login == NULL or data.login:len() == 0 then
+					return "Введите логин";
+				end
+				
+				if data.password == NULL or data.password:len() == 0 then
+					return "Введите пароль";
+				end
+				
+				local query = "SELECT u.id, u.activation_code, u.ban, u.ban_reason, uu.name AS ban_user_name, DATE_FORMAT( u.ban_date, '%d/%m/%Y %h:%i:%s' ) AS ban_date \
+					FROM uac_users u \
+					LEFT JOIN uac_users uu ON uu.id = u.ban_user_id \
+					WHERE \
+						u.login = '" + Server.DB.EscapeString( data.login ) + "' \
+					AND u.password = '" + Server.Blowfish.Encrypt( data.password ) + "' \
+					AND u.deleted = 'No' ";
+				
+				local result = Server.DB.Query( query );
+				
+				if not result then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR;
+				end
+				
+				local row = result.GetRow();
+				
+				delete ( result );
+				
+				if not row or not row.id then
+					player.LoginAttempt = ( player.LoginAttempt or 0 ) + 1;
+					
+					if player.LoginAttempt > 3 then
+						player.Ban( "Попытка взлома (подбор пароля)", 1440 );
+						
+						return;
+					end
+					
+					return "Неверный логин или пароль";
+				end
+				
+				player.LoginAttempt = NULL;
+				
+				if row.activation_code then
+					return "Учётная запись не активирована";
+				end
+				
+				if row.ban == "Yes" then
+					local reason	= row.ban_reason and " (" + row.ban_reason + ")" or "";
+					local admin		= row.ban_user_name and ( "администратором " + row.ban_user_name ) or "";
+					
+					return "Ваша учётная запись заблокирована " + admin + reason;
+				end
+				
+				for _, plr in pairs( this.GetAll() ) do
+					if plr.UserID == row.id then
+						return "Другой игрок в настоящее время находится под этой учётной записью";
+					end
+				end
+				
+				player.AutoLogin	= data.rememberMe == true;
+				
+				setTimer( function() player.Login( row.id ); end, 1000, 1 );
+				
+				player.RPC.UI.LoginScreen.Hide();
+				
+				return true;
 			end
 			
 			return "Ошибка авторизации";
