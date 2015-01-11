@@ -6,8 +6,8 @@
     <label text="Регистрация" x="233" y="168" width="204" height="22" font="Consolas 10" color="0,64,255" horizontalalign="right false" cursor="Link" onclick="DoRegister"></label>
     <label text="E-mail:" x="30" y="168" width="204" height="22" font="Consolas 10"/>
     <label text="Пароль:" x="30" y="238" width="204" height="22" font="Consolas 10"></label>
-    <input name="login" value="{login}" x="30" y="190" width="407" height="28" maxlength="64"></input>
-    <input name="password" value="" x="30" y="260" width="407" height="28" maxlength="64" masked="true"></input>
+    <input name="login" value="{login}" x="30" y="190" width="407" height="28" maxlength="64" onaccept="SignIn"></input>
+    <input name="password" value="" x="30" y="260" width="407" height="28" maxlength="64" masked="true" onaccept="SignIn"></input>
     <checkbox name="rememberMe" text="Запомнить меня" checked="false" x="35" y="308" width="206" height="27" font="SegoeUI 9 Bold"></checkbox>
     <button text="Войти" x="352" y="308" width="83" height="28" onclick="SignIn"></button>
   </window>

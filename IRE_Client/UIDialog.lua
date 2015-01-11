@@ -199,6 +199,10 @@ class. UIDialog
 						element.OnClick = data.onclick;
 					end
 					
+					if data.onaccept then
+						element.OnAccept = data.onaccept;
+					end
+					
 					this.Create( data, element );
 				end
 			end
@@ -217,10 +221,19 @@ class. UIDialog
 		end
 		
 		local function onClick( sender, e, ... )
-			this.OnClick( sender, e, ... );
+			if sender.OnClick then
+				this.OnEvent( sender, e, sender.OnClick, ... );
+			end
+		end
+		
+		local function onAccept( sender, e, ... )
+			if sender.OnAccept then
+				this.OnEvent( sender, e, sender.OnAccept, ... );
+			end
 		end
 		
 		window.OnClientGUIClick.Add( onClick, true );
+		window.OnClientGUIAccepted.Add( onAccept, true );
 		
 		this.Window = window;
 		
@@ -391,26 +404,26 @@ class. UIDialog
 	
 	-- Event raisers
 	
-	OnClick		= function( sender, e, ... )
-		if sender.OnClick then
-			local data = {};
+	OnEvent		= function( sender, e, eventName, ... )
+		this.Window.SetEnabled( false );
+		
+		local data = {};
+		
+		for name, element in pairs( this.ElementNames ) do
+			data[ name ] = element.GetValue();
+		end
+		
+		local result = SERVER.PlayerManager( eventName, data );
+		
+		this.Window.SetEnabled( true );
+		
+		if type( result ) == "string" then	
+			local errorElement = this.ElementIDs.error;
 			
-			for name, element in pairs( this.ElementNames ) do
-				data[ name ] = element.GetValue();
-			end
-			
-			local result = SERVER.PlayerManager( sender.OnClick, data );
-			
-			if type( result ) == "string" then
-				local errorElement = this.ElementIDs.error
-				
-				if errorElement then
-					errorElement.SetText( result );
-				else
-					-- TODO: MessageBox
-					
-					Debug( result );
-				end
+			if errorElement then
+				errorElement.SetText( result );
+			else
+				this.Window.ShowDialog( new. MessageBox( result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error ) );
 			end
 		end
 	end;
