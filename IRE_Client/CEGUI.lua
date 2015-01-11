@@ -127,7 +127,7 @@ class. CEGUI
 		
 		table.insert( this.m_Dialogs, pDialog );
 		
-		this.Window.SetEnabled( false );
+		this.SetEnabled( false );
 		
 		local sDestructor	= "_" + classname( pDialog );
 		local vDestructor 	= pDialog[ sDestructor ];
@@ -135,8 +135,8 @@ class. CEGUI
 		pDialog[ sDestructor ] = function()
 			pDialog.Parent = NULL;
 			
-			this.Window.SetEnabled( true );
-			this.Window.BringToFront();
+			this.SetEnabled( true );
+			this.BringToFront();
 			this.ShowCursor();
 			
 			if vDestructor then
