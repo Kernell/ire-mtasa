@@ -74,6 +74,10 @@ class. MySQL
 	end;
 	
 	Query = function( sQuery, ... )
+		if not sQuery then
+			error( "bad argument #1 to 'MySQL.Query'", 2 );
+		end
+		
 		if not this.m_pHandler or not this.Ping() then
 			Debug( "MySQL server has gone away", 2 );
 			
