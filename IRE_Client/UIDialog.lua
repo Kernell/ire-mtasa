@@ -115,9 +115,9 @@ class. UIDialog
 	end;
 	
 	Hide		= function()
-		this.Window.HideCursor();
-		
 		if this.Window then
+			this.Window.HideCursor();
+		
 			destroyElement( this.Window );
 		end
 		
