@@ -162,8 +162,6 @@ class. UIDialog
 						local varName = value:sub( 2, -2 );
 						
 						if this.Vars[ varName ] ~= NULL then
-							Debug( (string)(this.Vars[ varName ]) );
-							
 							data[ key ] = this.Vars[ varName ];
 						end
 					end
