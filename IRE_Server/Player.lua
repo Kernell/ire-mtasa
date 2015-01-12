@@ -237,7 +237,7 @@ class. Player : Ped
 			result.Free();
 			
 			if row then
-				this.RPC.UI.LoginScreen.Show( { login = row[ "login" ] } );
+				this.RPC.UI.LoginScreen.Show( { login = row[ "login" ], remembered = true } );
 				
 				return;
 			end
@@ -308,7 +308,7 @@ class. Player : Ped
 				this.AdminID				= row[ "admin_id" ];
 				this.IsAdmin				= row[ "adminduty" ] == "Yes";
 				
-				this.InitGroups( row[ "groups" ] );
+				this.InitGroups( row[ "groups" ], true );
 				
 				this.MuteSeconds			= row[ "muted_time" ];
 				this.ReportData.Locked		= row[ "report_locked" ] == "Yes";
@@ -354,7 +354,7 @@ class. Player : Ped
 				local result = Server.DB.Query( "SELECT `groups` FROM `uac_users` WHERE `id` = " + this.UserID + " LIMIT 1" );
 
 				if result ~= NULL then
-					groups = result.FetchRow()[ "groups" ];
+					groups = result.GetRow()[ "groups" ];
 					
 					result.Free();
 				else
@@ -395,7 +395,7 @@ class. Player : Ped
 					local result = Server.DB.Query( "SELECT `admin_id` FROM `uac_users` WHERE `id` = " + this.UserID + " LIMIT 1" );
 					
 					if result ~= NULL then
-						this.AdminID = result.FetchRow()[ "admin_id"];
+						this.AdminID = result.FetchRow()[ "admin_id" ];
 
 						result.Free();
 					else
