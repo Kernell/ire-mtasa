@@ -379,7 +379,7 @@ class. UIDialog
 	end;
 	
 	CreateCheckBox		= function( data, parent )
-		local element	= new. CEGUICheckBox( data.x, data.y, data.width, data.height, data.text, (bool)(data.selected), data.relative, parent );
+		local element	= new. CEGUICheckBox( data.x, data.y, data.width, data.height, data.text, (bool)(data.checked), data.relative, parent );
 		
 		return element;
 	end;
