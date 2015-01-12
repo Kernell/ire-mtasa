@@ -199,6 +199,10 @@ class. UIDialog
 						element.OnClick = data.onclick;
 					end
 					
+					if data.ondoubleclick then
+						element.OnDoubleClick = data.ondoubleclick;
+					end
+					
 					if data.onaccept then
 						element.OnAccept = data.onaccept;
 					end
@@ -226,6 +230,12 @@ class. UIDialog
 			end
 		end
 		
+		local function onDoubleClick( sender, e, ... )
+			if sender.OnDoubleClick then
+				this.OnEvent( sender, e, sender.OnDoubleClick, ... );
+			end
+		end
+		
 		local function onAccept( sender, e, ... )
 			if sender.OnAccept then
 				this.OnEvent( sender, e, sender.OnAccept, ... );
@@ -233,6 +243,7 @@ class. UIDialog
 		end
 		
 		window.OnClientGUIClick.Add( onClick, true );
+		window.OnClientDoubleClick.Add( onDoubleClick, true );
 		window.OnClientGUIAccepted.Add( onAccept, true );
 		
 		this.Window = window;
