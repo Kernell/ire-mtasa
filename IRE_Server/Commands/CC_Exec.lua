@@ -11,12 +11,12 @@ class. CC_Exec : IConsoleCommand
 		this.IConsoleCommand( ... );	
 	end;
 	
-	Execute		= function( Player, ... )
-		if Player.IsLoggedIn() then
-			local bHaveAccess = Player.GetUserID() == 0;
+	Execute		= function( player, ... )
+		if player.IsLoggedIn() then
+			local bHaveAccess = player.UserID == 0;
 			
 			if not bHaveAccess then
-				for i, pGroup in ipairs( Player.GetGroups() ) do
+				for i, pGroup in ipairs( player.Groups ) do
 					if pGroup.GetID() == 0 then
 						bHaveAccess = true;
 						
@@ -29,10 +29,7 @@ class. CC_Exec : IConsoleCommand
 				return true;
 			end
 			
-			-- local pChat		= Player.GetChat();
 			local String	= table.concat( { ... }, ' ' );
-			
-			-- pChat.Send( "> " + String, 255, 200, 200 );
 			
 			if String[ 1 ] == '=' then
 				String = String:gsub( "=", "return ", 1 );
