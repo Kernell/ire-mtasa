@@ -18,7 +18,7 @@ class. PlayerNametag
 	SetColor	= function( color )
 		this.Player.SetData( "Player::Nametag::Color", color );
 		
-		return setPlayerNametagColor( this.Player, unpack( color ) );
+		return setPlayerNametagColor( this.Player, color.R, color.G, color.B );
 	end;
 	
 	GetColor	= function()
@@ -47,10 +47,10 @@ class. PlayerNametag
 	
 	Update	= function()
 		local text	= this.Player.VisibleName;
-		local color	= { 120, 120, 120 };
+		local color	= new. Color( 120, 120, 120 );
 		
 		if this.Player.IsInGame() then
-			color	= { 255, 255, 255 };
+			color	= new. Color( 255, 255, 255 );
 		end
 		
 		if not this.Player.IsAdmin then
