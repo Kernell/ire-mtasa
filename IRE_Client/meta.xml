@@ -43,6 +43,7 @@
   <!-- UI -->
   
   <file src="UI/LoginScreen.xml"/>
+  <file src="UI/CharacterList.xml"/>
   
   <!-- Fonts -->
   

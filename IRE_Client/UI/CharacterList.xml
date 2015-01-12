@@ -1,0 +1,14 @@
+<ui>
+  <window title="Выбор персонажа" width="550" height="260" sizable="false">
+    <var name="canCreate" value="false"></var>
+    <gridlist name="characters" x="0" y="25" width="550" height="185" ondoubleclick="Character::Login">
+      <column name="name" title="Имя" width="0.12"></column>
+      <column name="surname" title="Фамилия" width="0.12"></column>
+      <column name="status" title="Статус" width="0.18"></column>
+      <column name="created" title="Создан" width="0.25"></column>
+      <column name="last_login" title="Последний вход" width="0.25"></column>
+    </gridlist>
+    <button text="Создать" x="460" y="220" width="83" height="28" onclick="Character::Create" enabled="{canCreate}"></button>
+    <button text="Выбрать" x="375" y="220" width="83" height="28" onclick="Character::Login"></button>
+  </window>
+</ui>
