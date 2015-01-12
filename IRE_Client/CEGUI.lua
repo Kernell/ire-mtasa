@@ -463,6 +463,14 @@ class. CEGUIGridList : CEGUI
 	SetItemColor	= function( rowIndex, columnIndex, red, green, blue, alpha )
 		return guiGridListSetItemColor( this, rowIndex, columnIndex, red, green, blue, alpha or 255 );
 	end;
+	
+	GetValue		= function()
+		local rowIndex, columnIndex = this.GetSelectedItem();
+		
+		if rowIndex and columnIndex and rowIndex ~= -1 and columnIndex ~= -1 then
+			return this.GetItemData( rowIndex, columnIndex );
+		end
+	end;
 };
 
 class. CEGUIEdit : CEGUI

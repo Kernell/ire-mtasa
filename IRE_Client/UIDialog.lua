@@ -22,6 +22,7 @@ class. UIDialog
 			progressbar	= "CreateProgressBar";
 			memo		= "CreateMemo";
 			gridlist	= "CreateGridList";
+			column		= "AddGridListColumn";
 			input		= "CreateEdit";
 			select		= "CreateComboBox";
 			checkbox	= "CreateCheckBox";
@@ -35,6 +36,10 @@ class. UIDialog
 	
 	UIDialog	= function( name )
 		this.BufferX, this.BufferY = guiGetScreenSize();
+		
+		if type( name ) ~= "string" then
+			error( "bad argument #1 for 'name' (expected string, got " + type( name ) + ")", 2 );
+		end
 		
 		local path	= "UI/" + name + ".xml";
 		
@@ -97,9 +102,11 @@ class. UIDialog
 		end
 	end;
 	
-	Show		= function( vars )
-		for key, value in pairs( vars ) do
-			this.Vars[ key ] = value;
+	Show		= function( vars, data )
+		if vars then
+			for key, value in pairs( vars ) do
+				this.Vars[ key ] = value;
+			end
 		end
 		
 		if this.Window then
@@ -110,6 +117,16 @@ class. UIDialog
 		this.ElementIDs = {};
 		
 		this.Create( this.Struct );
+		
+		if data then
+			for name, items in pairs( data ) do
+				local list = this.ElementNames[ name ];
+				
+				if list then
+					this.FillGridList( list, items );
+				end
+			end
+		end
 		
 		this.Window.ShowCursor();
 	end;
@@ -144,7 +161,9 @@ class. UIDialog
 					if type( value ) == "string" and value[ 1 ] == "{" and value[ -1 ] == "}" then
 						local varName = value:sub( 2, -2 );
 						
-						if this.Vars[ varName ] then
+						if this.Vars[ varName ] ~= NULL then
+							Debug( (string)(this.Vars[ varName ]) );
+							
 							data[ key ] = this.Vars[ varName ];
 						end
 					end
@@ -191,6 +210,10 @@ class. UIDialog
 					element.Height	= data.height;
 					element.Type	= data.node;
 					
+					if type( data.enabled ) ~= "nil" then
+						element.SetEnabled( (bool)(data.enabled) );
+					end
+					
 					if data.cursor then
 						element.Cursor = data.cursor;
 					end
@@ -213,7 +236,7 @@ class. UIDialog
 		end
 	end;
 	
-	CreateWindow	= function( data )
+	CreateWindow		= function( data )
 		local window = new. CEGUIWindow( data.x, data.y, data.width, data.height, data.title or "", data.relative );
 		
 		if data.sizable ~= NULL then
@@ -243,7 +266,7 @@ class. UIDialog
 		end
 		
 		window.OnClientGUIClick.Add( onClick, true );
-		window.OnClientDoubleClick.Add( onDoubleClick, true );
+		window.OnClientGUIDoubleClick.Add( onDoubleClick, true );
 		window.OnClientGUIAccepted.Add( onAccept, true );
 		
 		this.Window = window;
@@ -251,7 +274,7 @@ class. UIDialog
 		return window;
 	end;
 	
-	CreateLabel		= function( data, parent )
+	CreateLabel			= function( data, parent )
 		local element	= new. CEGUILabel( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
 		
 		if data.font then
@@ -273,7 +296,7 @@ class. UIDialog
 		return element;
 	end;
 	
-	CreateTab		= function( data, parent )
+	CreateTab			= function( data, parent )
 		local element	= new. CEGUITab( data.text, parent );
 		
 		if data.selected then
@@ -283,13 +306,13 @@ class. UIDialog
 		return element;
 	end;
 	
-	CreateTabPanel	= function( data, parent )
+	CreateTabPanel		= function( data, parent )
 		local element	= new. CEGUITabPanel( data.x, data.y, data.width, data.height, data.relative, parent );
 		
 		return element;
 	end;
 	
-	CreateImage		= function( data, parent )
+	CreateImage			= function( data, parent )
 		local element	= new. CEGUIImage( data.x, data.y, data.width, data.height, data.src, data.relative, parent );
 		
 		return element;
@@ -357,6 +380,36 @@ class. UIDialog
 		return element;
 	end;
 	
+	AddGridListColumn	= function( data, parent )
+		local index = parent.AddColumn( data.title, data.width );
+		
+		if not parent.columns then
+			parent.columns = {};
+		end
+		
+		parent.columns[ data.title ] =
+		{
+			index	= index;
+			title	= data.title;
+			name	= data.name;
+		};
+	end;
+	
+	FillGridList		= function( list, items )
+		for i, item in pairs( items ) do
+			local row 	= list.AddRow();
+			
+			if row then
+				for title, column in pairs( list.columns ) do				
+					local name = column.name;
+					
+					list.SetItemText( row, column.index, item[ name ], false, false );
+					list.SetItemData( row, column.index, item.id );
+				end
+			end
+		end
+	end;
+	
 	CreateEdit			= function( data, parent )
 		local element	= new. CEGUIEdit( data.x, data.y, data.width, data.height, data.value, data.relative, parent );
 		
@@ -401,7 +454,7 @@ class. UIDialog
 		return element;
 	end;
 	
-	AddItem			= function( data, parent )
+	AddItem				= function( data, parent )
 		local parentType = parent and parent.Type;
 		
 		if parentType == "select" then
@@ -413,29 +466,46 @@ class. UIDialog
 		end
 	end;
 	
+	--
+	
+	Error				= function( text )
+		local errorElement = this.ElementIDs.error;
+		
+		if errorElement then
+			errorElement.SetText( text );
+		else
+			this.Window.ShowDialog( new. MessageBox( text, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error ) );
+		end
+	end;
+	
 	-- Event raisers
 	
 	OnEvent		= function( sender, e, eventName, ... )
-		this.Window.SetEnabled( false );
-		
+		local count = 0;
 		local data = {};
 		
 		for name, element in pairs( this.ElementNames ) do
 			data[ name ] = element.GetValue();
+			
+			if data[ name ] then
+				count = count + 1;
+			end
 		end
+		
+		if count == 0 then
+			return;
+		end
+		
+		this.Window.SetEnabled( false );
 		
 		local result = SERVER.PlayerManager( eventName, data );
 		
 		this.Window.SetEnabled( true );
 		
 		if type( result ) == "string" then	
-			local errorElement = this.ElementIDs.error;
-			
-			if errorElement then
-				errorElement.SetText( result );
-			else
-				this.Window.ShowDialog( new. MessageBox( result, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error ) );
-			end
+			this.Error( result );
+		elseif result == -1 then
+			this.Hide();
 		end
 	end;
 };
