@@ -1,9 +1,11 @@
 -- Innovation Roleplay Engine
 --
 -- Author		Kernell
--- Copyright	© 2011 - 2014
+-- Copyright	© 2011 - 2015
 -- License		Proprietary Software
 -- Version		1.0
+
+addEvent( "onClientCommand", true );
 
 class. Console
 {
@@ -14,11 +16,17 @@ class. Console
 		
 		this.__OnCommand	= function( ... )
 			if client then
-				local Result = this.ExecuteCommand( client, ... );
+				local result, red, green, blue = this.ExecuteCommand( client, ... );
 			
-				if Result then
-					triggerClientEvent( client, "onClientCommandResult", client, Result );
+				if result then
+					if red and green and blue then
+						result = string.format( "#%02x%02x%02x%s", red, green, blue, result );
+					end
+					
+					triggerClientEvent( client, "Console::StdOut", client, result );
 				end
+				
+				triggerClientEvent( client, "Console::Return", client );
 			end
 		end;
 		
@@ -70,7 +78,7 @@ class. Console
 		
 		if CC then
 			if Player.IsLoggedIn() and Player.HaveAccess( "command." + Name ) then
-				Console.Log( "%s (%s): %s %s", Player.GetName(), Player.GetUserName(), Name, table.concat( { ... }, ' ' ) );
+				Console.Log( "%s (%s): %s %s", Player.GetName(), Player.UserName, Name, table.concat( { ... }, ' ' ) );
 				
 				return CC.Execute( Player, ... );
 			end
