@@ -7,6 +7,8 @@
 
 class. PlayerNametag
 {
+	Distance		= 8.0;
+	
 	PlayerNametag	= function( player )
 		this.Player = player;
 	end;
@@ -43,6 +45,10 @@ class. PlayerNametag
 
 	Hide	= function()
 		return this.Player.SetData( "Player::Nametag::Showing", false );
+	end;
+	
+	SetMaxDistance	= function( distance )
+		return this.Player.SetData( "Player::Nametag::Distance", distance or this.Distance );
 	end;
 	
 	Update	= function()
