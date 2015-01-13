@@ -76,7 +76,7 @@ class. PlayerManager : Manager
 				{ Field = "interior",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "dimension",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "position",			Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "(0,0,0)",	};
-				{ Field = "rotation",			Type = "float",								Null = "NO", 	Key = "",			Default = 0,	};
+				{ Field = "rotation",			Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "(0,0,0)",	};
 				{ Field = "skin",				Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "money",				Type = "double",							Null = "NO", 	Key = "",			Default = 1000,	};
 				{ Field = "pay",				Type = "int(10) unsigned",					Null = "NO", 	Key = "",			Default = 0,	};
@@ -236,7 +236,9 @@ end
 			player.BindKey( "sprint", "both", player.KeySprint );
 			
 			return true;
-		elseif command == "SignIn" then
+		end
+		
+		if command == "SignIn" then
 			local data = ( { ... } )[ 1 ];
 			
 			if data then
@@ -309,6 +311,97 @@ end
 			end
 			
 			return "Ошибка авторизации";
+		end
+		
+		if command == "Character::Login" then
+			if not player.IsLoggedIn() then
+				return ClientRPC.UNAUTHORIZED;
+			end
+			
+			local data = ( { ... } )[ 1 ];
+			
+			if data then
+				local characterID = (int)(data.characters);
+				
+				if characterID > 0 then
+					if player.IsInGame() then
+						Debug( player.GetName() + " arealy in game", 2 );
+						
+						return true;
+					end
+					
+					for _, p in pairs( this.GetAll() ) do
+						if p.IsInGame() and p.GetID() == characterID then
+							Debug( "This character arealy in game", 2 );
+							
+							return "Этот персонаж уже в игре";
+						end
+					end
+					
+					local result = Server.DB.Query( "SELECT *, \
+						DATE_FORMAT( created, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS created, \
+						DATE_FORMAT( last_login, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS last_login, \
+						DATE_FORMAT( date_of_birdth, '%%d/%%m/%%Y' ) AS date_of_birdth, \
+						UNIX_TIMESTAMP( c.last_logout ) AS last_logout_t FROM " + Server.DB.Prefix + "characters c\
+						WHERE c.id = %d AND c.status = 'Активен'", characterID );
+						
+					if not result then
+						Debug( Server.DB.Error(), 1 );
+						
+						return TEXT_DB_ERROR;
+					end
+					
+					local row = result.GetRow();
+			
+					delete ( result );
+					
+					if row then
+						local character		= new. Character( player, row );
+						
+						player.Character 	= character;
+						player.InGameCount	= 0;
+						
+						player.SetName( character.GetName():gsub( " ", "_" ) );
+						player.SetTeam( this.TeamLoggedIn );
+						player.SetData( "Player::Level", character.Level );
+						
+						player.Nametag.Update();
+						
+						player.Camera.Fade( false );
+						
+						setTimer(
+							function()
+								player.SetAlpha( 255 );
+								player.SetCollisionsEnabled( true );
+								
+								character.Spawn( new. Vector3( row.position ), row.rotation, row.interior, row.dimension );
+								character.SetHealth( row.health );
+								character.SetArmor( row.armor );
+								
+								player.HUD.Show();
+								player.HUD.ShowComponents( "crosshair" );
+								player.Chat.Show();
+								player.Nametag.Show();
+								
+								player.Camera.SetInterior( interior );
+								player.Camera.SetTarget();
+								player.Camera.Fade( true );
+							end,
+							1000, 1
+						);
+						
+						if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "characters SET last_login = NOW() WHERE id = '" + characterID + "'" ) then
+							Debug( Server.DB.Error(), 1 ); 
+						end
+						
+					--	player.RPC.OnCharacterLogin( character.GetID(), character.Name, character.Surname );
+						
+						return -1;
+					end
+				end
+			end
+			
+			return ClientRPC.BAD_REQUEST;
 		end
 		
 		return false;

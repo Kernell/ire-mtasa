@@ -96,4 +96,7 @@
   <script src="PlayerSpectator.lua"/>
   <script src="PlayerBones.lua"/>
   <script src="Player.lua"/>
+  
+  <script src="Character.lua"/>
+  <script src="CharacterSkin.lua"/>
 </meta>
