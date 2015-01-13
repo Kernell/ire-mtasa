@@ -1044,12 +1044,10 @@ class. CharacterSkin
 	CharacterSkin	= function( skinID )
 		this.ID				= skinID;
 		this.Name			= SKIN_NAMES[ skinID ] or "invalid skin " + skinID;
-		this.Color			= skins[ skin ] and skins[ skin ].color;
-		this.Gender			= skins[ skin ] and skins[ skin ].gender;
-		this.AnimGroup		= SKIN_ANIM_GROUPS[ skin ];
-		this.WalkingStyle	= SKIN_WALKING_STYLES[ skin ];
-		
-		
+		this.Color			= skins[ skinID ] and skins[ skinID ].color;
+		this.Gender			= skins[ skinID ] and skins[ skinID ].gender;
+		this.AnimGroup		= SKIN_ANIM_GROUPS[ skinID ];
+		this.WalkingStyle	= SKIN_WALKING_STYLES[ skinID ];
 	end;
 	
 	GetID			= function()
