@@ -92,7 +92,7 @@ class. PlayerChat
 		local char = this.Player.Character;
 		
 		if char then
-			if this.Player.IsAdmin() then
+			if this.Player.IsAdmin then
 				this.LocalOOC( message );
 			else
 				local gender = char.GetSkin().GetGender() or "unknown";
@@ -166,7 +166,7 @@ class. PlayerChat
 		local visibleName	= this.Player.VisibleName;
 		local text	= "*" + visibleName + ( this.Player.IsAdmin and "" or ( " (" + this.Player.ID + ")" ) ) + ": (( " + message + " ))";
 		
-		pPlayer:LocalMessage( text, 196, 255, 255 );
+		this.LocalMessage( text, 196, 255, 255 );
 		
 		Console.Log( "LocalOOC: [%d]:  (( %s: %s ))", this.Player.ID, visibleName, message );
 	end;
