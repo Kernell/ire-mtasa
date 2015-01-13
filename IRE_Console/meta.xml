@@ -1,0 +1,14 @@
+<meta>
+  <script src="Shared/utils.lua"        type="client"/>
+  <script src="Shared/Debug.lua"        type="client"/>
+  <script src="Shared/class.lua"        type="client"/>
+  
+  <script src="Client.lua"              type="client"/>
+  <script src="ClientConsole.lua"       type="client"/>
+  
+  <script src="bin/grep"                type="client"/>
+  <script src="bin/history"             type="client"/>
+  <script src="bin/yes"                 type="client"/>
+  <script src="bin/clear"               type="client"/>
+  <script src="bin/echo"                type="client"/>
+</meta>

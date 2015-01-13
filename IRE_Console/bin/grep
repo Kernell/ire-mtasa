@@ -1,0 +1,139 @@
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2015
+-- License		Proprietary Software
+-- Version		1.0
+
+function grep( ... )
+	local Options = {};
+	local aParams = { ... };
+	
+	local sPattern	= NULL;
+	local sFile		= NULL;
+	
+	local iLen = table.getn( aParams );
+	
+	if iLen == 0 then
+		console.StdOut( "Использование: grep [ПАРАМЕТР]… ШАБЛОН [ФАЙЛ]…" );
+		console.StdOut( "Запустите «grep --help» для получения более подробного описания." );
+		
+		return;
+	end
+	
+	local i = 1;
+	
+	while i <= iLen do
+		local sParam = aParams[ i ];
+		
+		if sParam == "--help" or sParam == "--h" then
+			console.StdOut( "Использование: grep [ПАРАМЕТР]… ШАБЛОН [ФАЙЛ]…" );
+			console.StdOut( "Поиск ШАБЛОНА в каждом ФАЙЛЕ или в стандартном вводе." );
+			console.StdOut( "По умолчанию, ШАБЛОН представляет собой простое регулярное выражение (BRE)." );
+			console.StdOut( "Пример: grep -i 'hello world' menu.h main.c" );
+			console.StdOut( "" );
+			console.StdOut( "Управление выводом:" );
+			console.StdOut( "  -m, --max-count=ЧИСЛО     остановиться после указанного ЧИСЛА совпадений" );
+			console.StdOut( "  -b, --byte-offset         печатать вместе с выходными строками смещение в байтах" );
+			console.StdOut( "  -n, --line-number         печатать номер строки вместе с выходными строками" );
+			console.StdOut( "      --line-buffered       сбрасывать буфер после каждой строки" );
+			console.StdOut( "  -H, --with-filename       печатать имя файла для каждого совпадения" );
+			console.StdOut( "  -h, --no-filename         не начинать вывод с имени файла" );
+			console.StdOut( "      --label=МЕТКА         использовать МЕТКУ в качестве имени файла для" );
+			console.StdOut( "                            стандартного ввода" );
+			console.StdOut( "  -o, --only-matching       показывать только часть строки, совпадающей с ШАБЛОНОМ" );
+			console.StdOut( "  -q, --quiet, --silent     подавлять весь обычный вывод" );
+			console.StdOut( "      --binary-files=ТИП    считать, что двоичный файл имеет ТИП:" );
+			console.StdOut( "                            «binary», «text» или «without-match»." );
+			console.StdOut( "  -a, --text                то же что и --binary-files=text" );
+			console.StdOut( "  -I                        то же, что и --binary-files=without-match" );
+			console.StdOut( "  -d, --directories=ДЕЙСТВ  как обрабатывать каталоги" );
+			console.StdOut( "                            ДЕЙСТВИЕ может быть «read» (читать)," );
+			console.StdOut( "                            «recurse» (рекурсивно) или «skip» (пропускать)." );
+			console.StdOut( "  -D, --devices=ДЕЙСТВ      как обрабатывать устройства, FIFO и сокеты" );
+			console.StdOut( "                            ДЕЙСТВИЕ может быть «read» или «skip»" );
+			console.StdOut( "  -r, --recursive           то же, что и --directories=recurse" );
+			console.StdOut( "  -R, --dereference-recursive                             тоже, но с переходом по всем символьным ссылкам" );
+			console.StdOut( "      --include=Ф_ШАБЛОН    обработать только файлы, подпадающие под Ф_ШАБЛОН" );
+			console.StdOut( "      --exclude=Ф_ШАБЛОН    пропустить файлы и каталоги," );
+			console.StdOut( "                            подпадающие под Ф_ШАБЛОН" );
+			console.StdOut( "      --exclude-from=ФАЙЛ   пропустить файлы, подпадающие под шаблон" );
+			console.StdOut( "                            файлов из ФАЙЛА" );
+			console.StdOut( "      --exclude-dir=ШАБЛОН  каталоги, подпадающие под ШАБЛОН," );
+			console.StdOut( "                            будут пропущены" );
+			console.StdOut( "  -L, --files-without-match печатать только имена ФАЙЛОВ без совпадений" );
+			console.StdOut( "  -l, --files-with-matches  печатать только имена ФАЙЛОВ с совпадениями" );
+			console.StdOut( "  -c, --count               печатать только количество совпадающих строк на ФАЙЛ" );
+			console.StdOut( "  -T, --initial-tab         выравнивать табуляцией (если нужно)" );
+			console.StdOut( "  -Z, --null                печатать байт 0 после имени ФАЙЛА" );
+			
+			return;
+		elseif sParam == "-c" or sParam == "--count" then
+			Options[ "-c" ] = true;
+		elseif sParam[ 1 ] ~= "-" then
+			if sPattern == NULL then
+				sPattern = sParam;
+			elseif sFile == NULL then
+				sFile = sParam;
+			end
+		else
+			console.StdOut( "grep: unknown option -- " + sParam );
+			
+			grep();
+			
+			return;
+		end
+		
+		i = i + 1;
+	end
+	
+	local aContent = NULL;
+	
+	if sFile then
+		if fileExists( sFile ) then
+			local pFile = fileOpen( sFile );
+			
+			if pFile then
+				aContent = fileRead( pFile, fileGetSize( pFile ) ):split( '\n' );
+				
+				fileClose( sFile );
+			else
+				return console.StdOut( "grep: " + sFile + ": Failed to open" );
+			end
+		else
+			return console.StdOut( "grep: " + sFile + ": No such file or directory" );
+		end
+	elseif console.m_aStdOut then
+		aContent = console.m_aStdOut;
+		
+		console.m_aStdOut = NULL;
+	end
+	
+	if aContent == NULL then
+		grep();
+		
+		return;
+	end
+	
+	if sPattern == NULL then
+		grep();
+		
+		return;
+	end
+	
+	local iCount = 0;
+	
+	for x, sLine in ipairs( aContent ) do
+		if sLine:match( sPattern ) then
+			if Options[ "-c" ] then
+				iCount = iCount + 1;
+			else
+				console.StdOut( sLine:gsub( sPattern, "#FF0000" + sPattern + "#FFFFFF" ) );
+			end
+		end
+	end
+	
+	if Options[ "-c" ] then
+		console.StdOut( iCount );
+	end
+end;

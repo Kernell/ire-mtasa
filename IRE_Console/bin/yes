@@ -1,0 +1,62 @@
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2015
+-- License		Proprietary Software
+-- Version		1.0
+
+function yes( ... )
+	local sString = "";
+	
+	local aParams = { ... };
+	local i = 1;
+	local iLen = table.getn( aParams );
+	
+	while i <= iLen do
+		local sParam = aParams[ i ];
+		
+		if sParam == "--help" then
+			console.StdOut( "»спользование: yes [—“–ќ ј]Е" );
+			console.StdOut( "       или:    yes  Ћё„" );
+			console.StdOut( "Ќепрерывно печатает заданную —“–ќ ”(и) или, если —“–ќ ј не задана, то Ђyї.");
+			console.StdOut( "" );
+			console.StdOut( "      --help     показать эту справку и выйти" );
+			console.StdOut( "      --version  показать информацию о версии и выйти" );
+			console.StdOut( "" );
+			
+			return;
+		elseif sParam == "--version" then
+			console.StdOut( "yes (IRE coreutils) 8.15" );
+			
+			return;
+		else
+			sString = sString + " " + sParam;
+		end
+		
+		i = i + 1;
+	end
+	
+	if sString == "" then
+		sString = "y";
+	end
+	
+	local aTimers = {};
+	
+	local function y()
+		console.StdOut( sString );
+		
+		if ( getKeyState( "lctrl" ) or getKeyState( "rctrl" ) ) and getKeyState( "c" ) then
+			for i, t in ipairs( aTimers ) do
+				killTimer( t );
+			end
+		end
+	end
+	
+	table.insert( aTimers, setTimer( y, 50, 0 ) );
+	table.insert( aTimers, setTimer( y, 50, 0 ) );
+	table.insert( aTimers, setTimer( y, 50, 0 ) );
+	table.insert( aTimers, setTimer( y, 50, 0 ) );
+	table.insert( aTimers, setTimer( y, 50, 0 ) );
+	
+	y();
+end;

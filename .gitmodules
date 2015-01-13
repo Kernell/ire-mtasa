@@ -22,3 +22,6 @@
 [submodule "IRE_Nametags/Shared"]
 	path = IRE_Nametags/Shared
 	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
+[submodule "IRE_Console/Shared"]
+	path = IRE_Console/Shared
+	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git

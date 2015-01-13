@@ -1,0 +1,57 @@
+-- Innovation Roleplay Engine
+--
+-- Author		Kernell
+-- Copyright	© 2011 - 2015
+-- License		Proprietary Software
+-- Version		1.0
+
+function history( ... )
+	local params = { ... };
+	
+	local limit = 0;
+	local i 	= 1;
+	local len 	= table.getn( params );
+	
+	while i <= len do
+		local param = params[ i ];
+		
+		if param == "-c" then
+			console.Log = {};
+			
+			return;
+		elseif param == "-d" then
+			i = i + 1;
+			
+			local offset = tonumber( params[ i ] );
+			
+			if offset then
+			
+			else
+				console.StdOut( "-bash: history: " + tostring( offset ) + ": history position выходит за пределы допустимых значений" );
+			end
+		elseif param == "-anrw" then
+			console.StdOut( "-bash: history: cannot use more than one of -anrw" );
+			
+			return;
+		elseif param == "-ps" then
+			return;
+		elseif tonumber( param ) then
+			limit = tonumber( param );
+		else
+			console.StdOut( "-bash: history: " + (string)(param) + ": неправильная опция" );
+			console.StdOut( "history: usage: history [-c] [-d offset] [n] or history -anrw [filename] or history -ps arg [arg...]" );
+			
+			return;
+		end
+		
+		i = i + 1;
+	end
+	
+	local len = table.getn( console.Log );
+	
+	for i = len, 1, -1 do
+		if limit - i >= 0 or limit == 0 then
+			console.StdOut( ( "%5s  %s" ):format( ( len - i ) + 1, console.Log[ i ] ) );
+		end
+	end
+end;
