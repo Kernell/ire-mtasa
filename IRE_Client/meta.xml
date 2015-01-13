@@ -11,6 +11,9 @@
     client="1.4.0-9.06814.0"
   />
   
+  <include resource="IRE_Headmove" />
+  <include resource="IRE_Nametags" />
+  
   <script src="Shared/utils.lua"        type="client"/>
   <script src="Shared/Debug.lua"        type="client"/>
   <script src="Shared/class.lua"        type="client"/>

@@ -7,6 +7,12 @@
 
 class. PlayerNametag
 {
+	static
+	{
+		DEFAULT_COLOR	= new. Color( 120, 120, 120 );
+		PLAYER_COLOR	= new. Color( 255, 255, 255 );
+	};
+	
 	Distance		= 8.0;
 	
 	PlayerNametag	= function( player )
@@ -53,14 +59,16 @@ class. PlayerNametag
 	
 	Update	= function()
 		local text	= this.Player.VisibleName;
-		local color	= new. Color( 120, 120, 120 );
+		local color	= PlayerNametag.DEFAULT_COLOR;
 		
 		if this.Player.IsInGame() then
-			color	= new. Color( 255, 255, 255 );
+			color	= PlayerNametag.PLAYER_COLOR;
 		end
 		
 		if not this.Player.IsAdmin then
 			text	= text + " (" + this.Player.ID + ")";
+		else
+			color	= this.Player.Groups[ 1 ].GetColor();
 		end
 		
 		this.SetText( text );
