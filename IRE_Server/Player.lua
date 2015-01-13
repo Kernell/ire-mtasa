@@ -950,6 +950,86 @@ class. Player : Ped
 		return true;
 	end;
 	
+	Respawn	= function()
+		if this.IsDead() then
+			this.Camera.Fade( false );
+			
+			setTimer( function() this.Player.PreSpawn(); end, 1000, 1 );
+		end
+	end;
+	
+	PrepareSpawn	= function()
+		local char = this.Character;
+		
+		if char then
+			if char.Jailed ~= "No" then
+				char.SetJailed( char.Jailed, char.JailedTime );
+			else
+				local spawned = false;
+				
+				if this.GetPosition().Distance( PlayerManager.PRISON_RESPAWN ) < 2000.0 then
+					char.Spawn( PlayerManager.PRISON_RESPAWN, 0.0, 0, 0 );
+					
+					spawned = true;
+				end
+				
+				if not spawned then
+					char.Spawn( PlayerManager.HOSPITAL_RESPAWN, 130.0, 0, 0 );
+				end
+			end
+			
+			if char.Alcohol > 0.0 then
+				char.SetAlcohol();
+			end
+		end
+	end;
+	
+	-- Events
+	
+	OnSpawn	= function( position, rotation, interior, dimension )
+		this.SetWalkingStyle( 0 );
+		this.TakeAllWeapons();
+		
+		if this.IsInGame() then
+			this.SetControlState( "walk", true );
+			
+			this.SetAnimation();
+			this.Camera.SetTarget();
+			this.Camera.Fade( true );
+			
+			this.Character.SetPower( 100.0 );
+			this.Character.SetCuffed();
+			
+			this.SetWalkingStyle( (int)(this.Character.Skin.GetWalkingStyle()) );
+		end
+		
+		this.SetAdminDuty( this.IsAdmin );
+	end;
+	
+	OnWasted	= function( totalAmmo, killer, killerWeapon, bodypart, stealth )
+		local char = this.Character;
+		
+		if char then
+			this.LowHPAnim = false;
+			
+			if this.Vehicle then
+				this.Vehicle.OnExit( this, this.GetVehicleSeat() );
+			end
+			
+			this.Respawn();
+			
+			-- this.RPC.OnClientWasted( totalAmmo, killer, killerWeapon, bodypart, stealth );
+		end
+	end;
+	
+	OnModelChange	= function( prevSkinID, skinID )
+		local skin = new. CharacterSkin( skinID );
+		
+		local style = (int)(skin.GetWalkingStyle());
+		
+		this.SetWalkingStyle( style );
+	end;
+	
 	-- Key handlers
 	
 	KeySprint			= function( key, state )
@@ -975,6 +1055,4 @@ class. Player : Ped
 	KeyVehicleToggleLights	= function()
 		
 	end;
-	
-	--
-}
+};

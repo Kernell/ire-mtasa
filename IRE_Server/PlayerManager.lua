@@ -16,6 +16,9 @@ class. PlayerManager : Manager
 		NEW_CHAR_CAMERA_POSITION	= new. Vector3( 1714.2, -1670.7, 42.9 );
 		NEW_CHAR_CAMERA_TARGET		= new. Vector3( 1628.2, -1719.5, 28.4 );
 		
+		HOSPITAL_RESPAWN			= new. Vector3( 2035.477, -1413.835, 16.99 );
+		PRISON_RESPAWN				= new. Vector3( 2262.488, -4783.914, 8.62 );
+		
 		AntiFloodCommands =
 		{
 			-- hardcoded
@@ -106,6 +109,9 @@ class. PlayerManager : Manager
 if _DEBUG then
 		root.OnPlayerModInfo.Add( this.PlayerModInfo );
 end
+		root.OnPlayerSpawn.Add( this.PlayerSpawn );
+		root.OnPlayerWasted.Add( this.PlayerWasted );
+		root.OnElementModelChange.Add( this.PlayerModelChange );
 	end;
 
 	_PlayerManager	= function()
@@ -119,6 +125,10 @@ end
 if _DEBUG then
 		root.OnPlayerModInfo.Remove( this.PlayerModInfo );
 end
+		root.OnPlayerSpawn.Remove( this.PlayerSpawn );
+		root.OnPlayerWasted.Remove( this.PlayerWasted );
+		root.OnElementModelChange.Remove( this.PlayerModelChange );
+		
 		this.DeleteAll();
 	end;
 
@@ -469,6 +479,20 @@ end
 	
 	PlayerPrivateMessage	= function( sender, e )
 		e.Cancel();
+	end;
+	
+	PlayerSpawn		= function( sender, e, posX, posY, posZ, rotation, team, skinID, interior, dimension )
+		sender.OnSpawn( new. Vector3( posX, posY, posZ ), rotation, interior, dimension );
+	end;
+	
+	PlayerWasted	= function( sender, e, totalAmmo, killer, killerWeapon, bodypart, stealth )
+		sender.OnWasted( totalAmmo, killer, killerWeapon, bodypart, stealth );
+	end;
+	
+	PlayerModelChange	= function( sender, e, prevSkinID, skinID )
+		if getElementType( sender ) == "player" then
+			sender.OnModelChange( prevSkinID, skinID );
+		end
 	end;
 	
 	---
