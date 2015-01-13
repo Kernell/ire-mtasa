@@ -88,7 +88,13 @@ class. PlayerSpectator
 	Update	= function()
 		local target = this.Target;
 		
-		if target and target.IsInGame() then
+		if target then
+			if not target.IsInGame() then
+				this.SetTarget( NULL );
+				
+				return;
+			end
+			
 			if target.Spectator.GetTarget() then
 				this.Target = target.Spectator.GetTarget();
 				
@@ -134,8 +140,6 @@ class. PlayerSpectator
 			if this.Player.Camera.GetTarget() ~= target then
 				this.Player.Camera.SetTarget( target );
 			end
-		else
-			this.SetTarget( NULL );
 		end
 	end;
 }
