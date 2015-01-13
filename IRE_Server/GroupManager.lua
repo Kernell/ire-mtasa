@@ -23,7 +23,7 @@ class. GroupManager : Manager
 				local id		= (int)(row[ "id" ]);
 				local name		= row[ "name" ];
 				local caption	= row[ "caption" ];
-				local color		= new. Color( fromJSON( row[ "color" ] ) );
+				local color		= new. Color( unpack( fromJSON( row[ "color" ] ) ) );
 
 				local group		= new. Group( id, name, caption, color );
 
