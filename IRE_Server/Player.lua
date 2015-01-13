@@ -126,6 +126,8 @@ class. Player : Ped
 		
 		Server.Game.PlayerManager.AddToList( this );
 		
+		this.SetID( "player:" + this.GetID() );
+		
 		this.SetData( "Player::ID", this.GetID(), true, true );
 		this.SetData( "Player::Controls", this.Controls );
 		this.SetData( "Player::ControlStates", this.ControlStates );
@@ -224,6 +226,26 @@ class. Player : Ped
 		end
 
 		return false;
+	end;
+	
+	SetMuted	= function( iTime )
+		iTime = (int)(iTime);
+		
+		this.MuteSeconds = iTime > 0 and iTime * 60 or NULL;
+		
+		if this.IsLoggedIn() then
+			return Server.DB.Query( "UPDATE uac_users SET muted_time = " + ( this.MuteSeconds or "NULL" ) + " WHERE id = " + this.UserID ) or not Debug( g_pDB:Error() );
+		end
+		
+		return true;
+	end;
+
+	GetMuted	= function()
+		return this.MuteSeconds;
+	end;
+
+	IsMuted		= function()
+		return (bool)(this.MuteSeconds);
 	end;
 	
 	ShowLoginScreen = function()
@@ -491,25 +513,81 @@ class. Player : Ped
 
 			this.HealthRegenPause = this.HealthRegenPause - 1;
 		end
-
-		local power = this.GetData( "Char::Power" );
-
-		this.Character.Power = power;
 		
-		if not this.LowHPAnim and not this.IsCuffed() then
-			if power <= 0 then
-				this.SetAnimation( PlayerAnimation.PRIORITY_TIRED, "FAT", "IDLE_tired", 10000, true, false, false, false );
+		if this.Character.IsCuffed() and not this.LowHPAnim then
+			local cuffedTo = this.Character.CuffedTo and this.Character.CuffedTo.Player;
+			
+			if cuffedTo and cuffedTo.IsInGame() then
+				if cuffedTo.IsDead() then
+					this.Character.SetCuffed();
+					
+					return true;
+				end
+				
+				local distance = this.GetPosition().Distance( cuffedTo.GetPosition() );
+				
+				local isPlayerMoved  = cuffedTo.GetControlState( "forwards" )
+									or cuffedTo.GetControlState( "backwards" )
+									or cuffedTo.GetControlState( "left" )
+									or cuffedTo.GetControlState( "right" );
+				
+				if distance > 30 then
+					if this.IsInVehicle() then
+						this.RemoveFromVehicle();
+					end
+					
+					this.SetPosition( cuffedTo.GetPosition().Offset( 1.4, cuffedTo.GetRotation() ) );
+					this.SetRotation( cuffedTo.GetRotation() );
+					this.SetInterior( cuffedTo.GetInterior() );
+					this.SetDimension( cuffedT.GetDimension() );
+				end
+				
+				if not cuffedTo.IsInVehicle() and this.IsInVehicle() then
+					this.ForceExitVehicle	= true;
+					this.SetControlState( "enter_exit", true );
+				end
+				
+				if this.GetControlState( "enter_exit" ) then
+					this.SetControlState( "enter_exit", false );
+					this.ForceExitVehicle	= false;
+				end
+				
+				if cuffedTo.IsInVehicle() and this.GetVehicle() ~= cuffedTo.GetVehicle() then
+					local vehicle = cuffedTo.GetVehicle();
+					
+					if vehicle and not vehicle.IsLocked() then
+						distance = vehicle.GetPosition().Distance( this.GetPosition() );
+						
+						if distance < 4 then
+							for seat = vehicle.GetMaxPassengers(), 1, -1 do
+								if not vehicle.GetOccupant( seat ) then
+									this.WarpInVehicle( vehicle, seat );
+									
+									break;
+								end
+							end
+						end
+					end
+				end
+				
+				if not this.IsInVehicle() then
+					if distance > 7 or ( isPlayerMoved and cuffedTo.GetControlState( "sprint" ) ) then
+						this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS, "PED", "SPRINT_civi" );
+					elseif distance > 4 or ( isPlayerMoved and not cuffedTo.GetControlState( "walk" ) ) then
+						this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS, "PED", "RUN_player" );
+					elseif distance > 1 or ( isPlayerMoved ) then
+						this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS, "PED", "WALK_player" );
+					else
+						this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
+					end
+				end
+			elseif not this.IsInVehicle() then
+				this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 			end
 		end
-
-		if this.GetArmor() > 0 and not this.GetSkin().HaveArmor() then
-			this.SetArmor( 0 );
-		end
 		
-		this.UpdateCuff();
-		this.UpdateJail();
-		this.UpdateSpectate();
-	
+		this.Spectator.Update();
+		
 		this.GetChar().DoPulse( realTime );
 	end;
 
@@ -816,7 +894,7 @@ class. Player : Ped
 
 		this.SetData( "Player::IsAdmin", this.IsAdmin );
 		
-		this.Nametag.SetColor( this.IsAdmin and this.Groups[ 1 ].GetColor() );
+		this.Nametag.SetColor( this.IsAdmin and this.Groups[ 1 ].GetColor() or new. Color( 255, 255, 255 ) );
 
 		this.Nametag.Update();
 
@@ -835,7 +913,7 @@ class. Player : Ped
 	end;
 
 	LoadCharacters	= function( userID )
-		local result = Server.DB.Query( "SELECT name, surname, DATE_FORMAT( last_login, '%d/%m/%Y %H:%i:%s' ) AS last_login, DATE_FORMAT( created, '%d/%m/%Y %H:%i:%s' ) AS created, status FROM " + Server.DB.Prefix + "characters WHERE user_id = " + userID + " AND status != 'Скрыт' ORDER BY last_login DESC" );
+		local result = Server.DB.Query( "SELECT id, name, surname, DATE_FORMAT( last_login, '%d/%m/%Y %H:%i:%s' ) AS last_login, DATE_FORMAT( created, '%d/%m/%Y %H:%i:%s' ) AS created, status FROM " + Server.DB.Prefix + "characters WHERE user_id = " + userID + " AND status != 'Скрыт' ORDER BY last_login DESC" );
 
 		if result ~= NULL then
 			local characters = result.GetArray();
@@ -851,13 +929,11 @@ class. Player : Ped
 			end
 			
 			if characterCount == 0 then
-				this.RPC.UI.CharacterCreate( "NEW", characterCount == 0 );
+				this.RPC.UI.CharacterCreate.Show();
 			elseif characterCount == 1 and Server.Game.CharactersLimit == 1 then
 				-- TODO: Select character
 			else
-				this.RPC.UI.CharacterList( characters, Server.Game.CharactersLimit == 0 or characterCount < Server.Game.CharactersLimit );
-
-				this.Characters = characters;
+				this.RPC.UI.CharacterList.Show( { canCreate = Server.Game.CharactersLimit == 0 or characterCount < Server.Game.CharactersLimit }, { characters = characters } );
 			end
 		else
 			Debug( Server.DB.Error(), 1 );
