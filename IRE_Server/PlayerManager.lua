@@ -231,7 +231,7 @@ end
 		end
 	end;
 	
-	ClientHandle	= function( player, command, ... )
+	ClientHandle	= function( player, command, data, ... )
 		if command == "Ready" then
 			player.ShowLoginScreen();
 			
@@ -249,8 +249,6 @@ end
 		end
 		
 		if command == "SignIn" then
-			local data = ( { ... } )[ 1 ];
-			
 			if data then
 				if data.login == NULL or data.login:len() == 0 then
 					return "Введите логин";
@@ -315,20 +313,145 @@ end
 				
 				setTimer( function() player.Login( row.id ); end, 1000, 1 );
 				
-				player.RPC.UI.LoginScreen.Hide();
-				
-				return true;
+				return -1;
 			end
 			
 			return "Ошибка авторизации";
+		end
+		
+		if command == "SignUp" then
+			if not data then
+				return ClientRPC.BAD_REQUEST;
+			end
+			
+			local email		= (string)(data.login);
+			local password	= (string)(data.password);
+			local nickname	= (string)(data.nick);
+			local referUser	= (string)(data.refer);
+			
+			if email:len() == 0					then	return TEXT_REG_EMAIL_IS_BLANK;		end
+			if email:len() < 3					then	return TEXT_REG_EMAIL_IS_SHORT;		end
+			if email:len() > 64					then	return TEXT_REG_EMAIL_IS_LONG;		end
+			if not email:match( "^[%w+%.%-_]+@[%w+%.%-_]+%.%a%a+$" ) then return TEXT_REG_EMAIL_IS_INVALID;	end
+			
+			if password:len() == 0		then	return TEXT_REG_PASSWORD_IS_BLANK;	end
+			if password:len() < 4		then	return TEXT_REG_PASSWORD_IS_SHORT;	end
+			if password:len() > 64		then	return TEXT_REG_PASSWORD_IS_LONG;	end
+			
+			if nickname:len() == 0		then	return TEXT_REG_NICKNAME_IS_BLANK;	end
+			if nickname:len() < 3		then	return TEXT_REG_NICKNAME_IS_SHORT;	end
+			if nickname:len() > 64		then	return TEXT_REG_NICKNAME_IS_LONG;	end
+			if tonumber( nickname ) 	then	return TEXT_REG_NICKNAME_IS_NUMBER;	end
+			
+			if not not nickname:find( "[^A-Za-z0-9]" ) then
+				return TEXT_REG_NICKNAME_IS_INVALID;
+			end
+			
+			local referID = 0;
+			
+			if referUser and referUser:len() > 0 then
+				if referUser:len() > 64 then
+					referUser = referUser:sub( 1, 64 );
+				end
+				
+				if not referUser:find( "[^A-Za-z0-9]" ) then
+					local result = Server.DB.Query( "SELECT id FROM uac_users WHERE LOWER( name ) = LOWER( %q )", referUser );
+					
+					if not result then
+						Debug( Server.DB.Error(), 1 );
+						
+						return TEXT_DB_ERROR;
+					end
+					
+					local numRows	= result.NumRows();
+					local row		= result.GetRow();
+					
+					delete ( result );
+					
+					if numRows ~= 1 then
+						return TEXT_REG_REFER_NOT_FOUND;
+					end
+					
+					referID = row and (int)(row.id) or 0;
+				else
+					return TEXT_REG_REFER_IS_INVALID;
+				end
+			end
+			
+			local serial = player.GetSerial();
+			
+			local result = Server.DB.Query( "SELECT \
+				SUM( login = %q ) AS mail, \
+				SUM( name = %q ) AS name, \
+				SUM( serial = %q OR serial_reg = %q ) AS serial \
+				FROM uac_users",
+				email, nickname, serial, serial
+			);
+			
+			if not result then
+				Debug( Server.DB.Error(), 1 );
+				
+				return TEXT_DB_ERROR;
+			end
+			
+			local row = result.GetRow();
+			
+			delete ( result );
+			
+			if row.mail > 0 	then	return TEXT_REG_EMAIL_IN_USE;		end
+			if row.name > 0 	then	return TEXT_REG_NICKNAME_IN_USE;	end
+			
+			if not Server.Game.AllowMultiaccount then
+				if row.serial > 0 then	return TEXT_REG_MULTIACCOUNT;	end
+			end
+			
+			-- local activationCode = md5( md5( math.random( 0, 999999999 ) ) + md5( getRealTime().timestamp ) );
+			
+			local ID = Server.DB.Insert( "uac_users",
+				{
+					refer_id		= referID;
+					login			= email:lower();
+					password		= Server.Blowfish.Encrypt( password );
+					name			= nickname;
+					serial_reg		= serial;
+					ip_reg			= player.GetIP();
+				--	activation_code	= activationCode;
+				}
+			);
+			
+			if ID then
+				Console.Log( "Registered new account %q (%q) (ID: %d, Serial: %s, IP: %s)", nickname, email, ID, serial, player.GetIP() );
+				
+				player.RPC.UI.LoginScreen.Show( { intro_text = TEXT_REG_SUCCESS } );
+				
+				return -1;
+			end
+			
+			Debug( Server.DB.Error(), 1 );
+			
+			return TEXT_DB_ERROR;
+		end
+		
+		if command == "DoLogin" then
+			if not player.IsLoggedIn() then
+				player.ShowLoginScreen();
+			end
+			
+			return -1
+		end
+		
+		if command == "DoRegister" then
+			if not player.IsLoggedIn() then
+				player.RPC.UI.Registration.Show();
+			end
+			
+			return -1;
 		end
 		
 		if command == "Character::Login" then
 			if not player.IsLoggedIn() then
 				return ClientRPC.UNAUTHORIZED;
 			end
-			
-			local data = ( { ... } )[ 1 ];
 			
 			if data then
 				local characterID = (int)(data.characters);

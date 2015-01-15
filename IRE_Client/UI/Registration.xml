@@ -1,0 +1,15 @@
+<ui>
+  <window title="" width="470" height="480" sizable="false" movable="false">
+    <label text="Registration" x="30" y="37" width="406" height="57" font="Consolas 32 Bold" shadow="1 1 0,0,0"/>
+    <label text="E-mail:" x="30" y="138" width="204" height="22" font="Consolas 10"/>
+    <label text="Пароль:" x="30" y="208" width="204" height="22" font="Consolas 10"/>
+    <label text="Ваш ник:" x="30" y="278" width="204" height="22" font="Consolas 10"/>
+    <label text="Ник друга который Вас пригласил:" x="30" y="348" width="204" height="22" font="Consolas 10"/>
+    <input name="login" value="" x="30" y="160" width="407" height="28" maxlength="64" onaccept="SignUp"/>
+    <input name="password" value="" x="30" y="230" width="407" height="28" masked="true" maxlength="64" onaccept="SignUp"/>
+    <input name="nick" value="" x="30" y="300" width="407" height="28" maxlength="64" onaccept="SignUp"/>
+    <input name="refer" value="" x="30" y="370" width="407" height="28" maxlength="64" onaccept="SignUp"/>
+    <button text="Регистрация" x="352" y="430" width="83" height="28" onclick="SignUp"/>
+    <button text="Отмена" x="262" y="430" width="83" height="28" onclick="DoLogin"/>
+  </window>
+</ui>

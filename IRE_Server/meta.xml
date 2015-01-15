@@ -51,6 +51,8 @@
   <script src="Shared/Timer.lua"/>
   <script src="Shared/Vector3.lua"/>
   
+  <script src="L10n/ru_RU.lua"/>
+  
   <script src="Team.lua"/>
   
   <script src="Commands/IConsoleCommand.lua"/>
