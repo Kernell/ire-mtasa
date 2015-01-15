@@ -487,11 +487,11 @@ class. CEGUIEdit : CEGUI
 	
 	SetPlaceHolder	= function( text )
 		if this.PlaceHolderFocus then
-			removeEventHandler( "event. OnClientGUIFocus",	this, this.PlaceHolderFocus );
+			removeEventHandler( "onClientGUIFocus",	this, this.PlaceHolderFocus );
 		end
 		
 		if this.PlaceHolderBlur then
-			removeEventHandler( "event. OnClientGUIBlur", 	this, this.PlaceHolderBlur );
+			removeEventHandler( "onClientGUIBlur", 	this, this.PlaceHolderBlur );
 		end
 		
 		this.PlaceHolderFocus	= NULL;
@@ -515,8 +515,8 @@ class. CEGUIEdit : CEGUI
 			this.SetProperty( "NormalTextColour", "FF333333" );
 			this.SetText( text );
 			
-			addEventHandler( "event. OnClientGUIFocus",	this, this.PlaceHolderFocus,	false, "high" );
-			addEventHandler( "event. OnClientGUIBlur", 	this, this.PlaceHolderBlur, 	true, "high" );
+			addEventHandler( "onClientGUIFocus",	this, this.PlaceHolderFocus,	false, "high" );
+			addEventHandler( "onClientGUIBlur", 	this, this.PlaceHolderBlur, 	true, "high" );
 		end
 	end;
 	

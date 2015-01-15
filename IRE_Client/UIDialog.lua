@@ -454,7 +454,7 @@ class. UIDialog
 		local element	= new. CEGUIEdit( data.x, data.y, data.width, data.height, data.value, data.relative, parent );
 		
 		if data.placeholder then
-			element.SetPlaceHolder( data.placeholders );
+			element.SetPlaceHolder( data.placeholder );
 		end
 		
 		if data.masked then
