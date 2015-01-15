@@ -13,6 +13,8 @@ class. PlayerManager : Manager
 		DEFAULT_CAMERA_POSITION		= new. Vector3( 1586.31, -1827.22, 84.12 );
 		DEFAULT_CAMERA_TARGET		= new. Vector3( 1585.96, 0.0, 84.12 );
 		
+		NEW_CHAR_POSITION			= new. Vector3( 1642.18, -2238.65, 13.5 );
+		NEW_CHAR_ANGLE				= 180.0;
 		NEW_CHAR_CAMERA_POSITION	= new. Vector3( 1714.2, -1670.7, 42.9 );
 		NEW_CHAR_CAMERA_TARGET		= new. Vector3( 1628.2, -1719.5, 28.4 );
 		
@@ -457,81 +459,212 @@ end
 				local characterID = (int)(data.characters);
 				
 				if characterID > 0 then
-					if player.IsInGame() then
-						Debug( player.GetName() + " arealy in game", 2 );
-						
-						return true;
-					end
-					
-					for _, p in pairs( this.GetAll() ) do
-						if p.IsInGame() and p.GetID() == characterID then
-							Debug( "This character arealy in game", 2 );
-							
-							return "Этот персонаж уже в игре";
-						end
-					end
-					
-					local result = Server.DB.Query( "SELECT *, \
-						DATE_FORMAT( created, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS created, \
-						DATE_FORMAT( last_login, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS last_login, \
-						DATE_FORMAT( date_of_birdth, '%%d/%%m/%%Y' ) AS date_of_birdth, \
-						UNIX_TIMESTAMP( c.last_logout ) AS last_logout_t FROM " + Server.DB.Prefix + "characters c\
-						WHERE c.id = %d AND c.status = 'Активен'", characterID );
-						
-					if not result then
-						Debug( Server.DB.Error(), 1 );
-						
-						return TEXT_DB_ERROR;
-					end
-					
-					local row = result.GetRow();
-			
-					delete ( result );
-					
-					if row then
-						local character		= new. Character( player, row );
-						
-						player.Character 	= character;
-						player.InGameCount	= 0;
-						
-						player.SetName( character.GetName():gsub( " ", "_" ) );
-						player.SetTeam( this.TeamLoggedIn );
-						player.SetData( "Player::Level", character.Level );
-						
-						player.Nametag.Update();
-						
-						player.Camera.Fade( false );
-						
-						setTimer(
-							function()
-								player.SetAlpha( 255 );
-								player.SetCollisionsEnabled( true );
-								
-								character.Spawn( new. Vector3( row.position ), row.rotation, row.interior, row.dimension );
-								character.SetHealth( row.health );
-								character.SetArmor( row.armor );
-								
-								player.HUD.Show();
-								player.HUD.ShowComponents( "crosshair" );
-								player.Chat.Show();
-								player.Nametag.Show();
-								
-								player.Camera.SetInterior( interior );
-								player.Camera.SetTarget();
-								player.Camera.Fade( true );
-							end,
-							1000, 1
-						);
-						
-						if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "characters SET last_login = NOW() WHERE id = '" + characterID + "'" ) then
-							Debug( Server.DB.Error(), 1 ); 
-						end
-						
-					--	player.RPC.OnCharacterLogin( character.GetID(), character.Name, character.Surname );
-						
+					if player.LoginCharacter( characterID ) then
 						return -1;
+					else
+						return "Произошла ошибка при авторизации персонажа";
 					end
 				end
+			end
+			
+			return ClientRPC.BAD_REQUEST;
+		end
+		
+		if command == "Character::Logout" then			
+			if not player.IsInGame() then
+				return -1
+			end
+			
+			player.Character.Logout( "Logout" );
+			
+			player.InitLoginCamera();
+			player.LoadCharacters( player.UserID, true );
+			
+			return -1;
+		end
+		
+		if command == "Character::CreateUI" then
+			if not player.IsLoggedIn() then
+				return ClientRPC.UNAUTHORIZED;
+			end
+			
+			if player.IsInGame() then
+				return "Вы не можете создавать персонажей во время игры";
+			end
+			
+			local result = Server.DB.Query( "SELECT COUNT(id) AS c FROM " + Server.DB.Prefix + "characters WHERE user_id = %d AND ( status = 'Активен' OR status = 'Заблокирован' )", player.UserID );
+			
+			if not result then
+				Debug( Server.DB.Error(), 1 );
+				
+				return TEXT_DB_ERROR;
+			end
+			
+			local row = result.GetRow();
+			
+			delete ( result );
+			
+			if not row or type( row.c ) ~= "number" then
+				return TEXT_DB_ERROR;
+			end
+			
+			if Server.Game.CharactersLimit ~= 0 and row.c >= Server.Game.CharactersLimit then
+				return "Вы не можете создавать больше персонажей";
+			end
+			
+			player.RPC.UI.CharacterCreate.Show();
+			
+			return -1;
+		end
+		
+		if command == "Character::Create" then
+			if not player.IsLoggedIn() then
+				return ClientRPC.UNAUTHORIZED;
+			end
+			
+			if player.IsInGame() then
+				return "Вы не можете создавать персонажей во время игры";
+			end
+			
+			if data then
+				local result = Server.DB.Query( "SELECT COUNT(id) AS c FROM " + Server.DB.Prefix + "characters WHERE user_id = %d AND ( status = 'Активен' OR status = 'Заблокирован' )", player.UserID );
+				
+				if not result then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR;
+				end
+				
+				local row = result.GetRow();
+				
+				delete ( result );
+				
+				if row and row.c >= Server.Game.CharactersLimit then
+					return "Вы не можете создавать больше персонажей";
+				end
+				
+				local name		= (string)(data.name);
+				local surname	= (string)(data.surname);
+				local skin		= (int)(data.skin);
+				local day		= (int)(data.day);
+				local month		= (int)(data.month);
+				local year		= (int)(data.year);
+				local date		= (string)(data.date);
+				local cityID	= (int)(data.city);
+				
+				if name:len() == 0 then
+					return "Введите имя персонажа";
+				end
+				
+				if surname:len() == 0 then
+					return "Введите фамилию персонажа";
+				end
+				
+				if name:len() < 3 then
+					return "Имя слишком короткое";
+				end
+				
+				if surname:len() < 3 then
+					return "Фамилия слишком короткая";
+				end
+				
+				if ( name + surname ):len() > 21 then
+					return "Общая длина имени и фамилии не может быть более 21 символа";
+				end
+				
+				if not not name:find( "[^A-Za-z]" ) then
+					return "Имя содержит запрещённые символы\n\nИспользуйте только символы латинского алфавита";
+				end
+				
+				if not not surname:find( "[^A-Za-z]" ) then
+					return "Фамилия содержит запрещённые символы\n\nИспользуйте только символы латинского алфавита";
+				end
+				
+				if not skinID then
+					return "Вы не выбрали скин персонажа";
+				end
+				
+				if not ( new. CharacterSkin( skinID ) ).IsValid() then
+					return "Данный скин отключён";
+				end
+				
+				if cityID == 0 then
+					return "Необходимо выбрать Город и Страну из предлагаемого списка";
+				end
+				
+				if day == 0 or month == 0 or year == 0 then
+					return "Введите дату рождения персонажа";
+				end
+				
+				name		= name[ 1 ]:upper() + name:sub( 2, name:len() ):lower();
+				surname		= surname[ 1 ]:upper() + surname:sub( 2, surname:len() ):lower();
+				
+				local result = Server.DB.Query( "SELECT COUNT(id) AS c FROM " + Server.DB.Prefix + "characters WHERE name = %q AND surname = %q", name, surname );
+				
+				if not result then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR;
+				end
+				
+				local row = result.GetRow();
+				
+				delete ( result );
+				
+				if row and row.c > 0 then
+					return "Персонаж с таким именем уже существует";
+				end
+				
+				local placeResult = Server.DB.Query( "SELECT c.name, cc.city, cc.region FROM cities cc JOIN countries c USING( country_id ) WHERE cc.id = " + cityID );
+				
+				if not placeResult then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR;
+				end
+				
+				local rowPlace = placeResult.GetRow();
+				
+				delete ( placeResult );
+				
+				if not rowPlace then
+					return "Поле 'Место рождения' заполнено некорректно";
+				end
+				
+				local language	= "en";
+				
+				local languages	= { current = language };
+				
+				languages[ language ] = 1000;
+				
+				local licenses	= { "vehicle" };
+				
+				local charID	= Server.DB.Insert( Server.DB.Prefix + "characters",
+					{
+						user_id				= player.UserID;
+						name				= name;
+						surname				= surname;
+						skin				= skin;
+						date_of_birdth		= string.format( "%04d-%02d-%02d", 1970 + year, month, day );
+						place_of_birdth		= string.format( "%s, %s, %s", rowPlace.name, rowPlace.region, rowPlace.city );
+						nation				= language;
+						languages			= languages;
+						licenses			= licenses;
+						position			= (string)(PlayerManager.NEW_CHAR_POSITION);
+						rotation			= PlayerManager.NEW_CHAR_ANGLE;
+						created				= new. DateTime().Format( "Y-m-d H:i:s" );
+					}
+				);
+				
+				if not charID then
+					return TEXT_DB_ERROR;
+				end
+				
+				player.LoginCharacter( charID );
+				
+				Console.Log( "%s (%d) Created new character \"%s_%s\" (%d)", player.UserName, player.UserID, name, surname, charID );
+				
+				return -1;
 			end
 			
 			return ClientRPC.BAD_REQUEST;
