@@ -228,7 +228,7 @@ class. UIDialog
 							end
 							
 							function element.IconDrawing()
-								if this.IsVisible() and isElement( element ) and element.GetVisible() then
+								if isElement( element ) and element.GetVisible() then
 									local elementX, elementY = GetPosition( element );
 									
 									dxDrawImage( x + elementX, y + elementY, size, size, texture, 0, 0, 0, -1, true );
@@ -481,6 +481,24 @@ class. UIDialog
 	CreateComboBox		= function( data, parent )
 		local element	= new. CEGUIComboBox( data.x, data.y, data.width, data.height, data.text, data.relative, parent );
 		
+		element.Items = {};
+		
+		function element.GetValue()
+			local item = element.GetSelected();
+			
+			if not item then
+				return NULL;
+			end
+			
+			local text = element.GetItemText( item );
+			
+			if not text then
+				return NULL;
+			end
+			
+			return element.Items[ text ];
+		end
+		
 		return element;
 	end;
 	
@@ -502,9 +520,9 @@ class. UIDialog
 		if parentType == "select" then
 			if data._value then
 				parent.AddItem( data._value );
+				
+				parent.Items[ data._value ] = data.value or data._value;
 			end
-		else
-			Debug( (string)(parentType) );
 		end
 	end;
 	
