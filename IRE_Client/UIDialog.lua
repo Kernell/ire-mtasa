@@ -76,6 +76,7 @@ class. UIDialog
 		for i, node in ipairs( xmlNodeGetChildren( xmlNode ) ) do
 			local nodeName		= xmlNodeGetName( node );
 			local attributes	= xmlNodeGetAttributes( node );
+			local value 		= xmlNodeGetValue( node );
 			
 			if nodeName == "var" then
 				this.Vars[ attributes.name ] = attributes.value;
@@ -94,6 +95,7 @@ class. UIDialog
 				
 				attributes.node 	= node;
 				attributes.nodeName = nodeName;
+				attributes._value 	= value;
 				
 				table.insert( struct, attributes );
 			end
@@ -247,7 +249,7 @@ class. UIDialog
 					element.Y		= data.y;
 					element.Width	= data.width;
 					element.Height	= data.height;
-					element.Type	= data.node;
+					element.Type	= data.nodeName;
 					element.NoValue = (bool)(data.novalue);
 					
 					if type( data.enabled ) ~= "nil" then
@@ -498,11 +500,11 @@ class. UIDialog
 		local parentType = parent and parent.Type;
 		
 		if parentType == "select" then
-			local value = xmlNodeGetValue( data.node );
-			
-			if value then
-				parent.AddItem( value );
+			if data._value then
+				parent.AddItem( data._value );
 			end
+		else
+			Debug( (string)(parentType) );
 		end
 	end;
 	
