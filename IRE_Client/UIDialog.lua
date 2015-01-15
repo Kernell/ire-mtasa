@@ -503,7 +503,7 @@ class. UIDialog
 		if type( result ) == "string" then	
 			this.Error( result );
 		elseif result == -1 then
-			this.Hide();
+			this.Destroy();
 		end
 	end;
 };
