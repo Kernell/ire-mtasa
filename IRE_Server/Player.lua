@@ -912,7 +912,7 @@ class. Player : Ped
 		end
 	end;
 
-	LoadCharacters	= function( userID )
+	LoadCharacters	= function( userID, forceList )
 		local result = Server.DB.Query( "SELECT id, name, surname, DATE_FORMAT( last_login, '%d/%m/%Y %H:%i:%s' ) AS last_login, DATE_FORMAT( created, '%d/%m/%Y %H:%i:%s' ) AS created, status FROM " + Server.DB.Prefix + "characters WHERE user_id = " + userID + " AND status != 'Скрыт' ORDER BY last_login DESC" );
 
 		if result ~= NULL then
@@ -929,15 +929,94 @@ class. Player : Ped
 			end
 			
 			if characterCount == 0 then
-				this.RPC.UI.CharacterCreate.Show();
-			elseif characterCount == 1 and Server.Game.CharactersLimit == 1 then
-				-- TODO: Select character
+				this.RPC.UI.CharacterCreate.Show( { cancelable = false } );
+			elseif characterCount == 1 and Server.Game.CharactersLimit == 1 and not forceList then
+				this.LoginCharacter( characters[ 1 ].id );
 			else
 				this.RPC.UI.CharacterList.Show( { canCreate = Server.Game.CharactersLimit == 0 or characterCount < Server.Game.CharactersLimit }, { characters = characters } );
 			end
 		else
 			Debug( Server.DB.Error(), 1 );
 		end
+	end;
+	
+	LoginCharacter	= function( characterID )
+		if this.IsInGame() then
+			Debug( this.GetName() + " arealy in game", 2 );
+			
+			return false;
+		end
+		
+		for _, p in pairs( this.GetAll() ) do
+			if p.IsInGame() and p.GetID() == characterID then
+				Debug( "This character arealy in game", 2 );
+				
+				return false;
+			end
+		end
+		
+		local result = Server.DB.Query( "SELECT *, \
+			DATE_FORMAT( created, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS created, \
+			DATE_FORMAT( last_login, '%%d/%%m/%%Y %%h:%%i:%%s' ) AS last_login, \
+			DATE_FORMAT( date_of_birdth, '%%d/%%m/%%Y' ) AS date_of_birdth, \
+			UNIX_TIMESTAMP( c.last_logout ) AS last_logout_t FROM " + Server.DB.Prefix + "characters c\
+			WHERE c.id = %d AND c.status = 'Активен'", characterID );
+			
+		if not result then
+			Debug( Server.DB.Error(), 1 );
+			
+			return false;
+		end
+		
+		local row = result.GetRow();
+		
+		delete ( result );
+		
+		if row then
+			local character		= new. Character( this, row );
+			
+			this.Character 		= character;
+			this.InGameCount	= 0;
+			
+			this.SetName( character.GetName():gsub( " ", "_" ) );
+			this.SetTeam( Server.Game.PlayerManager.TeamLoggedIn );
+			this.SetData( "Player::Level", character.Level );
+			
+			this.Nametag.Update();
+			
+			this.Camera.Fade( false );
+			
+			setTimer(
+				function()
+					this.SetAlpha( 255 );
+					this.SetCollisionsEnabled( true );
+					
+					character.Spawn( new. Vector3( row.position ), row.rotation, row.interior, row.dimension );
+					character.SetHealth( row.health );
+					character.SetArmor( row.armor );
+					
+					this.HUD.Show();
+					this.HUD.ShowComponents( "crosshair" );
+					this.Chat.Show();
+					this.Nametag.Show();
+					
+					this.Camera.SetInterior( interior );
+					this.Camera.SetTarget();
+					this.Camera.Fade( true );
+				end,
+				1000, 1
+			);
+			
+			if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "characters SET last_login = NOW() WHERE id = '" + characterID + "'" ) then
+				Debug( Server.DB.Error(), 1 ); 
+			end
+			
+		--	this.RPC.OnCharacterLogin( character.GetID(), character.Name, character.Surname );
+			
+			return true;
+		end
+		
+		return false;
 	end;
 	
 	SaveSettings	= function()
