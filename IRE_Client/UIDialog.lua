@@ -199,6 +199,47 @@ class. UIDialog
 					this.ElementNames[ data.name ] = element;
 				end
 				
+				if data.icon then
+					local iconPath = "Resources/Images/holo_light/" + data.icon + ".png";
+					
+					if fileExists( iconPath ) then
+						local texture	= dxCreateTexture( iconPath, "argb", false, "wrap" );
+						
+						if texture then
+							local size		= data.width - ( data.width % 16 );
+							
+							local x			= ( data.width - size ) / 2;
+							local y			= ( data.height - size ) / 2;
+							local width		= size;
+							local height	= size;
+							
+							local function GetPosition( element )
+								local x, y = element.GetPosition( false );
+								
+								if element.Parent then
+									local _x, _y = GetPosition( element.Parent );
+									
+									x, y = x + _x, y + _y;
+								end
+								
+								return x, y;
+							end
+							
+							function element.IconDrawing()
+								if this.IsVisible() and isElement( element ) and element.GetVisible() then
+									local elementX, elementY = GetPosition( element );
+									
+									dxDrawImage( x + elementX, y + elementY, size, size, texture, 0, 0, 0, -1, true );
+								else
+									removeEventHandler( "onClientRender", root, element.IconDrawing );
+								end
+							end
+							
+							addEventHandler( "onClientRender", root, element.IconDrawing );	
+						end
+					end
+				end
+				
 				if element then
 					element.Parent	= parent;
 					element.Name	= data.name;
@@ -207,6 +248,7 @@ class. UIDialog
 					element.Width	= data.width;
 					element.Height	= data.height;
 					element.Type	= data.node;
+					element.NoValue = (bool)(data.novalue);
 					
 					if type( data.enabled ) ~= "nil" then
 						element.SetEnabled( (bool)(data.enabled) );
@@ -482,16 +524,18 @@ class. UIDialog
 		local count = 0;
 		local data = {};
 		
-		for name, element in pairs( this.ElementNames ) do
-			data[ name ] = element.GetValue();
-			
-			if data[ name ] then
-				count = count + 1;
+		if not sender.NoValue then		
+			for name, element in pairs( this.ElementNames ) do
+				data[ name ] = element.GetValue();
+				
+				if data[ name ] then
+					count = count + 1;
+				end
 			end
-		end
-		
-		if count == 0 then
-			return;
+			
+			if count == 0 then
+				return;
+			end
 		end
 		
 		this.Window.SetEnabled( false );

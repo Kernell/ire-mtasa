@@ -47,6 +47,7 @@
   
   <file src="UI/LoginScreen.xml"/>
   <file src="UI/Registration.xml"/>
+  <file src="UI/CharacterCreate.xml"/>
   <file src="UI/CharacterList.xml"/>
   
   <!-- Fonts -->
@@ -74,4 +75,22 @@
   <file src="Resources/Images/Okay.png"/>
   <file src="Resources/Images/Warning.png"/>
   <file src="Resources/Images/Question.png"/>
+  
+  <!-- Holo Light icons -->
+  
+  <file src="Resources/Images/holo_light/1-navigation-cancel.png" />
+  <file src="Resources/Images/holo_light/1-navigation-refresh.png" />
+  <file src="Resources/Images/holo_light/2-action-about.png" />
+  <file src="Resources/Images/holo_light/2-action-search.png" />
+  <file src="Resources/Images/holo_light/2-action-settings.png" />
+  <file src="Resources/Images/holo_light/6-social-cc-bcc.png" />
+  <file src="Resources/Images/holo_light/6-social-chat.png" />
+  <file src="Resources/Images/holo_light/10-device-access-camera.png" />
+  <file src="Resources/Images/holo_light/11-alerts-and-states-airplane-mode-off.png" />
+  <file src="Resources/Images/holo_light/12-hardware-phone.png" />
+  <file src="Resources/Images/holo_light/13-handshake.png" />
+  <file src="Resources/Images/holo_light/13-home.png" />
+  <file src="Resources/Images/holo_light/13-kiss.png" />
+  <file src="Resources/Images/holo_light/13-handcuffs.png" />
+  <file src="Resources/Images/holo_light/13-heal.png" />
 </meta>
