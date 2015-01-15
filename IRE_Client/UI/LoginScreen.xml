@@ -1,9 +1,10 @@
 <ui>
   <window title="" x="center" y="center" width="470" height="370" sizable="false" movable="false">
+    <var name="login" value=""></var>
     <var name="intro_text" value="Для игры на сервере Вам необходимо пройти авторизацию"></var>
     <var name="remembered" value="false"></var>
     <label text="Login" x="30" y="37" width="406" height="57" font="Consolas 32 Bold" shadow="1 1 0,0,0"></label>
-    <label text="{intro_text}" x="30" y="94" width="405" height="20" font="Consolas 10" horizontalalign="left true"></label>
+    <label text="{intro_text}" x="30" y="94" width="405" height="64" font="Consolas 10" horizontalalign="left true"></label>
     <label text="Регистрация" x="233" y="168" width="204" height="22" font="Consolas 10" color="0,64,255" horizontalalign="right false" cursor="Link" onclick="DoRegister"></label>
     <label text="E-mail:" x="30" y="168" width="204" height="22" font="Consolas 10"/>
     <label text="Пароль:" x="30" y="238" width="204" height="22" font="Consolas 10"></label>
