@@ -252,6 +252,10 @@ class. UIDialog
 					element.Type	= data.nodeName;
 					element.NoValue = (bool)(data.novalue);
 					
+					if data.hidden and (bool)(data.hidden) then
+						element.SetVisible( false );
+					end
+					
 					if type( data.enabled ) ~= "nil" then
 						element.SetEnabled( (bool)(data.enabled) );
 					end
