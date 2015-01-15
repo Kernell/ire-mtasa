@@ -560,7 +560,13 @@ class. UIDialog
 		
 		this.Window.SetEnabled( false );
 		
-		local result = SERVER.PlayerManager( eventName, data );
+		local result = NULL;
+		
+		if this[ eventName ] then
+			result = this[ eventName ]( data );
+		else
+			result = SERVER.PlayerManager( eventName, data );
+		end
 		
 		this.Window.SetEnabled( true );
 		

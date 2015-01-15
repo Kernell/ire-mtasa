@@ -16,7 +16,13 @@ class. UIManager
 		{
 			__index = function( self, key )
 				if not this.UIList[ key ] then
-					local ui = new. UIDialog( key );
+					local ui = NULL;
+					
+					if _G[ key ] then
+						ui = new[ key ]( key );
+					else
+						ui = new. UIDialog( key );
+					end
 					
 					if ui.IsValid() then					 
 						this.UIList[ key ] = ui;
