@@ -42,8 +42,11 @@
   <script src="UICursor.lua"        type="client"/>
   <script src="UIFont.lua"          type="client"/>
   <script src="UIRadialMenu.lua"    type="client"/>
+  <script src="ClientCamera.lua"    type="client"/>
   
   <script src="Resource.lua"        type="client"/>
+  
+  <script src="CharacterSkin.lua"        type="client"/>
   
   <!-- UI -->
   
