@@ -260,6 +260,10 @@ class. UIDialog
 					element.Type	= data.nodeName;
 					element.NoValue = (bool)(data.novalue);
 					
+					if data.autocomplete and data.nodeName == "input" then
+						this.InitAutoComplete( element, data.autocomplete );
+					end
+					
 					if data.hidden and (bool)(data.hidden) then
 						element.SetVisible( false );
 					end
@@ -536,6 +540,121 @@ class. UIDialog
 				parent.Items[ data._value ] = data.value or data._value;
 			end
 		end
+	end;
+	
+	InitAutoComplete	= function( element, callbackName )
+		element.AutoComplete	=
+		{
+			Delay		= 300;
+			Callback	= callbackName;
+		};
+		
+		local function GetPosition( object )
+			local x, y = object.GetPosition( false );
+			
+			if object.Parent then
+				local _x, _y = GetPosition( object.Parent );
+				
+				x, y = x + _x, y + _y;
+			end
+			
+			return x, y;
+		end
+		
+		local x, y = GetPosition( element );
+		
+		local dropDown	= new. CEGUIGridList( x, y + element.Height, element.Width, 150, false );
+		
+		dropDown.AddColumn( " ", 0.8 );
+		dropDown.SetScrollBars( false, true );
+		dropDown.SetSortingEnabled( false );
+		dropDown.SetVisible( false );
+		dropDown.SetParent( element );
+		
+		local function SetResult( result )
+			dropDown.Clear();
+			
+			if result then
+				for i, item in ipairs( result ) do
+					local row = dropDown.AddRow();
+					
+					if row then
+						dropDown.SetItemText( row, dropDown[ " " ], item.value, false, false );
+						dropDown.SetItemData( row, dropDown[ " " ], item.id );
+					end
+				end
+				
+				dropDown.SetVisible( true );
+				dropDown.BringToFront();
+			else
+				dropDown.SetVisible( false );
+			end
+		end
+		
+		local function Click( button, state )
+			dropDown.SetVisible( false );
+			
+			local row = dropDown.GetSelectedItem();
+			
+			if not row or row == -1 then
+				return;
+			end
+			
+			element.AutoComplete.Skip = true;
+			
+			element.value = dropDown.GetItemData( row, dropDown[ " " ] ) or NULL;
+			
+			element.SetText( dropDown.GetItemText( row, dropDown[ " " ] ) or "" );
+		end
+		
+		local function Change()
+			if element.AutoComplete.Skip then
+				element.AutoComplete.Skip = NULL;
+				
+				return;
+			end
+			
+			if element.AutoComplete.Timer then
+				killTimer( element.AutoComplete.Timer );
+				element.AutoComplete.Timer = NULL;
+			end
+			
+			local function query()
+				element.AutoComplete.Timer = NULL;
+				
+				local stringQuery = element.GetText();
+				
+				if not stringQuery or stringQuery:utfLen() == 0 or stringQuery == element.PlaceHolder then
+					return;
+				end
+				
+				if element.AutoComplete.Callback then
+					local c = coroutine.create(
+						function()
+							local result = SERVER.PlayerManager( element.AutoComplete.Callback, stringQuery );
+							
+							SetResult( result );
+						end
+					);
+					
+					local success, message = coroutine.resume( c );
+					
+					if not success then
+						Debug( tostring( message ), 1 );
+					end
+				end
+			end
+			
+			element.AutoComplete.Timer = setTimer( query, element.AutoComplete.Delay, 1 );
+		end
+		
+		local function Blur()
+			dropDown.SetVisible( false );
+		end
+		
+		addEventHandler( "onClientGUIChanged",  element, Change, false );
+		addEventHandler( "onClientGUIClick", 	dropDown, Click, false );
+		addEventHandler( "onClientGUIBlur", 	dropDown, Blur, false );
 	end;
 	
 	--
