@@ -22,17 +22,21 @@ class. Resource
 	OnStart		= function()
 		this.RPC	= new. RPC( "IRE_Server", "IRE_Client" );
 		this.UI		= new. UIManager();
+		this.Camera	= new. ClientCamera();
 		
 		_G.UI = this.UI.UI;
+		_G.Camera = this.Camera;
 		
 		SERVER.PlayerManager( "Ready", guiGetScreenSize() );
 	end;
 	
 	OnStop		= function()
 		delete ( this.UI );
+		delete ( this.Camera );
 		delete ( this.RPC );
 		
 		_G.UI = NULL;
+		_G.Camera = NULL;
 	end;
 };
 
