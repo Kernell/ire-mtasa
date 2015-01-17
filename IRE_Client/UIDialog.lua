@@ -197,6 +197,14 @@ class. UIDialog
 				
 				local element = this[ funcName ]( data, parent );
 				
+				if data.id then
+					this.ElementIDs[ data.id ] = element;
+					
+					if not this[ data.id ] then
+						this[ data.id ] = element;
+					end
+				end
+				
 				if data.name then
 					this.ElementNames[ data.name ] = element;
 				end
@@ -545,6 +553,12 @@ class. UIDialog
 	-- Event raisers
 	
 	OnEvent		= function( sender, e, eventName, ... )
+		if this[ eventName ] then
+			this[ eventName ]( sender, data );
+			
+			return;
+		end
+		
 		local count = 0;
 		local data = {};
 		
@@ -564,13 +578,7 @@ class. UIDialog
 		
 		this.Window.SetEnabled( false );
 		
-		local result = NULL;
-		
-		if this[ eventName ] then
-			result = this[ eventName ]( data );
-		else
-			result = SERVER.PlayerManager( eventName, data );
-		end
+		local result = SERVER.PlayerManager( eventName, data );
 		
 		this.Window.SetEnabled( true );
 		
