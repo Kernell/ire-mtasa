@@ -237,16 +237,6 @@ end
 		if command == "Ready" then
 			player.ShowLoginScreen();
 			
-			player.ToggleControls( true, true, false );
-			player.DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous", "vehicle_left", "vehicle_right" );
-			
-			player.BindKey( "horn", "both", player.KeyVehicleHorn );
-			player.BindKey( "j", "up", player.KeyVehicleToggleEngine );
-			player.BindKey( "k", "up", player.KeyVehicleToggleLocked );
-			player.BindKey( "l", "up", player.KeyVehicleToggleLights );
-			
-			player.BindKey( "sprint", "both", player.KeySprint );
-			
 			return true;
 		end
 		
@@ -483,6 +473,25 @@ end
 			return -1;
 		end
 		
+		if command == "Character::List" then			
+			if player.IsInGame() then
+				return -1
+			end
+			
+			if player.IsLoggedIn() then			
+				-- player.InitLoginCamera();
+				
+				player.Camera.MoveTo( PlayerManager.DEFAULT_CAMERA_POSITION, 500, "InQuad" );
+				player.Camera.RotateTo( PlayerManager.DEFAULT_CAMERA_TARGET, 500, "InQuad" );
+				
+				player.LoadCharacters( player.UserID, true );
+			else
+				player.ShowLoginScreen();
+			end
+			
+			return -1;
+		end
+		
 		if command == "Character::CreateUI" then
 			if not player.IsLoggedIn() then
 				return ClientRPC.UNAUTHORIZED;
@@ -580,11 +589,11 @@ end
 					return "Фамилия содержит запрещённые символы\n\nИспользуйте только символы латинского алфавита";
 				end
 				
-				if not skinID then
+				if not skin then
 					return "Вы не выбрали скин персонажа";
 				end
 				
-				if not ( new. CharacterSkin( skinID ) ).IsValid() then
+				if not ( new. CharacterSkin( skin ) ).IsValid() then
 					return "Данный скин отключён";
 				end
 				

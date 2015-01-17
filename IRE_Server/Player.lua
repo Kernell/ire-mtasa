@@ -273,6 +273,16 @@ class. Player : Ped
 			this.RemoveFromVehicle();
 		end
 		
+		this.ToggleControls( true, true, false );
+		this.DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous", "vehicle_left", "vehicle_right" );
+		
+		this.BindKey( "horn", "both", this.KeyVehicleHorn );
+		this.BindKey( "j", "up", this.KeyVehicleToggleEngine );
+		this.BindKey( "k", "up", this.KeyVehicleToggleLocked );
+		this.BindKey( "l", "up", this.KeyVehicleToggleLights );
+		
+		this.BindKey( "sprint", "both", this.KeySprint );
+		
 		this.RemoveData( "Player::Level" );
 		
 		this.HUD.HideComponents( "all" );
