@@ -497,6 +497,8 @@ class. CEGUIEdit : CEGUI
 		this.PlaceHolderFocus	= NULL;
 		this.PlaceHolderBlur	= NULL;
 		
+		this.PlaceHolder = text;
+		
 		if text then
 			function this.PlaceHolderFocus()
 				if this.GetText() == text and this.GetProperty( "NormalTextColour" ) == "FF333333" then
