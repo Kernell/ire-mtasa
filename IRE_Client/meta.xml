@@ -32,6 +32,8 @@
   <script src="Shared/Timer.lua"        type="client"/>
   <script src="Shared/DateTime.lua"     type="client"/>
   
+  <script src="Utils.lua"           type="client"/>
+  
   <script src="RPC.lua"             type="client"/>
   <script src="CEGUI.lua"           type="client"/>
   <script src="MessageBox.lua"      type="client"/>
@@ -48,6 +50,7 @@
   <file src="UI/LoginScreen.xml"/>
   <file src="UI/Registration.xml"/>
   <file src="UI/CharacterCreate.xml"/>
+  <script src="UI/CharacterCreate.lua" type="client"/>
   <file src="UI/CharacterList.xml"/>
   
   <!-- Fonts -->

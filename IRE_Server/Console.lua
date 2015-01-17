@@ -16,17 +16,27 @@ class. Console
 		
 		this.__OnCommand	= function( ... )
 			if client then
-				local result, red, green, blue = this.ExecuteCommand( client, ... );
-			
-				if result then
-					if red and green and blue then
-						result = string.format( "#%02x%02x%02x%s", red, green, blue, result );
+				local c = coroutine.create(
+					function( client, ... )
+						local result, red, green, blue = this.ExecuteCommand( client, ... );
+						
+						if result then
+							if red and green and blue then
+								result = string.format( "#%02x%02x%02x%s", red, green, blue, result );
+							end
+							
+							triggerClientEvent( client, "Console::StdOut", client, result );
+						end
+						
+						triggerClientEvent( client, "Console::Return", client );
 					end
-					
-					triggerClientEvent( client, "Console::StdOut", client, result );
-				end
+				);
 				
-				triggerClientEvent( client, "Console::Return", client );
+				local success, result = coroutine.resume( c, client, ... );
+				
+				if not success then
+					error( tostring( result ), 2 );
+				end
 			end
 		end;
 		
@@ -64,7 +74,8 @@ class. Console
 		this.AddCommand( new. CC_Property	( "property" ) );
 		this.AddCommand( new. CC_Map		( "map" ) );
 		
-		this.AddCommand( new. CC_Exec		( "exec" ) );
+		this.AddCommand( new. CC_Exec		( "exe" ) );
+		this.AddCommand( new. CC_ExecClient	( "exec" ) );
 	end;
 	
 	AddCommand	= function( CC )

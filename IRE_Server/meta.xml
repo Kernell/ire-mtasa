@@ -70,6 +70,7 @@
   <script src="Commands/CC_UAC.lua"/>
   <script src="Commands/CC_Vehicle.lua"/>
   <script src="Commands/CC_Exec.lua"/>
+  <script src="Commands/CC_ExecClient.lua"/>
 
   <script src="MySQL.lua"/>
   <script src="MySQLResult.lua"/>
