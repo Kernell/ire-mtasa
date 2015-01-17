@@ -61,10 +61,10 @@ class. PlayerCamera
 	end;
 
 	MoveTo	= function( position, ... )
-		this.Player.RPC.Camera.MoveTo( position.X, position.Y, position.Z, ... );
+		this.Player.RPC.Camera.MoveTo( position, ... );
 	end;
 
 	RotateTo	= function( position, ... )
-		this.Player.RPC.Camera.RotateTo( position.X, position.Y, position.Z, ... );
+		this.Player.RPC.Camera.RotateTo( position, ... );
 	end;
 }
