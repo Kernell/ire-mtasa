@@ -1,0 +1,98 @@
+<ui>
+  <window title="Создание персонажа" x="50" width="400" height="520" sizable="false" movable="false">
+    <var name="cancelable" value="true"/>
+    <label text="Выберите пол" x="15" y="25" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="" x="10" y="48" width="380" height="50">
+      <button id="buttonMale" x="90" y="10" width="80" height="30" text="Мужской" onclick="OnClickMale"/>
+      <button id="buttonFemale" x="200" y="10" width="80" height="30" text="Женский" onclick="OnClickFemale"/>
+      <input id="sex" name="sex" hidden="true" value=""/>
+    </label>
+    <label text="Придумайте имя персонажа" x="15" y="103" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="" id="groupName" x="10" y="126" width="380" height="50" enabled="false">
+      <input id="name" name="name" value="" placeholder="Имя" x="15" y="10" width="140" height="25" maxlength="10"/>
+      <input id="surname" name="surname" value="" placeholder="Фамилия" x="205" y="10" width="140" height="25" maxlength="10"/>
+      <button x="155" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomName"/>
+      <button x="345" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomSurname"/>
+    </label>
+    <label text="Выберите скин" x="15" y="186" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="" id="groupSkin" x="10" y="206" width="380" height="50" enabled="false">
+      <button id="skinPrev" x="60" y="10" width="80" height="30" text="<<" onclick="OnClickSkinPrev"/>
+      <input id="skin" name="skin" value="" x="150" y="10" width="80" height="29" maxlength="3" readonly="true"/>
+      <button id="skinNext" x="240" y="10" width="80" height="30" text=">>" onclick="OnClickSkinNext"/>
+    </label>
+    <label text="Место рождения" x="15" y="266" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="" id="groupBPL" x="10" y="289" width="380" height="50" enabled="false">
+      <input id="country" name="country" value="" x="15" y="10" width="170" height="25" placeholder="Введите страну для поиска" autocomplete="SearchCountry"/>
+      <input id="city" name="city" value="" x="195" y="10" width="170" height="25" placeholder="Введите город для поиска" autocomplete="SearchCity"/>
+    </label>
+    <label text="Дата рождения" x="15" y="349" width="370" height="18" font="SegoeUI 10 bold"/>
+    <select id="day" name="day" x="25" y="382" width="61" height="150" text="День">
+      <item>1</item>
+      <item>2</item>
+      <item>3</item>
+      <item>4</item>
+      <item>5</item>
+      <item>6</item>
+      <item>7</item>
+      <item>8</item>
+      <item>9</item>
+      <item>10</item>
+      <item>11</item>
+      <item>12</item>
+      <item>13</item>
+      <item>14</item>
+      <item>15</item>
+      <item>16</item>
+      <item>17</item>
+      <item>18</item>
+      <item>19</item>
+      <item>20</item>
+      <item>21</item>
+      <item>22</item>
+      <item>23</item>
+      <item>24</item>
+      <item>25</item>
+      <item>26</item>
+      <item>27</item>
+      <item>28</item>
+      <item>29</item>
+      <item>30</item>
+      <item>31</item>
+    </select>
+    <select id="month" name="month" x="96" y="382" width="137" height="150" text="Месяц" onaccept="OnMonthChange">
+      <item value="1">Январь</item>
+      <item value="2">Февраль</item>
+      <item value="3">Март</item>
+      <item value="4">Апрель</item>
+      <item value="5">Март</item>
+      <item value="6">Июнь</item>
+      <item value="7">Июль</item>
+      <item value="8">Август</item>
+      <item value="9">Сентябрь</item>
+      <item value="10">Октябрь</item>
+      <item value="11">Ноябрь</item>
+      <item value="12">Декабрь</item>
+    </select>
+    <select id="year" name="year" x="243" y="382" width="137" height="150" text="Год" onaccept="OnYearChange">
+      <item>1996</item>
+      <item>1995</item>
+      <item>1994</item>
+      <item>1993</item>
+      <item>1992</item>
+      <item>1991</item>
+      <item>1990</item>
+      <item>1989</item>
+      <item>1988</item>
+      <item>1987</item>
+      <item>1986</item>
+      <item>1985</item>
+      <item>1984</item>
+      <item>1983</item>
+      <item>1982</item>
+      <item>1981</item>
+      <item>1980</item>
+    </select>
+    <button x="220" y="480" width="80" height="30" text="Отмена" enabled="{cancelable}" onclick="Character::List"/>
+    <button x="310" y="480" width="80" height="30" text="Создать" onclick="Character::Create"/>
+  </window>
+</ui>
