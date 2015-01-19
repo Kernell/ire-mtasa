@@ -288,6 +288,10 @@ class. UIDialog
 						element.OnAccept = data.onaccept;
 					end
 					
+					if data.onchange then
+						element.OnChange = data.onchange;
+					end
+					
 					this.Create( data, element );
 				end
 			end
@@ -323,9 +327,17 @@ class. UIDialog
 			end
 		end
 		
+		local function onChange( sender, e, ... )
+			if sender.OnChange then
+				this.OnEvent( sender, e, sender.OnChange, ... );
+			end
+		end
+		
 		window.OnClientGUIClick.Add( onClick, true );
 		window.OnClientGUIDoubleClick.Add( onDoubleClick, true );
 		window.OnClientGUIAccepted.Add( onAccept, true );
+		window.OnClientGUIComboBoxAccepted.Add( onAccept, true );
+		window.OnClientGUIChanged.Add( onChange, true );
 		
 		this.Window = window;
 		
@@ -515,6 +527,18 @@ class. UIDialog
 			return element.Items[ text ];
 		end
 		
+		function element.SetValue( value )
+			for i = 0, sizeof( element.Items ) do
+				local text = element.GetItemText( i );
+				
+				if text == value then
+					element.SetSelected( i );
+					
+					return;
+				end
+			end
+		end
+		
 		return element;
 	end;
 	
@@ -631,7 +655,13 @@ class. UIDialog
 				if element.AutoComplete.Callback then
 					local c = coroutine.create(
 						function()
-							local result = SERVER.PlayerManager( element.AutoComplete.Callback, stringQuery );
+							local result = NULL;
+							
+							if this[ element.AutoComplete.Callback ] then
+								result = this[ element.AutoComplete.Callback ]( stringQuery );
+							else
+								result = SERVER.PlayerManager( element.AutoComplete.Callback, stringQuery );
+							end
 							
 							SetResult( result );
 						end
@@ -650,6 +680,10 @@ class. UIDialog
 		
 		local function Blur()
 			dropDown.SetVisible( false );
+		end
+		
+		local function Focus()
+			dropDown.SetVisible( true );
 		end
 		
 		addEventHandler( "onClientGUIChanged",  element, Change, false );
@@ -683,7 +717,7 @@ class. UIDialog
 		
 		if not sender.NoValue then		
 			for name, element in pairs( this.ElementNames ) do
-				data[ name ] = element.GetValue();
+				data[ name ] = element.value or element.GetValue();
 				
 				if data[ name ] then
 					count = count + 1;
