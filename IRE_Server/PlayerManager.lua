@@ -605,6 +605,10 @@ end
 					return "Введите дату рождения персонажа";
 				end
 				
+				if day > days_in_month( year, month ) then
+					return "В этом месяце не может быть столько дней";
+				end
+				
 				name		= name[ 1 ]:upper() + name:sub( 2, name:len() ):lower();
 				surname		= surname[ 1 ]:upper() + surname:sub( 2, surname:len() ):lower();
 				
@@ -654,7 +658,7 @@ end
 						name				= name;
 						surname				= surname;
 						skin				= skin;
-						date_of_birdth		= string.format( "%04d-%02d-%02d", 1970 + year, month, day );
+						date_of_birdth		= string.format( "%04d-%02d-%02d", year, month, day );
 						place_of_birdth		= string.format( "%s, %s, %s", rowPlace.name, rowPlace.region, rowPlace.city );
 						nation				= language;
 						languages			= languages;
@@ -669,14 +673,111 @@ end
 					return TEXT_DB_ERROR;
 				end
 				
-				player.LoginCharacter( charID );
-				
 				Console.Log( "%s (%d) Created new character \"%s_%s\" (%d)", player.UserName, player.UserID, name, surname, charID );
+				
+				player.LoginCharacter( charID );
 				
 				return -1;
 			end
 			
 			return ClientRPC.BAD_REQUEST;
+		end
+		
+		if command == "SearchCountry" then
+			local query = (string)(data);
+			
+			if query:utfLen() > 0 then
+				for i = 1, query:utfLen() do
+					local char = query:utfSub( 1, 1 ):utfCode();
+					
+					if 	( char >= 1072 and char <= 1103 or char >= 1040 and char <= 1071 )
+						or
+						( char >= 65 and char <= 90 or char >= 97 and char <= 122 )
+					then
+						-- true;
+					else
+						if _DEBUG then
+							Debug( "invalid char " + char, 3 );
+						end
+						
+						return false;
+					end
+				end
+				
+				local result = Server.DB.Query( "SELECT country_id AS id, name as value FROM countries WHERE name LIKE '%" + query + "%' ORDER BY country_id LIMIT 15" );
+				
+				if result then
+					local Result = 
+					{
+						{
+							id		= 0;
+							value	= "Страна не найдена";
+						};
+					};
+					
+					if result.NumRows() > 0 then
+						Result = result.GetArray();
+					end
+					
+					delete ( result );
+					
+					return Result;
+				else
+					Debug( Server.DB.Error(), 1 );
+				end
+			end
+			
+			return NULL;
+		end
+		
+		if command == "SearchCity" then
+			local query		= (string)(data);
+			local countryID	= (int)(( { ... } )[ 1 ]);
+			
+			if query:utfLen() > 0 and countryID > 0 then
+				for i = 1, query:utfLen() do
+					local char = query:utfSub( 1, 1 ):utfCode();
+					
+					if 	( char >= 1072 and char <= 1103 or char >= 1040 and char <= 1071 )
+						or
+						( char >= 65 and char <= 90 or char >= 97 and char <= 122 )
+					then
+						-- true;
+					else
+						if _DEBUG then
+							Debug( "invalid char " + char, 3 );
+						end
+						
+						return false;
+					end
+				end
+				
+				local q = "SELECT id, CONCAT( city, ' (', region, ')' ) AS value FROM cities WHERE country_id = " + countryID + " AND city LIKE '%" + query + "%' LIMIT 15";
+				
+				local result = Server.DB.Query( q );
+				
+				if result then
+					local Result =
+					{
+						{
+							id		= 0;
+							value	= "Город не найден\n";
+						};
+					};
+					
+					if result.NumRows() > 0 then
+						Result = result.GetArray();
+					end
+					
+					delete ( result );
+					
+					return Result;
+				else
+					Debug( Server.DB.Error(), 1 );
+				end
+			end
+			
+			return NULL;
 		end
 		
 		return false;
