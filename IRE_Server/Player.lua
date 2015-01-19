@@ -349,9 +349,9 @@ class. Player : Ped
 
 				if row[ "last_login_f" ] ~= "00 00 0000 г. 00:00" then
 					if row[ "last_login_d" ] == 0 then
-						lastLogin = "Сегодня в " + row[ "last_login_f" ]:split( ' ' )[ 4 ];
+						lastLogin = "Сегодня в " + row[ "last_login_f" ]:split( ' ' )[ 5 ];
 					elseif row[ "last_login_d" ] == 1 then
-						lastLogin = "Вчера в " + row[ "last_login_f" ]:split( ' ' )[ 4 ];
+						lastLogin = "Вчера в " + row[ "last_login_f" ]:split( ' ' )[ 5 ];
 					else
 						lastLogin = row[ "last_login_f" ];
 					end
@@ -923,7 +923,7 @@ class. Player : Ped
 	end;
 
 	LoadCharacters	= function( userID, forceList )
-		local result = Server.DB.Query( "SELECT id, name, surname, DATE_FORMAT( last_login, '%d/%m/%Y %H:%i:%s' ) AS last_login, DATE_FORMAT( created, '%d/%m/%Y %H:%i:%s' ) AS created, status FROM " + Server.DB.Prefix + "characters WHERE user_id = " + userID + " AND status != 'Скрыт' ORDER BY last_login DESC" );
+		local result = Server.DB.Query( "SELECT id, name, surname, DATE_FORMAT( last_login, '%d.%m.%Y %H:%i:%s' ) AS last_login, DATE_FORMAT( created, '%d.%m.%Y %H:%i:%s' ) AS created, status FROM " + Server.DB.Prefix + "characters WHERE user_id = " + userID + " AND status != 'Скрыт' ORDER BY last_login DESC" );
 
 		if result ~= NULL then
 			local characters = result.GetArray();
@@ -935,6 +935,10 @@ class. Player : Ped
 			for i, character in ipairs( characters ) do
 				if character[ "status" ] ~= "Скрыт" then
 					characterCount = characterCount + 1;
+				end
+				
+				if character[ "last_login" ] == "00.00.0000 00:00:00" then
+					character[ "last_login" ] = "Никогда";
 				end
 			end
 			
@@ -957,7 +961,7 @@ class. Player : Ped
 			return false;
 		end
 		
-		for _, p in pairs( this.GetAll() ) do
+		for _, p in pairs( Server.Game.PlayerManager.GetAll() ) do
 			if p.IsInGame() and p.GetID() == characterID then
 				Debug( "This character arealy in game", 2 );
 				
