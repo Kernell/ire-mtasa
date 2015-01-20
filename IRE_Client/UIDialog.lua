@@ -725,18 +725,18 @@ class. UIDialog
 				
 				if value then
 					if element.MaxLength and value:utfLen() > element.MaxLength then
-						return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" превышает допустимую длину" );
+						return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" превышает допустимую длину" );
 					end
 					
 					if element.Pattern and not pregFind( value, element.Pattern ) then
-						return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" содержит запрещённые символы" );
+						return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" содержит запрещённые символы" );
 					end
 					
 					count = count + 1;
 					
 					data[ name ] = value;
 				elseif element.Required then
-					return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" обязательно для заполнения" );
+					return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" обязательно для заполнения" );
 				end
 			end
 			
