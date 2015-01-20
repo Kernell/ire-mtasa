@@ -251,14 +251,18 @@ class. UIDialog
 				end
 				
 				if element then
-					element.Parent	= parent;
-					element.Name	= data.name;
-					element.X		= data.x;
-					element.Y		= data.y;
-					element.Width	= data.width;
-					element.Height	= data.height;
-					element.Type	= data.nodeName;
-					element.NoValue = (bool)(data.novalue);
+					element.Parent		= parent;
+					element.Name		= data.name;
+					element.Title		= data.title;
+					element.X			= data.x;
+					element.Y			= data.y;
+					element.Width		= data.width;
+					element.Height		= data.height;
+					element.Type		= data.nodeName;
+					element.NoValue 	= (bool)(data.novalue);
+					element.Pattern		= data.pattern;
+					element.MaxLength	= data.maxlength;
+					element.Required	= (bool)(data.required);
 					
 					if data.autocomplete and data.nodeName == "input" then
 						this.InitAutoComplete( element, data.autocomplete );
@@ -717,10 +721,22 @@ class. UIDialog
 		
 		if not sender.NoValue then		
 			for name, element in pairs( this.ElementNames ) do
-				data[ name ] = element.value or element.GetValue();
+				local value = element.value or element.GetValue();
 				
-				if data[ name ] then
+				if value then
+					if element.MaxLength and value:utfLen() > element.MaxLength then
+						return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" превышает допустимую длину" );
+					end
+					
+					if element.Pattern and not pregFind( value, element.Pattern ) then
+						return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" содержит запрещённые символы" );
+					end
+					
 					count = count + 1;
+					
+					data[ name ] = value;
+				elseif element.Required then
+					return this.Error( "Поле \"" . ( element.Title or element.Name ) . "\" обязательно для заполнения" );
 				end
 			end
 			
