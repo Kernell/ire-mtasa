@@ -7,14 +7,14 @@
       <button id="buttonFemale" x="200" y="10" width="80" height="30" text="Женский" onclick="OnClickFemale"/>
       <input id="sex" name="sex" hidden="true" value=""/>
     </label>
-    <label text="Придумайте имя персонажа" x="15" y="103" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="Имя персонажа" x="15" y="103" width="370" height="18" font="SegoeUI 10 bold"/>
     <label text="" id="groupName" x="10" y="126" width="380" height="50" enabled="false">
-      <input id="name" name="name" value="" placeholder="Имя" x="15" y="10" width="140" height="25" maxlength="10"/>
-      <input id="surname" name="surname" value="" placeholder="Фамилия" x="205" y="10" width="140" height="25" maxlength="10"/>
+      <input id="name" name="name" title="Имя персонажа" value="" placeholder="Имя" x="15" y="10" width="140" height="25" maxlength="10" pattern="[a-zA-Z]"/>
+      <input id="surname" name="surname" title="Фамилия персонажа" value="" placeholder="Фамилия" x="205" y="10" width="140" height="25" maxlength="10" pattern="[a-zA-Z]"/>
       <button x="155" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomName"/>
       <button x="345" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomSurname"/>
     </label>
-    <label text="Выберите скин" x="15" y="186" width="370" height="18" font="SegoeUI 10 bold"/>
+    <label text="Cкин персонажа" x="15" y="186" width="370" height="18" font="SegoeUI 10 bold"/>
     <label text="" id="groupSkin" x="10" y="206" width="380" height="50" enabled="false">
       <button id="skinPrev" x="60" y="10" width="80" height="30" text="<<" onclick="OnClickSkinPrev"/>
       <input id="skin" name="skin" value="" x="150" y="10" width="80" height="29" maxlength="3" readonly="true"/>
