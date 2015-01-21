@@ -58,6 +58,12 @@ class. CC_System : IConsoleCommand
 	end;
 	
 	Info		= function()
-		
+		return
+		{
+			{ "Syntax: /" + this.Name + " <option>", 255, 255, 255 };
+			{ "List of options:", 200, 200, 200 };
+			{ "restart                    Таймер на рестарт сервера (0 для отмены)" };
+			{ "shutdown                   Таймер на выключение сервера (0 для отмены)" };
+		};
 	end;
 };
