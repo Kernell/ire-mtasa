@@ -26,7 +26,7 @@ class. PlayerNametag
 	SetColor	= function( color )
 		this.Player.SetData( "Player::Nametag::Color", color );
 		
-		return setPlayerNametagColor( this.Player, color.R, color.G, color.B );
+		return setPlayerNametagColor( this.Player, false );
 	end;
 	
 	GetColor	= function()
