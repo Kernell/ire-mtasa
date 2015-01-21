@@ -69,24 +69,24 @@ class. CharacterCreate : UIDialog
 	end;
 	
 	OnMonthChange	= function()
-		local year 	= this.year.GetValue();
+		local year 	= this.year.GetValue() or 1980;
 		local month = this.month.GetValue();
 		
-		if year and month then
+		if month then
 			local days = days_in_month( year, month );
 			
-			this.day.SetValue( Clamp( 1, this.day.GetValue(), days ) );
+			this.day.SetValue( (string)(Clamp( 1, this.day.GetValue(), days )) );
 		end
 	end;
 	
 	OnYearChange	= function()
-		local year 	= this.year.GetValue();
+		local year 	= this.year.GetValue() or 1980;
 		local month = this.month.GetValue();
 		
-		if year and month then
+		if month then
 			local days = days_in_month( year, month );
 			
-			this.day.SetValue( Clamp( 1, this.day.GetValue(), days ) );
+			this.day.SetValue( (string)(Clamp( 1, this.day.GetValue(), days )) );
 		end
 	end;
 	
