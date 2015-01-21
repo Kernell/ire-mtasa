@@ -97,8 +97,24 @@ class. ClientConsole
 			end
 		end
 		
-		function this.__Print( sResult )
-			this.StdOut( sResult );
+		function this.__Print( result )
+			if type( result ) == "table" then
+				for i, str in ipairs( result ) do
+					if type( str ) == "table" then
+						local str, r, g, b = str[ 1 ], str[ 2 ], str[ 3 ], str[ 4 ];
+						
+						if r and g and b then
+							str = ( "#%02x%02x%02x%s" ):format( r, g, b, str );
+						end
+						
+						this.StdOut( str );
+					elseif type( str ) == "string" then
+						this.StdOut( str );
+					end
+				end
+			elseif type( result ) == "string" then
+				this.StdOut( result );
+			end
 		end
 		
 		function this.__Return()
