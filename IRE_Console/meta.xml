@@ -11,4 +11,6 @@
   <script src="bin/yes"                 type="client"/>
   <script src="bin/clear"               type="client"/>
   <script src="bin/echo"                type="client"/>
+  
+  <file src="consola.ttf" download="false"/>
 </meta>

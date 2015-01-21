@@ -23,7 +23,7 @@ class. ClientConsole
 	m_iHeight			= gl_iScreenY * 0.5;
 	
 	m_iSize				= 1;
-	m_pFont				= dxCreateFont( ":IRE_Client/Resources/Fonts/consola.ttf", 9, false );
+	m_pFont				= "default-bold";
 	m_iFontWidth		= 7;
 	m_iLineHeight		= 15;
 	m_iLinesBufferSize	= 999;

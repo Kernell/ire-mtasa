@@ -7,9 +7,11 @@
 
 addEvent( "ToggleClientConsole", true );
 
-function Toggle()
+local function Toggle()
 	if not console then
 		console = new. ClientConsole();
+		
+		downloadFile( "consola.ttf" );
 	end
 	
 	if console.m_bVisible then
@@ -19,7 +21,13 @@ function Toggle()
 	end
 end
 
-function OnStop()
+local function OnFileDownload( fileName, success )
+	if fileName == "consola.ttf" and success then
+		console.m_pFont = dxCreateFont( "consola.ttf", 9, false );
+	end
+end
+
+local function OnStop()
 	if console then
 		delete ( console );
 		
@@ -28,4 +36,5 @@ function OnStop()
 end
 
 addEventHandler( "ToggleClientConsole", root, Toggle );
+addEventHandler( "onClientFileDownloadComplete", root, OnFileDownload );
 addEventHandler( "onClientResourceStop", resourceRoot, OnStop );
