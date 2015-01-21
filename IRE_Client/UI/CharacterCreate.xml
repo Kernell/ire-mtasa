@@ -60,7 +60,7 @@
       <item>1981</item>
       <item>1980</item>
     </select>
-    <button x="220" y="480" width="80" height="30" text="Отмена" enabled="{cancelable}" onclick="Character::List"/>
+    <button x="220" y="480" width="80" height="30" text="Отмена" enabled="{cancelable}" onclick="Character::List" novalue="true"/>
     <button x="310" y="480" width="80" height="30" text="Создать" onclick="Character::Create"/>
   </window>
 </ui>
