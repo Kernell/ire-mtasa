@@ -87,6 +87,7 @@
   <script src="Environment.lua"/>
   <script src="GroupManager.lua"/>
   <script src="PlayerManager.lua"/>
+  <script src="AdminManager.lua"/>
   
   <script src="Group.lua"/>
   
