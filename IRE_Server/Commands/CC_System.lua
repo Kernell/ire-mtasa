@@ -1,7 +1,7 @@
 -- Innovation Roleplay Engine
 --
 -- Author		Kernell
--- Copyright	© 2011 - 2014
+-- Copyright	© 2011 - 2015
 -- License		Proprietary Software
 -- Version		1.0
 
@@ -11,8 +11,29 @@ class. CC_System : IConsoleCommand
 		this.IConsoleCommand( ... );
 	end;
 	
-	Execute		= function( Player, Option, ... )
-		print( Player, Option, ... );
+	Execute		= function( player, option, ... )
+		if option == "restart" then
+			local seconds = tonumber( ( { ... } )[ 1 ] );
+			
+			if seconds then
+				seconds = Clamp( 0, seconds, 600 );
+				
+				Server.CountDown		= seconds;
+				Server.CountDownType	= seconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_RESTART;
+				
+				local decl = math.decl( seconds, "секунду", "секунды", "секунд" );
+				
+				outputChatBox( "Внимание! Перезапуск сервера " + ( seconds == 0 and "отменён" or "через " + seconds + " " + decl ), root, 255, 64, 0 );
+				
+				Server.Game.AdminManager.SendMessage( player.GetUserName() + " запустил таймер на перезапуск сервера (" + decl + ")" );
+				
+				return true;
+			end
+			
+			return "Syntax: /" + this.Name + " <option>";
+		end
+		
+		return this.Info();
 	end;
 	
 	Info		= function()
