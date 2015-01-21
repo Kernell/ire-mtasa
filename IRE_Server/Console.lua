@@ -89,7 +89,11 @@ class. Console
 		
 		if CC then
 			if Player.IsLoggedIn() and Player.HaveAccess( "command." + Name ) then
-				Console.Log( "%s (%s): %s %s", Player.GetName(), Player.UserName, Name, table.concat( { ... }, ' ' ) );
+				if Player == this then
+					Console.Log( "Console: %s %s", Name, table.concat( { ... }, ' ' ) );
+				else
+					Console.Log( "%s (%s): %s %s", Player.GetName(), Player.UserName, Name, table.concat( { ... }, ' ' ) );
+				end
 				
 				return CC.Execute( Player, ... );
 			end
