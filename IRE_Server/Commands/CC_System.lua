@@ -25,12 +25,33 @@ class. CC_System : IConsoleCommand
 				
 				outputChatBox( "Внимание! Перезапуск сервера " + ( seconds == 0 and "отменён" or "через " + seconds + " " + decl ), root, 255, 64, 0 );
 				
-				Server.Game.AdminManager.SendMessage( player.GetUserName() + " запустил таймер на перезапуск сервера (" + decl + ")" );
+				AdminManager.SendMessage( player.GetUserName() + " запустил таймер на перезапуск сервера (" + decl + ")" );
 				
 				return true;
 			end
 			
-			return "Syntax: /" + this.Name + " <option>";
+			return "Syntax: /" + this.Name + " " + option + " <seconds>";
+		end
+		
+		if option == "shutdown" then
+			local seconds = tonumber( ( { ... } )[ 1 ] );
+			
+			if seconds then
+				seconds = Clamp( 0, seconds, 600 );
+				
+				Server.CountDown		= seconds;
+				Server.CountDownType	= seconds == 0 and SERVER_COUNTDOWN_NONE or SERVER_COUNTDOWN_SHUTDOWN;
+				
+				local decl = math.decl( seconds, "секунду", "секунды", "секунд" );
+				
+				outputChatBox( "Внимание! Выключение сервера " + ( seconds == 0 and "отменён" or "через " + seconds + " " + decl ), root, 255, 64, 0 );
+				
+				AdminManager.SendMessage( player.GetUserName() + " запустил таймер на выключение сервера (" + decl + ")" );
+				
+				return true;
+			end
+			
+			return "Syntax: /" + this.Name + " " + option + " <seconds>";
 		end
 		
 		return this.Info();
