@@ -250,15 +250,16 @@ class. ClientConsole
 		
 		if _G[ Args[ 1 ] ] then
 			_G[ Args[ 1 ] ]( unpack( Args, 2 ) );
+
+			this.ExecuteResult();
+			
+			this.m_aStdOut = NULL;
 		else
 			triggerServerEvent( "onClientCommand", CLIENT, unpack( Args ) );
 			
 			-- this.StdOut( "#FF0000" + Args[ 1 ] + ": command not found" );
 		end
 		
-		this.ExecuteResult();
-		
-		this.m_aStdOut = NULL;
 	end;
 	
 	ExecuteResult		= function( sResult )
