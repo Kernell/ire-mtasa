@@ -276,12 +276,12 @@ class. Player : Ped
 		this.ToggleControls( true, true, false );
 		this.DisableControls( "next_weapon", "previous_weapon", "action", "walk", "fire", "horn", "radio_next", "radio_previous", "vehicle_left", "vehicle_right" );
 		
-		this.BindKey( "horn", "both", this.KeyVehicleHorn );
-		this.BindKey( "j", "up", this.KeyVehicleToggleEngine );
-		this.BindKey( "k", "up", this.KeyVehicleToggleLocked );
-		this.BindKey( "l", "up", this.KeyVehicleToggleLights );
+		this.BindKey( "horn", "both", Player.KeyVehicleHorn );
+		this.BindKey( "j", "up", Player.KeyVehicleToggleEngine );
+		this.BindKey( "k", "up", Player.KeyVehicleToggleLocked );
+		this.BindKey( "l", "up", Player.KeyVehicleToggleLights );
 		
-		this.BindKey( "sprint", "both", this.KeySprint );
+		this.BindKey( "sprint", "both", Player.KeySprint );
 		
 		this.RemoveData( "Player::Level" );
 		
@@ -360,7 +360,7 @@ class. Player : Ped
 				if lastLogin ~= "" then
 					this.Chat.Send( string.format( "Приветствуем Вас %s, последний раз Вы были тут %s (%s)", this.UserName, lastLogin, row[ "ip" ] ), 0, 255, 0 );
 				end
-		
+				
 				this.GP = row[ "goldpoints" ];
 
 			--	this.RPC.Settings.Load( not row[ "settings" ] and row[ "settings" ] or "" );
@@ -438,10 +438,14 @@ class. Player : Ped
 				if this.AdminID == 0 then
 					this.AdminID = math.random( 9000, 9999 );
 				end
+				
+				this.UnbindKey( "end", "down", Player.ToggleClientConsole );
 
 				this.UnbindKey( "F4", "up", "chatbox", "adminchat" );
 				
 				if this.HaveAccess( "command.adminchat" ) then
+					this.BindKey( "end", "down", Player.ToggleClientConsole );
+					
 					this.BindKey( "F4", "up", "chatbox", "adminchat" );
 				end
 				
@@ -788,44 +792,14 @@ class. Player : Ped
 	end;
 
 	BindKey	= function( key, state, func, ... )
-		if type( func ) == "function" then
-			local Function = this.Binds[ func ];
-			
-			if Function == NULL then
-				function Function( player, key, state, ... )
-					return func( this, key, state, ... );
-				end
-			end
-			
-			this.Binds[ func ] = Function;
-			
-			return bindKey( this, key, state, Function, ... );
-		else
-			return bindKey( this, key, state, func, ... );
-		end
-		
-		return false;
+		return bindKey( this, key, state, func, ... );
 	end;
 
 	UnbindKey	= function( key, state, func )
-		if type( func ) == "function" and this.Binds then
-			func = this.Binds[ func ] or func;
-		end
-		
-		if unbindKey( this, key, state, func ) then
-			this.Binds[ func ] = nil;
-			
-			return true;
-		end
-		
-		return false;
+		return unbindKey( this, key, state, func );
 	end;
 
 	IsKeyBound	= function( key, state, func )
-		if type( func ) == "function" then
-			func = this.Binds[ func ] or func;
-		end
-		
 		return isKeyBound( this, key, state, func );
 	end;
 
@@ -1125,27 +1099,34 @@ class. Player : Ped
 	
 	-- Key handlers
 	
-	KeySprint			= function( key, state )
-		this.SetControlState( "walk", state == "up" );
-	end;
-	
-	KeyVehicleHorn		= function( key, state )
-		local vehicle = this.GetVehicle();
+	static
+	{
+		ToggleClientConsole	= function( player )
+			triggerClientEvent( player, "ToggleClientConsole", player );
+		end;
 		
-		if vehicle and this.GetVehicleSeat() == 0 then
-			vehicle.Horn( state == "down" );
-		end
-	end;
-	
-	KeyVehicleToggleEngine	= function()
-	
-	end;
-	
-	KeyVehicleToggleLocked	= function()
+		KeySprint			= function( player, key, state )
+			player.SetControlState( "walk", state == "up" );
+		end;
 		
-	end;
-	
-	KeyVehicleToggleLights	= function()
+		KeyVehicleHorn		= function( player, key, state )
+			local vehicle = player.GetVehicle();
+			
+			if vehicle and player.GetVehicleSeat() == 0 then
+				vehicle.Horn( state == "down" );
+			end
+		end;
 		
-	end;
+		KeyVehicleToggleEngine	= function( player )
+		
+		end;
+		
+		KeyVehicleToggleLocked	= function( player )
+			
+		end;
+		
+		KeyVehicleToggleLights	= function( player )
+			
+		end;
+	};
 };

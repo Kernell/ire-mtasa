@@ -342,12 +342,6 @@ class. ClientConsole
 			end
 			
 			return false;
-		else
-			if sKey == "end" then
-				this.Show();
-				
-				return false;
-			end
 		end
 		
 		return true;

@@ -5,13 +5,27 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-function OnStart()
-	console = new. ClientConsole();
+addEvent( "ToggleClientConsole", true );
+
+function Toggle()
+	if not console then
+		console = new. ClientConsole();
+	end
+	
+	if console.m_bVisible then
+		console.Hide();
+	else
+		console.Show();
+	end
 end
 
 function OnStop()
-	delete ( console );
+	if console then
+		delete ( console );
+		
+		console = NULL;
+	end
 end
 
-addEventHandler( "onClientResourceStart", resourceRoot, OnStart );
+addEventHandler( "ToggleClientConsole", root, Toggle );
 addEventHandler( "onClientResourceStop", resourceRoot, OnStop );
