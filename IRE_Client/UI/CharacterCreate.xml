@@ -21,45 +21,13 @@
       <button id="skinNext" x="240" y="10" width="80" height="30" text=">>" onclick="OnClickSkinNext"/>
     </label>
     <label text="Место рождения" x="15" y="266" width="370" height="18" font="SegoeUI 10 bold"/>
-    <label text="" id="groupBPL" x="10" y="289" width="380" height="50" enabled="false">
+    <label text="" id="groupBPL" x="10" y="289" width="380" height="50">
       <input id="country" name="country" value="" x="15" y="10" width="170" height="25" placeholder="Введите страну для поиска" autocomplete="SearchCountry"/>
       <input id="city" name="city" value="" x="195" y="10" width="170" height="25" placeholder="Введите город для поиска" autocomplete="SearchCity"/>
     </label>
     <label text="Дата рождения" x="15" y="349" width="370" height="18" font="SegoeUI 10 bold"/>
-    <select id="day" name="day" x="25" y="382" width="61" height="150" text="День">
-      <item>1</item>
-      <item>2</item>
-      <item>3</item>
-      <item>4</item>
-      <item>5</item>
-      <item>6</item>
-      <item>7</item>
-      <item>8</item>
-      <item>9</item>
-      <item>10</item>
-      <item>11</item>
-      <item>12</item>
-      <item>13</item>
-      <item>14</item>
-      <item>15</item>
-      <item>16</item>
-      <item>17</item>
-      <item>18</item>
-      <item>19</item>
-      <item>20</item>
-      <item>21</item>
-      <item>22</item>
-      <item>23</item>
-      <item>24</item>
-      <item>25</item>
-      <item>26</item>
-      <item>27</item>
-      <item>28</item>
-      <item>29</item>
-      <item>30</item>
-      <item>31</item>
-    </select>
-    <select id="month" name="month" x="96" y="382" width="137" height="150" text="Месяц" onaccept="OnMonthChange">
+    <select id="day" name="day" x="25" y="382" width="61" height="150" text="День" onaccept="UpdateDaysInMonth"/>
+    <select id="month" name="month" x="96" y="382" width="137" height="150" text="Месяц" onaccept="UpdateDaysInMonth">
       <item value="1">Январь</item>
       <item value="2">Февраль</item>
       <item value="3">Март</item>
@@ -73,7 +41,7 @@
       <item value="11">Ноябрь</item>
       <item value="12">Декабрь</item>
     </select>
-    <select id="year" name="year" x="243" y="382" width="137" height="150" text="Год" onaccept="OnYearChange">
+    <select id="year" name="year" x="243" y="382" width="137" height="150" text="Год" onaccept="UpdateDaysInMonth">
       <item>1996</item>
       <item>1995</item>
       <item>1994</item>

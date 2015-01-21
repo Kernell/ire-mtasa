@@ -68,25 +68,31 @@ class. CharacterCreate : UIDialog
 		this.Ped = NULL;
 	end;
 	
-	OnMonthChange	= function()
-		local year 	= this.year.GetValue() or 1980;
-		local month = this.month.GetValue();
-		
-		if month then
-			local days = days_in_month( year, month );
-			
-			this.day.SetValue( (string)(Clamp( 1, this.day.GetValue(), days )) );
-		end
+	OnShow				= function()
+		this.UpdateDaysInMonth();
 	end;
 	
-	OnYearChange	= function()
+	UpdateDaysInMonth	= function()
 		local year 	= this.year.GetValue() or 1980;
-		local month = this.month.GetValue();
+		local month = this.month.GetValue() or 1;
+		local day 	= this.day.GetValue();
 		
 		if month then
-			local days = days_in_month( year, month );
+			local days = days_in_month( (int)(year), (int)(month) );
 			
-			this.day.SetValue( (string)(Clamp( 1, this.day.GetValue(), days )) );
+			this.day.Clear();
+			
+			this.day.Items = {};
+			
+			for i = 1, days do
+				this.day.AddItem( (string)(i) );
+				
+				this.day.Items[ (string)(i) ] = i;
+			end
+			
+			if day then
+				this.day.SetValue( (string)(Clamp( 1, day, days )) );
+			end
 		end
 	end;
 	
@@ -96,7 +102,6 @@ class. CharacterCreate : UIDialog
 		
 		this.groupName.SetEnabled( true );
 		this.groupSkin.SetEnabled( true );
-		this.groupBPL.SetEnabled( true );
 		
 		this.sex.value = 1;
 		
@@ -111,7 +116,6 @@ class. CharacterCreate : UIDialog
 		
 		this.groupName.SetEnabled( true );
 		this.groupSkin.SetEnabled( true );
-		this.groupBPL.SetEnabled( true );
 		
 		this.sex.value = 2;
 		
