@@ -9,8 +9,8 @@
     </label>
     <label text="Имя персонажа" x="15" y="103" width="370" height="18" font="SegoeUI 10 bold"/>
     <label text="" id="groupName" x="10" y="126" width="380" height="50" enabled="false">
-      <input id="name" name="name" title="Имя персонажа" value="" placeholder="Имя" x="15" y="10" width="140" height="25" maxlength="10" pattern="[a-zA-Z]"/>
-      <input id="surname" name="surname" title="Фамилия персонажа" value="" placeholder="Фамилия" x="205" y="10" width="140" height="25" maxlength="10" pattern="[a-zA-Z]"/>
+      <input id="name" name="name" title="Имя персонажа" value="" placeholder="Имя" x="15" y="10" width="140" height="25" maxlength="10" pattern="^(?:[A-Z]{1}[a-z]+)$"/>
+      <input id="surname" name="surname" title="Фамилия персонажа" value="" placeholder="Фамилия" x="205" y="10" width="140" height="25" maxlength="10" pattern="^(?:[A-Z]{1}[a-z]+)$"/>
       <button x="155" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomName"/>
       <button x="345" y="10" width="25" height="25" text="" icon="1-navigation-refresh" onclick="OnClickRandomSurname"/>
     </label>
