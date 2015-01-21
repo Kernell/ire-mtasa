@@ -261,7 +261,7 @@ class. UIDialog
 					element.Type		= data.nodeName;
 					element.NoValue 	= (bool)(data.novalue);
 					element.Pattern		= data.pattern;
-					element.MaxLength	= data.maxlength;
+					element.MaxLength	= (int)(data.maxlength);
 					element.Required	= (bool)(data.required);
 					
 					if data.autocomplete and data.nodeName == "input" then
@@ -724,12 +724,14 @@ class. UIDialog
 				local value = element.value or element.GetValue();
 				
 				if value then
-					if element.MaxLength and value:utfLen() > element.MaxLength then
-						return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" превышает допустимую длину" );
-					end
-					
-					if element.Pattern and not pregFind( value, element.Pattern ) then
-						return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" содержит запрещённые символы" );
+					if type( value ) == "string" then
+						if element.MaxLength > 0 and value:utfLen() > element.MaxLength then
+							return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" превышает допустимую длину" );
+						end
+						
+						if element.Pattern and not pregFind( value, element.Pattern ) then
+							return this.Error( "Поле \"" + ( element.Title or element.Name ) + "\" заполнено не верно" );
+						end
 					end
 					
 					count = count + 1;
