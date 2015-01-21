@@ -131,9 +131,17 @@ class. UIDialog
 		end
 		
 		this.Window.ShowCursor();
+		
+		if this.OnShow then
+			this.OnShow();
+		end
 	end;
 	
 	Hide		= function()
+		if this.OnHide then
+			this.OnHide();
+		end
+		
 		if this.Window then
 			this.Window.HideCursor();
 		
