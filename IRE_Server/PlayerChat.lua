@@ -95,7 +95,7 @@ class. PlayerChat
 			if this.Player.IsAdmin then
 				this.LocalOOC( message );
 			else
-				local gender = char.GetSkin().GetGender() or "unknown";
+				local gender = char.Skin.GetGender() or "unknown";
 				local prefix = PlayerChat.Prefixes[ type or 1 ][ gender ];
 				
 				local text = this.Player.VisibleName + " (" + this.Player.GetID() + ") " + prefix + ": " + message;

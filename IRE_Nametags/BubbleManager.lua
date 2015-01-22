@@ -7,7 +7,7 @@
 
 class. BubbleManager
 {
-	CBubbleManager	= function()
+	BubbleManager	= function()
 		this.__Render = function()
 			this.Render();
 		end
@@ -30,7 +30,7 @@ class. BubbleManager
 	Render	= function()
 		local tick			= getTickCount();
 		
-		for i, ped in pairs( getElementsByType( "player" ) ) do
+		for i, ped in pairs( getElementsByType( "player", root, true ) ) do
 			if ped ~= CLIENT then
 				if ped.Bubbles then 				
 					for ii, bubble in ipairs( ped.Bubbles ) do

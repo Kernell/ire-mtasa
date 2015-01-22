@@ -171,6 +171,6 @@ addEventHandler( 'OnPlayerChatMessage', root,
 			return;
 		end
 		
-		CBubble( source, sMessage, 10000, fDistance, iColor, iBackgroundColor );
+		new. Bubble( source, sMessage, 10000, fDistance, iColor, iBackgroundColor );
 	end
 );
