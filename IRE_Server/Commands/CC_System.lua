@@ -25,7 +25,7 @@ class. CC_System : IConsoleCommand
 				
 				outputChatBox( "Внимание! Перезапуск сервера " + ( seconds == 0 and "отменён" or "через " + seconds + " " + decl ), root, 255, 64, 0 );
 				
-				AdminManager.SendMessage( player.GetUserName() + " запустил таймер на перезапуск сервера (" + decl + ")" );
+				AdminManager.SendMessage( player.UserName + " запустил таймер на перезапуск сервера (" + decl + ")" );
 				
 				return true;
 			end
@@ -46,7 +46,7 @@ class. CC_System : IConsoleCommand
 				
 				outputChatBox( "Внимание! Выключение сервера " + ( seconds == 0 and "отменён" or "через " + seconds + " " + decl ), root, 255, 64, 0 );
 				
-				AdminManager.SendMessage( player.GetUserName() + " запустил таймер на выключение сервера (" + decl + ")" );
+				AdminManager.SendMessage( player.UserName + " запустил таймер на выключение сервера (" + decl + ")" );
 				
 				return true;
 			end

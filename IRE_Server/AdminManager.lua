@@ -12,9 +12,9 @@ class. AdminManager
 		SetAdminDuty	= function( player, enabled )
 			local char = player.Character;
 			
-			player.SetAdminDuty( enabled );
+			player.SetAdminDuty( (bool)(enabled) );
 			
-			if char and char.GetAlcohol() > 0 then
+			if char and char.Alcohol > 0 then
 				char.SetAlcohol();
 			end
 			
