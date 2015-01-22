@@ -104,6 +104,183 @@ class. CC_UAC : IConsoleCommand
 			return "Syntax: /" + this.Name + " " + option + " <login> [option]", 200, 200, 200;
 		end
 		
+		if option == "usermod" then
+			local Argv = { ... };
+			
+			if table.getn( Argv ) > 0 and Argv[ 1 ] ~= "-h" and Argv[ 1 ] ~= "--help" then
+				local login = Argv[ table.getn( Argv ) ];
+				
+				table.remove( Argv );
+				
+				if login and table.getn( Argv ) > 0 then
+					local iID = NULL;
+					
+					local result = Server.DB.Query( "SELECT id FROM uac_users WHERE login = %q", login );
+					
+					if result then
+						local row = result.GetRow();
+						
+						result.Free();
+						
+						iID = row and row.id;				
+						
+						if not iID then
+							return "Игрок с логином " + login + " не найден", 255, 0, 0;
+						end
+					else
+						Debug( Server.DB.Error() );
+						
+						return TEXT_DB_ERROR, 255, 0, 0;
+					end
+					
+					local sNewPasswd, sNewEmail, sNewName, sNewGroups, sAdminID;
+					
+					local i, f = next( Argv );
+					
+					while i do
+						local value;
+						
+						i, value 	= next( Argv, i );
+						
+						if 		f == '-p' or f == '--password'	then sNewPasswd		= value;
+						elseif 	f == '-l' or f == '--login'		then sNewEmail		= value;
+						elseif 	f == '-n' or f == '--name'		then sNewName		= value;
+						elseif 	f == '-g' or f == '--groups'	then sNewGroups		= value;
+						elseif 	f == '-Z' or f == '--adminid'	then sAdminID		= value;
+						else
+							return "Неизвестный флаг '" + f + "'", 255, 0, 0;
+						end
+						
+						if value == NULL or i == NULL or value[ 1 ] == '-' then
+							return "Syntax: /" + this.Name + " " + option + " " + f + " <value> [flags...] " + login, 255, 0, 0;
+						end
+						
+						i, f = next( Argv, i );
+					end
+					
+					local pTargetPlayer = NULL;
+					
+					for i, p in pairs( Server.Game.PlayerManager.GetAll() ) do
+						if p.IsLoggedIn() and p.UserID == iID then
+							pTargetPlayer = p;
+							
+							break;
+						end
+					end
+					
+					local Updates = {};
+					
+					if sNewPasswd then
+						table.insert( Updates, "password = '" + Server.Blowfish.Encrypt( sNewPasswd ) + "'" );
+					end
+					
+					if sNewEmail then
+						local result = Server.DB.Query( "SELECT id FROM uac_users WHERE login = %q", sNewEmail );
+						
+						if result then
+							if result.NumRows() > 0 then
+								result.Free();
+								
+								return "E-mail \"" + sNewEmail + "\" уже занят!", 255, 0, 0;
+							end
+							
+							result.Free();
+						else
+							Debug( Server.DB.Error() );
+							
+							return TEXT_DB_ERROR, 255, 0, 0;
+						end
+						
+						table.insert( Updates, "login = '" + sNewEmail + "'" );
+					end
+					
+					if sNewName then
+						local result = Server.DB.Query( "SELECT id FROM uac_users WHERE name = %q", sNewName );
+						
+						if result then
+							if result.NumRows() > 0 then
+								result.Free();
+								
+								return "Пользователь с именем \"" + sNewName + "\" уже существует", 255, 0, 0;
+							end
+							
+							result.Free();
+						else
+							Debug( Server.DB.Error() );
+							
+							return TEXT_DB_ERROR, 255, 0, 0;
+						end
+						
+						table.insert( Updates, "name = '" + sNewName + "'" );
+					end
+					
+					if sNewGroups then
+						local Groups = {};
+						
+						for i, void in ipairs( sNewGroups:split( ',' ) ) do
+							local group = Server.Game.GroupManager.Get( tonumber( void ) or void );
+							
+							if not group then
+								return "Неизвестная группа " + (string)(void), 255, 0, 0;
+							end
+							
+							table.insert( Groups, group.GetID() );
+						end
+						
+						table.insert( Updates, "groups = '" + table.concat( Groups, "," ) + "'" );
+					end
+					
+					if sAdminID then
+						local iAdminID = tonumber( sAdminID );
+						
+						if not iAdminID then
+							return "Ошибка в параметре \"Личный номер администратора\"", 255, 0, 0;
+						end
+						
+						local result = Server.DB.Query( "SELECT `id`, `name` FROM `uac_users` WHERE `admin_id` = " + iAdminID + " LIMIT 1" );
+						
+						if result then
+							local row = result.GetRow();
+							
+							result.Free();
+							
+							if row and row.id then
+								return "Этот номер администратора используется " + row.name, 255, 196, 0;
+							end
+						else
+							Debug( Server.DB.Query(), 1 );
+						end
+						
+						table.insert( Updates, "admin_id = " + iAdminID );
+					end
+					
+					if table.getn( Updates ) > 0 then
+						if Server.DB.Query( "UPDATE uac_users SET " + table.concat( Updates, ', ' ) + " WHERE id = " + iID ) then
+							if pTargetPlayer then
+								if sNewName then
+									pTargetPlayer.UserName = sNewName;
+									
+									if pTargetPlayer.IsAdmin then
+										pTargetPlayer.Nametag.Update();
+									end
+								end
+									
+								pTargetPlayer.InitGroups( false, false );
+							end
+						else
+							Debug( Server.DB.Error(), 1 );
+						end
+					end
+					
+					Console.Log( "UAC: %s: %s %s", player.UserName, option, table.concat( { ... }, ' ' ) );
+					
+					return true;
+				end
+			end
+			
+			return "Syntax: /" + this.Name + " " + option + " [flags] <login>", 200, 200, 200;
+		end
+		
 		return this.Info();
 	end;
 	
