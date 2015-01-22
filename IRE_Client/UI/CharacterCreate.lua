@@ -105,7 +105,7 @@ class. CharacterCreate : UIDialog
 		
 		this.sex.value = 1;
 		
-		this.skin.value = 0;
+		this.skin.iter = 0;
 		
 		this.UpdateSkin();
 	end;
@@ -119,7 +119,7 @@ class. CharacterCreate : UIDialog
 		
 		this.sex.value = 2;
 		
-		this.skin.value = 0;
+		this.skin.iter = 0;
 		
 		this.UpdateSkin();
 	end;
@@ -128,7 +128,7 @@ class. CharacterCreate : UIDialog
 		local sex	= this.sex.value;
 		
 		if sex then
-			this.skin.value = ( ( this.skin.value or 0 ) - 1 ) % sizeof( CharacterCreate.Skins[ sex ] );
+			this.skin.iter = ( ( this.skin.iter or 0 ) - 1 ) % sizeof( CharacterCreate.Skins[ sex ] );
 			
 			this.UpdateSkin();
 		end
@@ -138,7 +138,7 @@ class. CharacterCreate : UIDialog
 		local sex	= this.sex.value;
 		
 		if sex then
-			this.skin.value = ( ( this.skin.value or 0 ) + 1 ) % sizeof( CharacterCreate.Skins[ sex ] );
+			this.skin.iter = ( ( this.skin.iter or 0 ) + 1 ) % sizeof( CharacterCreate.Skins[ sex ] );
 			
 			this.UpdateSkin();
 		end
@@ -169,7 +169,7 @@ class. CharacterCreate : UIDialog
 	end;
 	
 	UpdateSkin		= function()
-		local skinID = CharacterCreate.Skins[ this.sex.value ][ this.skin.value ];
+		local skinID = CharacterCreate.Skins[ this.sex.value ][ this.skin.iter ];
 		
 		if skinID then
 			this.skin.SetText( skinID );
