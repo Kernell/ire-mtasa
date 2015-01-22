@@ -36,6 +36,7 @@
   <script src="Shared/class.lua"/>
   <script src="Shared/timezone.lua"/>
   <script src="Shared/base64.lua"/>
+  <script src="Shared/Vars.lua"/>
   
   <script src="Shared/Array.lua"/>
   <script src="Shared/Blowfish.lua"/>
@@ -87,6 +88,8 @@
   <script src="Environment.lua"/>
   <script src="GroupManager.lua"/>
   <script src="PlayerManager.lua"/>
+  <script src="VehicleManager.lua"/>
+  <script src="VehicleColorManager.lua"/>
   <script src="AdminManager.lua"/>
   
   <script src="Group.lua"/>
@@ -103,4 +106,9 @@
   
   <script src="Character.lua"/>
   <script src="CharacterSkin.lua"/>
+  
+  <script src="Vehicle.lua"/>
+  <script src="VehicleComponents.lua"/>
+  <script src="VehicleSiren.lua"/>
+  <script src="VehicleUpgrades.lua"/>
 </meta>

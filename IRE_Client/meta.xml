@@ -17,6 +17,7 @@
   <script src="Shared/utils.lua"        type="client"/>
   <script src="Shared/Debug.lua"        type="client"/>
   <script src="Shared/class.lua"        type="client"/>
+  <script src="Shared/Vars.lua"         type="client"/>
   <script src="Shared/Easing.lua"       type="client"/>
   <script src="Shared/Vector3.lua"      type="client"/>
   <script src="Shared/Vector4.lua"      type="client"/>

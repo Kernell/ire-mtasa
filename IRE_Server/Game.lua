@@ -90,7 +90,7 @@ class. Game
 	--	this.BankManager				= new. BankManager();
 	--	this.FactionManager				= new. FactionManager();
 	--	this.NPCManager					= new. NPCManager();
-	--	this.VehicleManager				= new. VehicleManager();
+		this.VehicleManager				= new. VehicleManager();
 	--	this.GateManager				= new. GateManager();
 	--	this.RaceManager				= new. RaceManager();
 	--	this.ItemManager				= new. ItemManager();
