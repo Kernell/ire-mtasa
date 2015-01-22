@@ -112,11 +112,11 @@ class. Server
 	end;
 	
 	Restart		= function()
-		return resource.Restart() and getResourceFromName( "WORP" ).Restart();
+		return resource.Restart() and getResourceFromName( "IRE_Client" ).Restart();
 	end;
 	
 	Stop		= function()
-		return resource.Stop() and getResourceFromName( "WORP" ).Stop();
+		return resource.Stop() and getResourceFromName( "IRE_Client" ).Stop();
 	end;
 	
 	static
