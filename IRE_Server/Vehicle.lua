@@ -29,6 +29,8 @@ class. Vehicle : Element
 		
 		this.ToggleRespawn( false );
 		this.SetParent( VehicleManager.Root );
+		
+		return this;
 	end;
 	
 	_Vehicle	= function()
@@ -47,6 +49,10 @@ class. Vehicle : Element
 	
 	GetID		= function()
 		return this.ID;
+	end;
+	
+	DoPulse		= function( realTime )
+		
 	end;
 	
 	RespawnSafe	= function( save )
@@ -99,8 +105,8 @@ class. Vehicle : Element
 			interior		= this.GetInterior();
 			dimension		= this.GetDimension();
 			health			= this.GetHealth();
-			last_time		= this.GetLastTime();
-			last_driver		= this.GetLastDriver() or NULL;
+			last_time		= this.LastTime;
+			last_driver		= this.LastDriver or NULL;
 			locked			= this.Locked and "Yes" or "No";
 			engine			= this.Engine and "on" or "off";
 			lights			= this.Lights and "on" or "off";

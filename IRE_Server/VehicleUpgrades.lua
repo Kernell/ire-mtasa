@@ -126,7 +126,7 @@ local DefaultComponents	=
 	};
 };
 
-class: VehicleUpgrades
+class. VehicleUpgrades
 {
 	Vehicle		= NULL;
 	Upgrades	= NULL;

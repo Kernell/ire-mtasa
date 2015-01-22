@@ -14,6 +14,8 @@ class. VehicleManager : Manager
 		DefaultData	=
 		{
 			character_id	= 0;
+			interior		= 0;
+			dimension		= 0;
 			fuel			= 100.0;
 			engine			= "on";
 			lights			= "off";
@@ -357,7 +359,7 @@ class. VehicleManager : Manager
 	Add	= function( ID, model, position, rotation, data )
 		data	= data or VehicleManager.DefaultData;
 		
-		local variant1, variant2 = unpack( fromJSON( data.variants ) or {} );
+		local variant1, variant2 = unpack( data.variants and fromJSON( data.variants ) or {} );
 		
 		local vehicle = new. Vehicle( model, position, rotation, plate, variant1, variant2 );
 		
@@ -422,7 +424,7 @@ class. VehicleManager : Manager
 		vehicle.SetEngineState		( data.engine == "on" );
 		vehicle.SetLights			( data.lights == "on" );
 		vehicle.SetLocked			( data.locked == "Yes" );
-		vehicle.SetHeadLightColor	( unpack( data.lights_color and fromJSON( data.lights_color ) or { 255, 255, 255 } ) );
+		vehicle.SetHeadLightColor	( new. Color( unpack( data.lights_color and fromJSON( data.lights_color ) or { 255, 255, 255 } ) ) );
 		vehicle.SetWheelStates		( unpack( data.wheels_states and fromJSON( data.wheels_states ) or { 0, 0, 0, 0 } ) );
 		vehicle.SetHealth			( Clamp( 300.0, data.health or 1000.0, 1000.0 ) );
 		
