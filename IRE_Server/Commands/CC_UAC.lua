@@ -463,6 +463,15 @@ class. CC_UAC : IConsoleCommand
 	end;
 	
 	Info		= function()
-		
+		return
+		{
+			{ "Syntax: /" + this.Name + " <option>", 255, 255, 255 };
+			{ "List of options:", 200, 200, 200 };
+			{ "adduser                    <login> [options]", 200, 200, 200 };
+			{ "usermod                    [flags] <login>", 200, 200, 200 };
+			{ "userdel                    <login> [flags]", 200, 200, 200 };
+			{ "addgroup                   <id|name|caption> [flags]", 200, 200, 200 };
+			{ "reload                     Перезагрузка групп и их привилегий", 200, 200, 200 };
+		};
 	end;
 };
