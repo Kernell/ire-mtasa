@@ -302,10 +302,30 @@ class. VehicleManager : Manager
 		this.ColorManager = new. VehicleColorManager();
 		
 		VehicleManager.Root.OnElementModelChange.Add( this.VehicleModelChange );
+		VehicleManager.Root.OnTrailerAttach.Add( this.VehicleTrailerAttach );
+		VehicleManager.Root.OnTrailerDetach.Add( this.VehicleTrailerDetach );
+		VehicleManager.Root.OnVehicleDamage.Add( this.VehicleDamage );
+		VehicleManager.Root.OnVehicleRespawn.Add( this.VehicleRespawn );
+		VehicleManager.Root.OnVehicleStartEnter.Add( this.VehicleStartEnter );
+		VehicleManager.Root.OnVehicleStartExit.Add( this.VehicleStartExit );
+		VehicleManager.Root.OnVehicleEnter.Add( this.VehicleEnter );
+		VehicleManager.Root.OnVehicleExit.Add( this.VehicleExit );
+		VehicleManager.Root.OnVehicleExplode.Add( this.VehicleExplode );
+		VehicleManager.Root.OnElementDestroy.Add( this.VehicleDestroy );
 	end;
 	
 	_VehicleManager		= function()
 		VehicleManager.Root.OnElementModelChange.Remove( this.VehicleModelChange );
+		VehicleManager.Root.OnTrailerAttach.Remove( this.VehicleTrailerAttach );
+		VehicleManager.Root.OnTrailerDetach.Remove( this.VehicleTrailerDetach );
+		VehicleManager.Root.OnVehicleDamage.Remove( this.VehicleDamage );
+		VehicleManager.Root.OnVehicleRespawn.Remove( this.VehicleRespawn );
+		VehicleManager.Root.OnVehicleStartEnter.Remove( this.VehicleStartEnter );
+		VehicleManager.Root.OnVehicleStartExit.Remove( this.VehicleStartExit );
+		VehicleManager.Root.OnVehicleEnter.Remove( this.VehicleEnter );
+		VehicleManager.Root.OnVehicleExit.Remove( this.VehicleExit );
+		VehicleManager.Root.OnVehicleExplode.Remove( this.VehicleExplode );
+		VehicleManager.Root.OnElementDestroy.Remove( this.VehicleDestroy );
 		
 		this.SaveAll();
 	end;
@@ -496,6 +516,66 @@ class. VehicleManager : Manager
 	VehicleModelChange	= function( sender, e, prevModel, model )
 		if getElementType( sender ) == "vehicle" then
 			sender.OnModelChange( prevModel, model );
+		end
+	end;
+	
+	VehicleTrailerAttach	= function( sender, e, trailer )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnTrailerAttach( trailer );
+		end
+	end;
+	
+	VehicleTrailerDetach	= function( sender, e, trailer )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnTrailerDetach( trailer );
+		end
+	end;
+	
+	VehicleDamage	= function( sender, e, loss )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnDamage( loss );
+		end
+	end;
+	
+	VehicleRespawn	= function( sender, e, exploded )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnRespawn( exploded );
+		end
+	end;
+	
+	VehicleStartEnter	= function( sender, e, enteringPlayer, seat, jacked, door )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnStartEnter( enteringPlayer, seat, jacked, door );
+		end
+	end;
+	
+	VehicleStartExit	= function( sender, e, exitingPlayer, seat, jacked, door )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnStartExit( exitingPlayer, seat, jacked, door );
+		end
+	end;
+	
+	VehicleEnter	= function( sender, e, player, seat, jacked )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnEnter( player, seat, jacked );
+		end
+	end;
+	
+	VehicleExit	= function( sender, e, player, seat, jacked )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnExit( player, seat, jacked );
+		end
+	end;
+	
+	VehicleExplode	= function( sender, e )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnExplode();
+		end
+	end;
+	
+	VehicleDestroy	= function( sender, e )
+		if getElementType( sender ) == "vehicle" then
+			sender.OnDestroy();
 		end
 	end;
 	

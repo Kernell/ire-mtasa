@@ -548,4 +548,40 @@ class. Vehicle : Element
 	OnModelChange	= function( prevModel, model )
 		this.SetHandling( false );
 	end;
+	
+	OnTrailerDetach	= function( trailer )
+		
+	end;
+	
+	OnDamage		= function( loss )
+	
+	end;
+	
+	OnRespawn		= function( explode )
+	
+	end;
+	
+	OnStartEnter	= function( player, seat, jacked, door )
+	
+	end;
+	
+	OnStartExit		= function( player, seat, jacked, door )
+	
+	end;
+	
+	OnEnter			= function( player, seat, jacked )
+	
+	end;
+	
+	OnExit			= function( player, seat, jacked )
+	
+	end;
+	
+	OnExplode		= function()
+	
+	end;
+	
+	OnDestroy		= function()
+	
+	end;
 };
