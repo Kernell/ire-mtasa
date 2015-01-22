@@ -31,7 +31,7 @@ class. Bubble
 				local distance 		= g_vecPosition.Distance( bonePosition );
 				
 				if distance <= this.Distance then
-					if g_vecPosition:IsLineOfSightClear( bonePosition, true, false, false, true, false, false, true ) then
+					if g_vecPosition.IsLineOfSightClear( bonePosition, true, false, false, true, false, false, true ) then
 						local screenX, screenY	= getScreenFromWorldPosition( bonePosition.X, bonePosition.Y, bonePosition.Z );
 					
 						if screenX and screenY then
