@@ -1054,11 +1054,11 @@ class. Player : Ped
 	-- Events
 	
 	OnSpawn	= function( position, rotation, interior, dimension )
-		this.SetWalkingStyle( 0 );
 		this.TakeAllWeapons();
 		
 		if this.IsInGame() then
 			this.SetControlState( "walk", true );
+			this.SetWalkingStyle( (int)(this.Character.Skin.GetWalkingStyle()) );
 			
 			this.SetAnimation();
 			this.Camera.SetTarget();
@@ -1066,8 +1066,8 @@ class. Player : Ped
 			
 			this.Character.SetPower( 100.0 );
 			this.Character.SetCuffed();
-			
-			this.SetWalkingStyle( (int)(this.Character.Skin.GetWalkingStyle()) );
+		else
+			this.SetWalkingStyle( 0 );
 		end
 		
 		this.SetAdminDuty( this.IsAdmin );
