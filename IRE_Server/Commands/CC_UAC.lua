@@ -446,6 +446,19 @@ class. CC_UAC : IConsoleCommand
 			return "Syntax: /" + this.Name + " " + option + " <name> <caption> [flags]", 200, 200, 200;
 		end
 		
+		if option == "reload" then
+			Server.Game.GroupManager.DeleteAll();
+			Server.Game.GroupManager.Init();
+			
+			for _, p in pairs( Server.Game.PlayerManager.GetAll() ) do
+				p.InitGroups( false, true );
+			end
+			
+			AdminManager.SendMessage( player.UserName + " перезагрузил привилегии" );
+			
+			return true;
+		end
+		
 		return this.Info();
 	end;
 	
