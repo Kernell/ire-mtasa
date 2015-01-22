@@ -358,7 +358,92 @@ class. CC_UAC : IConsoleCommand
 				return TEXT_DB_ERROR, 255, 0, 0;
 			end
 			
-			return "Syntax: /" + this.Name + " " + option + " [flags] <login>", 200, 200, 200;
+			return "Syntax: /" + this.Name + " " + option + " <login> [flags]", 200, 200, 200;
+		end
+		
+		if option == "addgroup" then
+			local args = { ... };
+			
+			local name		= args[ 1 ];
+			local caption	= args[ 2 ];
+			
+			table.remove( args, 1 );
+			table.remove( args, 2 );
+			
+			if name and name:len() > 0 and caption and caption:len() > 0 and name ~= "-h" and name ~= "--help" then
+				local name		= Server.DB.EscapeString( name );
+				local caption	= Server.DB.EscapeString( caption );
+				local color		= { 255, 255, 255 };
+				local flags		= args;
+				
+				if table.getn( flags ) > 0 then
+					local i, f = next( flags );
+						
+					while i do
+						local value;
+						
+						i, value 	= next( flags, i );
+						
+						if f == '-c' or f == '--color'	then
+							color	= value:split( ',' );
+							
+							if table.getn( color ) == 3 then
+								color[ 1 ] = (int)(color[ 1 ]) % 255;
+								color[ 2 ] = (int)(color[ 2 ]) % 255;
+								color[ 3 ] = (int)(color[ 3 ]) % 255;
+							else
+								return "Не правильно задан формат цвета", 255, 0, 0;
+							end
+						else
+							return "Неизвестный флаг '" + f + "'", 255, 0, 0;
+						end
+						
+						if value == NULL or i == NULL or value[ 1 ] == '-' then
+							return "Syntax: /" + this.Name + " " + option + " " + name + " " + caption + " " + f + " <value> [flags...]", 255, 0, 0;
+						end
+						
+						i, f = next( flags, i );
+					end
+				end
+				
+				if name and caption then
+					local result = g_pDB:Query( "SELECT id FROM uac_groups WHERE name = %q or caption = %q", name, caption );
+					
+					if result then
+						if result.NumRows() > 0 then
+							result.Free();
+							
+							return "Группа с таким названием уже существует", 255, 0, 0;
+						end
+						
+						result.Free();
+					else
+						Debug( Server.DB.Error(), 1 );
+						
+						return TEXT_DB_ERROR, 255, 0, 0;
+					end
+					
+					if Server.DB.Query( "INSERT INTO uac_groups (name, caption, color) VALUES (%q, %q, '" + toJSON( color ) + "')", name, caption ) then
+						local ID = Server.DB.InsertID();
+						
+						if ID then
+							Server.Game.GroupManager.Init( ID, name, caption, color );
+							
+							g_pServer:Print( "UAC: %s added new group %q %q %s ID: %d", pPlayer:GetUserName(), name, caption, table.concat( flags, " " ), ID );
+							
+							return "Группа '" + name + "' успешно добавлена, ID: " + ID, 0, 255, 0;
+						end
+						
+						return TEXT_DB_ERROR, 255, 0, 0;
+					end
+					
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+			end
+			
+			return "Syntax: /" + this.Name + " " + option + " <name> <caption> [flags]", 200, 200, 200;
 		end
 		
 		return this.Info();
