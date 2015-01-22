@@ -1021,7 +1021,7 @@ class. Player : Ped
 		if this.IsDead() then
 			this.Camera.Fade( false );
 			
-			setTimer( function() this.PreSpawn(); end, 1000, 1 );
+			setTimer( function() this.PrepareSpawn(); end, 1000, 1 );
 		end
 	end;
 	
