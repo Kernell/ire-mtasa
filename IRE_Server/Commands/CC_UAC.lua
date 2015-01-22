@@ -281,6 +281,86 @@ class. CC_UAC : IConsoleCommand
 			return "Syntax: /" + this.Name + " " + option + " [flags] <login>", 200, 200, 200;
 		end
 		
+		if option == "userdel" then
+			local login = ( { ... } )[ 1 ];
+			
+			if login and login:len() > 0 and login ~= "-h" and login ~= "--help" then
+				local iID = NULL;
+				
+				local result = Server.DB.Query( "SELECT id FROM uac_users WHERE login = %q", login );
+				
+				if result then
+					local row = result.GetRow();
+					
+					result.Free();
+					
+					iID = row and row.id;				
+					
+					if not iID then
+						return "Игрок с логином " + login + " не найден", 255, 0, 0;
+					end
+				else
+					Debug( Server.DB.Error() );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+				
+				local chars		= false;
+				
+				local flags		= { ... };
+				
+				table.remove( flags, 1 );
+				
+				local i, f = next( flags );
+				
+				if table.getn( flags ) > 0 then
+					while i do				
+						if 		f == '-c' or f == '--chars'	then
+							chars		= true;
+						else
+							return "Неизвестный флаг '" + f + "'", 255, 0, 0;
+						end
+						
+						i, f = next( flags, i );
+					end
+				end
+				
+				local pTargetPlayer = NULL;
+				
+				for i, p in pairs( Server.Game.PlayerManager.GetAll() ) do
+					if p.IsLoggedIn() and p.UserID == iID then
+						pTargetPlayer = p;
+						
+						break;
+					end
+				end
+				
+				if Server.DB.Query( "UPDATE uac_users SET deleted = 'Yes' WEHRE id = " + iID ) then
+					if pTargetPlayer then
+						pTargetPlayer.Kick( "Ваш аккаунт был удалён" );
+					end
+					
+					if chars then
+						if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "characters SET status = 'Скрыт' WHERE user_id = " + iID ) then
+							Debug( Server.DB.Error(), 1 );
+							
+							player.Chat.Send( "Ошибка при удалении персонажей: " + TEXT_DB_ERROR, 255, 0, 0 );
+						end
+					end
+					
+					Console.Log( "UAC: %s: %s %s", player.UserName, option, table.concat( { ... }, ' ' ) );
+					
+					return "Пользователь '" + login + "' удалён", 255, 128, 0;
+				end
+				
+				Debug( Server.DB.Error(), 1 );
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+			
+			return "Syntax: /" + this.Name + " " + option + " [flags] <login>", 200, 200, 200;
+		end
+		
 		return this.Info();
 	end;
 	
