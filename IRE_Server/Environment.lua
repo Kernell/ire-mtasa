@@ -99,6 +99,9 @@ class. Environment : Manager
 		this.Manager();
 		
 		setMinuteDuration( this.MinuteDuration );
+		
+		setOcclusionsEnabled( false );
+		setAircraftMaxVelocity( 5 );
 	end;
 	
 	SetTime			= function( hour, minute )

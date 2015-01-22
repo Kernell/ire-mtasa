@@ -46,9 +46,6 @@ class. Game
 	
 	Init		= function()
 		this.Environment				= new. Environment();
-	--	this.BlipManager				= new. BlipManager();
-	--	this.WeatherManager				= new. WeatherManager();
-	--	this.WorldManager				= new. WorldManager();
 		
 		local result	= Server.DB.Query( "SELECT `key`, `value` FROM `game_config`" );
 	
