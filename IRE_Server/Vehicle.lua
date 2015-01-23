@@ -724,6 +724,6 @@ class. Vehicle : Element
 	end;
 	
 	OnDestroy		= function()
-	
+		return true;
 	end;
 };
