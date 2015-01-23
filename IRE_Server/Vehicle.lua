@@ -51,10 +51,6 @@ class. Vehicle : Element
 		return this.ID;
 	end;
 	
-	DoPulse		= function( realTime )
-		
-	end;
-	
 	RespawnSafe	= function( save )
 		this.Spawn( this.DefaultPosition, this.DefaultRotation );
 		this.SetInterior( this.DefaultInterior );
@@ -545,40 +541,186 @@ class. Vehicle : Element
 		return getVehicleEngineState( this );
 	end;
 	
+	DoPulse		= function( realTime )
+		local health 	= this.GetHealth();
+		local player 	= this.GetDriver();
+		
+		if this.GetEngineState() then
+			if health < 300.0 or ( health < 400.0 and math.random( 5 ) == 5 ) then
+				this.Engine = false;
+			end
+		end
+		
+		if player then
+			if ( this.DamageProof or health < 250.0 ) and not this.IsDamageProof() then
+				this.SetDamageProof( true );
+			elseif this.IsDamageProof() and health >= 300.0 and not this.DamageProof then
+				this.SetDamageProof( false );
+			end
+			
+			this.RespawnIdleTime = 0;
+		else
+			this.RespawnIdleTime = ( this.RespawnIdleTime or 0 ) + 1;
+			
+			if not this.IsDamageProof() then
+				this.SetDamageProof( true );
+			end
+		end
+		
+		if not this.Frozen then
+			if not this.IsFrozen() then
+				if not this.GetTowingVehicle() and this.IsOnGround() and not player and this.GetSpeed() <= 1.0 then
+					this.SetFrozen( true );
+				end
+			else
+				if this.GetTowingVehicle() or not this.IsOnGround() or player then
+					this.SetFrozen( false );
+				end
+			end
+		end
+		
+		if health < 250.0 then
+			this.SetHealth( 250.0 );
+		end
+		
+		if this.GetEngineState() ~= this.Engine then
+			this.SetEngineState( this.Engine );
+		end
+		
+		if this.Fuel then
+		
+		end
+	end;
+	
 	OnModelChange	= function( prevModel, model )
 		this.SetHandling( false );
+		
+		return true;
 	end;
 	
 	OnTrailerDetach	= function( trailer )
-		
+		return true;
 	end;
 	
 	OnDamage		= function( loss )
-	
+		if this.GetHealth() < 250 or loss > this.GetHealth() then
+			this.SetDamageProof( true );
+			this.SetHealth( 250 );
+			
+			return false;
+		end
+		
+		return true;
 	end;
 	
 	OnRespawn		= function( explode )
-	
+		this.SetInterior( this.DefaultInterior );
+		this.SetDimension( this.DefaultDimension );
+		
+		return true;
 	end;
 	
 	OnStartEnter	= function( player, seat, jacked, door )
-	
+		local boneObject = player.Bones.GetObject( 12 );
+		
+		if boneObject and boneObject.Item and boneObject.Item.Slot == 5 then
+			return false;
+		end
+		
+		if player.TeleportMarker or not player.IsCollisionsEnabled() then
+			return false;
+		end
+		
+		return true;
 	end;
 	
-	OnStartExit		= function( player, seat, jacked, door )
-	
+	OnStartExit		= function( player, seat, jacker, door )
+		if jacker then	
+			return true;
+		end
+		
+		if player.IsCuffed() and not player.ForceVehicleExit then
+			player.Hint( "Ошибка", "Вы в наручниках", "error" );
+			
+			return false;
+		end
+		
+		if this.IsLocked() then
+			player.Hint( "Ошибка", "Двери заблокированы", "error" );
+			
+			return false;
+		end
+		
+		if seat == 0 then
+			this.Siren.SetState( 0, this.Siren.WhelenState );
+		end
+		
+		this.Horn( false );
+		
+		player.Vehicle = NULL;
+		
+		return true;
 	end;
 	
 	OnEnter			= function( player, seat, jacked )
-	
+		if this.ID == 0 then
+			player.RemoveFromVehicle();
+			
+			return false;
+		end
+		
+		if getElementType( player ) ~= "player" then
+			return true;
+		end
+		
+		player.Vehicle = this;
+		
+		this.SetFrozen( false );
+		this.SetEngineState( this.Engine );
+		
+		if seat == 0 then
+			this.LastDriver	= player.GetName();
+			this.LastTime	= getRealTime().timestamp;
+			
+			this.SetData( "LastDriver", this.LastDriver );
+			this.SetData( "LastTime", this.LastTime );
+		end
+		
+		return true;
 	end;
 	
 	OnExit			= function( player, seat, jacked )
-	
+		player.Vehicle 		= NULL;
+		player.OldVehicle	= this;
+		
+		if seat == 0 then
+			this.LastDriver	= player.GetName();
+			this.LastTime	= getRealTime().timestamp;
+			
+			this:SetData( "LastDriver", this.LastDriver );
+			this:SetData( "LastTime", this.LastTime );
+			
+			this.Save();
+		end
+		
+		player.SetControlState( "enter_exit", false );
+		
+		return true;
 	end;
 	
 	OnExplode		= function()
-	
+		this.Siren.SetState();
+		this.Horn( false );
+		
+		setTimer(
+			function()
+				this.Fix();
+				this.SetDamageProof( true );
+				this.SetHealth( 250 );
+			end, 500, 1
+		);
+		
+		return false;
 	end;
 	
 	OnDestroy		= function()
