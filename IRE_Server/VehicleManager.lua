@@ -515,67 +515,89 @@ class. VehicleManager : Manager
 	
 	VehicleModelChange	= function( sender, e, prevModel, model )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnModelChange( prevModel, model );
+			if not sender.OnModelChange( prevModel, model ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleTrailerAttach	= function( sender, e, trailer )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnTrailerAttach( trailer );
+			if not sender.OnTrailerAttach( trailer ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleTrailerDetach	= function( sender, e, trailer )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnTrailerDetach( trailer );
+			if not sender.OnTrailerDetach( trailer ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleDamage	= function( sender, e, loss )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnDamage( loss );
+			if not sender.OnDamage( loss ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleRespawn	= function( sender, e, exploded )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnRespawn( exploded );
+			if not sender.OnRespawn( exploded ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleStartEnter	= function( sender, e, enteringPlayer, seat, jacked, door )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnStartEnter( enteringPlayer, seat, jacked, door );
+			if not sender.OnStartEnter( enteringPlayer, seat, jacked, door ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleStartExit	= function( sender, e, exitingPlayer, seat, jacked, door )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnStartExit( exitingPlayer, seat, jacked, door );
+			if not sender.OnStartExit( exitingPlayer, seat, jacked, door ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleEnter	= function( sender, e, player, seat, jacked )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnEnter( player, seat, jacked );
+			if not sender.OnEnter( player, seat, jacked ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleExit	= function( sender, e, player, seat, jacked )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnExit( player, seat, jacked );
+			if not sender.OnExit( player, seat, jacked ) then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleExplode	= function( sender, e )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnExplode();
+			if not sender.OnExplode() then
+				e.Cancel();
+			end
 		end
 	end;
 	
 	VehicleDestroy	= function( sender, e )
 		if getElementType( sender ) == "vehicle" then
-			sender.OnDestroy();
+			if not sender.OnDestroy() then
+				e.Cancel();
+			end
 		end
 	end;
 	
