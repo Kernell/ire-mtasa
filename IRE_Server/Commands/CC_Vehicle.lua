@@ -56,6 +56,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleRepair( player, option, option2 );
 		end
 		
+		if option == "flip" then
+			return this.VehicleFlip( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -411,6 +415,22 @@ class. CC_Vehicle : IConsoleCommand
 			vehicle.SetDamageProof( false );
 			
 			return TEXT_VEHICLES_VEHICLE_FIXED:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+	end;
+	
+	VehicleFlip		= function( player, option, id )
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			vehicle.SetRotation( new. Vector3( 0.0, 0.0, vehicle.GetRotation().Z - 180.0 ) );
+			
+			return true;
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
