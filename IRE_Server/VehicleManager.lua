@@ -499,7 +499,7 @@ class. VehicleManager : Manager
 					
 					result.Free();
 					
-					return this.Add( ID, model, position, rotation, row );
+					return this.Add( ID, row.model, position, rotation, row );
 				else
 					Debug( Server.DB.Error(), 2 );
 				end
@@ -507,7 +507,7 @@ class. VehicleManager : Manager
 				Debug( Server.DB.Error(), 2 );
 			end
 		else
-			Debug( "invalid vehicle model '" + (string)(model) + "'", 2 );
+			Debug( "invalid vehicle model '" + (string)(data.model) + "'", 2 );
 		end
 		
 		return NULL;
