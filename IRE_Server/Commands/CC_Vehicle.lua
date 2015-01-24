@@ -60,6 +60,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleFlip( player, option, option2 );
 		end
 		
+		if option == "setfrozen" then
+			return this.VehicleSetFrozen( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -434,6 +438,35 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+	end;
+	
+	VehicleSetFrozen	= function( player, option, ... )
+		local id, frozen;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id		= args[ 1 ];
+			frozen	= args[ 2 ];
+		elseif len == 1 then
+			frozen	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			vehicle.Frozen = (bool)(frozen);
+			vehicle.SetFrozen( vehicle.Frozen );
+			
+			return "Автомобиль #" + vehicle.GetID() + ( vehicle.Frozen and " заморожен" or " разморожен" ), 0, 255, 128;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] [frozen = false]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
