@@ -75,7 +75,7 @@ class. ClientConsole
 			local text	= guiGetText( this.m_pInputGUI );
 			local len	= text:len();
 			
-			for i = 1, len do
+			for i = len, 1, -1 do
 				table.insert( this.m_aCommand, this.m_iCursorPosition, text[ i ] );
 			end
 			
