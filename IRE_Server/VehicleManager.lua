@@ -477,6 +477,9 @@ class. VehicleManager : Manager
 				data.plate			= VehicleManager.GetRandomRegPlate();
 			end
 			
+			local position			= data.position;
+			local rotation			= data.rotation;
+			
 			data.position 			= data.position.ToString();
 			data.rotation 			= data.rotation.ToString();
 			

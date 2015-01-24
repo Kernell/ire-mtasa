@@ -639,7 +639,7 @@ class. Vehicle : Element
 			return true;
 		end
 		
-		if player.IsCuffed() and not player.ForceVehicleExit then
+		if player.Character and player.Character.IsCuffed() and not player.ForceVehicleExit then
 			player.Hint( "Ошибка", "Вы в наручниках", "error" );
 			
 			return false;
@@ -697,8 +697,8 @@ class. Vehicle : Element
 			this.LastDriver	= player.GetName();
 			this.LastTime	= getRealTime().timestamp;
 			
-			this:SetData( "LastDriver", this.LastDriver );
-			this:SetData( "LastTime", this.LastTime );
+			this.SetData( "LastDriver", this.LastDriver );
+			this.SetData( "LastTime", this.LastTime );
 			
 			this.Save();
 		end
