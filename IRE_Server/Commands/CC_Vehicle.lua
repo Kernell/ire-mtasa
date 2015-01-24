@@ -40,6 +40,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleGoTo( player, option, option2 );
 		end
 		
+		if option == "respawn" then
+			return this.VehicleRespawn( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -284,6 +288,46 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
+	end;
+	
+	VehicleRespawn	= function( player, option, id )
+		local vehicleID = tonumber( id );
+		
+		local vehicle;
+		
+		if vehicleID then
+			vehicle = Server.Game.VehicleManager.Get( vehicleID );
+			
+			if not vehicle then
+				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+			end
+		else
+			vehicle = player.GetVehicle();
+		end
+		
+		if vehicle then
+			local result = Server.DB.Query( "SELECT * FROM " + Server.DB.Prefix + "vehicles WHERE id = " + vehicle.GetID() );
+			
+			if result then
+				local row = result.GetRow();
+				
+				result.Free();
+				
+				if row then
+					vehicle.RespawnSafe();
+					
+					return TEXT_VEHICLES_RESPAWNED:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+				end
+				
+				return TEXT_VEHICLES_INVALID_DB_ID, 255, 0, 0;
+			end
+			
+			Debug( Server.DB.Error(), 1 );
+			
+			return TEXT_DB_ERROR, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
