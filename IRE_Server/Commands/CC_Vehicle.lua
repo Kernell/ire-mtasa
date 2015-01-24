@@ -12,6 +12,10 @@ class. CC_Vehicle : IConsoleCommand
 	end;
 	
 	Execute		= function( player, option, option2, ... )
+		if not player.IsInGame() then
+			return true;
+		end
+		
 		if option2 == "-h" or option2 == "--help" then
 			return this.Info( option );
 		end
@@ -28,13 +32,10 @@ class. CC_Vehicle : IConsoleCommand
 	end;
 	
 	VehicleCreate	= function( player, option, model, ... )
-		if not player.IsInGame() then
-			return true;
-		end
 		
-		local modelID = model and tonumber( model ) or VehicleManager.GetModelByName( model );
-		
-		if modelID then
+		if model then
+			local modelID = tonumber( model ) or VehicleManager.GetModelByName( model );
+			
 			local vehicleManager = Server.Game.VehicleManager;
 			
 			if vehicleManager.IsValidModel( modelID ) then
