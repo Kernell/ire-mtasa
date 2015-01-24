@@ -188,9 +188,11 @@ class. CC_Vehicle : IConsoleCommand
 						end
 					end
 					
+					local text = TEXT_VEHICLES_REMOVE_SUCCESS:format( vehicle.GetName(), vehicle.GetID() );
+					
 					delete( vehicle );
 					
-					return TEXT_VEHICLES_REMOVE_SUCCESS:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 64;
+					return text, 0, 255, 64;
 				else
 					Debug( Server.DB.Error(), 1 );
 					
