@@ -72,6 +72,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetColor( player, option, option2, ... );
 		end
 		
+		if option == "setmodel" then
+			return this.VehicleSetModel( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -557,6 +561,47 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <color1> [color2] [color3] [color4]", 255, 255, 255;
+	end;
+	
+	VehicleSetModel	= function( player, option, ... )
+		local id, model;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id		= args[ 1 ];
+			model	= args[ 2 ];
+		elseif len == 1 then
+			model	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			local oldName	= vehicle.GetName();
+			local oldModel	= vehicle.GetModel();
+			
+			if vehicle.SetModel( model ) then
+				if vehicle.GetID() < 0 or Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET model = " + vehicle.GetModel() + " WHERE id = " + vehicle.GetID() ) then
+					Console.Log( "CC_Vehicle->SetModel( %s, %d, " + oldModel + " -> " + model + " )", player.UserName, vehicle.GetID() );
+					
+					return TEXT_VEHICLES_MODEL_CHANGED:format( oldName, vehicle.GetID(), vehicle.GetName(), vehicle.GetModel() ), 0, 255, 128;
+				end
+				
+				Debug( Server.DB.Error(), 1 );
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+			
+			return TEXT_VEHICLES_INVALID_MODEL, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <model>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
