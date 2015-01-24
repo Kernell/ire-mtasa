@@ -154,10 +154,10 @@ class. Character
 		
 		local query = string.format( 
 		"UPDATE " + Server.DB.Prefix + "characters SET \
-			position = %q, interior = '%d', dimension = '%d', rotation = %q, \
+			position = %q, interior = '%d', dimension = '%d', rotation = %f, \
 			health = '%f', armor = '%f', alcohol = '%f', power = '%f', jailed = %q, jailed_time = %d, \
 			level_points = %d, last_logout = NOW() WHERE id = %d",
-			(string)(position), interior, dimension, (string)(rotation), health, armor, alcohol, power, jailed, jailedTime, levelPoints, this.GetID()
+			position.ToString(), interior, dimension, rotation.Z, health, armor, alcohol, power, jailed, jailedTime, levelPoints, this.GetID()
 		);
 		
 		if not Server.DB.Query( query ) then
@@ -361,14 +361,14 @@ class. Character
 		this.CuffedTo		= character or NULL;
 		
 		if this.Cuffed then
-			this.Player.RPC.UpdateCuffed( this.CuffedTo and this.CuffedTo.Player ); -- TODO:
+			-- this.Player.RPC.UpdateCuffed( this.CuffedTo and this.CuffedTo.Player ); -- TODO:
 			
 			if not this.Player.IsInVehicle() and not this.Player.LowHPAnim then
 				this.SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 			end
 		elseif not this.Player.LowHPAnim then
 			this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS );
-			this.Player.RPC.UpdateCuffed(); -- TODO:
+			-- this.Player.RPC.UpdateCuffed(); -- TODO:
 		end
 		
 		return true;
