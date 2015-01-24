@@ -329,6 +329,26 @@ class. ClientConsole
 					this.m_iCursorPosition = 1;
 					
 					this.m_aCommand = {};
+				elseif sKey == "arrow_l" then
+					local len = table.getn( this.m_aCommand );
+					
+					for i = len, 1, -1 do
+						if ( ( this.m_aCommand[ i - 1 ] == " " and this.m_aCommand[ i ] ~= " " ) or i == 1 ) and i < this.m_iCursorPosition - 1 then
+							this.m_iCursorPosition = i;
+							
+							break;
+						end
+					end
+				elseif sKey == "arrow_r" then
+					local len = table.getn( this.m_aCommand );
+					
+					for i = 1, len, 1 do
+						if ( ( this.m_aCommand[ i - 1 ] == " " and this.m_aCommand[ i ] ~= " " ) or i == len ) and i > this.m_iCursorPosition then
+							this.m_iCursorPosition = i;
+							
+							break;
+						end
+					end
 				end
 				
 				return false;
