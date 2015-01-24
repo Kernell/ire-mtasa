@@ -48,6 +48,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleRespawn( player, option, option2 );
 		end
 		
+		if option == "respawnall" then
+			return this.VehicleRespawnAll( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -385,6 +389,26 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+	end;
+	
+	VehicleRespawnAll	= function( player, option )
+		for i, vehicle in pairs( Server.Game.VehicleManager.GetAll() ) do
+			local occupants = vehicle.GetOccupants();
+			
+			if occupants then
+				if sizeof( occupants ) == 0 then
+					vehicle.RespawnSafe();
+				end
+			elseif _DEBUG then
+				Debug( "Invalid vehicle, ID: " + (string)(vehicle.ID) );
+			end
+		end
+
+		Server.Game.VehicleManager.SaveAll();
+		
+		AdminManager.SendMessage( player.UserName + " respawned all vehicles" );
+		
+		return true;
 	end;
 	
 	Info		= function( option )
