@@ -59,8 +59,24 @@ class. ClientConsole
 			guiSetText( this.m_pInputGUI, "" );
 		end
 		
+		local __OnGUIChangedSkip = false;
+		
 		function this.__OnGUIChanged()
-			this.m_aCommand = guiGetText( this.m_pInputGUI ):split( "" );
+			if __OnGUIChangedSkip then
+				__OnGUIChangedSkip = false;
+				
+				return;
+			end
+			
+			local text = guiGetText( this.m_pInputGUI );
+			
+			for i = 1, text:len() do
+				table.insert( this.m_aCommand, text[ i ] );
+			end
+			
+			__OnGUIChangedSkip = true;
+			
+			guiSetText( this.m_pInputGUI, "" );
 		end
 		
 		function this.__OnGUIBlur()
@@ -302,11 +318,11 @@ class. ClientConsole
 				this.Hide();
 			elseif sKey == "c" then
 				if getKeyState( "rctrl" ) or getKeyState( "lctrl" ) then
-					this.Print( "> " + guiGetText( this.m_pInputGUI ) );
+					this.Print( "> " + table.concat( this.m_aCommand, "" ) );
 					
 					this.m_iLogIterator = 0;
 					
-					guiSetText( this.m_pInputGUI, "" );
+					this.m_aCommand = {};
 				end
 			elseif sKey == "arrow_d" then
 				this.m_iLogIterator = this.m_iLogIterator - 1;
@@ -317,11 +333,11 @@ class. ClientConsole
 				
 				local sText = this.Log[ this.m_iLogIterator ] or "";
 				
-				guiSetText( this.m_pInputGUI, sText );
+				this.m_aCommand = sText:split( "" );
 			elseif sKey == "arrow_u" then
 				local iLogSize	= table.getn( this.Log );
 				
-				if guiGetText( this.m_pInputGUI ):len() ~= 0 or this.m_iLogIterator == 0 then
+				if table.getn( this.m_aCommand ) ~= 0 or this.m_iLogIterator == 0 then
 					this.m_iLogIterator = this.m_iLogIterator + 1;
 				end
 				
@@ -331,7 +347,7 @@ class. ClientConsole
 				
 				local sText = this.Log[ this.m_iLogIterator ] or "";
 				
-				guiSetText( this.m_pInputGUI, sText );
+				this.m_aCommand = sText:split( "" );
 			elseif sKey == "pgup" then
 				this.m_iLineScrollOffset = Clamp( 0, this.m_iLineScrollOffset + 1, table.getn( this.m_aLines ) );
 			elseif sKey == "pgdn" then
