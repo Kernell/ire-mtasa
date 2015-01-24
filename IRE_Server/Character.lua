@@ -154,10 +154,10 @@ class. Character
 		
 		local query = string.format( 
 		"UPDATE " + Server.DB.Prefix + "characters SET \
-			position = %q, interior = '%d', dimension = '%d', rotation = %q, \
+			position = %q, interior = '%d', dimension = '%d', rotation = %f, \
 			health = '%f', armor = '%f', alcohol = '%f', power = '%f', jailed = %q, jailed_time = %d, \
 			level_points = %d, last_logout = NOW() WHERE id = %d",
-			(string)(position), interior, dimension, (string)(rotation), health, armor, alcohol, power, jailed, jailedTime, levelPoints, this.GetID()
+			position.ToString(), interior, dimension, rotation.Z, health, armor, alcohol, power, jailed, jailedTime, levelPoints, this.GetID()
 		);
 		
 		if not Server.DB.Query( query ) then

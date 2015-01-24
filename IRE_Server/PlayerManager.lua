@@ -81,7 +81,7 @@ class. PlayerManager : Manager
 				{ Field = "interior",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "dimension",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "position",			Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "(0,0,0)",	};
-				{ Field = "rotation",			Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "(0,0,0)",	};
+				{ Field = "rotation",			Type = "float",								Null = "NO", 	Key = "",			Default = "0",	};
 				{ Field = "skin",				Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
 				{ Field = "money",				Type = "double",							Null = "NO", 	Key = "",			Default = 1000,	};
 				{ Field = "pay",				Type = "int(10) unsigned",					Null = "NO", 	Key = "",			Default = 0,	};
