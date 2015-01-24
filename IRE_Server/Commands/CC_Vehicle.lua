@@ -32,6 +32,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleRestore( player, option, option2 );
 		end
 		
+		if option == "get" then
+			return this.VehicleGet( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -220,6 +224,34 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " <id в базе>", 255, 255, 255;
+	end;
+	
+	VehicleGet		= function( player, option, id )
+		local ID = tonumber( id );
+		
+		if ID then
+			local vehicle = Server.Game.VehicleManager.Get( ID );
+			
+			if vehicle then	
+				local rotation		= player.GetRotation();
+				
+				rotation.X	= 0;
+				rotation.Y	= 0;
+				rotation.Z	= rotation.Z + 90;
+				
+				vehicle.SetVelocity()
+				vehicle.SetPosition( player.GetPosition().Offset( 2.5, rotation.Z ) );
+				vehicle.SetRotation( rotation );
+				vehicle.SetInterior( player.GetInterior() );
+				vehicle.SetDimension( player.GetDimension() );
+				
+				return true;
+			end
+			
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
