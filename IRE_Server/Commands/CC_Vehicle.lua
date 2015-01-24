@@ -24,6 +24,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleCreate( player, option, option2, ... );
 		end
 		
+		if option == "delete" then
+			return this.VehicleDelete( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -32,7 +36,6 @@ class. CC_Vehicle : IConsoleCommand
 	end;
 	
 	VehicleCreate	= function( player, option, model, ... )
-		
 		if model then
 			local modelID = tonumber( model ) or VehicleManager.GetModelByName( model );
 			
@@ -136,6 +139,49 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " <model> [flags]";
+	end;
+	
+	VehicleDelete	= function( player, option, id )
+		local vehicleID = tonumber( id );
+		
+		local vehicle;
+		
+		if vehicleID then
+			vehicle = Server.Game.VehicleManager.Get( vehicleID );
+			
+			if not vehicle then
+				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+			end
+		else
+			vehicle = player.GetVehicle();
+		end
+		
+		if vehicle then
+			if vehicle.GetID() < 0 or player.HaveAccess( "command." + this.Name + ":create" ) then
+				if Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET deleted = NOW() WHERE id = " + vehicle.GetID() ) then
+					
+					local occupants = vehicle.GetOccupants();
+					
+					if occupants then
+						for i, plr in pairs( occupants ) do
+							plr.RemoveFromVehicle();
+						end
+					end
+					
+					delete( vehicle );
+					
+					return TEXT_VEHICLES_REMOVE_SUCCESS:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 64;
+				else
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+			else
+				return TEXT_VEHICLES_ACCESS_DENIED, 255, 128, 0;
+			end
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
