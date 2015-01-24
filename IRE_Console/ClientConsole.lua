@@ -76,7 +76,7 @@ class. ClientConsole
 			local len	= text:len();
 			
 			for i = 1, len do
-				table.insert( this.m_aCommand, text[ i ] );
+				table.insert( this.m_aCommand, this.m_iCursorPosition, text[ i ] );
 			end
 			
 			this.m_iCursorPosition = this.m_iCursorPosition + len;
@@ -332,6 +332,18 @@ class. ClientConsole
 					
 					this.m_aCommand = {};
 				end
+			elseif sKey == "delete" then
+				if this.m_iCursorPosition <= table.getn( this.m_aCommand ) then
+					table.remove( this.m_aCommand, this.m_iCursorPosition );
+				end
+				
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition, table.getn( this.m_aCommand ) + 1 );
+			elseif sKey == "backspace" then
+				if this.m_iCursorPosition > 1 then
+					table.remove( this.m_aCommand, this.m_iCursorPosition - 1 );
+					
+					this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition - 1, table.getn( this.m_aCommand ) + 1 );
+				end
 			elseif sKey == "arrow_l" then
 				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition - 1, table.getn( this.m_aCommand ) + 1 );
 			elseif sKey == "arrow_r" then
@@ -343,11 +355,16 @@ class. ClientConsole
 					this.m_iLogIterator = 0;
 				end
 				
-				local sText = this.Log[ this.m_iLogIterator ] or "";
+				this.m_aCommand = {};
 				
-				this.m_aCommand = sText:split( "" );
+				local text	= this.Log[ this.m_iLogIterator ] or "";
+				local len	= text:len();
 				
-				this.m_iCursorPosition = sText:len() + 1;
+				for i = 1, len do
+					table.insert( this.m_aCommand, text[ i ] );
+				end
+				
+				this.m_iCursorPosition = len + 1;
 			elseif sKey == "arrow_u" then
 				local iLogSize	= table.getn( this.Log );
 				
@@ -359,11 +376,16 @@ class. ClientConsole
 					this.m_iLogIterator = iLogSize;
 				end
 				
-				local sText = this.Log[ this.m_iLogIterator ] or "";
+				this.m_aCommand = {};
 				
-				this.m_aCommand = sText:split( "" );
+				local text	= this.Log[ this.m_iLogIterator ] or "";
+				local len	= text:len();
 				
-				this.m_iCursorPosition = sText:len() + 1;
+				for i = 1, len do
+					table.insert( this.m_aCommand, text[ i ] );
+				end
+				
+				this.m_iCursorPosition = len + 1;
 			elseif sKey == "pgup" then
 				this.m_iLineScrollOffset = Clamp( 0, this.m_iLineScrollOffset + 1, table.getn( this.m_aLines ) );
 			elseif sKey == "pgdn" then
@@ -388,7 +410,19 @@ class. ClientConsole
 			
 			local iMinDelay = 50;
 			
-			if getKeyState( "arrow_l" ) then
+			if getKeyState( "delete" ) then
+				this.OnKey( "delete" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "backspace" ) then
+				this.OnKey( "backspace" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_l" ) then
 				this.OnKey( "arrow_l" );
 				
 				iMinDelay = 50;
