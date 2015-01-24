@@ -17,7 +17,7 @@ class. ClientConsole
 		NextKeyTickDelay	= 500;
 	};
 
-	m_sVersion			= "0.1.20140110";
+	m_sVersion			= "0.1.20150124";
 	
 	m_iWidth			= gl_iScreenX;
 	m_iHeight			= gl_iScreenY * 0.5;
@@ -39,6 +39,8 @@ class. ClientConsole
 	m_iTextInputColor	= tocolor( 255, 255, 255, 255 );
 	m_iBackgroundColor	= tocolor( 0, 0, 0, 150 );
 	
+	m_iCursorPosition	= 1;
+	
 	ClientConsole		= function()
 		this.m_aThreads	= {};
 		
@@ -56,6 +58,8 @@ class. ClientConsole
 			
 			this.m_aCommand	= {};
 			
+			this.m_iCursorPosition = 1;
+			
 			guiSetText( this.m_pInputGUI, "" );
 		end
 		
@@ -68,11 +72,14 @@ class. ClientConsole
 				return;
 			end
 			
-			local text = guiGetText( this.m_pInputGUI );
+			local text	= guiGetText( this.m_pInputGUI );
+			local len	= text:len();
 			
-			for i = 1, text:len() do
+			for i = 1, len do
 				table.insert( this.m_aCommand, text[ i ] );
 			end
+			
+			this.m_iCursorPosition = this.m_iCursorPosition + len;
 			
 			__OnGUIChangedSkip = true;
 			
@@ -321,6 +328,7 @@ class. ClientConsole
 					this.Print( "> " + table.concat( this.m_aCommand, "" ) );
 					
 					this.m_iLogIterator = 0;
+					this.m_iCursorPosition = 1;
 					
 					this.m_aCommand = {};
 				end
@@ -334,6 +342,8 @@ class. ClientConsole
 				local sText = this.Log[ this.m_iLogIterator ] or "";
 				
 				this.m_aCommand = sText:split( "" );
+				
+				this.m_iCursorPosition = sText:len() + 1;
 			elseif sKey == "arrow_u" then
 				local iLogSize	= table.getn( this.Log );
 				
@@ -348,6 +358,8 @@ class. ClientConsole
 				local sText = this.Log[ this.m_iLogIterator ] or "";
 				
 				this.m_aCommand = sText:split( "" );
+				
+				this.m_iCursorPosition = sText:len() + 1;
 			elseif sKey == "pgup" then
 				this.m_iLineScrollOffset = Clamp( 0, this.m_iLineScrollOffset + 1, table.getn( this.m_aLines ) );
 			elseif sKey == "pgdn" then
@@ -421,6 +433,12 @@ class. ClientConsole
 				local sChar = this.m_aCommand[ i ];
 				
 				dxDrawText( sChar, fX, fY, fX, fY, this.m_iTextInputColor, this.m_iSize, this.m_pFont, "left", "center", false, false, true, true, false );
+			end
+			
+			local fX	= 17 + ( this.m_iCursorPosition * this.m_iFontWidth );
+			
+			if getTickCount() % 500 < 250 then
+				dxDrawRectangle( fX, fY + 4, this.m_iFontWidth, 3, this.m_iTextInputColor, true );
 			end
 		end
 	end;
