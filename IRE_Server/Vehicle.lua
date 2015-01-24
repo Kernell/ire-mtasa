@@ -639,7 +639,7 @@ class. Vehicle : Element
 			return true;
 		end
 		
-		if player.IsCuffed() and not player.ForceVehicleExit then
+		if player.Character and player.Character.IsCuffed() and not player.ForceVehicleExit then
 			player.Hint( "Ошибка", "Вы в наручниках", "error" );
 			
 			return false;
