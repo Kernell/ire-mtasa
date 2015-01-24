@@ -987,10 +987,6 @@ class. Player : Ped
 					this.HUD.ShowComponents( "crosshair" );
 					this.Chat.Show();
 					this.Nametag.Show();
-					
-					this.Camera.SetInterior( interior );
-					this.Camera.SetTarget();
-					this.Camera.Fade( true );
 				end,
 				1000, 1
 			);
@@ -1061,11 +1057,21 @@ class. Player : Ped
 			this.SetWalkingStyle( (int)(this.Character.Skin.GetWalkingStyle()) );
 			
 			this.SetAnimation();
-			this.Camera.SetTarget();
-			this.Camera.Fade( true );
 			
 			this.Character.SetPower( 100.0 );
 			this.Character.SetCuffed();
+			
+			this.Camera.SetInterior( interior );			
+			this.Camera.Fade( true );
+			this.Camera.SetTarget();
+			
+			setTimer(
+				function()
+					this.Camera.SetTarget();
+				end,
+				100,
+				1
+			);
 		else
 			this.SetWalkingStyle( 0 );
 		end
