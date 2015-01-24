@@ -68,6 +68,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetFrozen( player, option, option2, ... );
 		end
 		
+		if option == "setcolor" then
+			return this.VehicleSetColor( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -501,6 +505,58 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <fuel>", 255, 255, 255;
+	end;
+	
+	VehicleSetColor	= function( player, option, ... )
+		local id;
+		local colors = {};
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len > 1 then
+			for i = 1, len do
+				local arg = args[ i ];
+				
+				if arg:lower():match( "0x%x%x%x%x%x%x" ) or arg:lower():match( "%x%x%x%x%x%x" ) then
+					colors[ i ] = tonumber( arg, 16 );
+				elseif tonumber( arg ) then
+					id = tonumber( arg );
+				end
+			end
+		elseif len == 1 then
+			colors[ 1 ]	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			local color = {};
+			
+			for i, c in ipairs( colors ) do
+				table.insert( color, (byte)(c ">>" (16)) );
+				table.insert( color, (byte)(c ">>" (8) ));
+				table.insert( color, (byte)(c ">>" (0) ));
+			end
+			
+			if vehicle.SetColor( unpack( color ) ) then
+				local jsonColor	= toJSON( color );
+				
+				if Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET color = '" + jsonColor + "' WHERE id = " + vehicle.GetID() ) then
+					return TEXT_VEHICLES_COLOR_CHANGED:format( vehicle.GetName(), vehicle.GetID(), jsonColor ), 0, 255, 128;
+				end
+				
+				Debug( Server.DB.Error(), 1 );
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <color1> [color2] [color3] [color4]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
