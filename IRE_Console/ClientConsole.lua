@@ -321,10 +321,8 @@ class. ClientConsole
 		if this.m_bVisible then
 			guiBringToFront( this.m_pInputGUI );
 			
-			if sKey == "escape" or sKey == "end" then
-				this.Hide();
-			elseif sKey == "c" then
-				if getKeyState( "rctrl" ) or getKeyState( "lctrl" ) then
+			if getKeyState( "rctrl" ) or getKeyState( "lctrl" ) then
+				if sKey == "c" then
 					this.Print( "> " + table.concat( this.m_aCommand, "" ) );
 					
 					this.m_iLogIterator = 0;
@@ -332,6 +330,12 @@ class. ClientConsole
 					
 					this.m_aCommand = {};
 				end
+				
+				return false;
+			end
+			
+			if sKey == "escape" or sKey == "end" then
+				this.Hide();
 			elseif sKey == "delete" then
 				if this.m_iCursorPosition <= table.getn( this.m_aCommand ) then
 					table.remove( this.m_aCommand, this.m_iCursorPosition );
