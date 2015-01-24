@@ -17,7 +17,7 @@ class. ClientConsole
 		NextKeyTickDelay	= 500;
 	};
 
-	m_sVersion			= "0.1.20140110";
+	m_sVersion			= "0.1.20150124";
 	
 	m_iWidth			= gl_iScreenX;
 	m_iHeight			= gl_iScreenY * 0.5;
@@ -39,6 +39,8 @@ class. ClientConsole
 	m_iTextInputColor	= tocolor( 255, 255, 255, 255 );
 	m_iBackgroundColor	= tocolor( 0, 0, 0, 150 );
 	
+	m_iCursorPosition	= 1;
+	
 	ClientConsole		= function()
 		this.m_aThreads	= {};
 		
@@ -56,11 +58,32 @@ class. ClientConsole
 			
 			this.m_aCommand	= {};
 			
+			this.m_iCursorPosition = 1;
+			
 			guiSetText( this.m_pInputGUI, "" );
 		end
 		
+		local __OnGUIChangedSkip = false;
+		
 		function this.__OnGUIChanged()
-			this.m_aCommand = guiGetText( this.m_pInputGUI ):split( "" );
+			if __OnGUIChangedSkip then
+				__OnGUIChangedSkip = false;
+				
+				return;
+			end
+			
+			local text	= guiGetText( this.m_pInputGUI );
+			local len	= text:len();
+			
+			for i = len, 1, -1 do
+				table.insert( this.m_aCommand, this.m_iCursorPosition, text[ i ] );
+			end
+			
+			this.m_iCursorPosition = this.m_iCursorPosition + len;
+			
+			__OnGUIChangedSkip = true;
+			
+			guiSetText( this.m_pInputGUI, "" );
 		end
 		
 		function this.__OnGUIBlur()
@@ -298,16 +321,57 @@ class. ClientConsole
 		if this.m_bVisible then
 			guiBringToFront( this.m_pInputGUI );
 			
-			if sKey == "escape" or sKey == "end" then
-				this.Hide();
-			elseif sKey == "c" then
-				if getKeyState( "rctrl" ) or getKeyState( "lctrl" ) then
-					this.Print( "> " + guiGetText( this.m_pInputGUI ) );
+			if getKeyState( "rctrl" ) or getKeyState( "lctrl" ) then
+				if sKey == "c" then
+					this.Print( "> " + table.concat( this.m_aCommand, "" ) );
 					
 					this.m_iLogIterator = 0;
+					this.m_iCursorPosition = 1;
 					
-					guiSetText( this.m_pInputGUI, "" );
+					this.m_aCommand = {};
+				elseif sKey == "arrow_l" then
+					local len = table.getn( this.m_aCommand );
+					
+					for i = len, 1, -1 do
+						if ( ( this.m_aCommand[ i - 1 ] == " " and this.m_aCommand[ i ] ~= " " ) or i == 1 ) and i < this.m_iCursorPosition - 1 then
+							this.m_iCursorPosition = i;
+							
+							break;
+						end
+					end
+				elseif sKey == "arrow_r" then
+					local len = table.getn( this.m_aCommand );
+					
+					for i = 1, len, 1 do
+						if ( ( this.m_aCommand[ i - 1 ] == " " and this.m_aCommand[ i ] ~= " " ) or i == len ) and i > this.m_iCursorPosition then
+							this.m_iCursorPosition = i;
+							
+							break;
+						end
+					end
 				end
+				
+				return false;
+			end
+			
+			if sKey == "escape" or sKey == "end" then
+				this.Hide();
+			elseif sKey == "delete" then
+				if this.m_iCursorPosition <= table.getn( this.m_aCommand ) then
+					table.remove( this.m_aCommand, this.m_iCursorPosition );
+				end
+				
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition, table.getn( this.m_aCommand ) + 1 );
+			elseif sKey == "backspace" then
+				if this.m_iCursorPosition > 1 then
+					table.remove( this.m_aCommand, this.m_iCursorPosition - 1 );
+					
+					this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition - 1, table.getn( this.m_aCommand ) + 1 );
+				end
+			elseif sKey == "arrow_l" then
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition - 1, table.getn( this.m_aCommand ) + 1 );
+			elseif sKey == "arrow_r" then
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition + 1, table.getn( this.m_aCommand ) + 1 );
 			elseif sKey == "arrow_d" then
 				this.m_iLogIterator = this.m_iLogIterator - 1;
 				
@@ -315,13 +379,20 @@ class. ClientConsole
 					this.m_iLogIterator = 0;
 				end
 				
-				local sText = this.Log[ this.m_iLogIterator ] or "";
+				this.m_aCommand = {};
 				
-				guiSetText( this.m_pInputGUI, sText );
+				local text	= this.Log[ this.m_iLogIterator ] or "";
+				local len	= text:len();
+				
+				for i = 1, len do
+					table.insert( this.m_aCommand, text[ i ] );
+				end
+				
+				this.m_iCursorPosition = len + 1;
 			elseif sKey == "arrow_u" then
 				local iLogSize	= table.getn( this.Log );
 				
-				if guiGetText( this.m_pInputGUI ):len() ~= 0 or this.m_iLogIterator == 0 then
+				if table.getn( this.m_aCommand ) ~= 0 or this.m_iLogIterator == 0 then
 					this.m_iLogIterator = this.m_iLogIterator + 1;
 				end
 				
@@ -329,9 +400,16 @@ class. ClientConsole
 					this.m_iLogIterator = iLogSize;
 				end
 				
-				local sText = this.Log[ this.m_iLogIterator ] or "";
+				this.m_aCommand = {};
 				
-				guiSetText( this.m_pInputGUI, sText );
+				local text	= this.Log[ this.m_iLogIterator ] or "";
+				local len	= text:len();
+				
+				for i = 1, len do
+					table.insert( this.m_aCommand, text[ i ] );
+				end
+				
+				this.m_iCursorPosition = len + 1;
 			elseif sKey == "pgup" then
 				this.m_iLineScrollOffset = Clamp( 0, this.m_iLineScrollOffset + 1, table.getn( this.m_aLines ) );
 			elseif sKey == "pgdn" then
@@ -356,7 +434,31 @@ class. ClientConsole
 			
 			local iMinDelay = 50;
 			
-			if getKeyState( "arrow_u" ) then
+			if getKeyState( "delete" ) then
+				this.OnKey( "delete" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "backspace" ) then
+				this.OnKey( "backspace" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_l" ) then
+				this.OnKey( "arrow_l" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_r" ) then
+				this.OnKey( "arrow_r" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_u" ) then
 				this.OnKey( "arrow_u" );
 			elseif getKeyState( "arrow_d" ) then
 				this.OnKey( "arrow_d" );
@@ -405,6 +507,12 @@ class. ClientConsole
 				local sChar = this.m_aCommand[ i ];
 				
 				dxDrawText( sChar, fX, fY, fX, fY, this.m_iTextInputColor, this.m_iSize, this.m_pFont, "left", "center", false, false, true, true, false );
+			end
+			
+			local fX	= 17 + ( this.m_iCursorPosition * this.m_iFontWidth );
+			
+			if getTickCount() % 500 < 250 then
+				dxDrawRectangle( fX, fY + 4, this.m_iFontWidth, 3, this.m_iTextInputColor, true );
 			end
 		end
 	end;
