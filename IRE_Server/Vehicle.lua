@@ -413,8 +413,8 @@ class. Vehicle : Element
 		return respawnVehicle( this );
 	end;
 	
-	SetDamageProof			= function()
-		return setVehicleDamageProof( this );
+	SetDamageProof			= function( enabled )
+		return setVehicleDamageProof( this, enabled );
 	end;
 	
 	SetDirtLevel			= function( level )
