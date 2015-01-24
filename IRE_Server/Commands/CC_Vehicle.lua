@@ -28,6 +28,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleDelete( player, option, option2 );
 		end
 		
+		if option == "restore" then
+			return this.VehicleRestore( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -182,6 +186,40 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+	end;
+	
+	VehicleRestore	= function( player, option, id )
+		local ID = tonumber( id );
+		
+		if ID then
+			local result = Server.DB.Query( "SELECT * FROM " + Server.DB.Prefix + "vehicles WHERE id = %d AND deleted IS NOT NULL", ID );
+			
+			if result then
+				local row = result.GetRow();
+				
+				result.Free();
+				
+				if row then
+					if Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET deleted = NULL WHERE id = %d", sDBID ) then
+						local vehicle = Server.Game.VehicleManager.Add( row.id, row.model, new. Vector3( row.position ), new. Vector3( row.rotation ), row );
+						
+						return TEXT_VEHICLES_RESTORE_SUCCESS:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 64;
+					end
+					
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+				
+				return TEXT_VEHICLES_INVALID_DB_ID, 255, 0, 0;
+			end
+			
+			Debug( Server.DB.Error(), 1 );
+			
+			return TEXT_DB_ERROR, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " <id в базе>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
