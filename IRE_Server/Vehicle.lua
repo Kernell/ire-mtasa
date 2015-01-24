@@ -697,8 +697,8 @@ class. Vehicle : Element
 			this.LastDriver	= player.GetName();
 			this.LastTime	= getRealTime().timestamp;
 			
-			this:SetData( "LastDriver", this.LastDriver );
-			this:SetData( "LastTime", this.LastTime );
+			this.SetData( "LastDriver", this.LastDriver );
+			this.SetData( "LastTime", this.LastTime );
 			
 			this.Save();
 		end
