@@ -361,14 +361,14 @@ class. Character
 		this.CuffedTo		= character or NULL;
 		
 		if this.Cuffed then
-			this.Player.RPC.UpdateCuffed( this.CuffedTo and this.CuffedTo.Player ); -- TODO:
+			-- this.Player.RPC.UpdateCuffed( this.CuffedTo and this.CuffedTo.Player ); -- TODO:
 			
 			if not this.Player.IsInVehicle() and not this.Player.LowHPAnim then
 				this.SetAnimation( CPlayerAnimation.PRIORITY_CUFFS, "PED", "IDLE_stance" );
 			end
 		elseif not this.Player.LowHPAnim then
 			this.SetAnimation( PlayerAnimation.PRIORITY_CUFFS );
-			this.Player.RPC.UpdateCuffed(); -- TODO:
+			-- this.Player.RPC.UpdateCuffed(); -- TODO:
 		end
 		
 		return true;
