@@ -52,6 +52,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleRespawnAll( player, option, option2 );
 		end
 		
+		if option == "repair" then
+			return this.VehicleRepair( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -166,18 +170,10 @@ class. CC_Vehicle : IConsoleCommand
 	end;
 	
 	VehicleDelete	= function( player, option, id )
-		local vehicleID = tonumber( id );
+		local vehicle = this.GetVehicle( id );
 		
-		local vehicle;
-		
-		if vehicleID then
-			vehicle = Server.Game.VehicleManager.Get( vehicleID );
-			
-			if not vehicle then
-				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
-			end
-		else
-			vehicle = player.GetVehicle();
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
 		end
 		
 		if vehicle then
@@ -352,18 +348,10 @@ class. CC_Vehicle : IConsoleCommand
 	end;
 	
 	VehicleRespawn	= function( player, option, id )
-		local vehicleID = tonumber( id );
+		local vehicle = this.GetVehicle( id );
 		
-		local vehicle;
-		
-		if vehicleID then
-			vehicle = Server.Game.VehicleManager.Get( vehicleID );
-			
-			if not vehicle then
-				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
-			end
-		else
-			vehicle = player.GetVehicle();
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
 		end
 		
 		if vehicle then
@@ -409,6 +397,23 @@ class. CC_Vehicle : IConsoleCommand
 		AdminManager.SendMessage( player.UserName + " respawned all vehicles" );
 		
 		return true;
+	end;
+	
+	VehicleRepair	= function( player, option, id )
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			vehicle.Fix();
+			vehicle.SetDamageProof( false );
+			
+			return TEXT_VEHICLES_VEHICLE_FIXED:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
@@ -539,5 +544,23 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Неизвестный параметр «" + option + "». Используйте «" + this.Name + " --help» для получения списка параметров.", 255, 255, 255;
+	end;
+	
+	GetVehicle	= function( id )
+		local vehicleID = tonumber( id );
+		
+		local vehicle = NULL;
+		
+		if vehicleID then
+			vehicle = Server.Game.VehicleManager.Get( vehicleID );
+			
+			if not vehicle then
+				return false;
+			end
+		else
+			vehicle = player.GetVehicle();
+		end
+		
+		return vehicle;
 	end;
 };
