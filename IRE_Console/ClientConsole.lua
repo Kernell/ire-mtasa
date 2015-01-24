@@ -332,6 +332,10 @@ class. ClientConsole
 					
 					this.m_aCommand = {};
 				end
+			elseif sKey == "arrow_l" then
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition - 1, table.getn( this.m_aCommand ) + 1 );
+			elseif sKey == "arrow_r" then
+				this.m_iCursorPosition = Clamp( 1, this.m_iCursorPosition + 1, table.getn( this.m_aCommand ) + 1 );
 			elseif sKey == "arrow_d" then
 				this.m_iLogIterator = this.m_iLogIterator - 1;
 				
@@ -384,7 +388,19 @@ class. ClientConsole
 			
 			local iMinDelay = 50;
 			
-			if getKeyState( "arrow_u" ) then
+			if getKeyState( "arrow_l" ) then
+				this.OnKey( "arrow_l" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_r" ) then
+				this.OnKey( "arrow_r" );
+				
+				iMinDelay = 50;
+				
+				this.m_iNextKeyTickDelay = 50;
+			elseif getKeyState( "arrow_u" ) then
 				this.OnKey( "arrow_u" );
 			elseif getKeyState( "arrow_d" ) then
 				this.OnKey( "arrow_d" );
