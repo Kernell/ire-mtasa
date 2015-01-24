@@ -76,6 +76,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetModel( player, option, option2, ... );
 		end
 		
+		if option == "setspawn" then
+			return this.VehicleSetSpawn( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -602,6 +606,40 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <model>", 255, 255, 255;
+	end;
+	
+	VehicleSetSpawn	= function( player, option, id )
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			local position	= vehicle.GetPosition();
+			local rotation	= vehicle.GetRotation();
+			local interior	= vehicle.GetInterior();
+			local dimension	= vehicle.GetDimension();
+			
+			vehicle.DefaultPosition		= position;
+			vehicle.DefaultRotation		= rotation;
+			vehicle.DefaultInterior		= interior;
+			vehicle.DefaultDimension	= dimension;
+			
+			vehicle.SetRespawnPosition( position, rotation );
+			
+			local query = "UPDATE " + Server.DB.Prefix + "vehicles SET default_position = %q, default_rotation = %q, default_interior = %d, default_dimension = %d WHERE id = %d";
+			
+			if Server.DB.Query( query, position.ToString(), rotation.ToString(), interior, dimension, vehicle.GetID() ) then
+				return TEXT_VEHICLES_RESPAWN_CHANGED:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+			end
+			
+			Debug( Server.DB.Error(), 1 );
+			
+			return TEXT_DB_ERROR, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
