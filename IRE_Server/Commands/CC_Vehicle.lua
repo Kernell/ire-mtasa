@@ -40,6 +40,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleGoTo( player, option, option2 );
 		end
 		
+		if option == "spawn" then
+			return this.VehicleSpawn( player, option, option2, ... );
+		end
+		
 		if option == "respawn" then
 			return this.VehicleRespawn( player, option, option2 );
 		end
@@ -290,6 +294,57 @@ class. CC_Vehicle : IConsoleCommand
 		return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
 	end;
 	
+	VehicleSpawn	= function( player, option, ... )
+		local model = table.concat( { ... }, " " );
+		
+		if model:len() > 0 then
+			local vehicleManager = Server.Game.VehicleManager;
+			
+			local model = tonumber( model ) or vehicleManager.GetModelByName( model );
+			
+			if model then
+				if vehicleManager.IsValidModel( model ) then
+					local ID = NULL;
+					
+					for i = -1, -64, -1 do
+						if not vehicleManager.Get( i ) then
+							ID = i;
+							
+							break;
+						end
+					end
+					
+					if ID then
+						local rotation	= player.GetRotation();
+						
+						local position	= player.GetPosition().Offset( 2.5, rotation.Z );
+						
+						rotation.X	= 0.0;
+						rotation.Y	= 0.0;
+						rotation.Z	= rotation.Z + 90.0;
+						
+						local data	=
+						{
+							interior	= player.GetInterior();
+							dimension	= player.GetDimension();
+							plate		= ( "%03d NULL" ):format( ID );
+						};
+						
+						local vehicle = vehicleManager.Add( ID, model, position, rotation, data );
+						
+						return TEXT_VEHICLES_TEMP_CAR_CREATED:format( vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+					end
+					
+					return TEXT_NOT_ENOUGH_MEMORY, 255, 0, 0;
+				end
+				
+				return TEXT_VEHICLES_INVALID_MODEL, 255, 0, 0;
+			end
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " <model>", 255, 255, 255;
+	end;
+	
 	VehicleRespawn	= function( player, option, id )
 		local vehicleID = tonumber( id );
 		
@@ -387,6 +442,10 @@ class. CC_Vehicle : IConsoleCommand
 		
 		if option == "goto" then
 			return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
+		end
+		
+		if option == "spawn" then
+			return "Syntax: /" + this.Name + " " + option + " <model>", 255, 255, 255;
 		end
 		
 		if option == "respawn" then
