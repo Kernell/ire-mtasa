@@ -36,6 +36,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleGet( player, option, option2 );
 		end
 		
+		if option == "goto" then
+			return this.VehicleGoTo( player, option, option2 );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -237,13 +241,41 @@ class. CC_Vehicle : IConsoleCommand
 				
 				rotation.X	= 0;
 				rotation.Y	= 0;
-				rotation.Z	= rotation.Z + 90;
 				
 				vehicle.SetVelocity()
 				vehicle.SetPosition( player.GetPosition().Offset( 2.5, rotation.Z ) );
+				
+				rotation.Z	= rotation.Z + 90;
+				
 				vehicle.SetRotation( rotation );
 				vehicle.SetInterior( player.GetInterior() );
 				vehicle.SetDimension( player.GetDimension() );
+				
+				return true;
+			end
+			
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
+	end;
+	
+	VehicleGoTo		= function( player, option, id )
+		local ID = tonumber( id );
+		
+		if ID then
+			local vehicle = Server.Game.VehicleManager.Get( ID );
+			
+			if vehicle then
+				local rotation	= vehicle.GetRotation();
+				
+				player.SetPosition( vehicle.GetPosition().Offset( 2.5, rotation.Z ) );
+				
+				rotation.Z = rotation.Z + 90;
+				
+				player.SetRotation( rotation );
+				player.SetInterior( vehicle.GetInterior() );
+				player.SetDimension( vehicle.GetDimension() );
 				
 				return true;
 			end
