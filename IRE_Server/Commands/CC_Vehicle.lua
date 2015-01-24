@@ -11,9 +11,13 @@ class. CC_Vehicle : IConsoleCommand
 		this.IConsoleCommand( ... );
 	end;
 	
-	Execute		= function( player, option, ... )
+	Execute		= function( player, option, option2, ... )
+		if option2 == "-h" or option2 == "--help" then
+			return this.Info( option );
+		end
+		
 		if option == "create" then
-			return this.VehicleCreate( player, option, ... );
+			return this.VehicleCreate( player, option, option2, ... );
 		end
 		
 		if option == "-h" or option == "--help" then
@@ -27,20 +31,6 @@ class. CC_Vehicle : IConsoleCommand
 		if not player.IsInGame() then
 			return true;
 		end
-		
-		if model == "-h" or model == "--help" then
-			return
-			{
-				{ "Syntax: /" + this.Name + " " + option + " <model> [flags]", 255, 255, 255 };
-				{ "List of flags:", 200, 200, 200 };
-				{ "  -с, --color               цвет автомобиля в формате R,G,B", 200, 200, 200 };
-				{ "  -p, --plate               номерной знак автомобиля (8 символов)", 200, 200, 200 };
-				{ "  -v, --variants            extra parts через запятую (например 1,255)", 200, 200, 200 };
-				{ "  -E, --element_data        Element Data. -E key=value", 200, 200, 200 };
-			};
-		end
-		
-		Debug( "vehicle create " + model + " " + table.concat( { ... }, " " ) );
 		
 		local modelID = model and tonumber( model ) or VehicleManager.GetModelByName( model );
 		
@@ -147,7 +137,129 @@ class. CC_Vehicle : IConsoleCommand
 		return "Syntax: /" + this.Name + " " + option + " <model> [flags]";
 	end;
 	
-	Info		= function()
+	Info		= function( option )
+		if not option then
+			return
+			{
+				{ "Syntax: /" + this.Name + " <option>", 255, 255, 255 };
+				{ "List of options:", 200, 200, 200 };
+				{ "  create                    создание нового автомобиля", 200, 200, 200 };
+				{ "  delete                    удаление автомобиля с сервера", 200, 200, 200 };
+				{ "  restore                   вернуть удалённый автомобиль на сервер", 200, 200, 200 };
+				{ "  get                       телепортирует указанный автомобиль к персонажу", 200, 200, 200 };
+				{ "  goto                      телепортирует персонаж к указанному автомобилю", 200, 200, 200 };
+				{ "  spawn                     заспавнить временный автомобиль (не сохраняется в БД)", 200, 200, 200 };
+				{ "  respawn                   возвращает автомобиль на место создания, заправляет его и чинит", 200, 200, 200 };
+				{ "  respawnall                возвращает все автомобили на место создания", 200, 200, 200 };
+				{ "  repair                    ремонтирует автомобиль", 200, 200, 200 };
+				{ "  flip                      переворачивает автомобиль на колёса", 200, 200, 200 };
+				{ "  setfrozen                 статус заморозки (не может двигаться)", 200, 200, 200 };
+				{ "  setfuel                   уровень топлива", 200, 200, 200 };
+				{ "  setcolor                  цвет в HEX формате", 200, 200, 200 };
+				{ "  setmodel                  модель автомобиля", 200, 200, 200 };
+				{ "  setspawn                  начальная позиция (переписывает место создания)", 200, 200, 200 };
+				{ "  setplate                  регистрационный номер на автомобиле", 200, 200, 200 };
+				{ "  setvariant                extra parts", 200, 200, 200 };
+				{ "  setupgrade                апгрейды", 200, 200, 200 };
+				{ "  setdata                   element data", 200, 200, 200 };
+				{ "  setcharacter              персонаж который владеет этим автомобилем", 200, 200, 200 };
+				{ "  setfaction                организация которая владеет этим автомобилем", 200, 200, 200 };
+				{ "  saveall                   сохранение всех машин", 200, 200, 200 };
+			};
+		end
 		
+		if option == "create" then
+			return
+			{
+				{ "Syntax: /" + this.Name + " " + option + " <model> [flags]", 255, 255, 255 };
+				{ "List of flags:", 200, 200, 200 };
+				{ "  -с, --color               цвет автомобиля в формате R,G,B", 200, 200, 200 };
+				{ "  -p, --plate               номерной знак автомобиля (8 символов)", 200, 200, 200 };
+				{ "  -v, --variants            extra parts через запятую (например 1,255)", 200, 200, 200 };
+				{ "  -E, --element_data        Element Data. -E key=value", 200, 200, 200 };
+			};
+		end
+		
+		if option == "delete" then
+			return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+		end
+		
+		if option == "restore" then
+			return "Syntax: /" + this.Name + " " + option + " <id в базе>", 255, 255, 255;
+		end
+		
+		if option == "get" then
+			return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
+		end
+		
+		if option == "goto" then
+			return "Syntax: /" + this.Name + " " + option + " <id>", 255, 255, 255;
+		end
+		
+		if option == "respawn" then
+			return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+		end
+		
+		if option == "respawnall" then
+			return "Syntax: /" + this.Name + " " + option, 255, 255, 255;
+		end
+		
+		if option == "repair" then
+			return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+		end
+		
+		if option == "flip" then
+			return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+		end
+		
+		if option == "setfrozen" then
+			return "Syntax: /" + this.Name + " " + option + " [id] [frozen = false]", 255, 255, 255;
+		end
+		
+		if option == "setfuel" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <fuel>", 255, 255, 255;
+		end
+		
+		if option == "setcolor" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <color1> [color2] [color3] [color4]", 255, 255, 255;
+		end
+		
+		if option == "setmodel" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <model>", 255, 255, 255;
+		end
+		
+		if option == "setspawn" then
+			return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+		end
+		
+		if option == "setplate" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <text>", 255, 255, 255;
+		end
+		
+		if option == "setvariant" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <variant1> <variant2>", 255, 255, 255;
+		end
+		
+		if option == "setupgrade" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <upgrade> [install = true]", 255, 255, 255;
+		end
+		
+		if option == "setdata" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <data> <value (NULL для удаления)>", 255, 255, 255;
+		end
+		
+		if option == "setcharacter" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <character id>", 255, 255, 255;
+		end
+		
+		if option == "setfaction" then
+			return "Syntax: /" + this.Name + " " + option + " [id] <faction id>", 255, 255, 255;
+		end
+		
+		if option == "saveall" then
+			return "Syntax: /" + this.Name + " " + option, 255, 255, 255;
+		end
+		
+		return "Неизвестный параметр «" + option + "». Используйте «" + this.Name + " --help» для получения списка параметров.", 255, 255, 255;
 	end;
 };
