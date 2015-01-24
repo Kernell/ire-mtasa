@@ -64,6 +64,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetFrozen( player, option, option2, ... );
 		end
 		
+		if option == "setfuel" then
+			return this.VehicleSetFrozen( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -467,6 +471,36 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] [frozen = false]", 255, 255, 255;
+	end;
+	
+	VehicleSetFuel	= function( player, option, ... )
+		local id, fuel;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id		= args[ 1 ];
+			fuel	= args[ 2 ];
+		elseif len == 1 then
+			fuel	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			fuel = Clamp( 0, fuel, 100 );
+			
+			vehicle.SetFuel( fuel );
+			
+			return TEXT_VEHICLES_FUEL_CHANGED:format( vehicle.GetName(), vehicle.GetID(), fuel ), 0, 255, 128;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <fuel>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
