@@ -104,6 +104,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetFaction( player, option, option2, ... );
 		end
 		
+		if option == "saveall" then
+			return this.VehicleSaveAll( player, option );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -929,6 +933,14 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <faction id>", 255, 255, 255;
+	end;
+	
+	VehicleSaveAll	= function( player )
+		Server.Game.VehicleManager.SaveAll();
+		
+		AdminManager.SendMessage( player.UserName + " saved all vehicles" );
+		
+		return true;
 	end;
 	
 	Info		= function( option )
