@@ -80,6 +80,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetSpawn( player, option, option2, ... );
 		end
 		
+		if option == "setplate" then
+			return this.VehicleSetPlate( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -640,6 +644,38 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id]", 255, 255, 255;
+	end;
+	
+	VehicleSetPlate	= function( player, option, ... )
+		local id, plate;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id		= args[ 1 ];
+			plate	= args[ 2 ];
+		elseif len == 1 then
+			plate	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			if vehicle.SetRegPlate( plate ) then
+				return TEXT_VEHICLES_PLATE_CHANGED:format( vehicle.GetName(), vehicle.GetID(), plate ), 0, 255, 128;
+			end
+			
+			Debug( Server.DB.Error(), 1 );
+			
+			return TEXT_DB_ERROR, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <text>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
