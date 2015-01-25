@@ -88,6 +88,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetVariant( player, option, option2, ... );
 		end
 		
+		if option == "setupgrade" then
+			return this.VehicleSetUpgrade( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -711,11 +715,72 @@ class. CC_Vehicle : IConsoleCommand
 					return TEXT_VEHICLES_VARIANT_CHANGED:format( vehicle.GetName(), vehicle.GetID(), variant1, variant2 ), 0, 255, 128;
 				end
 				
+				Debug( Server.DB.Error(), 1 );
+				
 				return TEXT_DB_ERROR, 255, 0, 0;
 			end
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <variant1> <variant2>", 255, 255, 255;
+	end;
+	
+	VehicleSetUpgrade	= function( player, option, ... )
+		local id, upgrade, install;
+		
+		local args 		= { ... };
+		local len 		= table.getn( args );
+		
+		if len == 3 then
+			id			= args[ 1 ];
+			upgrade		= args[ 2 ];
+			install		= args[ 3 ];
+		elseif len == 2 then
+			if tonumber( args[ 1 ] ) then
+				id		= args[ 1 ];
+			else
+				upgrade	= args[ 1 ];
+			end
+			
+			install		= args[ 2 ];
+		elseif len == 1 then
+			upgrade		= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			if vehicle.Upgrades.IsInstalled( upgrade ) then
+				vehicle.Upgrades.Remove( upgrade )
+			else
+				if not vehicle.Upgrades.Add( upgrade ) then
+					return "Ошибка при установке компонента (возможно не совместим)", 255, 0, 0;
+				end
+			end
+			
+			if vehicle.GetID() > 0 then
+				local upgrade	= vehicle.Upgrades.ToJSON();
+				
+				if upgrade then
+					upgrade = "'" + upgrade + "'";
+				else
+					upgrade = "NULL";
+				end
+				
+				if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET upgrades = " + upgrade + " WHERE id = " + vehicle.GetID() ) then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+			end
+			
+			return true;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <upgrade> [install = true]", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
