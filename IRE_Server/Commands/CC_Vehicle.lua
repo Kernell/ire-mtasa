@@ -92,6 +92,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetUpgrade( player, option, option2, ... );
 		end
 		
+		if option == "setdata" then
+			return this.VehicleSetData( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -781,6 +785,64 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <upgrade> [install = true]", 255, 255, 255;
+	end;
+	
+	VehicleSetData	= function( player, option, ... )
+		local id, data, value;
+		
+		local args 		= { ... };
+		local len 		= table.getn( args );
+		
+		if len == 3 then
+			id			= args[ 1 ];
+			data		= args[ 2 ];
+			value		= args[ 3 ];
+		elseif len == 2 then
+			data		= args[ 1 ];
+			value		= args[ 2 ];
+		end
+		
+		if data and value then
+			local vehicle = this.GetVehicle( id );
+			
+			if vehicle == false then
+				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+			end
+			
+			if vehicle then
+				if not vehicle.Data then
+					vehicle.Data = {};
+				end
+				
+				if value == "NULL" then
+					vehicle.Data[ data ] = NULL;
+					
+					vehicle.RemoveData( data );
+				else
+					vehicle.Data[ data ] = value;
+					
+					vehicle.SetData( data, value );
+				end
+				
+				local jsonData	= toJSON( vehicle.Data );
+				
+				if jsonData then
+					jsonData = "'" + jsonData + "'";
+				else
+					jsonData = "NULL";
+				end
+				
+				if not Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET element_data = " + jsonData + " WHERE id = " + vehicle.GetID() ) then
+					Debug( Server.DB.Error(), 1 );
+					
+					return TEXT_DB_ERROR, 255, 0, 0;
+				end
+				
+				return true;
+			end
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <data> <value (NULL для удаления)>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
