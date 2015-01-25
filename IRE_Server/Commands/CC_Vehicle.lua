@@ -84,6 +84,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetPlate( player, option, option2, ... );
 		end
 		
+		if option == "setvariant" then
+			return this.VehicleSetVariant( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -676,6 +680,42 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <text>", 255, 255, 255;
+	end;
+	
+	VehicleSetVariant	= function( player, option, ... )
+		local id, variant1, variant2;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 3 then
+			id			= args[ 1 ];
+			variant1	= args[ 2 ];
+			variant2	= args[ 3 ];
+		elseif len == 1 then
+			variant1	= args[ 1 ];
+			variant2	= args[ 2 ];
+		end
+		
+		if variant1 and variant2 then
+			local vehicle = this.GetVehicle( id );
+			
+			if vehicle == false then
+				return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+			end
+			
+			if vehicle then
+				if Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET variants = '" + toJSON( { variant1, variant2 } ) + "' WHERE id = " + vehicle.GetID() ) then
+					vehicle.SetVariant( variant1, variant2 );
+					
+					return TEXT_VEHICLES_VARIANT_CHANGED:format( vehicle.GetName(), vehicle.GetID(), variant1, variant2 ), 0, 255, 128;
+				end
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <variant1> <variant2>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
