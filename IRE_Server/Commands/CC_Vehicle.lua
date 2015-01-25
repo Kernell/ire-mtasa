@@ -100,6 +100,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetCharacter( player, option, option2, ... );
 		end
 		
+		if option == "setfaction" then
+			return this.VehicleSetFaction( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -887,6 +891,44 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <character id>", 255, 255, 255;
+	end;
+	
+	VehicleSetFaction	= function( player, option, ... )
+		local id, factionID;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id			= args[ 1 ];
+			factionID	= args[ 2 ];
+		elseif len == 1 then
+			factionID	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			local faction = Server.Game.FactionManager.Get( factionID );
+			
+			if faction then
+				if vehicle.SetFaction( faction ) then
+					Console.Log( "%s changed faction vehicle %s (ID %d) for %s (ID: %d)", player.UserName, vehicle.GetName(), vehicle.GetID(), faction.GetName(), faction.GetID() );
+					
+					return TEXT_VEHICLES_FACTION_CHANGED:format( vehicle.GetName(), vehicle.GetID(), faction.GetName() ), 0, 255, 128;
+				end
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+			
+			return TEXT_FACTIONS_INVALID_ID, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <faction id>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
