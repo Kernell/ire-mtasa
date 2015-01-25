@@ -96,6 +96,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSetData( player, option, option2, ... );
 		end
 		
+		if option == "setcharacter" then
+			return this.VehicleSetCharacter( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -843,6 +847,46 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		return "Syntax: /" + this.Name + " " + option + " [id] <data> <value (NULL для удаления)>", 255, 255, 255;
+	end;
+	
+	VehicleSetCharacter	= function( player, option, ... )
+		local id, characterID;
+		
+		local args = { ... };
+		local len = table.getn( args );
+		
+		if len == 2 then
+			id			= args[ 1 ];
+			characterID	= args[ 2 ];
+		elseif len == 1 then
+			characterID	= args[ 1 ];
+		end
+		
+		local vehicle = this.GetVehicle( id );
+		
+		if vehicle == false then
+			return TEXT_VEHICLES_INVALID_ID, 255, 0, 0;
+		end
+		
+		if vehicle then
+			local target = Server.Game.PlayerManager.Get( iTargetID );
+			
+			if target then
+				if vehicle.SetOwner( target.GetChar() ) then
+					Console.Log( "%s changed owner vehicle ID %d for %s (User: %s ID: %d)", player.UserName, vehicle.GetID(), target.GetName(), target.UserName, target.UserID );
+					
+					target.Chat.Send( string.format( "Теперь Вы владелец автомобиля %s (ID %d)", vehicle.GetName(), vehicle.GetID() ), 0, 255, 128 );
+					
+					return TEXT_VEHICLES_OWNER_CHANGED:format( target.GetName(), target.GetID(), vehicle.GetName(), vehicle.GetID() ), 0, 255, 128;
+				end
+				
+				return TEXT_DB_ERROR, 255, 0, 0;
+			end
+			
+			return TEXT_PLAYER_NOT_FOUND, 255, 0, 0;
+		end
+		
+		return "Syntax: /" + this.Name + " " + option + " [id] <character id>", 255, 255, 255;
 	end;
 	
 	Info		= function( option )
