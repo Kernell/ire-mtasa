@@ -108,6 +108,10 @@ class. CC_Vehicle : IConsoleCommand
 			return this.VehicleSaveAll( player, option );
 		end
 		
+		if option == "setdebug" then
+			return this.VehicleSetDebug( player, option, option2, ... );
+		end
+		
 		if option == "-h" or option == "--help" then
 			return this.Info();
 		end
@@ -943,6 +947,12 @@ class. CC_Vehicle : IConsoleCommand
 		return true;
 	end;
 	
+	VehicleSetDebug	= function( player, option, enabled, distance )
+		player.RPC.VehicleManager.SetDebug( (bool)(enabled), distance );
+		
+		return true;
+	end;
+	
 	Info		= function( option )
 		if not option then
 			return
@@ -971,6 +981,7 @@ class. CC_Vehicle : IConsoleCommand
 				{ "  setcharacter              персонаж который владеет этим автомобилем", 200, 200, 200 };
 				{ "  setfaction                организация которая владеет этим автомобилем", 200, 200, 200 };
 				{ "  saveall                   сохранение всех машин", 200, 200, 200 };
+				{ "  setdebug                  отображение отладочной информации", 200, 200, 200 };
 			};
 		end
 		
@@ -1068,6 +1079,10 @@ class. CC_Vehicle : IConsoleCommand
 		
 		if option == "saveall" then
 			return "Syntax: /" + this.Name + " " + option, 255, 255, 255;
+		end
+		
+		if option == "setdebug" then
+			return "Syntax: /" + this.Name + " " + option + " <enabled> [distance = 30]", 255, 255, 255;
 		end
 		
 		return "Неизвестный параметр «" + option + "». Используйте «" + this.Name + " --help» для получения списка параметров.", 255, 255, 255;
