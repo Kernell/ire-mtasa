@@ -1,12 +1,3 @@
-[submodule "WORP_Server/Shared"]
-	path = WORP_Server/Shared
-	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
-[submodule "WORP/Shared"]
-	path = WORP/Shared
-	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
-[submodule "rp_nametags/Shared"]
-	path = rp_nametags/Shared
-	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
 [submodule "rp_models/Shared"]
 	path = rp_models/Shared
 	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
