@@ -24,6 +24,8 @@ class. Resource
 		this.UI		= new. UIManager();
 		this.Camera	= new. ClientCamera();
 		
+		this.VehicleManager	= new. VehicleManager();
+		
 		_G.UI = this.UI.UI;
 		_G.Camera = this.Camera;
 		
@@ -33,6 +35,7 @@ class. Resource
 	OnStop		= function()
 		delete ( this.UI );
 		delete ( this.Camera );
+		delete ( this.VehicleManager );
 		delete ( this.RPC );
 		
 		_G.UI = NULL;
