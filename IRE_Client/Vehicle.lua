@@ -19,6 +19,7 @@ class. Vehicle : Element
 	Aerodynamics		= 0.0;
 	
 	WiperTime			= 0;
+	WiperProgress		= 0.0;
 	WiperState			= VEHICLE_WIPER_DISABLED;
 	WiperTime			= 5000;
 	WiperTickEnd		= 0;

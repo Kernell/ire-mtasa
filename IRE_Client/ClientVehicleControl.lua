@@ -144,7 +144,7 @@ class. ClientVehicleControl
 					end
 				end
 				
-				local velocity		= pVehicle.GetVelocity().Length();
+				local velocity		= vehicle.GetVelocity().Length();
 				
 				local steerInput = 0.0;
 				
@@ -159,7 +159,7 @@ class. ClientVehicleControl
 				if steerInput < this.Steer then
 					local steerSpeed	= 0.0;
 					
-					if this.steer > 0.0 then
+					if this.Steer > 0.0 then
 						steerSpeed = 1.0 / ( this.SteerReleaseTime + this.VeloSteerReleaseTime * velocity );
 					else
 						steerSpeed	= 1.0 / ( this.SteerTime + this.VeloSteerTime * velocity );
@@ -169,7 +169,7 @@ class. ClientVehicleControl
 						steerSpeed = steerSpeed * ( 1.0 + this.Steer * this.SteerCorrectionFactor );
 					end
 					
-					this.Steer = this.Steer - ( SteerSpeed * deltaTime );
+					this.Steer = this.Steer - ( steerSpeed * deltaTime );
 					
 					if steerInput > this.Steer then
 						this.Steer = steerInput;
@@ -190,7 +190,7 @@ class. ClientVehicleControl
 					this.Steer = this.Steer + ( steerSpeed * deltaTime );
 					
 					if steerInput < this.Steer then
-						this.Steer = SteerInput;
+						this.Steer = steerInput;
 					end
 				end
 			end

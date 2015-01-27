@@ -164,7 +164,7 @@ class. VehicleManager
 						local lastTime		= vehicle.Debug.LastTime;
 						local lastDriver	= vehicle.Debug.LastDriver;
 						
-						local text = string.format( "%.3f\nID:%d\nHealth: %.2f\n%s (%d)\nLast time: %s\nLast driver: %s", distance, ID, health, lastTime, lastDriver );
+						local text = string.format( "%.3f\nID:%d (%d)\nHealth: %.2f\nLast time: %s\nLast driver: %s", distance, ID, vehicle.GetModel(), health, lastTime, lastDriver );
 						
 						local alpha	= Lerp( 255, 0, distance / this.DEBUG_DISTANCE );
 						
@@ -200,7 +200,7 @@ class. VehicleManager
 					
 					addEventHandler( "onClientRender", root, this.__OnDebugRender );				
 				end
-			else
+			elseif this.DebugTimer then
 				killTimer( this.DebugTimer );
 				
 				this.DebugTimer = NULL;
