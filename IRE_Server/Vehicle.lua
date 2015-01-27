@@ -7,16 +7,14 @@
 
 class. Vehicle : Element
 {
-	Vehicle		= function( model, position, rotation, plate, variant1, variant2 )
+	Vehicle		= function( model, plate, variant1, variant2 )
 		if not Server.Game.VehicleManager.IsValidModel( model ) then
 			error( "invalid vehicle model", 2 );
 		end
 		
-		position 	= position or new. Vector3();
-		rotation 	= rotation or new. Vector3();
 		plate		= plate or Server.Game.VehicleManager.GetRandomRegPlate();
 		
-		this = createVehicle( model, position.X, position.Y, position.Z, rotation.X, rotation.Y, rotation.Z, plate, variant1, variant2 )( this );
+		this = createVehicle( model, 4000.0, 4000.0, 4000.0, 0.0, 0.0, 0.0, plate, variant1, variant2 )( this );
 		
 		this.Model			= model;
 		this.Variant1		= variant1;

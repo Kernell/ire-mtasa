@@ -80,18 +80,20 @@ class. VehicleManager
 		end
 		
 		function this.__OnPreRender( deltaTime )
-			local vehicles = getElementsByType( "vehicle", VehicleManager.Root, true );
-			
-			for i = 1, table.getn( vehicles ) do
-				local vehicle = vehicles[ i ];
+			if isElement( VehicleManager.Root ) then	
+				local vehicles = getElementsByType( "vehicle", VehicleManager.Root, true );
 				
-				if not this.List[ vehicle ] then
-					vehicle = new. Vehicle( source );
+				for i = 1, table.getn( vehicles ) do
+					local vehicle = vehicles[ i ];
 					
-					this.List[ vehicle ] = vehicle;
+					if not this.List[ vehicle ] then
+						vehicle = new. Vehicle( source );
+						
+						this.List[ vehicle ] = vehicle;
+					end
+					
+					vehicle.DoPulse( deltaTime );
 				end
-				
-				vehicle.DoPulse( deltaTime );
 			end
 		end
 		

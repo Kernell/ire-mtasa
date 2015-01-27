@@ -381,7 +381,29 @@ class. VehicleManager : Manager
 		
 		local variant1, variant2 = unpack( data.variants and fromJSON( data.variants ) or {} );
 		
-		local vehicle = new. Vehicle( model, position, rotation, plate, variant1, variant2 );
+		local vehicle = new. Vehicle( model, plate, variant1, variant2 );
+		
+		vehicle.ID					= ID;
+		vehicle.CharID				= data.character_id;
+		vehicle.Fuel				= data.fuel;
+		vehicle.LastDriver			= data.last_driver or "N/A";
+		vehicle.LastTime			= data.last_time or getRealTime().timestamp;
+		
+		vehicle.SetID( "vehicle:" + vehicle.ID );
+		
+		vehicle.SetData( "Vehicle::ID",				vehicle.ID,			true, true );
+		vehicle.SetData( "Vehicle::CharID",			vehicle.CharID,		true, true );
+		vehicle.SetData( "Vehicle::Fuel",			vehicle.Fuel,		true, true );
+		vehicle.SetData( "Vehicle::LastDriver",		vehicle.LastDriver,	true, true );
+		vehicle.SetData( "Vehicle::LastTime",		vehicle.LastTime,	true, true );
+		
+		this.ElementData = data.element_data and fromJSON( data.element_data );
+		
+		if this.ElementData then
+			for key, value in pairs( this.ElementData ) do
+				vehicle.SetData( key, value );
+			end
+		end
 		
 		local upgrades = data.upgrades and fromJSON( data.upgrades );
 		
@@ -407,14 +429,6 @@ class. VehicleManager : Manager
 			end
 		end
 		
-		this.ElementData = data.element_data and fromJSON( data.element_data );
-		
-		if this.ElementData then
-			for key, value in pairs( this.ElementData ) do
-				vehicle.SetData( key, value );
-			end
-		end
-		
 		if not vehicle.RegPlate then
 			vehicle.GenerateRegPlate();
 		end
@@ -427,19 +441,10 @@ class. VehicleManager : Manager
 			vehicle.RandomizeColor();
 		end
 		
-		vehicle.ID					= ID;
-		vehicle.CharID				= data.character_id;
-		vehicle.Fuel				= data.fuel;
-		vehicle.LastDriver			= data.last_driver or "N/A";
-		vehicle.LastTime			= data.last_time or getRealTime().timestamp;
-		
 		vehicle.DefaultPosition		= new. Vector3( data.default_position );
 		vehicle.DefaultRotation		= new. Vector3( data.default_rotation );
 		vehicle.DefaultInterior		= data.default_interior;
 		vehicle.DefaultDimension	= data.default_dimension;
-		
-		vehicle.SetInterior			( data.interior );
-		vehicle.SetDimension		( data.dimension );
 		
 		vehicle.SetEngineState		( data.engine == "on" );
 		vehicle.SetLights			( data.lights == "on" );
@@ -450,13 +455,10 @@ class. VehicleManager : Manager
 		
 		vehicle.Siren.SetState		( data.siren, data.whelen );
 		
-		vehicle.SetID( "vehicle:" + vehicle.ID );
-		
-		vehicle.SetData( "Vehicle::ID",				vehicle.ID,			true, true );
-		vehicle.SetData( "Vehicle::CharID",			vehicle.CharID,		true, true );
-		vehicle.SetData( "Vehicle::Fuel",			vehicle.Fuel,		true, true );
-		vehicle.SetData( "Vehicle::LastDriver",		vehicle.LastDriver,	true, true );
-		vehicle.SetData( "Vehicle::LastTime",		vehicle.LastTime,	true, true );
+		vehicle.SetPosition			( position );
+		vehicle.SetRotation			( rotation );
+		vehicle.SetInterior			( data.interior );
+		vehicle.SetDimension		( data.dimension );
 		
 		this.AddToList( vehicle );
 		
