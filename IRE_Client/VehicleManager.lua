@@ -105,17 +105,20 @@ class. VehicleManager
 		addEventHandler( "onClientElementStreamIn", 	VehicleManager.Root, this.__OnStreamIn );
 		addEventHandler( "onClientElementStreamOut", 	VehicleManager.Root, this.__OnStreamOut );
 		addEventHandler( "onClientElementDataChange", 	VehicleManager.Root, this.__OnDataChange );
-		addEventHandler( "onClientPreRender", 			VehicleManager.Root, this.__OnPreRender );
+		addEventHandler( "onClientPreRender", 			root, this.__OnPreRender );
 	end;
 	
 	_VehicleManager	= function()
-		removeEventHandler( "onClientVehicleCollision", 	VehicleManager.Root, this.__OnCollision );
-		removeEventHandler( "onClientVehicleRespawn", 		VehicleManager.Root, this.__OnRespawn );
-		removeEventHandler( "onClientElementDestroy", 		VehicleManager.Root, this.__OnDestroy );
-		removeEventHandler( "onClientElementStreamIn", 		VehicleManager.Root, this.__OnStreamIn );
-		removeEventHandler( "onClientElementStreamOut", 	VehicleManager.Root, this.__OnStreamOut );
-		removeEventHandler( "onClientElementDataChange", 	VehicleManager.Root, this.__OnDataChange );
-		removeEventHandler( "onClientPreRender", 			VehicleManager.Root, this.__OnPreRender );
+		if isElement( VehicleManager.Root ) then		
+			removeEventHandler( "onClientVehicleCollision", 	VehicleManager.Root, this.__OnCollision );
+			removeEventHandler( "onClientVehicleRespawn", 		VehicleManager.Root, this.__OnRespawn );
+			removeEventHandler( "onClientElementDestroy", 		VehicleManager.Root, this.__OnDestroy );
+			removeEventHandler( "onClientElementStreamIn", 		VehicleManager.Root, this.__OnStreamIn );
+			removeEventHandler( "onClientElementStreamOut", 	VehicleManager.Root, this.__OnStreamOut );
+			removeEventHandler( "onClientElementDataChange", 	VehicleManager.Root, this.__OnDataChange );
+		end
+		
+		removeEventHandler( "onClientPreRender", root, this.__OnPreRender );
 		
 		for vehicle in pairs( this.List ) do
 			this.List[ vehicle ] = NULL;
