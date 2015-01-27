@@ -680,8 +680,8 @@ class. Vehicle : Element
 			this.LastDriver	= player.GetName();
 			this.LastTime	= getRealTime().timestamp;
 			
-			this.SetData( "LastDriver", this.LastDriver );
-			this.SetData( "LastTime", this.LastTime );
+			this.SetData( "Vehicle::LastDriver", this.LastDriver );
+			this.SetData( "Vehicle::LastTime", this.LastTime );
 		end
 		
 		return true;
@@ -695,8 +695,8 @@ class. Vehicle : Element
 			this.LastDriver	= player.GetName();
 			this.LastTime	= getRealTime().timestamp;
 			
-			this.SetData( "LastDriver", this.LastDriver );
-			this.SetData( "LastTime", this.LastTime );
+			this.SetData( "Vehicle::LastDriver", this.LastDriver );
+			this.SetData( "Vehicle::LastTime", this.LastTime );
 			
 			this.Save();
 		end
