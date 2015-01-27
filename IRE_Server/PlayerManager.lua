@@ -100,7 +100,9 @@ class. PlayerManager : Manager
 		
 		this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
 		this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
-
+		
+		addEvent( "onPlayerRadialMenu", true );
+		
 		root.OnPlayerJoin.Add( this.PlayerJoin );
 		root.OnPlayerQuit.Add( this.PlayerQuit );
 		root.OnPlayerChangeNick.Add( this.PlayerChangeNick );
@@ -113,6 +115,7 @@ if _DEBUG then
 end
 		root.OnPlayerSpawn.Add( this.PlayerSpawn );
 		root.OnPlayerWasted.Add( this.PlayerWasted );
+		root.OnPlayerRadialMenu.Add( this.PlayerRadialMenu );
 		root.OnElementModelChange.Add( this.PlayerModelChange );
 	end;
 
@@ -129,6 +132,7 @@ if _DEBUG then
 end
 		root.OnPlayerSpawn.Remove( this.PlayerSpawn );
 		root.OnPlayerWasted.Remove( this.PlayerWasted );
+		root.OnPlayerRadialMenu.Remove( this.PlayerRadialMenu );
 		root.OnElementModelChange.Remove( this.PlayerModelChange );
 		
 		this.DeleteAll();
@@ -853,6 +857,10 @@ end
 	
 	PlayerWasted	= function( sender, e, totalAmmo, killer, killerWeapon, bodypart, stealth )
 		sender.OnWasted( totalAmmo, killer, killerWeapon, bodypart, stealth );
+	end;
+	
+	PlayerRadialMenu	= function( sender, e, command, ... )
+		sender.OnRadialMenu( command, ... );
 	end;
 	
 	PlayerModelChange	= function( sender, e, prevSkinID, skinID )

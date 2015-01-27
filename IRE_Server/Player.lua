@@ -1103,6 +1103,50 @@ class. Player : Ped
 		this.SetWalkingStyle( style );
 	end;
 	
+	OnRadialMenu	= function( option, ... )
+		if not this.IsInGame() then
+			return;
+		end
+		
+		local args = { ... };
+		
+		Debug( option );
+		
+		if option == "Settings" then
+			return;
+		end
+		
+		if option == "PlayerHello" then
+			return;
+		end
+		
+		if option == "PlayerKiss" then
+			return;
+		end
+		
+		if option == "PlayerPropose" then
+			return;
+		end
+		
+		if option == "PlayerToggleCuffed" then
+			return;
+		end
+		
+		if option == "PlayerHeal" then
+			return;
+		end
+		
+		if option == "NPCInteractive" then
+			return;
+		end
+		
+		if option == "InteriorMenu" then
+			return;
+		end
+		
+		Debug( "Invalid option '" + (string)(option) + "' for Radial Menu", 2 );
+	end;
+	
 	-- Key handlers
 	
 	static
