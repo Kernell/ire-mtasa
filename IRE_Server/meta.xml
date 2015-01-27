@@ -81,7 +81,9 @@
   <script src="Resource.lua"/>
   <script src="Console.lua"/>
   <script src="Server.lua"/>
-  <script src="Game.lua"/>  
+  <script src="Game.lua"/>
+  
+  <script src="Sound.lua"/>  
   
   <script src="Manager.lua"/>
   

@@ -43,10 +43,19 @@
   <script src="UICursor.lua"        type="client"/>
   <script src="UIFont.lua"          type="client"/>
   <script src="UIRadialMenu.lua"    type="client"/>
+  
+  <script src="Client.lua"          type="client"/>
+  <script src="ClientVehicleControl.lua" type="client"/>
+  
   <script src="ClientCamera.lua"    type="client"/>
+  
+  <script src="Sound.lua"           type="client"/>
+  <script src="SoundManager.lua"    type="client"/>
   
   <script src="Vehicle.lua"         type="client"/>
   <script src="VehicleManager.lua"  type="client"/>
+  
+  <script src="Settings.lua"        type="client"/>
   
   <script src="Resource.lua"        type="client"/>
   
@@ -103,4 +112,6 @@
   <file src="Resources/Images/holo_light/13-kiss.png" />
   <file src="Resources/Images/holo_light/13-handcuffs.png" />
   <file src="Resources/Images/holo_light/13-heal.png" />
+  
+  <file src="Resources/Images/RadialMenu.png" />
 </meta>
