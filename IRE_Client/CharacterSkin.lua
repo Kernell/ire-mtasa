@@ -1025,6 +1025,13 @@ local ARMOR_SKINS =
 	-- TODO: K-9 skin
 };
 
+local GASMASK_SKINS =
+{
+	[ 285 ]	= true;
+	[ 287 ]	= true;
+	[ 288 ]	= true;
+};
+
 local skins = {};
 
 for _gender, _colors in pairs( SKINS ) do
@@ -1084,5 +1091,9 @@ class. CharacterSkin
 	
 	HaveArmor		= function()
 		return ARMOR_SKINS[ this.ID ];
+	end;
+	
+	HaveGasMask		= function()
+		return GASMASK_SKINS[ this.ID ];
 	end;
 };
