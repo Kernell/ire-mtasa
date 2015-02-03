@@ -1,5 +1,5 @@
-[submodule "rp_models/Shared"]
-	path = rp_models/Shared
+[submodule "IRE_Models/Shared"]
+	path = IRE_Models/Shared
 	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
 [submodule "IRE_Shaders/Shared"]
 	path = IRE_Shaders/Shared
