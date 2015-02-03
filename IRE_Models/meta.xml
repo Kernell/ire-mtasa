@@ -1,0 +1,75 @@
+<meta>
+  <info author="Kernell" version="1.0.0"/>
+  
+  <min_mta_version server="1.3.5-9.06025" client="1.3.5-9.06025" />
+  
+  <script src="Shared/utils.lua"  type="client"/>
+  <script src="Shared/Debug.lua"  type="client"/>
+  <script src="Shared/Vars.lua"   type="client"/>
+  
+  <script src="Shared/utils.lua"  type="server"/>
+  <script src="Shared/Debug.lua"  type="server"/>
+  <script src="Shared/Vars.lua"   type="server"/>
+  
+  <script src="dffs.lua"  type="server"/>
+  <script src="dffs.lua"  type="client"/>
+  
+  <script src="encode.lua"  type="server"/>
+  <script src="replace.lua" type="client"/>
+
+  <!-- Peds -->
+  
+  <file src="Peds/wfyclot.dff"/>
+  <file src="Peds/wfyclot.txd"/>
+  
+  <file src="Peds/crogrl3.dff"/>
+  <file src="Peds/crogrl3.txd"/>
+  
+  <file src="Peds/gungrl3.dff"/>
+  <file src="Peds/gungrl3.txd"/>
+  
+  <file src="Peds/mecgrl3.dff"/>
+  <file src="Peds/mecgrl3.txd"/>
+  
+  <file src="Peds/nurgrl3.dff"/>
+  <file src="Peds/nurgrl3.txd"/>
+  
+  <file src="Peds/urban.dff"/>
+  
+  <file src="Peds/swat.txd"/>
+  <file src="Peds/fbi_swat.txd"/>
+  <file src="Peds/army.txd"/>
+  
+  <!-- Weapons -->
+  
+  <file src="Weapons/dummy.dff"/>
+  
+  <file src="Weapons/acr.dff"/>
+  <file src="Weapons/acr.txd"/>
+  
+  <!-- Vehicles -->
+  
+  <file src="Vehicles/audi_a4_tfsi_2010.dff"/>
+  <file src="Vehicles/audi_a4_tfsi_2010.txd"/>
+  
+  <file src="Vehicles/dodge_charger_rt_2007.dff"/>
+  <file src="Vehicles/dodge_charger_rt_2007.txd"/>
+  
+  <file src="Vehicles/mitsubish_lancer_evolution_8_gsr.dff"/>
+  <file src="Vehicles/mitsubish_lancer_evolution_8_gsr.txd"/>
+  
+  <file src="Vehicles/subaru_impreza_wrx_sti_2005.dff"/>
+  <file src="Vehicles/subaru_impreza_wrx_sti_2005.txd"/>
+  
+  <file src="Vehicles/lexus_is300.dff"/>
+  <file src="Vehicles/lexus_is300.txd"/>
+  
+  <file src="Vehicles/ford_falcon.dff"/>
+  <file src="Vehicles/ford_falcon.txd"/>
+  
+  <file src="Vehicles/ford_mustang_boss_302.dff"/>
+  <file src="Vehicles/ford_mustang_boss_302.txd"/>
+  
+  <file src="Vehicles/nissan_skyline_r34_gtr.dff"/>
+  <file src="Vehicles/nissan_skyline_r34_gtr.txd"/>
+</meta>
