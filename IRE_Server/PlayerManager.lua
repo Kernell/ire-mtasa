@@ -272,12 +272,12 @@ end
 				
 				local row = result.GetRow();
 				
-				delete ( result );
+				result.Free();
 				
 				if not row or not row.id then
-					player.LoginAttempt = ( player.LoginAttempt or 0 ) + 1;
+					player.LoginAttempts = ( player.LoginAttempts or 0 ) + 1;
 					
-					if player.LoginAttempt > 3 then
+					if player.LoginAttempts > 3 then
 						player.Ban( "Попытка взлома (подбор пароля)", 1440 );
 						
 						return;
@@ -285,8 +285,6 @@ end
 					
 					return "Неверный логин или пароль";
 				end
-				
-				player.LoginAttempt = NULL;
 				
 				if row.activation_code then
 					return "Учётная запись не активирована";
@@ -305,7 +303,18 @@ end
 					end
 				end
 				
-				player.AutoLogin	= data.rememberMe == true;
+				if data.rememberMe then
+					local query	=
+					{
+						id			= row.id;
+						serial		= player.GetSerial();
+						password	= Server.Blowfish.Encrypt( data.password );
+					};
+					
+					if not Server.DB.Insert( "uac_users_autologin", query ) then
+						Debug( Server.DB.Error(), 1 );
+					end
+				end
 				
 				setTimer( function() player.Login( row.id ); end, 1000, 1 );
 				

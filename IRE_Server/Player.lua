@@ -93,7 +93,6 @@ class. Player : Ped
 	PayDay				= 0;
 	MuteSeconds 		= 0;
 	Antiflood			= 0;
-	AutoLogin			= false;
 	LowHPAnim			= false;
 	HealthRegenPause	= 0;
 
@@ -249,9 +248,11 @@ class. Player : Ped
 	end;
 	
 	ShowLoginScreen = function()
+		this.LoginAttempts = NULL;
+		
 		this.InitLoginCamera();
 		
-		local result = Server.DB.Query( "SELECT `login`, `password` FROM `uac_users` WHERE `autologin` = '%s' LIMIT 1", this.GetSerial() );
+		local result = Server.DB.Query( "SELECT `id`, `password` FROM `uac_users_autologin` WHERE `serial` = '%s' LIMIT 1", this.GetSerial() );
 		
 		if result then
 			local row = result.GetRow();
@@ -259,9 +260,24 @@ class. Player : Ped
 			result.Free();
 			
 			if row then
-				this.RPC.UI.LoginScreen.Show( { login = row[ "login" ], remembered = true } );
+				local userID	= row.id;
+				local password	= row.password;
 				
-				return;
+				local result = Server.DB.Query( "SELECT `id` FROM `uac_users` WHERE `id` = %d AND `password` = %q LIMIT 1", userID, password );
+				
+				if result then
+					local row = result.GetRow();
+					
+					result.Free();
+					
+					if row and row.id then
+						this.Login( row.id );
+						
+						return;
+					end
+				else
+					Debug( Server.DB.Error(), 1 );
+				end
 			end
 		end
 		
@@ -327,7 +343,6 @@ class. Player : Ped
 					`serial` = '" + serial + "', `ip` = '" + ip + "',\
 					`last_login` = NOW(),\
 					`activation_code` = NULL,\
-					`autologin` = " + ( this.AutoLogin and ( "'" + serial + "'" ) or "NULL" ) + "\
 				WHERE `id` = " + UserID;
 
 				if not Server.DB.Query( updateQuery ) then
