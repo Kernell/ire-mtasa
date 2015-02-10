@@ -11,7 +11,7 @@ class. MySQLManager : Manager
 	{
 		Tables	=
 		{
-			"uac_users", "uac_groups", "$characters", "$vehicles"
+			"uac_users", "uac_users_autologin", "uac_groups", "$characters", "$vehicles"
 		};
 	};
 	

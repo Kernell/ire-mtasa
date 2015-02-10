@@ -1,0 +1,5 @@
+<db>
+	<id 		type="int(11) unsigned" 	null="NO" 	default="false" />
+	<password 	type="varchar(255)" 		null="NO" 	default="false" />
+	<serial 	type="varchar(255)" 		null="NO" 	default="false" />
+</db>
