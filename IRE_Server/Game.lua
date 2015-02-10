@@ -45,10 +45,12 @@ class. Game
 	end;
 	
 	Init		= function()
+		this.MySQLManager				= new. MySQLManager();
+		
 		this.Environment				= new. Environment();
 		
 		local result	= Server.DB.Query( "SELECT `key`, `value` FROM `game_config`" );
-	
+		
 		if result then
 			for i, row in pairs( result.GetArray() ) do
 				switch( row.key )
@@ -84,7 +86,6 @@ class. Game
 			Debug( Server.DB.Error(), 1 );
 		end
 		
-		this.MySQLManager				= new. MySQLManager();
 	--	this.EventManager				= new. EventManager();
 	--	this.MapManager					= new. MapManager();
 		this.GroupManager				= new. GroupManager();
