@@ -5,7 +5,7 @@
 -- License		Proprietary Software
 -- Version		1.0
 
-class. MySQLManager : Manager
+class. MySQLManager
 {
 	static
 	{
@@ -16,10 +16,6 @@ class. MySQLManager : Manager
 	};
 	
 	MySQLManager	= function()
-		this.Manager();
-	end;
-	
-	Init	= function()
 		local dbTables = {};
 		
 		for i, tableName in pairs( MySQLManager.Tables ) do
@@ -68,7 +64,5 @@ class. MySQLManager : Manager
 		for tableName, dbTable in pairs( dbTables ) do
 			Server.DB.CreateTable( tableName, dbTable );
 		end
-		
-		return true;
 	end;
 };

@@ -45,8 +45,6 @@ class. Game
 	end;
 	
 	Init		= function()
-		this.MySQLManager				= new. MySQLManager();
-		
 		this.Environment				= new. Environment();
 		
 		local result	= Server.DB.Query( "SELECT `key`, `value` FROM `game_config`" );

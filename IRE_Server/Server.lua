@@ -43,6 +43,8 @@ class. Server
 			return cancelEvent( true );
 		end
 		
+		this.MySQLManager	= new. MySQLManager();
+		
 		Server.Console	= new. Console();
 		Server.Blowfish	= new. Blowfish( "576F726C644F66526F6C65506C6179426C6F77666973684B6579" );
 		Server.Game		= new. Game();
@@ -62,6 +64,8 @@ class. Server
 		delete ( Server.RPC );
 		delete ( Server.DB );
 		
+		delete ( this.MySQLManager );
+		
 		Server.Blowfish 	= NULL;
 		Server.Console 		= NULL;
 		Server.Game			= NULL;
@@ -69,6 +73,7 @@ class. Server
 		Server.DB			= NULL;
 		
 		this.DoPulseTimer	= NULL;
+		this.MySQLManager	= NULL;
 	end;
 	
 	Startup		= function()
