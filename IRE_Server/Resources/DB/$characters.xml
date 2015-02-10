@@ -1,0 +1,37 @@
+<db>
+	<id					type="int(11) unsigned"									null="NO"		default="NULL"	key="PRI"	extra="auto_increment" />
+	<user_id			type="int(11)"											null="NO"		default="NULL"	/>
+	<spawn_id			type="smallint(4)"										null="YES"		default="NULL"	/>
+	<faction_id			type="int(5) unsigned"									null="NO"		default="0"	/>
+	<faction_dept_id	type="smallint(5) unsigned"								null="NO"		default="0"	/>
+	<faction_rank_id	type="smallint(5) unsigned"								null="NO"		default="0"	/>
+	<faction_rights		type="varchar(8)"										null="NO"		default="0"	/>
+	<level				type="smallint(3)"										null="NO"		default="1"	/>
+	<level_points		type="int(11)"											null="NO"		default="0"	/>
+	<name				type="varchar(11)"										null="NO"		default="NULL" />
+	<surname			type="varchar(11)"										null="NO"		default="NULL" />
+	<created			type="timestamp"										null="NO"		default="0000-00-00 00:00:00" />
+	<last_login			type="timestamp"										null="NO"		default="0000-00-00 00:00:00" />
+	<last_logout		type="timestamp"										null="NO"		default="CURRENT_TIMESTAMP" />
+	<status				type="enum('Активен','Заблокирован','Убит','Скрыт')"	null="NO" 		default="Активен" />
+	<date_of_birdth		type="datetime"											null="NO" 		default="0000-00-00 00:00:00" />
+	<place_of_birdth	type="varchar(255)"										null="NO" 		default="Неизвестно" />
+	<nation				type="varchar(3)"										null="NO" 		default="en" />
+	<languages			type="text"												null="NO" 		default="NULL" />
+	<interior			type="smallint(6)"										null="NO" 		default="0"	/>
+	<dimension			type="smallint(6)"										null="NO" 		default="0"	/>
+	<position			type="varchar(255)"										null="NO" 		default="(0,0,0)" />
+	<rotation			type="float"											null="NO" 		default="0"	/>
+	<skin				type="smallint(6)"										null="NO" 		default="0"	/>
+	<money				type="double"											null="NO" 		default="1000" />
+	<pay				type="int(10) unsigned"									null="NO" 		default="0"	/>
+	<health				type="float"											null="NO" 		default="100" />
+	<armor				type="float"											null="NO" 		default="0"	/>
+	<alcohol			type="float"											null="NO" 		default="0"	/>
+	<power				type="float"											null="NO" 		default="100" />
+	<licenses			type="text"												null="NO" 		default="NULL" />
+	<jailed				type="enum('No','Police','FBI','Prison')"				null="NO" 		default="No" />
+	<jailed_time		type="int(11)"											null="NO" 		default="0"	/>
+	<married			type="varchar(255)"										null="YES" 		default="NULL" />
+	<events				type="text"												null="YES" 		default="NULL" />
+</db>

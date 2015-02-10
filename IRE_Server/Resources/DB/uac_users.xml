@@ -1,0 +1,27 @@
+<db>
+	<id 				type="int(11) unsigned" 		null="NO" 	default="false" key="PRI" extra="auto_increment" />
+	<refer_id 			type="int(11) unsigned" 		null="NO" 	default="0" />
+	<admin_id 			type="smallint(1) unsigned" 	null="NO" 	default="0" />
+	<activation_code 	type="varchar(32)" 				null="YES" 	default="NULL" />
+	<login 				type="varchar(255)" 			null="NO" 	default="false" key="UNI" />
+	<password 			type="varchar(255)" 			null="NO" 	default="false" />
+	<groups 			type="varchar(255)" 			null="YES" 	default="NULL" />
+	<name 				type="varchar(255)" 			null="NO" 	default="false" />
+	<serial 			type="varchar(255)" 			null="YES" 	default="NULL" />
+	<ip 				type="varchar(16)" 				null="NO" 	default="0.0.0.0" />
+	<serial_reg 		type="varchar(255)" 			null="YES" 	default="NULL" />
+	<ip_reg 			type="varchar(16)" 				null="YES" 	default="NULL" />
+	<last_login 		type="datetime" 				null="NO" 	default="0000-00-00 00:00:00" />
+	<last_logout 		type="datetime" 				null="NO" 	default="0000-00-00 00:00:00" />
+	<login_history 		type="text" 					null="YES" 	default="NULL" />
+	<ban 				type="enum('Yes','No')" 		null="NO" 	default="No" />
+	<ban_reason 		type="varchar(255)" 			null="YES" 	default="NULL" />
+	<ban_user_id 		type="int(11)" 					null="YES" 	default="NULL" />
+	<ban_date 			type="datetime" 				null="YES" 	default="NULL" />
+	<goldpoints 		type="int(20) unsigned" 		null="NO" 	default="0" />
+	<muted_time 		type="int(11)" 					null="YES" 	default="NULL" />
+	<settings 			type="text" 					null="YES" 	default="NULL" />
+	<adminduty 			type="enum('Yes','No')" 		null="NO" 	default="No" />
+	<report_locked 		type="enum('Yes','No')" 		null="NO" 	default="No" />
+	<deleted 			type="enum('Yes','No')" 		null="NO" 	default="No" />
+</db>

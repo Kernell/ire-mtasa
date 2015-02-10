@@ -57,47 +57,6 @@ class. PlayerManager : Manager
 	PlayerManager	= function()
 		this.Manager();
 		
-		Server.DB.CreateTable( Server.DB.Prefix + "characters",
-			{
-				{ Field = "id",					Type = "int(11) unsigned",					Null = "NO",	Key = "PRI", 		Default = NULL,	Extra = "auto_increment" };
-				{ Field = "user_id",			Type = "int(11)",							Null = "NO",	Key = "",			Default = NULL,	};
-				{ Field = "spawn_id",			Type = "smallint(4)",						Null = "YES",	Key = "",			Default = NULL,	};
-				{ Field = "faction_id",			Type = "int(5) unsigned",					Null = "NO",	Key = "",			Default = 0,	};
-				{ Field = "faction_dept_id",	Type = "smallint(5) unsigned",				Null = "NO",	Key = "",			Default = 0,	};
-				{ Field = "faction_rank_id",	Type = "smallint(5) unsigned",				Null = "NO",	Key = "",			Default = 0,	};
-				{ Field = "faction_rights",		Type = "varchar(8)",						Null = "NO",	Key = "",			Default = "0",	};
-				{ Field = "level",				Type = "smallint(3)",						Null = "NO",	Key = "",			Default = 1,	};
-				{ Field = "level_points",		Type = "int(11)",							Null = "NO",	Key = "",			Default = 0,	};
-				{ Field = "name",				Type = "varchar(11)",						Null = "NO",	Key = "",			Default = NULL,	};
-				{ Field = "surname",			Type = "varchar(11)",						Null = "NO",	Key = "",			Default = NULL,	};
-				{ Field = "created",			Type = "timestamp",							Null = "NO",	Key = "",			Default = "0000-00-00 00:00:00",	};
-				{ Field = "last_login",			Type = "timestamp",							Null = "NO",	Key = "",			Default = "0000-00-00 00:00:00",	};
-				{ Field = "last_logout",		Type = "timestamp",							Null = "NO",	Key = "",			Default = MySQL.CURRENT_TIMESTAMP,	};
-				{ Field = "status",	Type = "enum('Активен','Заблокирован','Убит','Скрыт')",	Null = "NO", 	Key = "",			Default = "Активен",	};
-				{ Field = "date_of_birdth",		Type = "datetime",							Null = "NO", 	Key = "",			Default = "0000-00-00 00:00:00",	};
-				{ Field = "place_of_birdth",	Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "Неизвестно",	};
-				{ Field = "nation",				Type = "varchar(3)",						Null = "NO", 	Key = "",			Default = "en",	};
-				{ Field = "languages",			Type = "text",								Null = "NO", 	Key = "",			Default = NULL,	};
-				{ Field = "interior",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "dimension",			Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "position",			Type = "varchar(255)",						Null = "NO", 	Key = "",			Default = "(0,0,0)",	};
-				{ Field = "rotation",			Type = "float",								Null = "NO", 	Key = "",			Default = "0",	};
-				{ Field = "skin",				Type = "smallint(6)",						Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "money",				Type = "double",							Null = "NO", 	Key = "",			Default = 1000,	};
-				{ Field = "pay",				Type = "int(10) unsigned",					Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "health",				Type = "float",								Null = "NO", 	Key = "",			Default = 100,	};
-				{ Field = "armor",				Type = "float",								Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "alcohol",			Type = "float",								Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "power",				Type = "float",								Null = "NO", 	Key = "",			Default = 100,	};
-				{ Field = "licenses",			Type = "text",								Null = "NO", 	Key = "",			Default = NULL,	};
-				{ Field = "jailed",			Type = "enum('No','Police','FBI','Prison')",	Null = "NO", 	Key = "",			Default = "No",	};
-				{ Field = "jailed_time",		Type = "int(11)",							Null = "NO", 	Key = "",			Default = 0,	};
-				{ Field = "married",			Type = "varchar(255)",						Null = "YES", 	Key = "",			Default = NULL,	};
-				{ Field = "phone",				Type = "int(11)",							Null = "YES", 	Key = "UNI",		Default = NULL,	};
-				{ Field = "events",				Type = "text",								Null = "YES", 	Key = "",			Default = NULL,	};
-			}
-		);
-		
 		this.TeamLoggedIn		= new. Team( "Players", new. Color( 255, 255, 255 ) );
 		this.TeamNotLoggedIn	= new. Team( "Not logged in", new. Color( 120, 120, 120 ) );
 		

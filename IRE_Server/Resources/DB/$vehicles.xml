@@ -1,0 +1,30 @@
+<db>
+	<id					type="int(11) unsigned"		null="NO"		 	default="NULL"	key="PRI"	extra="auto_increment" />
+	<character_id		type="int(11) unsigned"		null="NO"			default="0" />
+	<model				type="smallint(3)"			null="NO"			default="NULL" />
+	<color				type="varchar(255)"			null="NO"			default="[[ 255, 255, 255, 0, 0, 0, 128, 128, 128, 64, 64, 64 ]]" />
+	<lights_color		type="varchar(255)"			null="NO"			default="[[ 255, 255, 255 ]]" />
+	<position			type="varchar(255)"			null="NO"			default="NULL" />
+	<rotation			type="varchar(255)"			null="NO"			default="NULL" />
+	<interior			type="smallint(3)"			null="NO"			default="NULL" />
+	<dimension			type="smallint(6)"			null="NO"			default="NULL" />
+	<default_position	type="varchar(255)"			null="NO"			default="NULL" />
+	<default_rotation	type="varchar(255)"			null="NO"			default="NULL" />
+	<default_interior	type="smallint(3)"			null="NO"			default="NULL" />
+	<default_dimension	type="smallint(6)"			null="NO"			default="NULL" />
+	<plate				type="varchar(8)"			null="NO"			default="NULL" />
+	<variants			type="varchar(128)"			null="YES"			default="NULL" />
+	<upgrades			type="text"					null="YES"			default="NULL" />
+	<wheels_states		type="text"					null="YES"			default="NULL" />
+	<panel_states		type="text"					null="YES"			default="NULL" />
+	<door_state			type="text"					null="YES"			default="NULL" />
+	<health				type="smallint(4)"			null="NO"			default="1000" />
+	<fuel				type="float"				null="NO"			default="100" />
+	<last_time			type="int(11) unsigned"		null="NO"			default="0"	/>
+	<last_driver		type="varchar(64)"			null="YES"			default="NULL" />
+	<locked				type="enum('Yes','No')"		null="NO"			default="No" />
+	<engine				type="enum('on','off')"		null="NO"			default="off" />
+	<lights				type="enum('on','off')"		null="NO"			default="off" />
+	<element_data		type="text"					null="YES"			default="NULL" />
+	<deleted			type="timestamp"			null="YES"			default="NULL" />
+</db>

@@ -84,6 +84,7 @@ class. Game
 			Debug( Server.DB.Error(), 1 );
 		end
 		
+		this.MySQLManager				= new. MySQLManager();
 	--	this.EventManager				= new. EventManager();
 	--	this.MapManager					= new. MapManager();
 		this.GroupManager				= new. GroupManager();

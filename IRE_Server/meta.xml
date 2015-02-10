@@ -87,6 +87,7 @@
   
   <script src="Manager.lua"/>
   
+  <script src="MySQLManager.lua"/>
   <script src="Environment.lua"/>
   <script src="GroupManager.lua"/>
   <script src="PlayerManager.lua"/>

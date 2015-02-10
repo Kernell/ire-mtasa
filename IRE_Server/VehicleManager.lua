@@ -266,39 +266,6 @@ class. VehicleManager : Manager
 	VehicleManager		= function()
 		this.Manager();
 		
-		Server.DB.CreateTable( Server.DB.Prefix + "vehicles",
-			{
-				{ Field = "id",					Type = "int(11) unsigned",		Null = "NO",	Key = "PRI", 	Default = NULL,	Extra = "auto_increment" };
-				{ Field = "character_id",		Type = "int(11) unsigned",		Null = "NO",	Key = "",		Default = 0,	};
-				{ Field = "model",				Type = "smallint(3)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "color",				Type = "varchar(255)",			Null = "NO",	Key = "",		Default = "[[ 255, 255, 255, 0, 0, 0, 128, 128, 128, 64, 64, 64 ]]" };
-				{ Field = "lights_color",		Type = "varchar(255)",			Null = "NO",	Key = "",		Default = "[[ 255, 255, 255 ]]" };
-				{ Field = "position",			Type = "varchar(255)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "rotation",			Type = "varchar(255)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "interior",			Type = "smallint(3)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "dimension",			Type = "smallint(6)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "default_position",	Type = "varchar(255)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "default_rotation",	Type = "varchar(255)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "default_interior",	Type = "smallint(3)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "default_dimension",	Type = "smallint(6)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "plate",				Type = "varchar(8)",			Null = "NO",	Key = "",		Default = NULL,	};
-				{ Field = "variants",			Type = "varchar(128)",			Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "upgrades",			Type = "text",					Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "wheels_states",		Type = "text",					Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "panel_states",		Type = "text",					Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "door_state",			Type = "text",					Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "health",				Type = "smallint(4)",			Null = "NO",	Key = "",		Default = 1000,	};
-				{ Field = "fuel",				Type = "float",					Null = "NO",	Key = "",		Default = 100,	};
-				{ Field = "last_time",			Type = "int(11) unsigned",		Null = "NO",	Key = "",		Default = 0,	};
-				{ Field = "last_driver",		Type = "varchar(64)",			Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "locked",				Type = "enum('Yes','No')",		Null = "NO",	Key = "",		Default = "No",	};
-				{ Field = "engine",				Type = "enum('on','off')",		Null = "NO",	Key = "",		Default = "off",};
-				{ Field = "lights",				Type = "enum('on','off')",		Null = "NO",	Key = "",		Default = "off",};
-				{ Field = "element_data",		Type = "text",					Null = "YES",	Key = "",		Default = NULL,	};
-				{ Field = "deleted",			Type = "timestamp",				Null = "YES",	Key = "",		Default = NULL,	};
-			}
-		);
-		
 		this.ColorManager = new. VehicleColorManager();
 		
 		VehicleManager.Root.OnElementModelChange.Add( this.VehicleModelChange );
