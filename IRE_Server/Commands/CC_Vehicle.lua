@@ -233,7 +233,7 @@ class. CC_Vehicle : IConsoleCommand
 		end
 		
 		if vehicle then
-			if vehicle.GetID() < 0 or player.HaveAccess( "command." + this.Name + ":create" ) then
+			if vehicle.GetID() < 0 or player.HaveAccess( "command." + this.Name + ".create" ) then
 				if Server.DB.Query( "UPDATE " + Server.DB.Prefix + "vehicles SET deleted = NOW() WHERE id = " + vehicle.GetID() ) then
 					
 					local occupants = vehicle.GetOccupants();
