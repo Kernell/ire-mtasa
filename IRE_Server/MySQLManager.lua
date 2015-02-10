@@ -11,7 +11,7 @@ class. MySQLManager : Manager
 	{
 		Tables	=
 		{
-			"uac_users", "uac_users_autologin", "uac_groups", "$characters", "$vehicles"
+			"game_config", "uac_users", "uac_users_autologin", "uac_groups", "$characters", "$vehicles"
 		};
 	};
 	
@@ -61,7 +61,7 @@ class. MySQLManager : Manager
 				
 				xmlUnloadFile( xml );
 				
-				dbTables[ tableName:gsub( "$", Server.DB.Prefix ) ] = dbTable; 
+				dbTables[ tableName:gsub( "%$", Server.DB.Prefix ) ] = dbTable; 
 			end
 		end
 		
