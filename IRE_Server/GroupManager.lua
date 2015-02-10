@@ -1,7 +1,7 @@
 -- Innovation Roleplay Engine
 --
 -- Author		Kernell
--- Copyright	© 2011 - 2014
+-- Copyright	© 2011 - 2015
 -- License		Proprietary Software
 -- Version		1.0
 
@@ -9,6 +9,36 @@ class. GroupManager : Manager
 {
 	GroupManager	= function()
 		this.Manager();
+		
+		Server.DB.CreateTable( "uac_users",
+			{
+				{ Field = "id", 				Type = "int(11) unsigned", 		Null = "NO", 	Key = "PRI", 	Default = false, Extra = "auto_increment" };
+				{ Field = "refer_id", 			Type = "int(11) unsigned", 		Null = "NO", 	Key = "", 		Default = "0" };
+				{ Field = "admin_id", 			Type = "smallint(1) unsigned", 	Null = "NO", 	Key = "", 		Default = "0" };
+				{ Field = "activation_code",	Type = "varchar(32)", 			Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "login", 				Type = "varchar(255)", 			Null = "NO", 	Key = "UNI",	Default = false };
+				{ Field = "password", 			Type = "varchar(255)", 			Null = "NO", 	Key = "", 		Default = false };
+				{ Field = "groups", 			Type = "varchar(255)", 			Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "name", 				Type = "varchar(255)", 			Null = "NO", 	Key = "", 		Default = false };
+				{ Field = "serial", 			Type = "varchar(255)", 			Null = "YES",	Key = "", 		Default = NULL };
+				{ Field = "ip", 				Type = "varchar(16)", 			Null = "NO", 	Key = "", 		Default = "0.0.0.0" };
+				{ Field = "serial_reg", 		Type = "varchar(255)", 			Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "ip_reg", 			Type = "varchar(16)", 			Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "last_login", 		Type = "datetime", 				Null = "NO", 	Key = "", 		Default = "0000-00-00 00:00:00" };
+				{ Field = "last_logout", 		Type = "datetime", 				Null = "NO", 	Key = "", 		Default = "0000-00-00 00:00:00" };
+				{ Field = "login_history", 		Type = "text",					Null = "YES",	Key = "",		Default = NULL };
+				{ Field = "ban", 				Type = "enum('Yes','No')", 		Null = "NO", 	Key = "", 		Default = "No" };
+				{ Field = "ban_reason", 		Type = "varchar(255)", 			Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "ban_user_id", 		Type = "int(11)", 				Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "ban_date", 			Type = "datetime", 				Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "goldpoints", 		Type = "int(20) unsigned", 		Null = "NO", 	Key = "", 		Default = 0    };
+				{ Field = "muted_time", 		Type = "int(11)", 				Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "settings", 			Type = "text", 					Null = "YES", 	Key = "", 		Default = NULL };
+				{ Field = "adminduty", 			Type = "enum('Yes','No')", 		Null = "NO", 	Key = "", 		Default = "No" };
+				{ Field = "report_locked", 		Type = "enum('Yes','No')", 		Null = "NO", 	Key = "", 		Default = "No" };
+				{ Field = "deleted", 			Type = "enum('Yes','No')", 		Null = "NO", 	Key = "", 		Default = "No" };
+			}
+		);
 	end;
 
 	_GroupManager	= function()
