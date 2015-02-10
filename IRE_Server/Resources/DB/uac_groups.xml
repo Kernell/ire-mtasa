@@ -60,7 +60,6 @@
 	<command.teleport.delete			type="enum('Yes','No')" 	null="NO" 	 		default="No" />
 	<command.teleport.drawlabels		type="enum('Yes','No')" 	null="NO" 	 		default="No" />
 	<command.teleport.setfaction		type="enum('Yes','No')" 	null="NO" 	 		default="No" />
-	<command.teleport.setfaction		type="enum('Yes','No')" 	null="NO" 	 		default="No" />
 	<command.npc						type="enum('Yes','No')" 	null="NO" 	 		default="No" />
 	<command.npc.create					type="enum('Yes','No')" 	null="NO" 	 		default="No" />
 	<command.npc.remove					type="enum('Yes','No')" 	null="NO" 	 		default="No" />
