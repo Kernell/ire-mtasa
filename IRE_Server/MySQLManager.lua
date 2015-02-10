@@ -28,9 +28,7 @@ class. MySQLManager : Manager
 			if xml then
 				local dbTable = {};
 				
-				local dbNode = xmlNodeGetChildren( xml );
-				
-				for x, node in ipairs( xmlNodeGetChildren( dbNode ) ) do
+				for x, node in ipairs( xmlNodeGetChildren( xml ) ) do
 					local nodeName		= xmlNodeGetName( node );
 					local attributes	= xmlNodeGetAttributes( node );
 					
