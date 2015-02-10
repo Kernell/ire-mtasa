@@ -1,0 +1,4 @@
+<db>
+	<key 	type="varchar(255)" 	null="NO" 	default="NULL" key="UNI" />
+	<value	type="varchar(255)" 	null="NO" 	default="NULL" />
+</db>
