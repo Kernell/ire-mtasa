@@ -95,6 +95,7 @@
   <script src="AdminManager.lua"/>
   
   <script src="Group.lua"/>
+  <script src="User.lua"/>
   
   <script src="PlayerAnimation.lua"/>
   <script src="PlayerCamera.lua"/>
