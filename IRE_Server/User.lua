@@ -113,5 +113,71 @@ class. User
 			
 			return User.HashPassword( password, salt ) == passwordHashed;
 		end;
+		
+		Create	= function( data )
+			if not data.login then
+				Debug( "Cannot create a user with an empty login", 1 );
+				
+				return false;
+			end
+			
+			if not data.name then
+				Debug( "Cannot create a user with an empty name", 1 );
+				
+				return false;
+			end
+			
+			local result = Server.DB.Query( "SELECT SUM( login = %q ) AS login, SUM( name = %q ) AS name, FROM uac_users", data.login, data.name );
+			
+			if not result then
+				Debug( Server.DB.Error(), 1 );
+				
+				return false;
+			end
+			
+			local row = result.GetRow();
+			
+			result.Free();
+			
+			if row.login > 0 then
+				Debug( "Email address is already used", 1 );
+				
+				return false;
+			end
+			
+			if row.name > 0 then
+				Debug( "Username already exists", 1 );
+				
+				return false;
+			end
+			
+			
+			if not data.password then
+				data.password = User.GeneratePassword();
+			end
+			
+			data.salt		= User.GenerateSalt( 16 );
+			data.password	= User.HashPassword( data.password, data.salt );
+			
+			if data.groups and type( data.groups ) == "table" then
+				data.groups = table.concat( data.groups, "," );
+			else
+				data.groups = NULL;
+			end
+			
+			if data.settings and type( data ) == "table" then
+				data.settings = toJSON( data.settings );
+			else
+				data.settings = NULL;
+			end
+			
+			local userID = Server.DB.Insert( "uac_users", data );
+			
+			if not userID then
+				Debug( Server.DB.Error(), 1 );
+			end
+			
+			return userID;
+		end;
 	};
 };
