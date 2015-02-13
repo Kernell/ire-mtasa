@@ -11,7 +11,8 @@ class. MySQLManager
 	{
 		Tables	=
 		{
-			"game_config", "uac_users", "uac_users_autologin", "uac_groups", "$characters", "$vehicles"
+			"game_config", "uac_users", "uac_users_autologin", "uac_groups", "$characters", "$vehicles",
+			"$banks", "$bank_logs", "$bank_accounts", "$currencies"
 		};
 	};
 	

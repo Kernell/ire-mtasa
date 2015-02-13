@@ -1,0 +1,7 @@
+<db>
+  <id           type="int(11) unsigned" null="NO"   default="NULL" key="PRI" extra = "auto_increment" />
+  <bank_acc_id  type="varchar(19)"      null="NO"   default="NULL" />
+  <amount       type="varchar(64)"      null="YES"  default="NULL" />
+  <date         type="timestamp"        null="NO"   default="CURRENT_TIMESTAMP" />
+  <text         type="text"             null="NO"   default="NULL" />
+</db>

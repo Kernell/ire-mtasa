@@ -1,0 +1,5 @@
+<db>
+  <id   type="varchar(3)"   null="NO" default="NULL" key="PRI"/>
+  <name type="varchar(128)" null="NO" default="NULL" />
+  <rate type="float"        null="NO" default="0" />
+</db>

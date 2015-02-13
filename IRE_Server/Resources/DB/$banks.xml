@@ -1,0 +1,9 @@
+<db>
+	<id         type="int(11) unsigned"		null="NO"   default="NULL" key="PRI" extra="auto_increment" />
+  <model      type="smallint(6)"			  null="YES"  default="NULL" />
+  <position   type="varchar(256)"			  null="NO"   default="false" />
+  <rotation   type="varchar(256)"			  null="NO"   default="false" />
+  <interior   type="smallint(3)"			  null="NO"   default="0" />
+  <dimension  type="smallint(6)"			  null="NO"   default="0" />
+  <deleted    type="timestamp"			    null="YES"  default="NULL" />
+</db>

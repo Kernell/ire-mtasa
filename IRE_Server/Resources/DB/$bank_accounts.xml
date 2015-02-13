@@ -1,0 +1,11 @@
+<db>
+  <id           type="varchar(19)"        null="NO" 	   	default="NULL" key="PRI" />
+  <owner_id     type="int(11) unsigned"   null="YES" 	 		default="NULL" />
+  <faction_id   type="int(11) unsigned"   null="YES" 	 		default="NULL" />
+  <currency_id  type="varchar(3)"         null="NO" 	 		default="USD" />
+  <amount			  type="double"             null="NO" 	 		default="0" />
+  <type         type="enum('none','faction','mastercard','visa','americanexpress')" null="NO" default="none"	/>
+  <created      type="timestamp"          null="NO" 	 		default="CURRENT_TIMESTAMP" />
+  <locked       type="timestamp"          null="YES" 	 		default="NULL" />
+  <closed       type="timestamp"          null="YES" 	 		default="NULL" />
+</db>
