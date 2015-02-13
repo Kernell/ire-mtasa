@@ -272,7 +272,7 @@ class. MySQL
 				end
 				
 				if Fields[ pRow.Field ].Key ~= pRow.Key then
-					if Fields[ pRow.Field ].Key and Fields[ pRow.Field ].Key:len() > 0 then
+					if Fields[ pRow.Field ].Key and Fields[ pRow.Field ].Key:len() > 0 then	
 						table.insert( DropKeys, pRow.Field );
 					end
 					
@@ -308,7 +308,7 @@ class. MySQL
 		end
 		
 		for i, sKey in ipairs( DropKeys ) do
-			if not this.Query( "ALTER TABLE `%s` DROP INDEX " + sKey, sTableName ) then
+			if not this.Query( "ALTER TABLE `%s` DROP INDEX `" + sKey + "`", sTableName ) then
 				error( "MySQL - Unable to drop " + sKey + " key\n" + this.Error(), 2 );
 			end
 			
