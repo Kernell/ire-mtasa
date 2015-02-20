@@ -94,6 +94,7 @@
   <script src="VehicleManager.lua"/>
   <script src="VehicleColorManager.lua"/>
   <script src="AdminManager.lua"/>
+  <script src="ItemsManager.lua"/>
   
   <script src="Group.lua"/>
   <script src="User.lua"/>
