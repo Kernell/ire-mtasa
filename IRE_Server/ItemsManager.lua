@@ -34,11 +34,11 @@ class. ItemsManager : Manager
 			result.Free();
 			
 			for i, row in pairs( array ) do
-				local itemClass = this.GetItem( row.class );
+				local itemConfig = this.GetItem( row.class );
 				
-				if itemClass then
-					local item			= itemClass.m_TClass( itemClass );
-					local Data			= fromJSON( row.data );
+				if itemConfig then
+					local item		= itemConfig:class();
+					local Data		= fromJSON( row.data );
 					
 					if Data then				
 						for key, value in pairs( Data ) do
@@ -66,8 +66,8 @@ class. ItemsManager : Manager
 		end
 	end;
 	
-	Create			= function( itemClass, owner, position, rotation, interior, dimension, value, condition, data )
-		return this.Register( itemClass.m_TClass( itemClass ), 	owner, position, rotation, interior, dimension, value, condition, data );
+	Create			= function( itemConfig, owner, position, rotation, interior, dimension, value, condition, data )
+		return this.Register( itemConfig.class( itemConfig ), owner, position, rotation, interior, dimension, value, condition, data );
 	end;
 	
 	Register		= function( item, owner, position, rotation, interior, dimension, value, condition, data )
@@ -131,7 +131,7 @@ class. ItemsManager : Manager
 	end;
 	
 	GetItem	= function( item )
-		local itemClass = _G[ item ];
+		local itemClass = ItemsConfig[ item ];
 		
 		return itemClass and itemClass.IsItem and itemClass or NULL;
 	end
