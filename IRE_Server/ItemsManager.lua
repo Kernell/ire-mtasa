@@ -46,10 +46,10 @@ class. ItemsManager : Manager
 				local item = this.Create( row.section );
 				
 				if item then
-					local Data		= fromJSON( row.data );
+					local data		= row.data and fromJSON( row.data );
 					
-					if Data then
-						for key, value in pairs( Data ) do
+					if data then
+						for key, value in pairs( data ) do
 							item[ key ] = tonumber( value ) or value;
 						end
 					end
@@ -142,7 +142,7 @@ class. ItemsManager : Manager
 				class = "Item" + class;
 			end
 
-			if _G[ class ] = NULL then
+			if _G[ class ] == NULL then
 				Debug( "invalid item class '" + class:sub( 1, 4 ) + "' in section '" + section + "'", 1 );
 
 				return NULL;
@@ -169,7 +169,7 @@ class. ItemsManager : Manager
 		
 		local fields	=
 		{
-			section		= "'" + item.SectionName + "'";
+			section		= item.SectionName;
 			owner		= item.Owner and ( classname( item.Owner ) + "[" + (int)(item.Owner.GetID()) + "]" ) or NULL;
 			position	= item.Position and item.Position.ToString() or NULL;
 			rotation	= item.Rotation and item.Rotation.ToString() or NULL;
