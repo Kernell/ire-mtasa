@@ -60,8 +60,6 @@ class. CharacterInventory
 			[ INVENTORY_SLOT.BELT ] 	= 1;
 			[ INVENTORY_SLOT.HIDDEN ] 	= 1;
 		};
-
-		Server.Game.ItemsManager.Load( character );
 	end;
 
 	_CharacterInventory	= function()
@@ -99,14 +97,16 @@ class. CharacterInventory
 		if typeof( item ) == "string" then
 			local item = Server.Game.ItemsManager.Create( item );
 
-			item.Value 		= value;
-			item.Condition 	= condition;
+			item.Value 		= tonumber( value ) or 1;
+			item.Condition 	= tonumber( condition ) or 1.0;
 
-			for key, value in pairs( data ) do 
-				item[ key ] = value;
+			if data then
+				for key, value in pairs( data ) do 
+					item[ key ] = value;
+				end
 			end
 
-			if item.Give( this ) then
+			if item.Give( this.Character ) then
 				Server.Game.ItemsManager.Register( item );
 
 				return item;
@@ -141,12 +141,16 @@ class. CharacterInventory
 			
 			for i = items.Length(), 1, -1 do
 				if count < limit then
-					if items[ i ].SectionName == item then
-						removedItems.Insert( items[ i ].GetID() );
-						
-						delete ( items[ i ] );
+					local _item = items[ i ];
 
+					if _item and _item.SectionName == item then
+						removedItems.Insert( _item.GetID() );
+						
 						items.Remove( i );
+
+						_item.Owner = NULL;
+
+						delete ( _item );
 						
 						count = count + 1;
 					end
