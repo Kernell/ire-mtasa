@@ -33,10 +33,17 @@ class. Character
 		
 		this.Player.SetData( "Character::Alcohol", this.Alcohol );
 		this.Player.SetData( "Character::Power", this.Power );
+
+		this.Inventory		= new. CharacterInventory( this );
 	end;
 	
 	_Character	= function()
 		this.Save();
+		this.Inventory.Save();
+
+		delete ( this.Inventory );
+
+		this.Inventory = NULL;
 		
 		this.Player.Character = NULL;
 		
