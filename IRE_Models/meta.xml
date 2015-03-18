@@ -49,6 +49,9 @@
   <file src="Weapons/acr.dff" />
   <file src="Weapons/acr.txd" />
   
+  <file src="Weapons/aug.dff" />
+  <file src="Weapons/aug.txd" />
+  
   <!-- Vehicles -->
   
 <!--   <file src="Vehicles/audi_a4_tfsi_2010.dff" />
