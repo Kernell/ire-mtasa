@@ -308,8 +308,8 @@ class. MySQL
 		end
 		
 		for i, sKey in ipairs( DropKeys ) do
-			if not this.Query( "ALTER TABLE `%s` DROP INDEX " + sKey, sTableName ) then
-				error( "MySQL - Unable to drop " + sKey + " key\n" + this.Error(), 2 );
+			if not this.Query( "ALTER TABLE `%s` DROP INDEX `" + sKey + "`", sTableName ) then
+				error( "MySQL - Unable to drop `" + sKey + "` key\n" + this.Error(), 2 );
 			end
 			
 			Debug( "Removed index " + sTableName + "." + sKey );
