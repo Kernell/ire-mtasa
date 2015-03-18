@@ -342,7 +342,7 @@ class. Player : Ped
 					`login_history` = '" + table.concat( this.LoginHistory, '\n' ) + "',\
 					`serial` = '" + serial + "', `ip` = '" + ip + "',\
 					`last_login` = NOW(),\
-					`activation_code` = NULL,\
+					`activation_code` = NULL\
 				WHERE `id` = " + UserID;
 
 				if not Server.DB.Query( updateQuery ) then
@@ -997,7 +997,9 @@ class. Player : Ped
 					character.Spawn( new. Vector3( row.position ), row.rotation, row.interior, row.dimension );
 					character.SetHealth( row.health );
 					character.SetArmor( row.armor );
-					
+
+					Server.Game.ItemsManager.Load( character );
+
 					this.HUD.Show();
 					this.HUD.ShowComponents( "crosshair" );
 					this.Chat.Show();
