@@ -18,11 +18,6 @@ class. Item
 	end;
 
 	_Item		= function()
-		if this.Entity then
-			delete ( this.Entity );
-			this.Entity = NULL;
-		end
-		
 		this.Take();
 
 		Server.Game.ItemsManager.RemoveFromList( this );
@@ -47,7 +42,7 @@ class. Item
 			if this.slot == NULL then
 				return false;
 			else
-				if owner.Inventory.Items[ this.slot ].Length() >= owner.SlotSize[ this.slot ] then
+				if owner.Inventory.Items[ this.slot ].Length() >= owner.Inventory.SlotSize[ this.slot ] then
 					return false;
 				end
 				
@@ -57,10 +52,16 @@ class. Item
 			local bone = this.model and CharacterInventory.GetBoneSlot( this.slot );	
 			
 			if bone then
-				local bonePosition = new. Vector3( this.bone_position[ 1 ], this.bone_position[ 2 ], this.bone_position[ 3 ] );
-				local boneRotation = new. Vector3( this.bone_rotation[ 1 ], this.bone_rotation[ 2 ], this.bone_rotation[ 3 ] );
+				local model = type( this.model ) == "number" and this.model or exports.IRE_Models:GetInfo( this.model ).ID;
 
-				this.Entity = owner.Player.Bones.AttachObject( bone, this.model, bonePosition, boneRotation );
+				if model then
+					local bonePosition = new. Vector3( this.bone_position[ 1 ], this.bone_position[ 2 ], this.bone_position[ 3 ] );
+					local boneRotation = new. Vector3( this.bone_rotation[ 1 ], this.bone_rotation[ 2 ], this.bone_rotation[ 3 ] );
+					
+					this.Entity = owner.Player.Bones.AttachObject( bone, model, bonePosition, boneRotation );
+				else
+					Debug( "invalid model '" + this.model + "' for item [" + this.SectionName + "]", 1 );
+				end
 			end
 		else
 			owner.Inventory.Items.Insert( this );
@@ -80,18 +81,12 @@ class. Item
 		if this.Owner then
 			local count = 0;
 			
-			if this.Owner.SlotSize and this.Owner.SlotSize[ this.slot ] > 1 then
-				for i = table.getn( this.Owner.Inventory.Items[ this.slot ] ), 1, -1 do
-					if this.Owner.Inventory.Items[ this.slot ][ i ] == this then
-						this.Owner.Inventory.Items[ this.slot ].Remove( i );
-						
-						count = count + 1;
-					end
+			for i = this.Owner.Inventory.Items[ this.slot ].Length(), 1, -1 do
+				if this.Owner.Inventory.Items[ this.slot ][ i ] == this then
+					this.Owner.Inventory.Items[ this.slot ].Remove( i );
+					
+					count = count + 1;
 				end
-			elseif this.Owner.Inventory.Items[ this.slot ] then
-				this.Owner.Inventory.Items[ this.slot ] = NULL;
-				
-				count = count + 1;
 			end
 			
 			this.Owner = NULL;
@@ -151,7 +146,7 @@ class. Item
 	end;
 
 	Save		= function()
-		local itemManager	= Server.Game.ItemManager;
+		local itemManager	= Server.Game.ItemsManager;
 		local dataCount		= 0;
 		local data			= new {};
 
