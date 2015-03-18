@@ -1,0 +1,12 @@
+<db>
+  <id         type="bigint(20) unsigned"    null="NO"   default="NULL" key="PRI" Extra="auto_increment"/>
+  <section    type="varchar(255)"           null="NO"   default="NULL"/>
+  <owner		  type="varchar(128)"			      null="YES"	default="NULL"/>
+  <position	  type="varchar(255)"			      null="YES"	default="NULL"/>
+  <rotation	  type="varchar(255)"			      null="YES"	default="NULL"/>
+  <interior	  type="smallint(3)"			      null="YES"	default="NULL"/>
+  <dimension	type="smallint(4)"			      null="YES"	default="NULL"/>
+  <value		  type="int(10)"			          null="NO"	  default="0"/>
+  <condition	type="float"				          null="NO"	  default="100.0"/>
+  <data		    type="text"					          null="YES"	default="NULL"/>
+</db>
