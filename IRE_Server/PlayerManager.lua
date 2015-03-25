@@ -432,7 +432,7 @@ end
 			return ClientRPC.BAD_REQUEST;
 		end
 		
-		if command == "Character::Logout" then			
+		if command == "Character::Logout" then
 			if not player.IsInGame() then
 				return -1
 			end
@@ -445,7 +445,7 @@ end
 			return -1;
 		end
 		
-		if command == "Character::List" then			
+		if command == "Character::List" then
 			if player.IsInGame() then
 				return -1
 			end
@@ -750,6 +750,10 @@ end
 			end
 			
 			return NULL;
+		end
+
+		if command:sub( 1, 14 ) == "ItemsManager::" then
+			return Server.Game.ItemsManager.ClientHandle( player, command:sub( 15 ), data, ... );
 		end
 		
 		return false;
