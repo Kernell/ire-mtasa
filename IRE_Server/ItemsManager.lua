@@ -88,7 +88,7 @@ class. ItemsManager : Manager
 				local char = player.Character
 
 				if char then
-					local item = Server.Game.ItemsManager.Get( item.ID );
+					local item = this.Get( item.ID );
 					
 					if item then			
 						item.Use();
@@ -108,7 +108,7 @@ class. ItemsManager : Manager
 				local item = ( { ... } )[ 1 ];
 
 				if item then
-					local item = Server.Game.ItemsManager.Get( item.ID );
+					local item = this.Get( item.ID );
 					
 					if item then
 						char.Inventory.DropItem( item );
