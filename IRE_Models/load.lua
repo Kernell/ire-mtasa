@@ -6,14 +6,14 @@
 -- Version		1.0
 
 function OnStart()
-	local delay = 200;
+	local delay = 50;
 
 	for folder, data in pairs( Registry ) do
 		for name, info in pairs( data ) do
 			if info.TXD and info.DFF and info.ID then
 				setTimer( Load, delay, 1, info, folder == "world" );
 				
-				delay = delay + 200;
+				delay = delay + 50;
 			end
 		end
 	end
