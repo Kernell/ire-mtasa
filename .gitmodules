@@ -16,3 +16,9 @@
 [submodule "IRE_Console/Shared"]
 	path = IRE_Console/Shared
 	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
+[submodule "IRE_GUI/Shared"]
+	path = IRE_GUI/Shared
+	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git
+[submodule "Shared"]
+	path = Shared
+	url = https://Kernell@bitbucket.org/mtaroleplay/ire-shared-libs.git

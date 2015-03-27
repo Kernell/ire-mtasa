@@ -1,0 +1,63 @@
+<meta>
+  <info
+    author="Kernell"
+    version="1.0.0"
+    type="script"
+  />
+  
+  <min_mta_version
+    server="1.3.2-9.05364"
+    client="1.3.2-9.05365"
+  />
+  
+  <script src="Shared/utils.lua"                type="client"/>
+  <script src="Shared/Debug.lua"                type="client"/>
+  <script src="Shared/class.lua"                type="client"/>
+  <script src="Shared/Element.lua"              type="client"/>
+  
+  <script src="Screen.lua"                      type="client"/>
+  
+  <script src="WindowManager.lua"               type="client"/>
+
+  <script src="Shader.lua"                      type="client"/>
+  <script src="ShaderGaussianBlur.lua"          type="client"/>
+
+  <script src="Point.lua"                       type="client"/>
+  <script src="Size.lua"                        type="client"/>
+  <script src="GraphicsUnit.lua"                type="client"/>
+  <script src="EventHandler.lua"                type="client"/>
+  <script src="Font.lua"                        type="client"/>
+  <script src="Color.lua"                       type="client"/>
+  <script src="SystemColors.lua"                type="client"/>
+  <script src="Image.lua"                       type="client"/>
+
+  <script src="Control.lua"                     type="client"/>
+  <script src="ControlCollection.lua"           type="client"/>
+
+  <script src="Window.lua"                      type="client"/>
+  <script src="Button.lua"                      type="client"/>
+  <script src="ComboBox.lua"                    type="client"/>
+  <script src="PictureBox.lua"                  type="client"/>
+  <script src="Label.lua"                       type="client"/>
+  
+  <script src="Form1.lua"         type="client"/>
+
+  <file src="GaussianBlur.fx" />
+  
+  <file src="Resources/Images/Info.png"/>
+  
+  <file src="Resources/Fonts/consola.ttf"/>
+  <file src="Resources/Fonts/consolab.ttf"/>
+  
+  <file src="Resources/Fonts/segoeui.ttf"/>
+  <file src="Resources/Fonts/segoeuib.ttf"/>
+  
+  <file src="Resources/Fonts/micross.ttf"/>
+  
+  <file src="Resources/Textures/Windows 7.5.png" />
+  <file src="Resources/Textures/hide.png" />
+  <file src="Resources/Textures/maximize.png" />
+  <file src="Resources/Textures/minimize.png" />
+  <file src="Resources/Textures/close.png" />
+  <file src="Resources/Textures/dropdown.png" />
+</meta>
