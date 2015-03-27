@@ -17,6 +17,7 @@ class. Form1 : Window
 		this.label2				= new. Label();
 		this.button1			= new. Button();
 		this.comboBox1			= new. ComboBox();
+		this.checkbox1			= new. Checkbox();
 		-- 
 		-- pictureBox1
 		-- 
@@ -65,9 +66,17 @@ class. Form1 : Window
 			}
 		);
 		-- 
+		-- checkbox1
+		-- 
+		this.checkbox1.Location 				= new. Point( 20, 100 );
+		this.checkbox1.Size 					= new. Size( 100, 18 );
+		this.checkbox1.Name 					= "checkbox1";
+		this.checkbox1.TabIndex					= 6;
+		this.checkbox1.Text						= "Checkbox";
+		-- 
 		-- Form1
 		--
-		this.ClientSize = new. Size( 484, 112 );
+		this.ClientSize = new. Size( 484, 150 );
 		this.Location	= new. Point( ( Screen.Width - 500 ) / 2, ( Screen.Height - 150 ) / 2 );
 		this.Name		= "Form1";
 		this.Text		= "VS.Net Style Demo";
@@ -76,6 +85,7 @@ class. Form1 : Window
 		this.Controls.Add( this.label1 );
 		this.Controls.Add( this.button1 );
 		this.Controls.Add( this.comboBox1 );
+		this.Controls.Add( this.checkbox1 );
 		
 		this.ResumeLayout( false );
 		this.PerformLayout();

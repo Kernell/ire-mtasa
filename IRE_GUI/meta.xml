@@ -36,6 +36,7 @@
 
   <script src="Window.lua"                      type="client"/>
   <script src="Button.lua"                      type="client"/>
+  <script src="Checkbox.lua"                    type="client"/>
   <script src="ComboBox.lua"                    type="client"/>
   <script src="PictureBox.lua"                  type="client"/>
   <script src="Label.lua"                       type="client"/>
@@ -60,4 +61,5 @@
   <file src="Resources/Textures/minimize.png" />
   <file src="Resources/Textures/close.png" />
   <file src="Resources/Textures/dropdown.png" />
+  <file src="Resources/Textures/checkbox.png" />
 </meta>

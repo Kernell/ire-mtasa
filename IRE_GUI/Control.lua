@@ -34,6 +34,8 @@ class. Control
 	Visible				= true;
 	Width				= 0;
 
+	PostGUI				= true;
+
 	BackColor				= SystemColors.ControlBackColor;
 	BorderColor 			= SystemColors.ButtonBorder;
 	ForeColor 				= SystemColors.ButtonFace;

@@ -16,7 +16,6 @@ class. Label : Control
 	Align			= "left";
 	VerticalAlign	= "top";
 	FontScale		= 1.0;
-	PostGUI			= true;
 
 	Label	= function()
 		this.Control();
