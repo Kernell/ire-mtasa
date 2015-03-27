@@ -33,15 +33,15 @@ class. ItemWeapon : Item
 		return magazines;
 	end;
 
-	Take	= function()
-		local owner = this.Owner;
+	-- Take	= function()
+	-- 	local owner = this.Owner;
 		
-		if base.Take() > 0 then
-			if classof( owner ) == Character then
-				owner.Player.TakeAllWeapons();
-			end
-		end
-	end;
+	-- 	if base.Take() > 0 then
+	-- 		if classof( owner ) == Character then
+	-- 			owner.Player.TakeAllWeapons();
+	-- 		end
+	-- 	end
+	-- end;
 
 	Use		= function()
 		local playerBones = this.Owner.Player.Bones;
