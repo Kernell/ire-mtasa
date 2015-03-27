@@ -18,6 +18,9 @@ class. Form1 : Window
 		this.button1			= new. Button();
 		this.comboBox1			= new. ComboBox();
 		this.checkbox1			= new. Checkbox();
+		this.radio1				= new. RadioButton();
+		this.radio2				= new. RadioButton();
+		this.radio3				= new. RadioButton();
 		-- 
 		-- pictureBox1
 		-- 
@@ -74,10 +77,34 @@ class. Form1 : Window
 		this.checkbox1.TabIndex					= 6;
 		this.checkbox1.Text						= "Checkbox";
 		-- 
+		-- radio1
+		-- 
+		this.radio1.Location 					= new. Point( 20, 125 );
+		this.radio1.Size 						= new. Size( 100, 20 );
+		this.radio1.Name 						= "radio1";
+		this.radio1.TabIndex					= 7;
+		this.radio1.Text						= "Вариант 1";
+		-- 
+		-- radio2
+		-- 
+		this.radio2.Location 					= new. Point( 20, 150 );
+		this.radio2.Size 						= new. Size( 100, 20 );
+		this.radio2.Name 						= "radio2";
+		this.radio2.TabIndex					= 8;
+		this.radio2.Text						= "Вариант 2";
+		-- 
+		-- radio3
+		-- 
+		this.radio3.Location 					= new. Point( 20, 175 );
+		this.radio3.Size 						= new. Size( 100, 20 );
+		this.radio3.Name 						= "radio3";
+		this.radio3.TabIndex					= 9;
+		this.radio3.Text						= "Вариант 3";
+		-- 
 		-- Form1
 		--
-		this.ClientSize = new. Size( 484, 150 );
-		this.Location	= new. Point( ( Screen.Width - 500 ) / 2, ( Screen.Height - 150 ) / 2 );
+		this.ClientSize = new. Size( 484, 250 );
+		this.Location	= new. Point( ( Screen.Width - 500 ) / 2, ( Screen.Height - 250 ) / 2 );
 		this.Name		= "Form1";
 		this.Text		= "VS.Net Style Demo";
 		
@@ -86,6 +113,9 @@ class. Form1 : Window
 		this.Controls.Add( this.button1 );
 		this.Controls.Add( this.comboBox1 );
 		this.Controls.Add( this.checkbox1 );
+		this.Controls.Add( this.radio1 );
+		this.Controls.Add( this.radio2 );
+		this.Controls.Add( this.radio3 );
 		
 		this.ResumeLayout( false );
 		this.PerformLayout();
