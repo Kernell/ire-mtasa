@@ -50,7 +50,7 @@ class. Control
 	MouseDownForeColor		= SystemColors.ButtonFace;
 	
 	Control = function()
-		this.Controls	= new. ControlCollection();
+		this.Controls	= new. ControlCollection( this );
 		
 		this.Click		= new. EventHandler( this );
 		this.Focus		= new. EventHandler( this );
