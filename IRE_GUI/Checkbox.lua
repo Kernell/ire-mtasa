@@ -7,9 +7,10 @@
 
 class. Checkbox : Control
 {
-	ForeColor 				= SystemColors.ControlBackColor;
-	MouseOverForeColor		= SystemColors.ActiveBorderVS2012;
-	MouseDownForeColor		= SystemColors.Highlight;
+	TextColor				= SystemColors.ButtonFace;
+	ForeColor 				= SystemColors.ActiveBorderVS2012;
+	MouseOverForeColor		= SystemColors.Highlight;
+	MouseDownForeColor		= SystemColors.ActiveBorderVS2012;
 
 	TexturePath		= "Resources/Textures/checkbox.png";
 
@@ -46,7 +47,7 @@ class. Checkbox : Control
 		dxDrawImageSection( this.Left, this.Top, 18, 18, this.Checked and 19 or 0, 0, 18, 18, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
 
 		if this.Text then
-			dxDrawText( this.Text, this.Left + 25, this.Top, this.Left + this.Width, this.Top + this.Height, this.ForeColor.ToArgb(), this.FontScale, this.Font, this.Align, this.VerticalAlign, this.Clip, this.WordBreak, this.PostGUI );
+			dxDrawText( this.Text, this.Left + 30, this.Top, this.Left + this.Width, this.Top + this.Height, this.TextColor.ToArgb(), this.FontScale, this.Font, this.Align, this.VerticalAlign, this.Clip, this.WordBreak, this.PostGUI );
 		end
 	end;
 
