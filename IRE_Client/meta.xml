@@ -14,59 +14,61 @@
   <include resource="IRE_Headmove" />
   <include resource="IRE_Nametags" />
   
-  <script src="Shared/utils.lua"        type="client"/>
-  <script src="Shared/Debug.lua"        type="client"/>
-  <script src="Shared/class.lua"        type="client"/>
-  <script src="Shared/Vars.lua"         type="client"/>
-  <script src="Shared/Easing.lua"       type="client"/>
-  <script src="Shared/Vector3.lua"      type="client"/>
-  <script src="Shared/Vector4.lua"      type="client"/>
-  <script src="Shared/Color.lua"        type="client"/>
-  <script src="Shared/Element.lua"      type="client"/>
-  <script src="Shared/Ped.lua"          type="client"/>
-  <script src="Shared/Player.lua"       type="client"/>
-  <script src="Shared/Blip.lua"         type="client"/>
-  <script src="Shared/ColShape.lua"     type="client"/>
-  <script src="Shared/Marker.lua"       type="client"/>
-  <script src="Shared/Object.lua"       type="client"/>
-  <script src="Shared/Pickup.lua"       type="client"/>
-  <script src="Shared/Timer.lua"        type="client"/>
-  <script src="Shared/DateTime.lua"     type="client"/>
+  <script src="Shared/utils.lua"          type="client"/>
+  <script src="Shared/Debug.lua"          type="client"/>
+  <script src="Shared/class.lua"          type="client"/>
+  <script src="Shared/Vars.lua"           type="client"/>
+  <script src="Shared/Easing.lua"         type="client"/>
+  <script src="Shared/Vector3.lua"        type="client"/>
+  <script src="Shared/Vector4.lua"        type="client"/>
+  <script src="Shared/Color.lua"          type="client"/>
+  <script src="Shared/Element.lua"        type="client"/>
+  <script src="Shared/Ped.lua"            type="client"/>
+  <script src="Shared/Player.lua"         type="client"/>
+  <script src="Shared/Blip.lua"           type="client"/>
+  <script src="Shared/ColShape.lua"       type="client"/>
+  <script src="Shared/Marker.lua"         type="client"/>
+  <script src="Shared/Object.lua"         type="client"/>
+  <script src="Shared/Pickup.lua"         type="client"/>
+  <script src="Shared/Timer.lua"          type="client"/>
+  <script src="Shared/DateTime.lua"       type="client"/>
   
-  <script src="Utils.lua"           type="client"/>
+  <script src="Utils.lua"                 type="client"/>
   
-  <script src="RPC.lua"             type="client"/>
-  <script src="CEGUI.lua"           type="client"/>
-  <script src="MessageBox.lua"      type="client"/>
-  <script src="UIDialog.lua"        type="client"/>
-  <script src="UIManager.lua"       type="client"/>
-  <script src="UICursor.lua"        type="client"/>
-  <script src="UIFont.lua"          type="client"/>
-  <script src="UIRadialMenu.lua"    type="client"/>
+  <script src="RPC.lua"                   type="client"/>
+  <script src="CEGUI.lua"                 type="client"/>
+  <script src="MessageBox.lua"            type="client"/>
+  <script src="UIDialog.lua"              type="client"/>
+  <script src="UIManager.lua"             type="client"/>
+  <script src="UICursor.lua"              type="client"/>
+  <script src="UIFont.lua"                type="client"/>
+  <script src="UIRadialMenu.lua"          type="client"/>
   
-  <script src="Client.lua"          type="client"/>
-  <script src="ClientVehicleControl.lua" type="client"/>
+  <script src="Client.lua"                type="client"/>
+  <script src="ClientCamera.lua"          type="client"/>
+  <script src="ClientInventory.lua"       type="client"/>
+  <script src="ClientVehicleControl.lua"  type="client"/>
   
-  <script src="ClientCamera.lua"    type="client"/>
+  <script src="ItemsManager.lua"          type="client"/>
+
+  <script src="Sound.lua"                 type="client"/>
+  <script src="SoundManager.lua"          type="client"/>
   
-  <script src="Sound.lua"           type="client"/>
-  <script src="SoundManager.lua"    type="client"/>
+  <script src="Vehicle.lua"               type="client"/>
+  <script src="VehicleManager.lua"        type="client"/>
   
-  <script src="Vehicle.lua"         type="client"/>
-  <script src="VehicleManager.lua"  type="client"/>
+  <script src="Settings.lua"              type="client"/>
   
-  <script src="Settings.lua"        type="client"/>
+  <script src="Resource.lua"              type="client"/>
   
-  <script src="Resource.lua"        type="client"/>
-  
-  <script src="CharacterSkin.lua"   type="client"/>
+  <script src="CharacterSkin.lua"         type="client"/>
   
   <!-- UI -->
   
   <file src="UI/LoginScreen.xml"/>
   <file src="UI/Registration.xml"/>
   <file src="UI/CharacterCreate.xml"/>
-  <script src="UI/CharacterCreate.lua" type="client"/>
+  <script src="UI/CharacterCreate.lua"    type="client"/>
   <file src="UI/CharacterList.xml"/>
   
   <!-- Fonts -->
