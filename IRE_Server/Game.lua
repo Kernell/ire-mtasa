@@ -93,7 +93,7 @@ class. Game
 		this.VehicleManager				= new. VehicleManager();
 	--	this.GateManager				= new. GateManager();
 	--	this.RaceManager				= new. RaceManager();
-	--	this.ItemManager				= new. ItemManager();
+		this.ItemsManager				= new. ItemsManager();
 	--	this.InteriorManager			= new. InteriorManager();
 	--	this.TeleportManager			= new. TeleportManager();
 	--	this.ShopManager				= new. ShopManager();

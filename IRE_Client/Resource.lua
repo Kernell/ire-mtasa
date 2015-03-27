@@ -31,9 +31,11 @@ class. Resource
 		
 		this.Client		= new. Client();
 		
+		this.ItemsManager		= new. ItemsManager();
 		this.VehicleManager		= new. VehicleManager();
 		this.SoundManager 		= new. SoundManager();
 		
+		_G.Items		= this.ItemsManager;
 	end;
 	
 	OnStop		= function()
@@ -42,10 +44,12 @@ class. Resource
 		delete ( this.Client );
 		delete ( this.SoundManager );
 		delete ( this.VehicleManager );
+		delete ( this.ItemsManager );
 		delete ( this.RPC );
 		
 		_G.UI 				= NULL;
 		_G.Camera 			= NULL;
+		_G.Items 			= NULL;
 	end;
 };
 

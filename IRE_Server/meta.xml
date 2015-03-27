@@ -38,6 +38,8 @@
   <script src="Shared/base64.lua"/>
   <script src="Shared/Vars.lua"/>
   
+  <script src="Shared/File.lua"/>
+  <script src="Shared/IniFile.lua"/>
   <script src="Shared/Array.lua"/>
   <script src="Shared/Blowfish.lua"/>
   <script src="Shared/Color.lua"/>
@@ -94,6 +96,11 @@
   <script src="VehicleManager.lua"/>
   <script src="VehicleColorManager.lua"/>
   <script src="AdminManager.lua"/>
+  <script src="ItemsManager.lua"/>
+
+  <script src="Item.lua"/>
+  <script src="ItemFood.lua"/>
+  <script src="ItemWeapon.lua"/>
   
   <script src="Group.lua"/>
   <script src="User.lua"/>
@@ -110,6 +117,7 @@
   
   <script src="Character.lua"/>
   <script src="CharacterSkin.lua"/>
+  <script src="CharacterInventory.lua"/>
   
   <script src="Vehicle.lua"/>
   <script src="VehicleComponents.lua"/>

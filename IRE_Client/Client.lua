@@ -38,6 +38,7 @@ class. Client : Player
 		this.BindKeys();
 		
 		this.VehicleControl	= new. ClientVehicleControl();
+		this.Inventory		= new. ClientInventory();
 		
 		SERVER.PlayerManager( "Ready", guiGetScreenSize() );
 		
@@ -49,6 +50,7 @@ class. Client : Player
 		removeEventHandler( "onClientPlayerChoke", CLIENT, this.__OnChoke );
 		removeEventHandler( "onClientPlayerHeliKilled", CLIENT, this.__OnHeliKilled );
 		
+		delete ( this.Inventory );
 		delete ( this.VehicleControl );
 	end;
 	
@@ -69,8 +71,6 @@ class. Client : Player
 		
 		bindKey( "f", "up", "enter" );
 		bindKey( "r", "up", "reload_weapon" );
-		
-		bindKey( "i", "up", "inventory" );
 		
 		bindKey( "0", "up", "drop_weapon" );
 		bindKey( "1", "up", "weapon_slot", "1" );
