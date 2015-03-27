@@ -46,14 +46,14 @@
   
   <!-- Weapons -->
   
-  <file src="Weapons/acr.dff" />
-  <file src="Weapons/acr.txd" />
+  <file src="Weapons/acr/model.dff" />
+  <file src="Weapons/acr/texture.txd" />
   
-  <file src="Weapons/aug.dff" />
-  <file src="Weapons/aug.txd" />
+  <file src="Weapons/aug/model.dff" />
+  <file src="Weapons/aug/texture.txd" />
   
-  <file src="Weapons/scar_h.dff" />
-  <file src="Weapons/scar_h.txd" />
+  <file src="Weapons/scar_h/model.dff" />
+  <file src="Weapons/scar_h/texture.txd" />
   
   <!-- Vehicles -->
   
