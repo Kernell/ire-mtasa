@@ -44,7 +44,7 @@ class. Checkbox : Control
 			end
 		end
 
-		dxDrawImageSection( this.Left, this.Top, 18, 18, this.Checked and 19 or 0, 0, 18, 18, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
+		dxDrawImageSection( this.Left + 2, this.Top + 2, 14, 14, this.Checked and 14 or 0, 0, 14, 14, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
 
 		if this.Text then
 			dxDrawText( this.Text, this.Left + 30, this.Top, this.Left + this.Width, this.Top + this.Height, this.TextColor.ToArgb(), this.FontScale, this.Font, this.Align, this.VerticalAlign, this.Clip, this.WordBreak, this.PostGUI );

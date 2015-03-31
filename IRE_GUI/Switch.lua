@@ -44,7 +44,7 @@ class. Switch : Control
 			end
 		end
 
-		dxDrawImageSection( this.Left, this.Top, 38, 20, 0, this.Checked and 20 or 0, 38, 20, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
+		dxDrawImageSection( this.Left + 2, this.Top + 3, 29, 15, 0, this.Checked and 15 or 0, 29, 15, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
 
 		if this.Text then
 			dxDrawText( this.Text, this.Left + 45, this.Top, this.Left + this.Width, this.Top + this.Height, this.TextColor.ToArgb(), this.FontScale, this.Font, this.Align, this.VerticalAlign, this.Clip, this.WordBreak, this.PostGUI );

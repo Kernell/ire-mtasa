@@ -44,7 +44,7 @@ class. RadioButton : Control
 			end
 		end
 
-		dxDrawImageSection( this.Left, this.Top, 20, 20, this.Selected and 21 or 0, 0, 20, 20, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
+		dxDrawImageSection( this.Left + 2, this.Top + 3, 15, 15, this.Selected and 15 or 0, 0, 15, 15, this.TexturePath, 0, 0, 0, ForeColor.ToArgb(), this.PostGUI );
 
 		if this.Text then
 			dxDrawText( this.Text, this.Left + 30, this.Top, this.Left + this.Width, this.Top + this.Height, this.TextColor.ToArgb(), this.FontScale, this.Font, this.Align, this.VerticalAlign, this.Clip, this.WordBreak, this.PostGUI );
