@@ -76,9 +76,17 @@ class. Font
 				sPath = "Resources/Fonts/" + familyName + "b.ttf";
 			end
 			
-			FontCache[ familyName ][ pxSize ][ style ] = dxCreateFont( sPath, pxSize, bBold );
+			local font = dxCreateFont( sPath, pxSize, bBold );
+
+			font( this );
+
+			this.Name	= familyName;
+			this.Size	= pxSize;
+			this.Style	= style;
+
+			FontCache[ familyName ][ pxSize ][ style ] = font;
 		end
-		
+
 		return FontCache[ familyName ][ pxSize ][ style ];
 	end;
 };
