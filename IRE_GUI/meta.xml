@@ -29,7 +29,6 @@
   <script src="Font.lua"                        type="client"/>
   <script src="Color.lua"                       type="client"/>
   <script src="SystemColors.lua"                type="client"/>
-  <script src="Image.lua"                       type="client"/>
 
   <script src="Control.lua"                     type="client"/>
   <script src="ControlCollection.lua"           type="client"/>
@@ -42,6 +41,8 @@
   <script src="Label.lua"                       type="client"/>
   <script src="RadioButton.lua"                 type="client"/>
   <script src="Switch.lua"                      type="client"/>
+  <script src="Image.lua"                       type="client"/>
+  <script src="TextField.lua"                   type="client"/>
   
   <script src="Form1.lua"         type="client"/>
 

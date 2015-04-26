@@ -22,6 +22,7 @@ class. Form1 : Window
 		this.radio2				= new. RadioButton();
 		this.radio3				= new. RadioButton();
 		this.switch1			= new. Switch();
+		this.textField1			= new. TextField();
 		-- 
 		-- pictureBox1
 		-- 
@@ -110,6 +111,14 @@ class. Form1 : Window
 		this.switch1.TabIndex					= 10;
 		this.switch1.Text						= "Переключатель";
 		-- 
+		-- textField1
+		-- 
+		this.textField1.Location 				= new. Point( 150, 125 );
+		this.textField1.Size 					= new. Size( 165, 20 );
+		this.textField1.Name 					= "textField1";
+		this.textField1.TabIndex				= 11;
+		this.textField1.Text					= "Input text";
+		-- 
 		-- Form1
 		--
 		this.ClientSize = new. Size( 484, 250 );
@@ -126,6 +135,7 @@ class. Form1 : Window
 		this.Controls.Add( this.radio2 );
 		this.Controls.Add( this.radio3 );
 		this.Controls.Add( this.switch1 );
+		this.Controls.Add( this.textField1 );
 		
 		this.ResumeLayout( false );
 		this.PerformLayout();
