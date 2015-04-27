@@ -82,22 +82,22 @@ class. MySQLResult
 	end;
 	
 	GetArray 		= function()
-		local Array = {};
+		local array = new {};
 		
 		if this.NumRows() > 0 then
-			for _, row in this.result:rows_assoc() do
-				local Row = {};
+			for _, _row in this.result:rows_assoc() do
+				local row = {};
 				
-				for key, value in pairs( row ) do
+				for key, value in pairs( _row ) do
 					if value ~= mysql_null() then
-						Row[ key ] = tonumber( value ) or value;
+						row[ key ] = tonumber( value ) or value;
 					end
 				end
 				
-				table.insert( Array, Row );
+				array.Insert( row );
 			end
 		end
 		
-		return Array;
+		return array;
 	end;
 };
