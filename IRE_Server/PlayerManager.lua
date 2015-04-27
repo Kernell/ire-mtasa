@@ -212,13 +212,12 @@ end
 				if data.password == NULL or data.password:len() == 0 then
 					return "Введите пароль";
 				end
-				
-				local query = "SELECT u.id, u.activation_code, u.ban, u.ban_reason, uu.name AS ban_user_name, DATE_FORMAT( u.ban_date, '%d/%m/%Y %h:%i:%s' ) AS ban_date \
+
+				local query = "SELECT u.id, u.password, u.salt, u.activation_code, u.ban, u.ban_reason, uu.name AS ban_user_name, DATE_FORMAT( u.ban_date, '%d/%m/%Y %h:%i:%s' ) AS ban_date \
 					FROM uac_users u \
 					LEFT JOIN uac_users uu ON uu.id = u.ban_user_id \
 					WHERE \
 						u.login = '" + Server.DB.EscapeString( data.login ) + "' \
-					AND u.password = '" + Server.Blowfish.Encrypt( data.password ) + "' \
 					AND u.deleted = 'No' ";
 				
 				local result = Server.DB.Query( query );
@@ -232,8 +231,32 @@ end
 				local row = result.GetRow();
 				
 				result.Free();
-				
+
 				if not row or not row.id then
+					return "Пользватель с такими данными не найден";
+				end
+
+				if row.salt == null then
+					row.salt		= User.GenerateSalt( 16 );
+					row.password	= User.HashPassword( Server.Blowfish.Decrypt( row.password ), row.salt );
+					
+					if Server.DB.Query( "UPDATE uac_users SET password = %q, salt = %q WHERE id = %d", row.password, row.salt, row.id ) then
+						if not Server.DB.Query( "UPDATE uac_users_autologin SET password = %q WHERE id = %d", row.password, row.id ) then
+							Debug( Server.DB.Error(), 1 );
+					
+							return TEXT_DB_ERROR;
+						end
+					else
+						Debug( Server.DB.Error(), 1 );
+					
+						return TEXT_DB_ERROR;
+					end
+				end
+
+				local password1 = User.HashPassword( row.password, row.salt );
+				local password2 = User.HashPassword( data.password, row.salt );
+
+				if password1 ~= password2 then
 					player.LoginAttempts = ( player.LoginAttempts or 0 ) + 1;
 					
 					if player.LoginAttempts > 3 then
@@ -267,7 +290,7 @@ end
 					{
 						id			= row.id;
 						serial		= player.GetSerial();
-						password	= Server.Blowfish.Encrypt( data.password );
+						password	= password2;
 					};
 					
 					if not Server.DB.Insert( "uac_users_autologin", query ) then
@@ -369,17 +392,14 @@ end
 				if row.serial > 0 then	return TEXT_REG_MULTIACCOUNT;	end
 			end
 			
-			-- local activationCode = md5( md5( math.random( 0, 999999999 ) ) + md5( getRealTime().timestamp ) );
-			
-			local ID = Server.DB.Insert( "uac_users",
+			local ID = User.Create(
 				{
 					refer_id		= referID;
 					login			= email:lower();
-					password		= Server.Blowfish.Encrypt( password );
+					password		= password
 					name			= nickname;
 					serial_reg		= serial;
 					ip_reg			= player.GetIP();
-				--	activation_code	= activationCode;
 				}
 			);
 			
@@ -390,8 +410,6 @@ end
 				
 				return -1;
 			end
-			
-			Debug( Server.DB.Error(), 1 );
 			
 			return TEXT_DB_ERROR;
 		end
