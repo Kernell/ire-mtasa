@@ -4,9 +4,11 @@ export LANG="ru_RU.UTF-8"
 
 REV=`git log | grep commit | wc -l`
 
-git reset --HARD
+git reset --hard
 git pull
 
 echo "VERSION = \"1.0.$REV\"" > IRE_Server/Version.lua
+
+git submodule foreach git pull
 
 # php post-commit-compile.php
