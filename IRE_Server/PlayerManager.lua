@@ -396,7 +396,7 @@ end
 				{
 					refer_id		= referID;
 					login			= email:lower();
-					password		= password
+					password		= password;
 					name			= nickname;
 					serial_reg		= serial;
 					ip_reg			= player.GetIP();
